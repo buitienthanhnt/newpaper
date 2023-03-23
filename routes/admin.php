@@ -8,7 +8,10 @@ Route::group(["prefix" => "adminhtml"], function(){
         return view("adminhtml/templates/home");
     });
 
-});
+    Route::get("page", function (){
+       return 123;
+    });
 
+});
 
 ?>
