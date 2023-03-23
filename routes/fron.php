@@ -11,7 +11,8 @@ Route::get("homepage", function(){
 });
 
 Route::get("page_str", function(){
-    return view("frontend/templates/pagestr");
+    $a = 123;
+    return view("frontend/templates/pagestr", ['a' => $a]);
 })
 
 ?>
