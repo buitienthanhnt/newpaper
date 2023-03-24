@@ -3,15 +3,21 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function(){
-    return view("frontend/templates/home");
+    return view("frontend/templates/homeconten");
 });
 
-Route::get("homepage", function(){
-    return view("frontend/templates/homepage");
+Route::get("basepage", function(){
+    return view("frontend/templates/home");
+//    return view("frontend/templates/homepage");
 });
 
 Route::get("page_str", function(){
     return view("frontend/templates/pagestr");
+});
+
+Route::get("home", function ()
+{
+    return view("frontend/templates/homeconten");
 })
 
 ?>
