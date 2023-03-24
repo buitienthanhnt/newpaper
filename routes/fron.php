@@ -12,6 +12,15 @@ Route::get("homepage", function(){
 
 Route::get("page_str", function(){
     return view("frontend/templates/pagestr");
-})
+});
+
+Route::get("ajax", function(){
+    return view("frontend/templates/home");
+});
+
+Route::post("ajax_post", function(){
+    echo json_encode(["a" => 13123]);
+    // return view("frontend/templates/home");
+})->name("ajax_post")
 
 ?>

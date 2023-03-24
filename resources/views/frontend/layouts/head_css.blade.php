@@ -12,3 +12,6 @@
  <link rel="stylesheet" href={{asset('assets/frontend/css/nice-select.css')}}>
  <link rel="stylesheet" href={{asset('assets/frontend/css/style.css')}}>
  @yield('css_after')
+
+
+ <script src={{asset('assets/frontend/js/vendor/jquery-1.12.4.min.js')}}></script>
