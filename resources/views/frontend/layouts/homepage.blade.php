@@ -14,6 +14,10 @@
     @include('frontend.layouts.head_css')
 @endsection
 
+@section('head_js')
+    @include('frontend.layouts.head_js')
+@endsection
+
 @section('bottom_js')
     @include('frontend.layouts.bottom_js')
 @endsection

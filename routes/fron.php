@@ -8,7 +8,6 @@ Route::get("/", function(){
 
 Route::get("basepage", function(){
     return view("frontend/templates/home");
-//    return view("frontend/templates/homepage");
 });
 
 Route::get("page_str", function(){
@@ -17,7 +16,7 @@ Route::get("page_str", function(){
 
 Route::get("home", function ()
 {
-    return view("frontend/templates/homeconten");
+       return view("frontend/templates/homepage");
 })
 
 ?>
