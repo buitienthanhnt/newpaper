@@ -68,8 +68,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <form class="search-form" action="#')}}>
-          <i class="icon-search"></i>
+                <form class="search-form" action="#">
+                    <i class="icon-search"></i>
                     <input type="search" class="form-control" placeholder="Search Here" title="Search here">
                 </form>
             </li>
@@ -165,8 +165,8 @@
                         alt="Profile image"> </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                     <div class="dropdown-header text-center">
-                        <img class="img-md rounded-circle"
-                            src={{ asset('assets/adminhtml/images/faces/face8.jpg') }} alt="Profile image">
+                        <img class="img-md rounded-circle" src={{ asset('assets/adminhtml/images/faces/face8.jpg') }}
+                            alt="Profile image">
                         <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
                         <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
                     </div>
@@ -181,8 +181,8 @@
                         Activity</a>
                     <a class="dropdown-item"><i
                             class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-                    <a class="dropdown-item"><i
-                            class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+                    <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign
+                        Out</a>
                 </div>
             </li>
         </ul>

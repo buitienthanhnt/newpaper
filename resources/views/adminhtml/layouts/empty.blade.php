@@ -1,5 +1,13 @@
 @extends('adminhtml.layouts.base')
 
+@section('head_css')
+    @include('adminhtml.layouts.head_css')
+@endsection
+
+@section('bottom_js')
+    @include('adminhtml.layouts.bottom_js')
+@endsection
+
 @section('body')
     <div class="container-scroller">
         <!-- partial:partials/_navbar.html')}} -->
@@ -22,12 +30,4 @@
         </div>
     </div>
     <!-- End custom js for this page-->
-@endsection
-
-@section('head_css')
-    @include('adminhtml.layouts.head_css')
-@endsection
-
-@section('bottom_js')
-    @include('adminhtml.layouts.bottom_js')
 @endsection
