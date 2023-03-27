@@ -17,6 +17,10 @@ Route::get("page_str", function(){
 Route::get("home", function ()
 {
        return view("frontend/templates/homepage");
-})
+});
+
+Route::get("demo", function(){
+    return view("frontend/templates/demo");
+});
 
 ?>

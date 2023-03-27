@@ -15,10 +15,12 @@
 
 {{-- ========base============ --}}
 
+{{-- page_title --}}
 @section('page_title')
     home demo
 @endsection
 
+{{-- morning_post --}}
 @section('morning_post')
     <div class="trending-area fix pt-25 gray-bg">
         <div class="container">
@@ -45,6 +47,7 @@
     </div>
 @endsection
 
+{{-- new_post --}}
 @section('new_post')
     <section class="whats-news-area pt-50 pb-20 gray-bg">
         <div class="container">
@@ -80,6 +83,7 @@
     </section>
 @endsection
 
+{{-- weekly2_news --}}
 @section('weekly2_news')
     <div class="weekly2-news-area pt-50 pb-30 gray-bg">
         <div class="container">
@@ -104,8 +108,9 @@
     </div>
 @endsection
 
+{{-- articles --}}
 @section('articles')
-    <div class="recent-articles pt-80 pb-80">
+    <div class="recent-articles pt-40 pb-40">
         <div class="container">
             <div class="recent-wrapper">
 
@@ -126,6 +131,7 @@
     </div>
 @endsection
 
+{{-- video_area --}}
 @section('video_area')
     <div class="youtube-area video-padding d-none d-sm-block">
 
@@ -138,6 +144,7 @@
     </div>
 @endsection
 
+{{-- weekly3_news --}}
 @section('weekly3_news')
     <div class="weekly3-news-area pt-80 pb-130">
         <div class="container">
@@ -166,6 +173,7 @@
     </div>
 @endsection
 
+{{-- banner_last --}}
 @section('banner_last')
     <div class="banner-area gray-bg pt-90 pb-90">
         <div class="container">
