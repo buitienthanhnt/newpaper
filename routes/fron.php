@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/", function(){
     return view("frontend/templates/homeconten");
-});
+})->name("/");
 
 Route::get("basepage", function(){
     return view("frontend/templates/home");
@@ -23,7 +23,7 @@ Route::get("login", function(){
 });
 
 Route::post("loginpost", function(){
-   return 123;
+    return 123;
 })->name("login_post");
 
 Route::get("new_account", function(){

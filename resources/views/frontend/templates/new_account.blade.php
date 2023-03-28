@@ -40,7 +40,9 @@
                         <input id="pass_confirm" class="form-control" type="password" name="pass_confirm" required>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">create new account</button>
+                    <div class="form-group">
+                        <center><button type="submit" class="btn btn-primary">create new account</button></center>
+                    </div>
                 </form>
             </div>
         </div>

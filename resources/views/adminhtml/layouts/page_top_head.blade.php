@@ -6,7 +6,7 @@
             </button>
         </div>
         <div>
-            <a class="navbar-brand brand-logo" href={{ asset('assets/adminhtml/index.html') }}>
+            <a class="navbar-brand brand-logo" href={{ route('admin') }}>
                 <img src={{ asset('assets/adminhtml/images/logo.svg') }} alt="logo" />
             </a>
             <a class="navbar-brand brand-logo-mini" href={{ asset('assets/adminhtml/index.html') }}>
@@ -24,10 +24,10 @@
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown d-none d-lg-block">
                 <a class="nav-link dropdown-bordered dropdown-toggle dropdown-toggle-split" id="messageDropdown"
-                    href={{ asset('assets/adminhtml/#') }} data-bs-toggle="dropdown" aria-expanded="false"> Select
+                   href={{ asset('assets/adminhtml/#') }} data-bs-toggle="dropdown" aria-expanded="false"> Select
                     Category </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-                    aria-labelledby="messageDropdown">
+                     aria-labelledby="messageDropdown">
                     <a class="dropdown-item py-3">
                         <p class="mb-0 font-weight-medium float-left">Select category</p>
                     </a>
@@ -79,7 +79,7 @@
                     <i class="icon-mail icon-lg"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-                    aria-labelledby="notificationDropdown">
+                     aria-labelledby="notificationDropdown">
                     <a class="dropdown-item py-3 border-bottom">
                         <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
                         <span class="badge badge-pill badge-primary float-right">View all</span>
@@ -120,7 +120,7 @@
                     <span class="count"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
-                    aria-labelledby="countDropdown">
+                     aria-labelledby="countDropdown">
                     <a class="dropdown-item py-3">
                         <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
                         <span class="badge badge-pill badge-primary float-right">View all</span>
@@ -129,7 +129,7 @@
                     <a class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
                             <img src={{ asset('assets/adminhtml/images/faces/face10.jpg') }} alt="image"
-                                class="img-sm profile-pic">
+                                 class="img-sm profile-pic">
                         </div>
                         <div class="preview-item-content flex-grow py-2">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
@@ -139,7 +139,7 @@
                     <a class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
                             <img src={{ asset('assets/adminhtml/images/faces/face12.jpg') }} alt="image"
-                                class="img-sm profile-pic">
+                                 class="img-sm profile-pic">
                         </div>
                         <div class="preview-item-content flex-grow py-2">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
@@ -149,7 +149,7 @@
                     <a class="dropdown-item preview-item">
                         <div class="preview-thumbnail">
                             <img src={{ asset('assets/adminhtml/images/faces/face1.jpg') }} alt="image"
-                                class="img-sm profile-pic">
+                                 class="img-sm profile-pic">
                         </div>
                         <div class="preview-item-content flex-grow py-2">
                             <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
@@ -187,7 +187,7 @@
             </li>
         </ul>
         <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-            data-bs-toggle="offcanvas">
+                data-bs-toggle="offcanvas">
             <span class="mdi mdi-menu"></span>
         </button>
     </div>
