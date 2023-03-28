@@ -27,7 +27,7 @@
                         <!-- Logo -->
                         <div class="col-xl-3 col-lg-3 col-md-3 d-none d-md-block">
                             <div class="logo">
-                                <a href="index.html"><img src={{ asset('assets/frontend/img/logo/logo.png') }}
+                                <a href="{{ route('/') }}"><img src={{ asset('assets/frontend/img/logo/logo.png') }}
                                         alt=""></a>
                             </div>
                         </div>

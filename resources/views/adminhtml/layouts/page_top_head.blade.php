@@ -6,7 +6,7 @@
             </button>
         </div>
         <div>
-            <a class="navbar-brand brand-logo" href={{ asset('assets/adminhtml/index.html') }}>
+            <a class="navbar-brand brand-logo" href={{ route('admin') }}>
                 <img src={{ asset('assets/adminhtml/images/logo.svg') }} alt="logo" />
             </a>
             <a class="navbar-brand brand-logo-mini" href={{ asset('assets/adminhtml/index.html') }}>

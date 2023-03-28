@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-info btn-sm">login</button>
+                    <center><button type="submit" class="btn btn-info btn-sm float-center">login</button></center>
                 </div>
 
             </form>
