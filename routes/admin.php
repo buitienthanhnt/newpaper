@@ -42,25 +42,19 @@ Route::group(["prefix" => "adminhtml"], function(){
     });
 
     Route::prefix('category')->group(function () {
-        Route::get("list", function(){
-
-        })->name("category_admin_list");
+        Route::get("list", "CategoryController@listCategory")->name("category_admin_list");
 
         Route::get("create", "CategoryController@createCategory")->name("category_admin_create");
 
         Route::post("insert","CategoryController@insertCategory")->name("category_admin_insert");
 
-        Route::get("edit/{category_id}", function(){
-
-        })->name("category_admin_edit");
+        Route::get("edit/{category_id}", "CategoryController@editCategory")->name("category_admin_edit");
 
         Route::put("update/{category_id}", function(){
 
         })->name("category_admin_update");
 
-        Route::delete("delete/{category_id}", function(){
-
-        })->name("category_admin_delete");
+        Route::any("delete/{category_id}", "CategoryController@deleteCategory")->name("category_admin_delete");
     });
 
 });
