@@ -50,9 +50,7 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         Route::get("edit/{category_id}", "CategoryController@editCategory")->name("category_admin_edit");
 
-        Route::put("update/{category_id}", function(){
-
-        })->name("category_admin_update");
+        Route::post("update/{category_id}", "CategoryController@updateCategory")->name("category_admin_update");
 
         Route::any("delete/{category_id}", "CategoryController@deleteCategory")->name("category_admin_delete");
     });

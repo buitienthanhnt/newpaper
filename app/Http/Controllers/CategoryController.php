@@ -21,7 +21,7 @@ class CategoryController extends Controller
 
     public function listCategory()
     {
-        $all_category = $this->category->all();
+        $all_category = $this->category::paginate(8); // php artisan vendor:publish --tag=laravel-pagination
         return view("adminhtml/templates/category/list", ["all_category" => $all_category]);
     }
 
@@ -58,12 +58,12 @@ class CategoryController extends Controller
         $category->name = $params["name"];
         $category->description = $params["description"];
         $category->active = $params["active"];
-        $category->parent_id = $this->request->__get("parent_category");
+        $category->parent_id = $this->request->__get("parent_id");
         $category->url_alias = $params["url_alias"];
         $category->save();
 
         if ($category) {
-           return back();
+           return back()->with("success", "created new category: $category->name");
         }
     }
 
@@ -92,6 +92,16 @@ class CategoryController extends Controller
         $parent_category = $this->category_tree_option($category);
 
         return view("adminhtml/templates/category/edit", compact("category", "parent_category"));
+    }
+
+    public function updateCategory($category_id)
+    {
+        $category = $this->category::find($category_id);
+        $request_params = $this->request->toArray();
+        $category->fill($request_params);
+        $category->save();
+        // return redirect(route("category_admin_list"));
+        return redirect()->back()->with("success", "updated success!");
     }
 
     public function deleteCategory($category_id)

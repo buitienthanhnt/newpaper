@@ -59,6 +59,13 @@
             </tbody>
           </table>
         </div>
+        <div class="row">
+            <div class="col-md-12 mt-20 d-flex flex-row-reverse">
+                {{ $all_category->links() }}
+            </div>
+
+        </div>
+
       </div>
     </div>
   </div>
