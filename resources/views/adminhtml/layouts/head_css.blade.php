@@ -11,4 +11,7 @@
 <!-- End plugin css for this page -->
 <!-- inject:css -->
 <link rel="stylesheet" href={{asset('assets/adminhtml/css/vertical-layout-light/style.css')}}>
+
+{{-- <link href="vendor/select2/dist/css/select2.min.css" rel="stylesheet" /> --}}
+<link href={{ asset('assets/select2/dist/css/select2.css') }} rel="stylesheet" />
 @yield('after_css')

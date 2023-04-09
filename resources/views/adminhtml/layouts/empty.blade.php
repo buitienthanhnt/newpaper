@@ -4,6 +4,10 @@
     @include('adminhtml.layouts.head_css')
 @endsection
 
+@section('head_js')
+    @include('adminhtml.layouts.head_js')
+@endsection
+
 @section('bottom_js')
     @include('adminhtml.layouts.bottom_js')
 @endsection

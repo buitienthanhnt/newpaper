@@ -112,4 +112,19 @@ class CategoryController extends Controller
             return back();
         }
     }
+
+    public function setupCategory()
+    {
+        $parent_category = $this->category_tree_option();
+        return view("adminhtml/templates/category/setup", ["parent_category" => $parent_category]);
+    }
+
+    public function setupSave()
+    {
+        # code...
+        $params = $this->request->toArray();
+        dd($params);
+        return;
+        return redirect()->back();
+    }
 }

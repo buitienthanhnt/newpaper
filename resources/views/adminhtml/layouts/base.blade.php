@@ -10,6 +10,7 @@
     @yield('head_css')
   <!-- endinject -->
   <link rel="shortcut icon" href={{asset('assets/adminhtml/images/favicon.png')}} />
+  @yield("head_js")
 </head>
 <body>
 
