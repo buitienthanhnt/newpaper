@@ -42,7 +42,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Parent Category</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" id="category_top_use" name="parent_id[]" multiple="multiple">
+                                    <select class="form-control" id="category_top_use" name="setup_category[]" multiple="multiple">
                                         <?= $parent_category ?>
                                     </select>
                                 </div>
