@@ -6,6 +6,11 @@ Route::get("/", function(){
     return view("frontend/templates/homeconten");
 })->name("/");
 
+Route::get("/{category}", function($category){
+    return $category;
+
+})->name("front_category");
+
 Route::get("basepage", function(){
     return view("frontend/templates/home");
 });

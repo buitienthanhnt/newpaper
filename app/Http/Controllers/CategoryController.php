@@ -127,8 +127,13 @@ class CategoryController extends Controller
     {
         $params = $this->request->toArray();
         $configCategory = $this->configCategory;
+        $top_category = $configCategory::firstWhere("path", ConfigCategory::TOP_CATEGORY);
+        if ($top_category) {
+            $configCategory = $configCategory::find($top_category->id);
+        }
         $configCategory->fill(["path" => ConfigCategory::TOP_CATEGORY, "value" => implode("&", $params["setup_category"]), "description" => $params['description'] ?? null]);
         $configCategory->save();
+
         return redirect()->back();
     }
 }
