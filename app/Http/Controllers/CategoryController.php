@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\SetupCategory;
 
 class CategoryController extends Controller
 {
     protected $request;
     protected $category;
+    protected $setup_category;
 
     public function __construct(
         Request $request,
-        Category $category
+        Category $category,
+        SetupCategory $setup_category
     )
     {
         $this->request = $request;
         $this->category = $category;
+        $this->setup_category = $setup_category;
     }
 
     public function listCategory()
@@ -121,8 +125,15 @@ class CategoryController extends Controller
 
     public function setupSave()
     {
-        # code...
         $params = $this->request->toArray();
+
+        $setup_category = $this->setup_category;
+        $setup_category->fill([
+            "name" => "category_top",
+            "path" => "category_top",
+            "value" => implode("|", $params["parent_id"])
+        ]);
+        $setup_category->save();
         dd($params);
         return;
         return redirect()->back();
