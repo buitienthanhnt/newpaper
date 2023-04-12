@@ -15,6 +15,8 @@
 
 <body>
 
+    @include('sweetalert::alert')
+
     <!-- Preloader Start -->
     @yield('body')
 

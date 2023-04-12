@@ -102,8 +102,10 @@
                                 <div class="col-sm-9">
                                     <input type="file" class="form-control pb-10" id="category_image"
                                         name="image_path" />
-                                    <img src="#" style="width: 100%; height: 240px; resize: cover"
-                                        class="form-control" alt="your image" id="category_preview" />
+                                    @if ($category->image_path)
+                                        <img src="{{$category->image_path}}" style="width: 100%; height: 240px; resize: cover"
+                                            class="form-control" alt="your image" id="category_preview" />
+                                    @endif
                                 </div>
                             </div>
                         </div>

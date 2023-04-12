@@ -5,22 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CategoryController extends Controller
 {
     protected $request;
     protected $category;
     protected $configCategory;
+    protected $session;
 
     public function __construct(
         Request $request,
         Category $category,
-        ConfigCategory $configCategory
+        ConfigCategory $configCategory,
+        Store $session
     )
     {
         $this->request = $request;
         $this->category = $category;
         $this->configCategory = $configCategory;
+        $this->session = $session;
     }
 
     public function listCategory()
@@ -36,6 +41,12 @@ class CategoryController extends Controller
         // if ($list_catergory->count()) {
         //     $parent_category.= $this->category_tree($list_catergory);
         // }
+        if ($this->session->exists("success")) {
+            Alert::info($this->session->get("success"), 'Message')->autoClose(2000);
+        }elseif ($this->session->exists("error")) {
+            Alert::error($this->session->get("error"), 'Message')->autoClose(2000);
+        }
+        
         $parent_category = $this->category_tree_option();
         return view("adminhtml/templates/category/create", ["parent_category" => $parent_category]);
     }

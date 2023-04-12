@@ -14,6 +14,7 @@
 </head>
 <body>
 
+    @include('sweetalert::alert')
     @yield('body')
 
     @yield('bottom_js')

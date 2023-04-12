@@ -105,7 +105,7 @@
                                 <div class="col-sm-9">
                                     <input type="file" class="form-control pb-10" id="category_image"
                                         name="category_image" />
-                                    <img src="#" style="width: 100%; height: 240px; resize: cover"
+                                    <img src="#" style="width: 100%; height: 240px; resize: cover; display: none"
                                         class="form-control" alt="your image" id="category_preview" />
                                 </div>
                             </div>
@@ -130,9 +130,13 @@
         category_image.onchange = evt => {
             const [file] = category_image.files
             if (file) {
+                $(category_preview).show();
                 category_preview.src = URL.createObjectURL(file)
+            }else{
+                $(category_preview).hide();
             }
         }
+
 
         setInterval(() => {
             var category_insert_success = $("#category_insert_success");
