@@ -113,12 +113,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-info">create category</button>
-                        </div>
-
-                        <div class="col-md-2">
-                            <a href="{{ route('category_admin_list') }}" class="btn btn-primary">list category</a>
+                        <div class="offset-md-10 col-md-2">
+                            <button type="submit" class="btn btn-info">save category</button>
                         </div>
                     </div>
                 </form>

@@ -9,5 +9,8 @@
 @endsection
 
 @section('body_main_conten')
+    @if (session("not_page"))
+        <?php Alert::error("not page", 'Message')->autoClose(2000) ?>
+    @endif
     <span>noi dung trong body main conten</span>
 @endsection

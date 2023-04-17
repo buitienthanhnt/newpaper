@@ -131,7 +131,14 @@ class CategoryController extends Controller
     public function setupCategory()
     {
         $parent_category = $this->category_tree_option();
-        return view("adminhtml/templates/category/setup", ["parent_category" => $parent_category]);
+        $current_setup = ConfigCategory::where("path", ConfigCategory::TOP_CATEGORY);
+        $all_category = Category::all();
+        if ($current_setup->count()) {
+            $current_setup = explode("&", $current_setup->first()->value);
+            // $list_current = Category::find($current_setup);
+            # code...
+        }
+        return view("adminhtml/templates/category/setup", ["parent_category" => $parent_category, "all_category" => $all_category, "list_current" => $current_setup]);
     }
 
     public function setupSave()

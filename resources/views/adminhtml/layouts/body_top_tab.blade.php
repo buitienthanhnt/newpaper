@@ -19,6 +19,10 @@
                     role="tab" aria-selected="false">More</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link border-0 text-primary" id="more-tab"  href={{ route('category_admin_list') }}
+                    role="tab" aria-selected="false">list category</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link border-0 text-info" id="more-tab"  href={{ route('category_top_setup') }}
                     role="tab" aria-selected="false">setup category top</a>
             </li>

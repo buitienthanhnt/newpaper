@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 Route::group(["prefix" => "adminhtml"], function(){
+    $admin = "admin";
 
     Route::get("/", function(){
         return view("adminhtml/templates/home");
@@ -13,11 +14,11 @@ Route::group(["prefix" => "adminhtml"], function(){
         return view("adminhtml/templates/default");
     });
 
-    Route::prefix('paper')->group(function () {
+    Route::prefix('paper')->group(function ()use($admin) {
 
         Route::get("list", function(){
 
-        })->name("paper_list");
+        })->name($admin."_paper_list");
 
         Route::get("create", function(){
 
@@ -39,6 +40,10 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         })->name("paper_delete");
 
+    });
+
+    Route::prefix('writer')->group(function ()use($admin) {
+        Route::get("/", "WriterController@listOfWriter")->name($admin."_writer_list");
     });
 
     Route::prefix('category')->group(function () {

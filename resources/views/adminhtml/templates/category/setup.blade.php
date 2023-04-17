@@ -22,9 +22,27 @@
 
 @section('body_main_conten')
     <div class="col-12 grid-margin">
-        <div class="">
+        <div>
             <div class="card-body">
-                <h4 class="card-title">Create new category</h4>
+
+                @if ($list_current)
+                    <h4 class="card-title"> current setup category:</h4>
+                    <div class="row">
+                        @foreach ($all_category as $item)
+                            <div class="col-md-3 mt-3">
+                                <input type="checkbox" @if (in_array($item->id, $list_current))
+                                checked
+                                @endif >
+                                <span>{{ $item->name }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+            </div>
+
+            <div class="card-body">
+                <h4 class="card-title">choose setup categories:</h4>
                 <form class="form-sample" method="POST" action={{ route('category_setup_save') }}>
                     @csrf
 
@@ -33,16 +51,14 @@
                             {{ session('success') }}
                         </div>
                     @endif
-                    <p class="card-description">
-                        category info
-                    </p>
 
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Parent Category</label>
+                                <label class="col-sm-2 col-form-label">select Category:</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" id="category_top_use" name="setup_category[]" multiple="multiple">
+                                    <select class="form-control" id="category_top_use" name="setup_category[]"
+                                        multiple="multiple">
                                         <?= $parent_category ?>
                                     </select>
                                 </div>
@@ -52,12 +68,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-info">save category</button>
-                        </div>
-
-                        <div class="col-md-2">
-                            <a href="{{ route('category_admin_list') }}" class="btn btn-primary">list category</a>
+                        <div class="offset-md-10 col-md-2">
+                            <button type="submit" class="btn btn-info">save for selected</button>
                         </div>
                     </div>
                 </form>
