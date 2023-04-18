@@ -13,17 +13,8 @@
         <div class="">
             <div class="card-body">
                 <h4 class="card-title">Create new category</h4>
-                <form class="form-sample" method="POST" action={{ route('category_admin_insert') }}>
+                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('category_admin_insert') }}>
                     @csrf
-                    {{-- @if ($errors->any())
-                    <div class="alert alert-danger" role="alert">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{$error}}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif --}}
                     @if (session('success'))
                         <div class="alert alert-success" id="category_insert_success" role="alert">
                             {{ session('success') }}

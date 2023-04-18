@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", function(){
-    return view("frontend/templates/homeconten");
-})->name("/");
+ Route::get("/", function(){
+     return view("frontend/templates/homeconten");
+ })->name("/");
 
 Route::get("/{category}", function($category){
     return $category;

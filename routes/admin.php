@@ -44,6 +44,10 @@ Route::group(["prefix" => "adminhtml"], function(){
 
     Route::prefix('writer')->group(function ()use($admin) {
         Route::get("/", "WriterController@listOfWriter")->name($admin."_writer_list");
+
+        Route::get("create", "WriterController@createWriter")->name($admin."_writer_create");
+
+        Route::post("insert", "WriterController@insertWriter")->name($admin."_writer_insert");
     });
 
     Route::prefix('category')->group(function () {
