@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 Route::group(["prefix" => "adminhtml"], function(){
     $admin = "admin";
 
-    Route::get("/", function(){
+    Route::get("/home", function(){
         return view("adminhtml/templates/home");
     })->name("admin");
 
