@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 Route::group(["prefix" => "adminhtml"], function(){
     $admin = "admin";

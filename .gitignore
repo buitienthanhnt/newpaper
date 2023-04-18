@@ -1,7 +1,7 @@
 /vendor/
 /tests/
 /bootstrap/
-/config/
+#/config/
 /.env.example
 /artisan
 /phpunit.xml
