@@ -12,27 +12,24 @@ class WriterController extends Controller
 
     public function __construct(
         Request $request
-    )
-    {
+    ) {
         $this->request = $request;
     }
 
     public function listOfWriter()
     {
-      if (view()->exists('adminhtml.writer.list'))
-      {
-          return view("adminhtml.writer.list");
-      }else {
-        return redirect("adminhtml")->with("not_page", 1);
-      }
+        if (view()->exists('adminhtml.templates.writer.list')) {
+            return view("adminhtml.templates.writer.list");
+        } else {
+            return redirect("adminhtml")->with("not_page", 1);
+        }
     }
 
     public function createWriter()
     {
-        if (view()->exists('adminhtml.templates.writer.create'))
-        {
+        if (view()->exists('adminhtml.templates.writer.create')) {
             return view("adminhtml.templates.writer.create");
-        }else {
+        } else {
             redirect("admin")->with("no_router", 1);
         }
     }

@@ -15,8 +15,6 @@ trait ImageUpload
      */
     public function uploadImage(Request $request)
     {
-        // echo public_path();
-        // exit();
         if ($file = $request->__get("image_post")) {
             try {
                 $upload_file = $file->store("public/images/writer");
@@ -29,7 +27,7 @@ trait ImageUpload
                     return $file_path;
                 }
             } catch (\Throwable $th) {
-                throw $th->__toString();
+//                throw \Exception::getMessage();
             }
         }
         return false;
