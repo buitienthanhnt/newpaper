@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Helper;
+
+/**
+ *
+ */
+trait Nan
+{
+    public function create_folder(string $path_folder, $permission = 777, $recursive = true)
+    {
+        try {
+            $new_path_folder = $this->public_storage_path($path_folder);
+            if (!is_dir($new_path_folder)) {
+                mkdir($new_path_folder, $permission, $recursive);
+            }
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return true;
+    }
+
+    public function public_storage_path($path)
+    {
+        return public_path($path);
+    }
+}
