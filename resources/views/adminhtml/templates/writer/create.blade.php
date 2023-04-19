@@ -8,8 +8,12 @@
     @include('adminhtml.layouts.body_overview')
 @endsection
 
-
 @section('body_main_conten')
+    @if($message = session('success'))
+        <?php alert()->success('server message', $message);?>
+    @elseif ($error = session("error"))
+        <?php alert()->fail('server mesage',$error);?>
+    @endif
     <div class="container">
         <div class="row">
             <div class="col-md-12">

@@ -11,18 +11,16 @@ use Illuminate\Support\Str;
  */
 trait ImageUpload
 {
+    use Nan;
+
     /**
      * @return string|bool
      */
-    public function uploadImage(Request $request)
+    public function uploadImage(Request $request, $save_folder = "public/images", $resize_path = null)
     {
-        // dd(public_path());
-        // $this->resize("");
-        // exit();
-        $save_folder = "public/images/writer";
         if ($file = $request->__get("image_post")) {
             try {
-                // $upload_file = $file->store("public/images/writer");  // luu truc tiep
+                // $upload_file = $file->store("public/images/writer");  // lưu trực tiếp với tên file tải lên.
                 $file_name = $file->getClientOriginalName();
                 $file_type = $file->getClientOriginalExtension();
                 $upload_name = random_int(1, 10000)."-".Str::random(8)."-".$file_name;
@@ -33,26 +31,35 @@ trait ImageUpload
                 }
                 if ($upload_file) {
                     $file_path = asset($upload_file);
-                    // $this->resize($file_path);
+                    if ($resize_path) {
+                        return $this->resize($resize_path, $upload_file);
+                    }
                     return $file_path;
                 }
             } catch (\Throwable $th) {
-            //    throw \Exception::getMessage();
+                return false;
             }
         }
         return false;
     }
 
-    public function resize($path)
+    public function resize($save_folder = null, $file_path, $width=400, $height=400, $file_name = null)
     {
-        $real_image_path = public_path("/storage/images/writer/135-0a3wlqNW-giay4.jpg");
+        if (!$save_folder) {$save_folder = "/storage/resize";}else {
+            $save_folder = "/storage/".$save_folder;
+        }
+        if (!$this->create_folder($save_folder)) {return;}
+
+        if (!$file_name) {
+            $file_name = Str::random(12).str_replace(dirname($file_path)."/", "",$file_path);
+        }
+
+        $real_image_path = $this->public_storage_path($file_path);
         $image = Image::make($real_image_path);
-        // asset("storage/images/writer/large.jpg");
-        // $savedPath = public_path("/storage/images/resize/writer/135-0a3wlqNW-giay4.jpg");
-        $image->fit(600, 600)->save(public_path("/images/resize/writer/135-0a3wlqNW-lager-giay4.jpg")); // luu y cac folder can co san.
-        $image->fit(400, 400)->save(public_path("/images/resize/writer/135-0a3wlqNW-medium-giay4.jpg"));
-        $image->fit(150, 150)->save(public_path("/images/resize/writer/135-0a3wlqNW-thumbnail-giay4.jpg"));
-        return 'Done';
-        // /var/www/html/laravel1/public/storage/images/writer/135-0a3wlqNW-giay4.jpg
+        $save_file_name = $this->public_storage_path($save_folder)."/".$file_name;
+
+        $image->fit($width, $height)->save($save_file_name);  // lưu ý các folder phải tồn tại(nó không tạo folder tự động)
+        return ["file_name" => $file_name, "real_file_path" => $save_file_name, "file_path" => asset($save_folder."/".$file_name)];
     }
+
 }

@@ -26,7 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
         try {
             $topcategory = ConfigCategory::where("path", ConfigCategory::TOP_CATEGORY)->firstOr(function(){
                 return null;
