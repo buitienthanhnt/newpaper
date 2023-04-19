@@ -1,18 +1,18 @@
 <?php
 
 namespace App\Helper;
-
+use Illuminate\Support\Facades\File;
 /**
  *
  */
 trait Nan
 {
-    public function create_folder(string $path_folder, $permission = 777, $recursive = true)
+    public function create_folder(string $path_folder, $permission = 0777, $recursive = true)
     {
         try {
             $new_path_folder = $this->public_storage_path($path_folder);
             if (!is_dir($new_path_folder)) {
-                mkdir($new_path_folder, $permission, $recursive);
+                File::makeDirectory($new_path_folder, $permission, $recursive);
             }
         } catch (\Throwable $th) {
             return false;
