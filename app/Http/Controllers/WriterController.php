@@ -23,7 +23,8 @@ class WriterController extends Controller
     public function listOfWriter()
     {
         if (view()->exists('adminhtml.templates.writer.list')) {
-            return view("adminhtml.templates.writer.list");
+            $all_writer = Writer::paginate(8);
+            return view("adminhtml.templates.writer.list", compact("all_writer"));
         } else {
             return redirect("adminhtml")->with("not_page", 1);
         }
@@ -50,7 +51,7 @@ class WriterController extends Controller
             "phone" => $request->__get("phone"),
             "address" => $request->__get("address"),
             "image_path" => $image_upload_path ? $image_upload_path["file_path"] ?? $image_upload_path : null,
-            "name_alias" => $request->__get("name_alias"),
+            "name_alias" => $request->__get("alias"),
             "active" => $request->__get("active") ?: true,
             "date_of_birth" => date('Y-m-d H:i:s',strtotime($request->__get("date_of_birth"))),
             "good" => $request->__get("good") ?: null
@@ -62,6 +63,12 @@ class WriterController extends Controller
         }else {
             return redirect()->back()->with("error", "create fail!!, please try again.");
         }
+    }
+
+    public function deleteWriter()
+    {
+        $a = 123;
+        return redirect()->back()->with("success", "asdasdasd");
     }
 
     public function editWriter()

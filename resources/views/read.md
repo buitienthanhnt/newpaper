@@ -22,3 +22,7 @@ hoặc:
 public_path(): lấy đường dẫn trỏ vào thư mục public.
 public_path("/storage/images/writer/"): sẽ ánh xạ vào trong thư mục storage/app/public/images/writer 
 ====================================================================================================
+  window.location.href = url; chuyển hướng tới 1 request bằng js.
+===================================================================================================
+sweet alert: https://sweetalert2.github.io/#declarative-templates
+===================================================================================================
