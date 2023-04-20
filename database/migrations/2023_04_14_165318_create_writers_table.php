@@ -24,7 +24,7 @@ class CreateWritersTable extends Migration
             $table->string("name_alias")->unique("name_alias")->nullable();
             $table->boolean("active")->default(false);
             $table->string("good")->nullable();
-            $table->time("date_of_birth")->nullable(false);
+            $table->timestamp("date_of_birth")->nullable(false);
             $table->softDeletes();
             $table->timestamps();
         });

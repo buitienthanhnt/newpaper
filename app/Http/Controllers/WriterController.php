@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\ImageUpload;
 use App\Models\Writer;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class WriterController extends Controller
 {
@@ -52,10 +53,10 @@ class WriterController extends Controller
             "email" => $request->__get("email"),
             "phone" => $request->__get("phone"),
             "address" => $request->__get("address"),
-            "image_path" => $image_upload_path ? $image_upload_path["file_path"] ?? $image_upload_path : null,
+            "image_path" => $image_upload_path["file_path"] ?? null,
             "name_alias" => $request->__get("alias"),
             "active" => $request->__get("active") ?: true,
-            "date_of_birth" => date('Y-m-d H:i:s',strtotime($request->__get("date_of_birth"))),
+            "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
             "good" => $request->__get("good") ?: null
         ]);
 
@@ -69,44 +70,40 @@ class WriterController extends Controller
 
     public function deleteWriter()
     {
-        $a = 123;
-        return response([
-            "success" => 1
-        ]);
-        // return redirect()->back()->with("success", "asdasdasd");
+        try {
+            $request = $this->request;
+        if ($writer_id = $request->__get("writer_id")) {
+            $writer = $this->writer->find($writer_id);
+            if ($writer && $writer->id) {
+                $writer->delete();
+                return response(json_encode([
+                    "code" => "200",
+                    "value" => "deleted: $writer->name success"
+                ]), 200);
+            }
+        }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return response(json_encode([
+            "code" => "401",
+            "value" => "can not delete, please try again."
+        ]), 401);
     }
 
-    public function editWriter()
+    public function editWriter($writer_id)
     {
-        // $this->resize("");
+        if ($writer_id) {
+            $writer = $this->writer->find($writer_id);
+            if ($writer) {
+                return view("adminhtml.templates.writer.edit", compact("writer"));
+            }
+        }
+        return redirect()->back()->with("error", "can not update data!");
+    }
+
+    public function updateWriter($writer_id = null)
+    {
+        # code...
     }
 }
-// customer_custom_email:
-// items[0][order_item_id]: 7114181
-// items[0][qty_requested]: 1
-// items[0][wrong_size]: 9449
-// items[0][wrong_order]: 9464
-// defect_0: (binary)
-// defect_0_value:
-// items[1][order_item_id]: 7114181
-// items[1][qty_requested]: 1
-// items[1][wrong_size]: 9452
-// items[1][wrong_order]: 9470
-// defect_1: (binary)
-// defect_1_value:
-// send_by_your_own: 1
-// rma_comment:
-// form_key: sVzugqMZEZpDLmZm
-
-// curl --location --request POST 'https://subdued.int.jmango.net/it_en//japi/rest_customer/orderReturnSubmit?order_id=1403457' \
-// --header 'Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJTSEEyNTYifQ.eyJkYXRhIjoidm5IVW9ITU5ZbDYxOFwvYVg4d3dQanJPK3NHSW1HWGlwUytoeVwvXC9RODVyVnBwRnVPa2VtXC9HNm1oT0ZDRkpxRkFCN0hXdEJLV2pPU3VobmNnS3l4Q0FzVzVZTGM0V0F1dFg3bGgrb2xJTFNnc2NmdVNHUlJzVXI2V1d5dDI3WElnIiwiaWF0IjoxNjgxODc2MTA2LCJleHAiOjE2ODE4NzcwMDYsImNpZCI6IjEyNDk3NTMiLCJjZ2lkIjoiMyJ9.lu7BNMfVwnJS3RaiWy8y980XCFGGhEh5L_AcWgdGuS0' \
-// --header 'Cookie: PHPSESSID=grcb7vamrcclb0bstbtjuvco3m; authentication_flag=true; dataservices_cart_id=%2215917602%22; dataservices_customer_group=%7B%22customerGroupCode%22%3A%2277de68daecd823babbb58edb1c8e14d7106e83bb%22%7D; dataservices_customer_id=%221249753%22; smclient=086eb680-32af-4054-b660-c8606f580cba' \
-// --form 'items[0][order_item_id]="7114181"' \
-// --form 'items[0][qty_requested]="1"' \
-// --form 'items[0][wrong_size]="9449"' \
-// --form 'items[0][wrong_order]="9467"' \
-// --form 'send_by_your_own="1"' \
-// --form 'rma_comment="ppp"' \
-// --form 'defect_0="(binary)"' \
-// --form 'defect_0_value=@"/C:/Users/admin/Pictures/556.PNG"' \
-// --form 'customer_custom_email=""'

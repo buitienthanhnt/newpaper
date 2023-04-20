@@ -48,9 +48,9 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         Route::post("insert", "WriterController@insertWriter")->name($admin."_writer_insert");
 
-        Route::get("edit", "WriterController@editWriter")->name($admin."_writer_edit");
+        Route::get("edit/{writer_id}", "WriterController@editWriter")->name($admin."_writer_edit");
 
-        Route::put("update", "WriterController@updateWriter")->name($admin."_writer_update");
+        Route::post("update/{writer_id}", "WriterController@updateWriter")->name($admin."_writer_update");
 
         Route::delete("delete", "WriterController@deleteWriter")->name($admin."_writer_delete");
     });

@@ -48,7 +48,7 @@
                                     </td>
                                     <td>{{ $writer->active ? 'active' : 'inactive' }}</td>
                                     <td>
-                                        <a href="">
+                                        <a href="{{ route('admin_writer_edit', ['writer_id'=>$writer->id]) }}">
                                             <button class="btn btn-info">edit</button>
                                         </a>
                                         <a href="">
@@ -72,7 +72,7 @@
     </div>
 
     <script type="text/javascript">
-    var token = "{{ csrf_token() }}";
+        var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
             var id = $(this).attr("data-id");
             var url = "{{ route('admin_writer_delete') }}";
@@ -97,19 +97,45 @@
                             writer_id: id
                         }),
                         success: function(result) {
-                            // console.log("request success!", result, this);
+                            // console.log(result, this);
+                            if (result) {
+                                var data = JSON.parse(result);
+                                if (data.code == 200) {
+                                    // Swal.fire({
+                                    //     title: 'message from server',
+                                    //     text: data.value,
+                                    //     type: 'success',
+                                    //     showConfirmButton: false,
+                                    //     timer: 2000
+                                    // });
+                                    Swal.fire({
+                                        position: 'center',
+                                        type: 'success',
+                                        title: data.value,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    $(this).parent().parent().parent().remove();
+                                } else {
+                                    Swal.fire({
+                                        position: 'center',
+                                        type: 'warning',
+                                        title: data.value,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                }
+                            }
+                        }.bind(this),
+                        error: function(e) {
+                            // console.log("fail for request", e);
                             Swal.fire({
-                                title: 'Your work has been saved',
-                                text: "You won't be able to revert this!",
-                                type: 'success',
+                                position: 'center',
+                                type: 'warning',
+                                title: "can not delete, please try again.",
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                            $(this).parent().parent().parent().remove();
-
-                        }.bind(this),
-                        error: function(e){
-                            console.log("fail for request", e);
                         }
                     })
                 }
