@@ -25,6 +25,7 @@ class CreateWritersTable extends Migration
             $table->boolean("active")->default(false);
             $table->string("good")->nullable();
             $table->time("date_of_birth")->nullable(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

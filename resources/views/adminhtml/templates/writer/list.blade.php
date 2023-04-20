@@ -41,7 +41,7 @@
                                 <tr>
                                     <td>{{ $writer->name }}</td>
                                     <td>{{ $writer->email }}</td>
-                                    <td>{{ $writer->alias }}</td>
+                                    <td>{{ $writer->name_alias }}</td>
                                     <td>
                                         <img src="{{ $writer->image_path }}" style="width: 100px; height: 100px;"
                                             alt="">
@@ -51,8 +51,9 @@
                                         <a href="">
                                             <button class="btn btn-info">edit</button>
                                         </a>
-                                        <a href="{{ route('admin_writer_delete') }}" id="{{ $writer->id }}">
-                                            <button class="btn btn-danger btn-flat show_confirm">delete</button>
+                                        <a href="">
+                                            <button class="btn btn-danger btn-flat show_confirm"
+                                                data-id="{{ $writer->id }}">delete</button>
                                         </a>
                                     </td>
                                 </tr>
@@ -71,38 +72,49 @@
     </div>
 
     <script type="text/javascript">
+    var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
-            var form = $(this).closest("form");
-            var name = $(this).data("name");
+            var id = $(this).attr("data-id");
             var url = "{{ route('admin_writer_delete') }}";
-            event.preventDefault();
-            swal({
-                    title: `Are you sure you want to delete this record?`,
-                    text: "If you delete this, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    window.location.href = url;
-                    // $("#2").trigger("click");
-                    // console.log(willDelete);
-                    // var xhr = new XMLHttpRequest();
-                    // xhr.open("POST", url, true);
-                    // xhr.setRequestHeader('Content-Type', 'application/json');
-                    // xhr.send();
 
-                    // fetch(url, {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Accept': 'application/json',
-                    //         'Content-Type': 'application/json'
-                    //     },
-                    //     body: JSON.stringify({
-                    //         "id": 78912
-                    //     })
-                    // })
-                });
+            event.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            _token: token,
+                            writer_id: id
+                        }),
+                        success: function(result) {
+                            // console.log("request success!", result, this);
+                            Swal.fire({
+                                title: 'Your work has been saved',
+                                text: "You won't be able to revert this!",
+                                type: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $(this).parent().parent().parent().remove();
+
+                        }.bind(this),
+                        error: function(e){
+                            console.log("fail for request", e);
+                        }
+                    })
+                }
+            });
+            return;
         });
     </script>
 @endsection

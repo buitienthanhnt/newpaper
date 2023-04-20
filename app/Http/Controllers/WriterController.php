@@ -42,7 +42,9 @@ class WriterController extends Controller
     public function insertWriter()
     {
         $request = $this->request;
-        $image_upload_path = $this->uploadImage($request, "public/images/writer", "images/resize/writer");
+        if ($file = $request->__get("image_post")){
+            $image_upload_path = $this->uploadImage($file, "public/images/writer", "images/resize/writer");
+        }
 
         $writer = $this->writer;
         $writer->fill([
@@ -68,7 +70,10 @@ class WriterController extends Controller
     public function deleteWriter()
     {
         $a = 123;
-        return redirect()->back()->with("success", "asdasdasd");
+        return response([
+            "success" => 1
+        ]);
+        // return redirect()->back()->with("success", "asdasdasd");
     }
 
     public function editWriter()

@@ -14,11 +14,14 @@ trait ImageUpload
     use Nan;
 
     /**
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param string $save_folder
+     * @param string $resize_path
      * @return string|bool
      */
-    public function uploadImage(Request $request, $save_folder = "public/images", $resize_path = null)
+    public function uploadImage(\Symfony\Component\HttpFoundation\File\UploadedFile $file, $save_folder = "public/images", $resize_path = null)
     {
-        if ($file = $request->__get("image_post")) {
+        if ($file) {
             try {
                 // $upload_file = $file->store("public/images/writer");  // lưu trực tiếp với tên file tải lên.
                 $file_name = $file->getClientOriginalName();
@@ -43,7 +46,7 @@ trait ImageUpload
         return false;
     }
 
-    public function resize($save_folder = null, $file_path, $width=400, $height=400, $file_name = null)
+    public function resize(string $save_folder = null, string $file_path, $width=400, $height=400, $file_name = null)
     {
         if (!$save_folder) {$save_folder = "/storage/resize";}else {
             $save_folder = "/storage/".$save_folder;

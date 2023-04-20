@@ -52,7 +52,7 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         Route::put("update", "WriterController@updateWriter")->name($admin."_writer_update");
 
-        Route::any("delete", "WriterController@deleteWriter")->name($admin."_writer_delete");
+        Route::delete("delete", "WriterController@deleteWriter")->name($admin."_writer_delete");
     });
 
     Route::prefix('category')->group(function () {
