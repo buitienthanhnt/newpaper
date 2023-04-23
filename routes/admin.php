@@ -53,6 +53,15 @@ Route::group(["prefix" => "adminhtml"], function(){
         Route::post("update/{writer_id}", "WriterController@updateWriter")->name($admin."_writer_update");
 
         Route::delete("delete", "WriterController@deleteWriter")->name($admin."_writer_delete");
+
+    });
+
+    Route::prefix('file')->group(function ()use($admin) {
+        Route::get("add", "ImageController@addFile")->name($admin."_file_add");
+
+        Route::post("save", "ImageController@saveFile")->name($admin."_file_save");
+
+        Route::get("delete", "ImageController@deleteFile")->name($admin."_file_delete");
     });
 
     Route::prefix('category')->group(function () {

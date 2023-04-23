@@ -75,7 +75,10 @@ class WriterController extends Controller
         if ($writer_id = $request->__get("writer_id")) {
             $writer = $this->writer->find($writer_id);
             if ($writer && $writer->id) {
-                $writer->delete();
+                // delete resize file of writer
+                $this->delete_file($writer->image_path); 
+                // $writer->delete // xoa mem
+                $writer->forceDelete(); // xoa han khoi ban ghi
                 return response(json_encode([
                     "code" => "200",
                     "value" => "deleted: $writer->name success"
@@ -104,6 +107,50 @@ class WriterController extends Controller
 
     public function updateWriter($writer_id = null)
     {
-        # code...
+        if ($writer_id) {
+            $request = $this->request;
+            $writer = $this->writer->find($writer_id);
+            if ($writer) {
+                if ($file = $request->__get("image_post")){
+                    $image_upload_path = $this->uploadImage($file, "public/images/writer", "images/resize/writer");
+                    if ($image_upload_path) {
+                        $this->delete_file($writer->image_path); // xoa file cu de thay bang file moi.
+                    }
+                }
+                try {
+                    $writer->fill([
+                        "name" => $request->__get("name"),
+                        "email" => $request->__get("email"),
+                        "phone" => $request->__get("phone"),
+                        "address" => $request->__get("address"),
+                        "image_path" => $image_upload_path["file_path"] ?? null,
+                        "name_alias" => $request->__get("alias"),
+                        "active" => $request->__get("active") ?? true,
+                        "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
+                        "good" => $request->__get("good") ?: null
+                    ]);
+                    $result = $writer->save();
+                    if ($result) {
+                        return redirect()->back()->with("success", "updated writer success!");
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+                return redirect()->back()->with("error", "can not update!");
+            }
+        }else {
+            return redirect()->back()->with("error", "can not update!");
+        }
+    }
+
+    public function deleteFile()
+    {
+        $path = $this->request->__get("path");
+        if ($path) {
+            $url = app('url');
+            $this->delete_file($path);
+        }
+        return 123;
+        
     }
 }

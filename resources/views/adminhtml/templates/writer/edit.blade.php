@@ -36,7 +36,7 @@
                                     <div class="form-check">
                                         <label class="form-check-label">
                                             <input type="radio" class="form-check-input" name="active"
-                                                id="membershipRadios1" value="1" {{ $writer->active ?: "checked"}}>
+                                                id="membershipRadios1" value="1" {{ $writer->active == true ? "checked='checked'" : ""}}>
                                             active
                                         </label>
                                     </div>
@@ -45,7 +45,7 @@
                                     <div class="form-check">
                                         <label class="form-check-label">
                                             <input type="radio" class="form-check-input" name="active"
-                                                id="membershipRadios2" value="0" {{ $writer->active == false ? "checked" : ""}}>
+                                                id="membershipRadios2" value="0" {{ $writer->active == false ? "checked='checked'" : ""}}>
                                             in_active
                                         </label>
                                     </div>
