@@ -28,15 +28,31 @@ class ImageController extends Controller
 
     public function deleteFile()
     {
-        // $url = "http://laravel1.com/storage/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg";
-        // $file_path = $this->urlpath_to_real($url);
+        $result = false;
+        $request = $this->request;
+        $params = $request->json()->all();
+        if (isset($params["file_path"]) && $file_path = $params["file_path"]) {
+            $result = $this->delete_real_file($file_path);
+        }
 
-        // $url = "storage/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg";
-        // $file_path = $this->real_to_url($url);
+        if (isset($params["resize_path"]) && $resize_path = $params["resize_path"]) {
+            $result = $this->delete_real_file($resize_path);
+        }
 
-        $url = $this->request->__get("path");
-        $this->delete_file($url);
-        // return $file_path;
+        if (isset($params["id"]) && $id = $params["id"]) {
+            ImageModel::find($id)->delete();
+        }
+        if ($result) {
+            return response(json_encode([
+                "code" => "200",
+                "value" => "deleted: success"
+            ]), 200);
+        }else {
+            return response(json_encode([
+                "code" => "401",
+                "value" => "deleted: error"
+            ]), 401);
+        }
     }
 
     public function addFile()

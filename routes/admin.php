@@ -20,8 +20,8 @@ Route::group(["prefix" => "adminhtml"], function(){
         })->name($admin."_paper_list");
 
         Route::get("create", function(){
-
-        })->name("paper_create");
+            return view("adminhtml.templates.papers.create");
+        })->name($admin."_paper_create");
 
         Route::post("insert", function(){
 
@@ -64,7 +64,7 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         Route::post("save", "ImageController@saveFile")->name($admin."_file_save");
 
-        Route::get("delete", "ImageController@deleteFile")->name($admin."_file_delete");
+        Route::delete("delete", "ImageController@deleteFile")->name($admin."_file_delete");
     });
 
     Route::prefix('category')->group(function () {
@@ -84,5 +84,9 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
     });
+
+    Route::group(['prefix' => 'laravel-filemanager'], function () {
+        \UniSharp\LaravelFilemanager\Lfm::routes();
+   });
 
 });

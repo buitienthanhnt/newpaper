@@ -79,7 +79,7 @@ trait ImageUpload
      * @param string $file_path
      * @return bool
      */
-    public function delete_file(string $file_path = "")
+    protected function delete_file(string $file_path = "")
     {
         $a = $this->all_of_folder();
         if ($file_path) {
