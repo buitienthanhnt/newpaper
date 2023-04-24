@@ -57,6 +57,9 @@ Route::group(["prefix" => "adminhtml"], function(){
     });
 
     Route::prefix('file')->group(function ()use($admin) {
+
+        Route::get("/", "ImageController@listFile")->name($admin."_file_list");
+
         Route::get("add", "ImageController@addFile")->name($admin."_file_add");
 
         Route::post("save", "ImageController@saveFile")->name($admin."_file_save");

@@ -38,7 +38,7 @@ trait ImageUpload
                 if ($upload_file) {
                     $file_path = asset($upload_file);
                     if ($resize_path) {
-                        return array_merge(['file_name' => $upload_name, "file_path" => $upload_file,"file_url" => $file_path], $this->resize($resize_path, $upload_file));
+                        return array_merge(['file_name' => $upload_name, "file_path" => $upload_file, "file_url" => $file_path], $this->resize($resize_path, $upload_file));
                     }
                     return $file_path;
                 }
@@ -66,7 +66,7 @@ trait ImageUpload
 
         $real_image_path = $this->public_storage_path($file_path);
         $image = Image::make($real_image_path);
-        // $save_file_name = $this->public_storage_path($save_folder) . "/" . $file_name; 
+        // $save_file_name = $this->public_storage_path($save_folder) . "/" . $file_name;
         $save_file_name = $save_folder . "/" . $file_name;  // /storage/images/resize/all/lFLIAAxDjwYg9157-FTgJTfGq-TTT-3852-1682000802-1682040277.jpg
 
         $image->fit($width, $height)->save($save_file_name);  // lưu ý các folder phải tồn tại(nó không tạo folder tự động)
@@ -111,7 +111,7 @@ trait ImageUpload
         $real_path = null;
         if ($url_path) {
             // /var/www/html/laravel1/storage/app/public/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg
-            $root_path = $this->storage_real_path().(str_replace(asset("storage"), "", $url_path)); 
+            $root_path = $this->storage_real_path().(str_replace(asset("storage"), "", $url_path));
 
             $path = str_replace(asset(""), "", $url_path); // storage/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg
             if (File::exists($path)) {
@@ -149,6 +149,6 @@ trait ImageUpload
         $storage_config =config("filesystems")["links"];
         $storage_real = key($storage_config);
         return $storage_config[$storage_real];
-        
+
     }
 }

@@ -20,6 +20,12 @@ class ImageController extends Controller
         $this->request = $request;
     }
 
+    public function listFile()
+    {
+        $list_file = ImageModel::paginate(8);
+        return view("adminhtml.templates.files.list", compact("list_file"));
+    }
+
     public function deleteFile()
     {
         // $url = "http://laravel1.com/storage/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg";
@@ -45,17 +51,16 @@ class ImageController extends Controller
         $save_image = $request->__get("save_image");
         if ($save_image) {
             $image_saves = $this->uploadImage($save_image, "public/images/all", "images/resize/all");
-            dd($image_saves);
-            ImageModel::firstOrCreate([
+            $image_obj = ImageModel::firstOrCreate([
                 "name" => $request->__get("file_name"),
                 "file_name" => $image_saves["file_name"] ?? null,
                 "file_path" => $image_saves["file_path"] ?? null,
-                "file_url" => $image_saves["url_path"] ?? null,
+                "file_url" => $image_saves["file_url"] ?? null,
                 "resize_name" => $image_saves["resize_name"] ?? null,
                 "resize_path" => $image_saves["resize_path"] ?? null,
                 "resize_url" => $image_saves["resize_url"] ?? null
             ]);
-            
+            return redirect(route("admin_file_list"))->with("success", "created new file!");
         }
     }
 }
