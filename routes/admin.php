@@ -19,7 +19,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         })->name($admin . "_paper_list");
 
         Route::get("create", function () {
-            return view("adminhtml.templates.papers.create", ["filemanager_url" => url("adminhtml/laravel-filemanager")]);
+            return view("adminhtml.templates.papers.create", ["filemanager_url" => url("adminhtml/laravel-filemanager")."?editor=tinymce5"]);
         })->name($admin . "_paper_create");
 
         Route::post("insert", function () {

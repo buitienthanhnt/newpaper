@@ -13,9 +13,9 @@
 @endsection
 
 @section('head_js_after')
-    {{-- <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script> --}}
-    {{-- <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script> --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script>
+    <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script> --}}
 @endsection
 
 @section('body_main_conten')
@@ -114,7 +114,7 @@
                     .getElementsByTagName('body')[0].clientHeight;
 
                 let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                    url = "<?php echo($filemanager_url).'?editor=tinymce5' ?>" ;
+                    url = '<?=$filemanager_url ?>';
 
                 tinymce.activeEditor.windowManager.openUrl({
                     url: url,
