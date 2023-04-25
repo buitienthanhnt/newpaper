@@ -13,9 +13,9 @@
 @endsection
 
 @section('head_js_after')
-    <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script> --}}
+    {{-- <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script> --}}
+    {{-- <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script>
 @endsection
 
 @section('body_main_conten')
@@ -104,10 +104,9 @@
 
         tinymce.init({
             selector: "textarea#my-editor",
-            plugins: [
-                "image"
-            ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | image ",
+            plugins: ["image"],
+            toolbar1: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | wordcount',
+            toolbar2: 'aligncenter alignjustify alignleft alignnone alignright| anchor | blockquote blocks | backcolor | bold | copy | cut | fontfamily fontsize forecolor h1 h2 h3 h4 h5 h6 hr indent | italic | language | lineheight | newdocument | outdent | paste pastetext | print | redo | remove removeformat | selectall | strikethrough | styles | subscript superscript underline | undo | visualaid | a11ycheck advtablerownumbering typopgraphy anchor restoredraft casechange charmap checklist code codesample addcomment showcomments ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen help image insertdatetime link openlink unlink bullist numlist media mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink quicktable cancel save searchreplace spellcheckdialog spellchecker | table tablecellprops tablecopyrow tablecutrow tabledelete tabledeletecol tabledeleterow tableinsertdialog tableinsertcolafter tableinsertcolbefore tableinsertrowafter tableinsertrowbefore tablemergecells tablepasterowafter tablepasterowbefore tableprops tablerowprops tablesplitcells tableclass tablecellclass tablecellvalign tablecellborderwidth tablecellborderstyle tablecaption tablecellbackgroundcolor tablecellbordercolor tablerowheader tablecolheader | tableofcontents tableofcontentsupdate | template typography | insertfile | visualblocks visualchars | wordcount',
             file_picker_callback: function(callback, value, meta) {
                 let x = window.innerWidth || document.documentElement.clientWidth || document
                     .getElementsByTagName('body')[0].clientWidth;
@@ -115,7 +114,7 @@
                     .getElementsByTagName('body')[0].clientHeight;
 
                 let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                    url = 'http://laravel1.com/adminhtml/laravel-filemanager?editor=tinymce5';
+                    url = "<?php echo($filemanager_url).'?editor=tinymce5' ?>" ;
 
                 tinymce.activeEditor.windowManager.openUrl({
                     url: url,

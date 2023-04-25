@@ -2,69 +2,62 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(["prefix" => "adminhtml"], function(){
+Route::group(["prefix" => "adminhtml"], function () {
     $admin = "admin";
 
-    Route::get("/home", function(){
+    Route::get("/home", function () {
         return view("adminhtml/templates/home");
     })->name("admin");
 
-    Route::get("default", function(){
+    Route::get("default", function () {
         return view("adminhtml/templates/default");
     });
 
-    Route::prefix('paper')->group(function ()use($admin) {
+    Route::prefix('paper')->group(function () use ($admin) {
 
-        Route::get("list", function(){
+        Route::get("list", function () {
+        })->name($admin . "_paper_list");
 
-        })->name($admin."_paper_list");
+        Route::get("create", function () {
+            return view("adminhtml.templates.papers.create", ["filemanager_url" => url("adminhtml/laravel-filemanager")]);
+        })->name($admin . "_paper_create");
 
-        Route::get("create", function(){
-            return view("adminhtml.templates.papers.create");
-        })->name($admin."_paper_create");
-
-        Route::post("insert", function(){
-
+        Route::post("insert", function () {
         })->name("paper_insert");
 
-        Route::get("paper_edit/{paper_id}", function(){
-
+        Route::get("paper_edit/{paper_id}", function () {
         })->name("paper_edit");
 
-        Route::put("update/{paper_id}", function(){
-
+        Route::put("update/{paper_id}", function () {
         })->name("paper_update");
 
-        Route::delete("delete/{paper_id}", function(){
-
+        Route::delete("delete/{paper_id}", function () {
         })->name("paper_delete");
-
     });
 
-    Route::prefix('writer')->group(function ()use($admin) {
-        Route::get("/", "WriterController@listOfWriter")->name($admin."_writer_list");
+    Route::prefix('writer')->group(function () use ($admin) {
+        Route::get("/", "WriterController@listOfWriter")->name($admin . "_writer_list");
 
-        Route::get("create", "WriterController@createWriter")->name($admin."_writer_create");
+        Route::get("create", "WriterController@createWriter")->name($admin . "_writer_create");
 
-        Route::post("insert", "WriterController@insertWriter")->name($admin."_writer_insert");
+        Route::post("insert", "WriterController@insertWriter")->name($admin . "_writer_insert");
 
-        Route::get("edit/{writer_id}", "WriterController@editWriter")->name($admin."_writer_edit");
+        Route::get("edit/{writer_id}", "WriterController@editWriter")->name($admin . "_writer_edit");
 
-        Route::post("update/{writer_id}", "WriterController@updateWriter")->name($admin."_writer_update");
+        Route::post("update/{writer_id}", "WriterController@updateWriter")->name($admin . "_writer_update");
 
-        Route::delete("delete", "WriterController@deleteWriter")->name($admin."_writer_delete");
-
+        Route::delete("delete", "WriterController@deleteWriter")->name($admin . "_writer_delete");
     });
 
-    Route::prefix('file')->group(function ()use($admin) {
+    Route::prefix('file')->group(function () use ($admin) {
 
-        Route::get("/", "ImageController@listFile")->name($admin."_file_list");
+        Route::get("/", "ImageController@listFile")->name($admin . "_file_list");
 
-        Route::get("add", "ImageController@addFile")->name($admin."_file_add");
+        Route::get("add", "ImageController@addFile")->name($admin . "_file_add");
 
-        Route::post("save", "ImageController@saveFile")->name($admin."_file_save");
+        Route::post("save", "ImageController@saveFile")->name($admin . "_file_save");
 
-        Route::delete("delete", "ImageController@deleteFile")->name($admin."_file_delete");
+        Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
     Route::prefix('category')->group(function () {
@@ -72,7 +65,7 @@ Route::group(["prefix" => "adminhtml"], function(){
 
         Route::get("create", "CategoryController@createCategory")->name("category_admin_create");
 
-        Route::post("insert","CategoryController@insertCategory")->name("category_admin_insert");
+        Route::post("insert", "CategoryController@insertCategory")->name("category_admin_insert");
 
         Route::get("edit/{category_id}", "CategoryController@editCategory")->name("category_admin_edit");
 
@@ -87,6 +80,5 @@ Route::group(["prefix" => "adminhtml"], function(){
 
     Route::group(['prefix' => 'laravel-filemanager'], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
-   });
-
+    });
 });
