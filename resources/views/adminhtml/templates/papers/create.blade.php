@@ -32,10 +32,9 @@
                     @endif
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label>Content</label>
-                                <textarea id="my-editor" name="content" class="form-control">{!! old('content', 'test editor content') !!}</textarea>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <textarea id="my-editor" name="content" class="form-control">{!! old('content', '') !!}</textarea>
                             </div>
                         </div>
                     </div>
@@ -92,21 +91,14 @@
 
 @section('after_js')
     <script>
-        // CKEDITOR.replace('my-editor');
-        // CKEDITOR.replace( 'editor1', {
-        //     filebrowserBrowseUrl: '{{ asset('ckfinder/ckfinder.html') }}',
-        //     filebrowserImageBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Images') }}',
-        //     filebrowserFlashBrowseUrl: '{{ asset('ckfinder/ckfinder.html?type=Flash') }}',
-        //     filebrowserUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files') }}',
-        //     filebrowserImageUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images') }}',
-        //     filebrowserFlashUploadUrl: '{{ asset('ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash') }}'
-        // } );
+        // CKEDITOR.replace('myeditor'); // dùng cho CKEDITOR.
 
+        // dùng cho tiny mce.
         tinymce.init({
             selector: "textarea#my-editor",
-            plugins: ["image", "table", "lineheight"],
-            toolbar1: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | wordcount',
-            toolbar2: 'aligncenter alignjustify alignleft alignnone alignright| anchor | blockquote blocks | backcolor | bold | copy | cut | fontfamily fontsize forecolor h1 h2 h3 h4 h5 h6 hr indent | italic | language | lineheight | newdocument | outdent | paste pastetext | print | redo | remove removeformat | selectall | strikethrough | styles | subscript superscript underline | undo | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist code codesample addcomment showcomments ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen help image insertdatetime link openlink unlink bullist numlist media mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | table tablecellprops tablecopyrow tablecutrow tabledelete tabledeletecol tabledeleterow tableinsertdialog tableinsertcolafter tableinsertcolbefore tableinsertrowafter tableinsertrowbefore tablemergecells tablepasterowafter tablepasterowbefore tableprops tablerowprops tablesplitcells tableclass tablecellclass tablecellvalign tablecellborderwidth tablecellborderstyle tablecaption tablecellbackgroundcolor tablecellbordercolor tablerowheader tablecolheader | tableofcontents tableofcontentsupdate | template typography | insertfile | visualblocks visualchars | wordcount',
+            plugins: ["image", "table", "lineheight", "code"],
+            toolbar1: 'undo redo | fontfamily fontsize styles bold italic | alignleft aligncenter alignright alignjustify | indent outdent | wordcount | aligncenter alignjustify alignleft alignnone help image',
+            toolbar2: 'anchor | blockquote | backcolor | bold | copy | cut | forecolor h1 h2 h3 h4 h5 h6 hr indent | italic | language | lineheight | newdocument | outdent | paste pastetext | print | redo | remove removeformat | selectall | strikethrough | subscript superscript underline | undo | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist code codesample addcomment showcomments ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist media mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars | wordcount',
             file_picker_callback: function(callback, value, meta) {
                 let x = window.innerWidth || document.documentElement.clientWidth || document
                     .getElementsByTagName('body')[0].clientWidth;
@@ -114,7 +106,7 @@
                     .getElementsByTagName('body')[0].clientHeight;
 
                 let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                    url = '<?=$filemanager_url ?>';
+                    url = '{!! $filemanager_url !!}';
 
                 tinymce.activeEditor.windowManager.openUrl({
                     url: url,

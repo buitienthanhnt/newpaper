@@ -19,10 +19,13 @@
                     <li class="nav-item"> <a class="nav-link" href={{ route('category_admin_list') }}>Categories</a>
                     </li>
 
-                    <li class="nav-item"> <a class="nav-link" href={{ route('admin_paper_list') }}>Papers</a>
+                    <li class="nav-item"> <a class="nav-link" href={{ route('admin_paper_create') }}>Papers</a>
                     </li>
 
                     <li class="nav-item"> <a class="nav-link" href={{ route('admin_writer_list') }}>Writers</a>
+                    </li>
+
+                    <li class="nav-item"> <a class="nav-link" href={{ url('adminhtml/file/manager') }}>file manager</a>
                     </li>
 
                     <li class="nav-item"> <a class="nav-link"

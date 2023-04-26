@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = "admin";
 
-    Route::get("/home", function () {
+    Route::get("/", function () {
         return view("adminhtml/templates/home");
     })->name("admin");
 
@@ -19,7 +19,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         })->name($admin . "_paper_list");
 
         Route::get("create", function () {
-            return view("adminhtml.templates.papers.create", ["filemanager_url" => url("adminhtml/laravel-filemanager")."?editor=tinymce5"]);
+            return view("adminhtml.templates.papers.create", ["filemanager_url" => url("adminhtml/file/manager")."?editor=tinymce5"]);
         })->name($admin . "_paper_create");
 
         Route::post("insert", function () {
@@ -51,6 +51,10 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::prefix('file')->group(function () use ($admin) {
 
+        Route::group(['prefix' => 'manager'], function () {
+            \UniSharp\LaravelFilemanager\Lfm::routes();
+        });
+
         Route::get("/", "ImageController@listFile")->name($admin . "_file_list");
 
         Route::get("add", "ImageController@addFile")->name($admin . "_file_add");
@@ -76,9 +80,5 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("setup", "CategoryController@setupCategory")->name("category_top_setup");
 
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
-    });
-
-    Route::group(['prefix' => 'laravel-filemanager'], function () {
-        \UniSharp\LaravelFilemanager\Lfm::routes();
     });
 });
