@@ -22,7 +22,7 @@
     <div class="col-12 grid-margin">
         <div class="">
             <div class="card-body">
-                <h4 class="card-title">add new file to source</h4>
+                <h4 class="card-title">add new source</h4>
                 <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_file_save') }}>
                     @csrf
                     @if (session('success'))
@@ -32,15 +32,80 @@
                     @endif
 
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="page_title" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="active" class="col-sm-1">Active:</label>
+                                <div class="col-sm-1">
+                                    <input id="active" class="form-check-input" type="checkbox" name="active" checked>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="url-alias" class="col-sm-2">url alias:</label>
+                                <div class="col-sm-8">
+                                    <input id="url-alias" class="form-control" type="text" name="alias">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 row">
+                            <label for="show" class="col-sm-1">show:</label>
+                            <div class="col-sm-1">
+                                <input id="show" class="form-check-input" type="checkbox" name="show" checked>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="short_conten" class="col-sm-2">short conten:</label>
+                            <div class="col-sm-10">
+                                {{-- <input id="short_conten" class="form-control" type="text" name="short_conten" checked> --}}
+                                <textarea id="short_conten" name="short_conten" class="form-control" rows="4" style="padding: 10px; height: 100%;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">image:</label>
+                                <div class="col-sm-9">
+                                    <input type="file" class="form-control pb-10" id="save_image" name="save_image" />
+                                    <img src="#" style="width: 100%; height: 240px; resize: cover; display: none"
+                                        class="form-control" alt="your image" id="priview_image" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- <div class="row">
+                        
+                    </div> --}}
+
+                    <div class="row">
                         <div class="col-md-10">
                             <div class="form-group">
-                                <textarea id="my-editor" name="content" class="form-control">{!! old('content', '') !!}</textarea>
+                                <label for="conten" class="col-sm-2">page conten:</label>
+                                <textarea id="conten" name="conten" class="form-control">{!! old('content', '') !!}</textarea>
                             </div>
                         </div>
                     </div>
             </div>
 
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-md-6">
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">file name:</label>
@@ -49,20 +114,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">image:</label>
-                        <div class="col-sm-9">
-                            <input type="file" class="form-control pb-10" id="save_image" name="save_image" />
-                            <img src="#" style="width: 100%; height: 240px; resize: cover; display: none"
-                                class="form-control" alt="your image" id="priview_image" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div> --}}
 
             <div class="row">
                 <div class="col-md-6 justify-content-center row">
@@ -95,15 +147,13 @@
 
         // dùng cho tiny mce.
         tinymce.init({
-            selector: "textarea#my-editor",
-            plugins: ["image", "table", "lineheight", "code"],
-            toolbar1: 'undo redo | fontfamily fontsize styles bold italic | alignleft aligncenter alignright alignjustify | indent outdent | wordcount | aligncenter alignjustify alignleft alignnone help image',
-            toolbar2: 'anchor | blockquote | backcolor | bold | copy | cut | forecolor h1 h2 h3 h4 h5 h6 hr indent | italic | language | lineheight | newdocument | outdent | paste pastetext | print | redo | remove removeformat | selectall | strikethrough | subscript superscript underline | undo | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist code codesample addcomment showcomments ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist media mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars | wordcount',
+            selector: "textarea#conten",
+            plugins: ["image", "table", "code"],
+            toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image',
+            toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist code codesample addcomment showcomments ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist media mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
             file_picker_callback: function(callback, value, meta) {
-                let x = window.innerWidth || document.documentElement.clientWidth || document
-                    .getElementsByTagName('body')[0].clientWidth;
-                let y = window.innerHeight || document.documentElement.clientHeight || document
-                    .getElementsByTagName('body')[0].clientHeight;
+                let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                let y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
 
                 let type = 'image' === meta.filetype ? 'Images' : 'Files',
                     url = '{!! $filemanager_url !!}';
