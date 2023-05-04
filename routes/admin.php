@@ -18,12 +18,9 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("list", function () {
         })->name($admin . "_paper_list");
 
-        Route::get("create", function () {
-            return view("adminhtml.templates.papers.create", ["filemanager_url" => url("adminhtml/file/manager")."?editor=tinymce5"]);
-        })->name($admin . "_paper_create");
+        Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
 
-        Route::post("insert", function () {
-        })->name("paper_insert");
+        Route::post("insert", "PaperController@insertPaper")->name($admin . "_paper_save");
 
         Route::get("paper_edit/{paper_id}", function () {
         })->name("paper_edit");

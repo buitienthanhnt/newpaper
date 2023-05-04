@@ -18,17 +18,45 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script> --}}
 @endsection
 
+@section('after_css')
+    <style type="text/css">
+        /* ul,
+                    ol,
+                    dl {
+                        padding-left: 1rem;
+                        font-size: $default-font-size;
+
+                        li {
+                            line-height: 1.8 !important;
+                        }
+                    } */
+
+        .select2-selection--multiple {
+            .select2-selection__choice {
+                color: color(white);
+                border: 0;
+                border-radius: 3px;
+                padding: 6px;
+                font-size: larger !important;
+                font-family: inherit;
+                line-height: 1;
+            }
+        }
+    </style>
+@endsection
+
 @section('body_main_conten')
     <div class="col-12 grid-margin">
         <div class="">
             <div class="card-body">
                 <h4 class="card-title">add new source</h4>
-                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_file_save') }}>
+                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
                     @csrf
-                    @if (session('success'))
-                        <div class="alert alert-success" id="save_image_success" role="alert">
-                            {{ session('success') }}
-                        </div>
+                    
+                    @if ($message = session('success'))
+                        <?php alert()->success('server message', $message); ?>
+                    @elseif ($error = session('error'))
+                        <?php alert()->fail('server mesage', $error); ?>
                     @endif
 
                     <div class="row">
@@ -47,7 +75,7 @@
                                 <div class="col-sm-1">
                                     <input id="active" class="form-check-input" type="checkbox" name="active" checked>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -75,7 +103,8 @@
                             <label for="short_conten" class="col-sm-2">short conten:</label>
                             <div class="col-sm-10">
                                 {{-- <input id="short_conten" class="form-control" type="text" name="short_conten" checked> --}}
-                                <textarea id="short_conten" name="short_conten" class="form-control" rows="4" style="padding: 10px; height: 100%;"></textarea>
+                                <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
+                                    style="padding: 10px; height: 100%;"></textarea>
                             </div>
                         </div>
 
@@ -100,6 +129,24 @@
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
                                 <textarea id="conten" name="conten" class="form-control">{!! old('content', '') !!}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paper-tag">tag for links</label>
+                                <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="auto_hide">auto hide: </label>
+                                <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide">
                             </div>
                         </div>
                     </div>
@@ -129,15 +176,22 @@
     </div>
 
     <script>
-        save_image.onchange = evt => {
-            const [file] = save_image.files
-            if (file) {
-                $(priview_image).show();
-                priview_image.src = URL.createObjectURL(file)
-            } else {
-                $(priview_image).hide();
+        $(".paper_tag").select2({
+            tags: true,
+            tokenSeparators: [',', ' ']
+        });
+
+        $(document).ready(function() {
+            save_image.onchange = evt => {
+                const [file] = save_image.files
+                if (file) {
+                    $(priview_image).show();
+                    priview_image.src = URL.createObjectURL(file)
+                } else {
+                    $(priview_image).hide();
+                }
             }
-        }
+        });
     </script>
 @endsection
 
@@ -152,8 +206,10 @@
             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image',
             toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist code codesample addcomment showcomments ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist media mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
             file_picker_callback: function(callback, value, meta) {
-                let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                let y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+                let x = window.innerWidth || document.documentElement.clientWidth || document
+                    .getElementsByTagName('body')[0].clientWidth;
+                let y = window.innerHeight || document.documentElement.clientHeight || document
+                    .getElementsByTagName('body')[0].clientHeight;
 
                 let type = 'image' === meta.filetype ? 'Images' : 'Files',
                     url = '{!! $filemanager_url !!}';
