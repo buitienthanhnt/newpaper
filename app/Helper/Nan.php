@@ -26,4 +26,14 @@ trait Nan
     {
         return public_path($path);
     }
+
+    public function pageCategoryTable()
+    {
+        return "page_category";
+    }
+
+    public function pageTagTable()
+    {
+        return "page_tag";
+    }
 }

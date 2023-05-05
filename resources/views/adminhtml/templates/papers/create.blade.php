@@ -16,20 +16,21 @@
     <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.1/tinymce.min.js"></script> --}}
+    <script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
 @endsection
 
 @section('after_css')
     <style type="text/css">
         /* ul,
-                    ol,
-                    dl {
-                        padding-left: 1rem;
-                        font-size: $default-font-size;
+                                ol,
+                                dl {
+                                    padding-left: 1rem;
+                                    font-size: $default-font-size;
 
-                        li {
-                            line-height: 1.8 !important;
-                        }
-                    } */
+                                    li {
+                                        line-height: 1.8 !important;
+                                    }
+                                } */
 
         .select2-selection--multiple {
             .select2-selection__choice {
@@ -52,7 +53,7 @@
                 <h4 class="card-title">add new source</h4>
                 <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
                     @csrf
-                    
+
                     @if ($message = session('success'))
                         <?php alert()->success('server message', $message); ?>
                     @elseif ($error = session('error'))
@@ -112,6 +113,19 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">image:</label>
                                 <div class="col-sm-9">
+                                    {{-- <input type="text" class="form-control pb-10"  name="file_text" /> --}}
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <a id="lfm" data-input="thumbnail" data-preview="holder"
+                                                class="btn btn-primary">
+                                                <i class="fa fa-picture-o"></i> Choose
+                                            </a>
+                                        </span>
+                                        <input id="thumbnail" class="form-control" type="text" name="file_text">
+                                    </div>
+                                    <img id="holder" style="margin-top:15px;max-height:100px;">
+
+
                                     <input type="file" class="form-control pb-10" id="save_image" name="save_image" />
                                     <img src="#" style="width: 100%; height: 240px; resize: cover; display: none"
                                         class="form-control" alt="your image" id="priview_image" />
@@ -120,9 +134,19 @@
                         </div>
                     </div>
 
-                    {{-- <div class="row">
-                        
-                    </div> --}}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="category" class="col-sm-2">category:</label>
+                            <div class="col-sm-10">
+                                <div class="form-group">
+                                    <select id="category_option" class="form-control" name="category_option[]"
+                                        multiple="multiple">
+                                        {!! $category_option !!}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-10">
@@ -138,7 +162,6 @@
                             <div class="form-group">
                                 <label for="paper-tag">tag for links</label>
                                 <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
-
                                 </select>
                             </div>
                         </div>
@@ -176,12 +199,26 @@
     </div>
 
     <script>
-        $(".paper_tag").select2({
+        $("#category_option").select2({
+            placeholder: 'Select an option',
             tags: true,
             tokenSeparators: [',', ' ']
         });
 
+        $(".paper_tag").select2({
+            tags: true,
+            tokenSeparators: [',']
+        });
+        var url_base = '{!! $filemanager_url_base !!}';
+
+        $('#lfm').filemanager('file', {prefix: url_base});
+
         $(document).ready(function() {
+            $("#thumbnail").on("change", function(){
+                $("#priview_image").attr("src", $("#thumbnail").val());
+                $("#priview_image").show();
+            });
+
             save_image.onchange = evt => {
                 const [file] = save_image.files
                 if (file) {
