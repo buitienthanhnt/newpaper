@@ -10,5 +10,6 @@ class Paper extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    const PAGE_TAG = "page_tag";
     protected $guarded;
 }
