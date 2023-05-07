@@ -20,7 +20,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
 
-        Route::post("insert", "PaperController@insertPaper")->name($admin . "_paper_save");
+        Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
 
         Route::get("paper_edit/{paper_id}", function () {
         })->name("paper_edit");

@@ -53,9 +53,9 @@ trait Page
             try {
                 foreach ($values as $value) {
                     DB::table($this->pageTagTable())->updateOrInsert($value);
-                    DB::commit();
-                    return true;
                 }
+                DB::commit();
+                return true;
             } catch (\Throwable $th) {
                 //throw $th;
                 DB::rollBack();

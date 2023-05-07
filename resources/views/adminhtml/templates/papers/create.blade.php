@@ -57,7 +57,7 @@
                     @if ($message = session('success'))
                         <?php alert()->success('server message', $message); ?>
                     @elseif ($error = session('error'))
-                        <?php alert()->fail('server mesage', $error); ?>
+                        <?php alert()->warning('server mesage', $error); ?>
                     @endif
 
                     <div class="row">
@@ -113,7 +113,6 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">image:</label>
                                 <div class="col-sm-9">
-                                    {{-- <input type="text" class="form-control pb-10"  name="file_text" /> --}}
                                     <div class="input-group">
                                         <span class="input-group-btn">
                                             <a id="lfm" data-input="thumbnail" data-preview="holder"
@@ -121,14 +120,9 @@
                                                 <i class="fa fa-picture-o"></i> Choose
                                             </a>
                                         </span>
-                                        <input id="thumbnail" class="form-control" type="text" name="file_text">
+                                        <input id="thumbnail" class="form-control" type="text" name="image_path">
                                     </div>
                                     <img id="holder" style="margin-top:15px;max-height:100px;">
-
-
-                                    <input type="file" class="form-control pb-10" id="save_image" name="save_image" />
-                                    <img src="#" style="width: 100%; height: 240px; resize: cover; display: none"
-                                        class="form-control" alt="your image" id="priview_image" />
                                 </div>
                             </div>
                         </div>
@@ -214,20 +208,20 @@
         $('#lfm').filemanager('file', {prefix: url_base});
 
         $(document).ready(function() {
-            $("#thumbnail").on("change", function(){
-                $("#priview_image").attr("src", $("#thumbnail").val());
-                $("#priview_image").show();
-            });
+            // $("#thumbnail").on("change", function(){
+            //     $("#priview_image").attr("src", $("#thumbnail").val());
+            //     $("#priview_image").show();
+            // });
 
-            save_image.onchange = evt => {
-                const [file] = save_image.files
-                if (file) {
-                    $(priview_image).show();
-                    priview_image.src = URL.createObjectURL(file)
-                } else {
-                    $(priview_image).hide();
-                }
-            }
+            // save_image.onchange = evt => {
+            //     const [file] = save_image.files
+            //     if (file) {
+            //         $(priview_image).show();
+            //         priview_image.src = URL.createObjectURL(file)
+            //     } else {
+            //         $(priview_image).hide();
+            //     }
+            // }
         });
     </script>
 @endsection

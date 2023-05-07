@@ -12,7 +12,7 @@
     @if($message = session('success'))
         <?php alert()->success('server message', $message);?>
     @elseif ($error = session("error"))
-        <?php alert()->fail('server mesage',$error);?>
+        <?php alert()->error('server mesage',$error);?>
     @endif
     <div class="container">
         <div class="row">

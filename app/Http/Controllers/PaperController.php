@@ -51,10 +51,9 @@ class PaperController extends Controller
                 "active" => $request->__get("active") ? true : false,
                 "show" => $request->__get("show") ? true : false,
                 "auto_hide" => $request->__get("auto_hide") ? true : false,
-                // "tag" => $request->__get("paper_tag") ? implode("|", $request->__get("paper_tag")) : null,
                 "show_writer" => $request->__get("show_writer") ? true : false,
                 "show_time" => $request->__get("show_time"),
-                "image_path" => ""
+                "image_path" => $request->__get("image_path") ?: ""
             ]);
             $paper->save();
             if ($new_id = $paper->id) {
