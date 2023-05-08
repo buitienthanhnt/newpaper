@@ -9,67 +9,90 @@
 @endsection
 
 @section('admin_title')
-    writer list
+    paper list
 @endsection
 
+@section('after_css')
+<style>
+    .table th, .table td{
+    line-height: inherit
+}
+</style>
+@endsection
+
+@section('head_js_after')
+@endsection
 
 @section('body_main_conten')
-    @if ($message = session('success'))
-        <?php alert()->success('server message', $message); ?>
-    @endif
-    <div class="container">
-        <div class="row">
-            <a href="{{ route('admin_writer_create') }}">
-                <button class="btn btn-info">create writer</button>
-            </a>
-
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ route('admin_paper_create') }}"><span class="btn btn-info">new paper</span></a>
+            <span class="btn btn-primary">setting paper info</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <td>name</td>
-                            <td>email</td>
-                            <td>alias</td>
+                            <td>title</td>
+                            <td>show</td>
                             <td>image</td>
-                            <td>active</td>
+                            <td>writer</td>
+                            <td>category</td>
                             <td>action</td>
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($all_writer)
-                            @foreach ($all_writer as $writer)
+                        @isset($page_lists)
+                            @foreach ($page_lists as $page)
                                 <tr>
-                                    <td>{{ $writer->name }}</td>
-                                    <td>{{ $writer->email }}</td>
-                                    <td>{{ $writer->name_alias }}</td>
+                                    <td>{{ $page->title }}</td>
+                                    <td>{{ $page->active && $page->show ? 'yes' : 'no' }}</td>
                                     <td>
-                                        <img src="{{ $writer->image_path }}" style="width: 100px; height: 100px;"
-                                            alt="">
+                                        <img src="{{ $page->image_path }}" alt="" style="width: 100px; height: 100px;">
                                     </td>
-                                    <td>{{ $writer->active ? 'active' : 'inactive' }}</td>
                                     <td>
-                                        <a href="{{ route('admin_writer_edit', ['writer_id' => $writer->id]) }}">
+                                        @if ($page->writer)
+                                        {{ $page->to_writer()->getResults()->name}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($page->categories)
+                                            @foreach ($page->categories as $category)
+                                                <span style="margin-bottom: 10px !important">{{ $category->name }}</span><br>
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin_paper_edit', ['paper_id' => $page->id]) }}">
                                             <button class="btn btn-info">edit</button>
                                         </a>
-                                        <a href="">
+                                        <a href="#">
                                             <button class="btn btn-danger btn-flat show_confirm"
-                                                data-id="{{ $writer->id }}">delete</button>
+                                                data-id="{{ $page->id }}">delete</button>
                                         </a>
                                     </td>
                                 </tr>
                             @endforeach
-                        @endif
+                        @endisset
                     </tbody>
                 </table>
             </div>
+
             <div class="row">
                 <div class="col-md-12 mt-20 d-flex flex-row-reverse">
-                    {{ $all_writer->links() }}
+                    {{ $page_lists->links() }}
                 </div>
 
             </div>
+
         </div>
     </div>
+@endsection
+
+@section('before_bottom_js')
 @endsection
 
 @section('after_js')
@@ -77,7 +100,7 @@
         var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
             var id = $(this).attr("data-id");
-            var url = "{{ route('admin_writer_delete') }}";
+            var url = "{{ route('admin_paper_delete') }}";
 
             event.preventDefault();
             Swal.fire({
@@ -96,20 +119,12 @@
                         contentType: 'application/json',
                         data: JSON.stringify({
                             _token: token,
-                            writer_id: id
+                            paper_id: id
                         }),
                         success: function(result) {
-                            // console.log(result, this);
                             if (result) {
                                 var data = JSON.parse(result);
                                 if (data.code == 200) {
-                                    // Swal.fire({
-                                    //     title: 'message from server',
-                                    //     text: data.value,
-                                    //     type: 'success',
-                                    //     showConfirmButton: false,
-                                    //     timer: 2000
-                                    // });
                                     Swal.fire({
                                         position: 'center',
                                         type: 'success',
@@ -130,7 +145,6 @@
                             }
                         }.bind(this),
                         error: function(e) {
-                            // console.log("fail for request", e);
                             Swal.fire({
                                 position: 'center',
                                 type: 'warning',

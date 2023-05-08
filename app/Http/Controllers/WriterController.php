@@ -53,7 +53,7 @@ class WriterController extends Controller
             "email" => $request->__get("email"),
             "phone" => $request->__get("phone"),
             "address" => $request->__get("address"),
-            "image_path" => $image_upload_path["file_path"] ?? null,
+            "image_path" => $image_upload_path["file_path"] ? url($image_upload_path["file_path"]) : null,
             "name_alias" => $request->__get("alias"),
             "active" => $request->__get("active") ?: true,
             "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
@@ -76,7 +76,7 @@ class WriterController extends Controller
             $writer = $this->writer->find($writer_id);
             if ($writer && $writer->id) {
                 // delete resize file of writer
-                $this->delete_file($writer->image_path); 
+                $this->delete_file($writer->image_path);
                 // $writer->delete // xoa mem
                 $writer->forceDelete(); // xoa han khoi ban ghi
                 return response(json_encode([
@@ -123,7 +123,7 @@ class WriterController extends Controller
                         "email" => $request->__get("email"),
                         "phone" => $request->__get("phone"),
                         "address" => $request->__get("address"),
-                        "image_path" => $image_upload_path["file_path"] ?? null,
+                        "image_path" => $image_upload_path["file_path"] ? url($image_upload_path["file_path"]) : null,
                         "name_alias" => $request->__get("alias"),
                         "active" => $request->__get("active") ?? true,
                         "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
@@ -151,6 +151,6 @@ class WriterController extends Controller
             $this->delete_file($path);
         }
         return 123;
-        
+
     }
 }

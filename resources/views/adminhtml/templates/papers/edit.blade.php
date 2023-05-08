@@ -9,7 +9,7 @@
 @endsection
 
 @section('admin_title')
-    paper create
+    paper edit
 @endsection
 
 @section('head_js_after')
@@ -53,7 +53,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Title:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="page_title" required />
+                                    <input type="text" class="form-control" name="page_title" required value="{{ $paper->title }}" />
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                             <div class="form-group row">
                                 <label for="active" class="col-sm-1">Active:</label>
                                 <div class="col-sm-1">
-                                    <input id="active" class="form-check-input" type="checkbox" name="active" checked>
+                                    <input id="active" class="form-check-input" type="checkbox" name="active" {{ $paper->active ? "checked" : "" }}>
                                 </div>
 
                             </div>
@@ -74,7 +74,7 @@
                             <div class="form-group row">
                                 <label for="url-alias" class="col-sm-2">url alias:</label>
                                 <div class="col-sm-8">
-                                    <input id="url-alias" class="form-control" type="text" name="alias" required>
+                                    <input id="url-alias" class="form-control" type="text" name="alias" required value="{{ $paper->url_alias }}">
                                 </div>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                         <div class="col-md-6 row">
                             <label for="show" class="col-sm-1">show:</label>
                             <div class="col-sm-1">
-                                <input id="show" class="form-check-input" type="checkbox" name="show" checked>
+                                <input id="show" class="form-check-input" type="checkbox" name="show" {{ $paper->show ? "checked" : "" }}>
                             </div>
                         </div>
                     </div>
@@ -92,14 +92,14 @@
                             <label for="short_conten" class="col-sm-2">short conten:</label>
                             <div class="col-sm-10">
                                 <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                                    style="padding: 10px; height: 100%;"></textarea>
+                                    style="padding: 10px; height: 100%;">{{ $paper->short_conten }}</textarea>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="auto_hide">auto hide: </label>
-                                <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide">
+                                <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide" {{ $paper->auto_hide ? "checked" : "" }}>
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                                                 <i class="fa fa-picture-o"></i> Choose
                                             </a>
                                         </span>
-                                        <input id="thumbnail" class="form-control" type="text" name="image_path">
+                                        <input id="thumbnail" class="form-control" type="text" name="image_path" value="{{ $paper->image_path }}">
                                     </div>
                                     <img id="holder" style="margin-top:15px;max-height:100px;">
                                 </div>
@@ -140,7 +140,7 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea id="conten" name="conten" class="form-control">{!! old('content', '') !!}</textarea>
+                                <textarea id="conten" name="conten" class="form-control">{{ $paper->conten }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -150,6 +150,11 @@
                             <div class="form-group">
                                 <label for="paper-tag">tag for links</label>
                                 <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
+                                    @if ($tags = $paper->to_tag()->getResults())
+                                        @foreach ($tags as $tag)
+                                            <option value="{{ $tag->value }}" selected>{{ $tag->value }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -160,7 +165,9 @@
                                 <select class="form-control" name="writer" id="paper_writer">
                                     @if ($writers)
                                         @foreach ($writers as $writer)
-                                            <option value="{{ $writer->id }}">{{ $writer->name }}</option>
+                                            <option value="{{ $writer->id }}" @if ($paper->writer && $paper->writer == $writer->id)
+                                                selected
+                                            @endif>{{ $writer->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -172,7 +179,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-info btn-lg"
-                                    style="width: -webkit-fill-available;">save new paper</button>
+                                    style="width: -webkit-fill-available;">update paper</button>
                             </div>
                         </div>
                     </div>
@@ -187,6 +194,8 @@
 @section('before_bottom_js')
     <script>
         var url_base = '{!! $filemanager_url_base !!}';
+        var paper_category = <?= $paper_category ?>;
+        console.log(paper_category);
         $('#lfm').filemanager('file', {
             prefix: url_base
         });
@@ -201,6 +210,16 @@
             tags: true,
             tokenSeparators: [',', ' ']
         });
+
+        $(document).ready(function(){
+            // var all_categories = $("#category_option option");
+            // all_categories.each(function(index, item){
+            //     if (paper_category.indexOf($(item).attr("value")) != -1) {
+            //         $(item).attr("selected", true);
+            //     }
+            // });
+        });
+        $("#category_option").select2().trigger("change");
     </script>
 @endsection
 

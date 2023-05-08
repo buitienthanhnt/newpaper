@@ -1,3 +1,5 @@
+@yield('before_bottom_js')
+
 <!-- plugins:js -->
 <script src={{asset('assets/adminhtml/vendors/js/vendor.bundle.base.js')}}></script>
 <!-- endinject -->
@@ -17,4 +19,5 @@
 <!-- Custom js for this page-->
 <script src={{asset('assets/adminhtml/js/dashboard.js')}}></script>
 <script src={{asset('assets/adminhtml/js/Chart.roundedBarCharts.js')}}></script>
+
 @yield('after_js')

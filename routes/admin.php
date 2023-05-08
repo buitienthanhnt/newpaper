@@ -15,21 +15,18 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::prefix('paper')->group(function () use ($admin) {
 
-        Route::get("list", function () {
-        })->name($admin . "_paper_list");
+        Route::get("list", "PaperController@listPaper")->name($admin . "_paper_list");
 
         Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
 
         Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
 
-        Route::get("paper_edit/{paper_id}", function () {
-        })->name("paper_edit");
+        Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin."_paper_edit");
 
         Route::put("update/{paper_id}", function () {
-        })->name("paper_update");
+        })->name($admin . "_paper_update");
 
-        Route::delete("delete/{paper_id}", function () {
-        })->name("paper_delete");
+        Route::delete("delete", "PaperController@deletePaper")->name($admin."_paper_delete");
     });
 
     Route::prefix('writer')->group(function () use ($admin) {

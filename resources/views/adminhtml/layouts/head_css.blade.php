@@ -6,7 +6,7 @@
 <link rel="stylesheet" href={{asset('assets/adminhtml/vendors/css/vendor.bundle.base.css')}}>
 <!-- endinject -->
 <!-- Plugin css for this page -->
-<link rel="stylesheet" href={{asset('assets/adminhtml/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}>
+<link rel="stylesheet" href={{asset('assets/adminhtml/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css')}}>
 <link rel="stylesheet" href={{asset('assets/adminhtml/js/select.dataTables.min.css')}}>
 <!-- End plugin css for this page -->
 <!-- inject:css -->
