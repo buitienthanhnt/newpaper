@@ -91,11 +91,12 @@ class PaperController extends Controller
     {
         $paper = $this->paper->find($paper_id);
         $writers = Writer::all();
-        $category_option = $this->category->category_tree_option();
         $filemanager_url = url("adminhtml/file/manager") . "?editor=tinymce5";
         $filemanager_url_base = url("adminhtml/file/manager");
-        $paper_category = json_encode(array_column($paper->to_category()->get(["id"])->toArray(), "id"));
-        return view("adminhtml.templates.papers.edit", compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "paper_category"));
+        $paper_category = array_column($paper->to_category()->get(["id"])->toArray(), "id");
+        $category_option = $this->category->setSelected($paper_category)->category_tree_option();
+
+        return view("adminhtml.templates.papers.edit", compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base"));
     }
 
     public function deletePaper()

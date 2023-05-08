@@ -13,6 +13,7 @@ class Category extends Model
     // public $timestamps = false;
     protected $guarded = [];
     use SoftDeletes;
+    protected $_selected = array();
 
     public function category_tree_html()
     {
@@ -38,7 +39,7 @@ class Category extends Model
     {
         $html = "";
         foreach ($catergory as $cate) {
-            $html.='<option value="'.$cate->id.'" '.($selected === $cate->id ? "selected" : "").'>'.$begin.$cate->name.'</option>';
+            $html.='<option value="'.$cate->id.'" '.($this->_selected ? (in_array($cate->id, $this->_selected) ? "selected " : "") : ($selected === $cate->id ? "selected " : "")).'>'.$begin.$cate->name.'</option>';
             if ($list_catergory = $this->all()->where("parent_id", "=", $cate->id)) {
                 if ($list_catergory->count()) {
                     $_be = $begin;
@@ -51,5 +52,11 @@ class Category extends Model
             }
         }
         return $html;
+    }
+
+    public function setSelected($_selected = [])
+    {
+        $this->_selected = $_selected;
+        return $this;
     }
 }

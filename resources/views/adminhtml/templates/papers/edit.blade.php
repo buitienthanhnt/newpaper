@@ -140,7 +140,7 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea id="conten" name="conten" class="form-control">{{ $paper->conten }}</textarea>
+                                <textarea id="conten" name="conten" class="form-control">{!!$paper->conten !!} <img src="a.jpg" alt=""></textarea>
                             </div>
                         </div>
                     </div>
@@ -194,8 +194,6 @@
 @section('before_bottom_js')
     <script>
         var url_base = '{!! $filemanager_url_base !!}';
-        var paper_category = <?= $paper_category ?>;
-        console.log(paper_category);
         $('#lfm').filemanager('file', {
             prefix: url_base
         });
@@ -210,26 +208,15 @@
             tags: true,
             tokenSeparators: [',', ' ']
         });
-
-        $(document).ready(function(){
-            // var all_categories = $("#category_option option");
-            // all_categories.each(function(index, item){
-            //     if (paper_category.indexOf($(item).attr("value")) != -1) {
-            //         $(item).attr("selected", true);
-            //     }
-            // });
-        });
-        $("#category_option").select2().trigger("change");
+       
     </script>
 @endsection
 
 @section('after_js')
     <script>
-        $(document).ready(function() {
-
-        });
 
         tinymce.init({
+            convert_urls: false,
             selector: "textarea#conten",
             plugins: ["image", "table", "code"],
             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image',

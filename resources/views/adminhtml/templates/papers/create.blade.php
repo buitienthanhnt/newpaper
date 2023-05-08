@@ -211,6 +211,7 @@
         });
 
         tinymce.init({
+            convert_urls: false,
             selector: "textarea#conten",
             plugins: ["image", "table", "code"],
             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image',
