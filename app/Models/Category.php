@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\pageCategory;
 
 class Category extends Model
 {
@@ -59,4 +61,15 @@ class Category extends Model
         $this->_selected = $_selected;
         return $this;
     }
+
+    public function to_page_category(): HasMany
+    {
+        return $this->hasMany(PageCategory::class, "category_id");
+    }
+
+    public function get_product()
+    {
+        $page_id = array_column($this->to_page_category()->getResults()->toArray(), "page_id");
+        return Paper::whereIn("id", $page_id)->get();
+    }    
 }

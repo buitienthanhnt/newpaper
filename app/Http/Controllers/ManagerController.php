@@ -23,6 +23,7 @@ class ManagerController extends Controller
 
     public function homePage()
     {
+        $list_center = []; $list_center_conten = [];
         $trending_left = $this->paper->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
         $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){
@@ -30,6 +31,14 @@ class ManagerController extends Controller
         });
         if ($center_category) {
             $list_center = Category::find(explode("&", $center_category->value));
+            $list_papers = [];
+            foreach ($list_center as $center) {
+                $page_category = $center->to_page_category()->getResults()->toArray();
+                $list_papers = array_unique([...array_column($page_category, "page_id"), ...$list_papers]);
+            }
+            if ($list_papers) {
+                $list_center_conten = $this->paper->whereIn("id", $list_papers)->get();
+            }
         }
 
         return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center"));
