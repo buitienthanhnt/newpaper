@@ -144,11 +144,18 @@ class CategoryController extends Controller
     {
         $params = $this->request->toArray();
         $configCategory = $this->configCategory;
-        $top_category = $configCategory::firstWhere("path", ConfigCategory::TOP_CATEGORY);
-        if ($top_category) {
-            $configCategory = $configCategory::find($top_category->id);
+        $setup_type = $this->request->get("setup_type");
+        if (!$setup_type) {
+            $top_category = $configCategory::firstWhere("path", ConfigCategory::TOP_CATEGORY);
+            if ($top_category) {
+                $configCategory = $configCategory::find($top_category->id);
+            }
         }
-        $configCategory->fill(["path" => ConfigCategory::TOP_CATEGORY, "value" => implode("&", $params["setup_category"]), "description" => $params['description'] ?? null]);
+        $configCategory->fill([
+            "path" => $setup_type ? str_replace(" ", "_", $setup_type) : ConfigCategory::TOP_CATEGORY,
+            "value" => implode("&", $params["setup_category"]),
+            "description" => $params['description'] ?? null
+        ]);
         $configCategory->save();
 
         return redirect()->back();

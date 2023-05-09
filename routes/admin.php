@@ -23,8 +23,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin."_paper_edit");
 
-        Route::put("update/{paper_id}", function () {
-        })->name($admin . "_paper_update");
+        Route::post("update/{paper_id}", "PaperController@updatePaper")->name($admin . "_paper_update");
 
         Route::delete("delete", "PaperController@deletePaper")->name($admin."_paper_delete");
     });

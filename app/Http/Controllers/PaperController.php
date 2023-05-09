@@ -93,10 +93,44 @@ class PaperController extends Controller
         $writers = Writer::all();
         $filemanager_url = url("adminhtml/file/manager") . "?editor=tinymce5";
         $filemanager_url_base = url("adminhtml/file/manager");
-        $paper_category = array_column($paper->to_category()->get(["id"])->toArray(), "id");
+        $paper_category = array_column($paper->to_category()->get(["category_id"])->toArray(), "category_id");
         $category_option = $this->category->setSelected($paper_category)->category_tree_option();
 
         return view("adminhtml.templates.papers.edit", compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base"));
+    }
+
+    public function updatePaper($paper_id)
+    {
+        $paper = $this->paper->find($paper_id);
+        $request = $this->request;
+        if ($paper) {
+            try {
+                $paper->fill([
+                    "title" => $request->__get("page_title"),
+                    "url_alias" => $request->__get("alias") ?: str_replace(" ", "_", $request->get("page_title")),
+                    "short_conten" => $request->__get("short_conten"),
+                    "conten" => $request->__get("conten"),
+                    "active" => $request->__get("active") ? true : false,
+                    "show" => $request->__get("show") ? true : false,
+                    "auto_hide" => $request->__get("auto_hide") ? true : false,
+                    "show_writer" => $request->__get("show_writer") ? true : false,
+                    "show_time" => $request->__get("show_time"),
+                    "image_path" => $request->__get("image_path") ?: "",
+                    "writer" => $request->get("writer", null)
+                ]);
+                $paper->save();
+                if ($new_id = $paper->id) {
+                    $this->delete_page_category($paper);
+                    $this->insert_page_category($new_id, $request->get("category_option"));
+                    $this->delete_page_tag($paper);
+                    $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAGE_TAG);
+                }
+                return redirect()->back()->with("success", "updated success");
+            } catch (\Throwable $th) {
+                $th->getMessage();
+            }
+        }
+        return redirect()->back()->with("error", "update error, please try again!");
     }
 
     public function deletePaper()
@@ -130,7 +164,7 @@ class PaperController extends Controller
             //throw $th;
         }
         return response(json_encode([
-            "code"=>401,
+            "code" => 401,
             "value" => "delete error. Please try again!"
         ]), 401);
     }

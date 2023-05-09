@@ -33,6 +33,38 @@ trait Page
         return false;
     }
 
+    public function delete_page_category($paper)
+    {
+        $paper_categories = $paper->to_category();
+        try {
+            if ($categories = $paper_categories->getResults()) {
+                foreach ($categories as $category) {
+                    $category->forceDelele();
+                }
+            }
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
+    }
+
+    public function delete_page_tag($paper)
+    {
+        $paper_tags = $paper->to_tag();
+        try {
+            if ($tags = $paper_tags->getResults()) {
+                foreach ($tags as $tag) {
+                    $tag->forceDelete();
+                }
+            }
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
+    }
+
     public function format_page_category($page_id, $values)
     {
         $result = [];
@@ -77,5 +109,4 @@ trait Page
         }
         return $result;
     }
-
 }

@@ -5,90 +5,49 @@
 {{-- col-lg-8 --}}
 @section('trending_left')
     <div class="slider-active">
-        <div class="single-slider">
-            <div class="trending-top mb-30">
-                <div class="trend-top-img">
-                    <img src={{ asset('assets/frontend/img/trending/trending_top2.jpg') }} alt="">
-                    <div class="trend-top-cap">
-                        <span class="bgr" data-animation="fadeInUp" data-delay=".2s" data-duration="1000ms">Business</span>
-                        <h2><a href="latest_news.html" data-animation="fadeInUp" data-delay=".4s"
-                                data-duration="1000ms">Anna
-                                Lora Stuns In White At Her Australian
-                                Premiere</a></h2>
-                        <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-                            Alice cloe - Jun 19, 2020</p>
+        @if ($trending_left)
+            @foreach ($trending_left as $tren)
+                <div class="single-slider">
+                    <div class="trending-top mb-30">
+                        <div class="trend-top-img">
+                            <img src="{{ $tren->image_path }}" alt="">
+                            <div class="trend-top-cap">
+                                <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
+                                    data-duration="1000ms">Business</span>
+                                <h2><a href="latest_news.html" data-animation="fadeInUp" data-delay=".4s"
+                                        data-duration="1000ms">{{ $tren->short_conten }}</a></h2>
+                                <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
+                                    {{ $tren->to_writer()->getResults()->name }} -
+                                    {{ date('M d, Y', strtotime($tren->updated_at)) }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Single -->
-        <div class="single-slider">
-            <div class="trending-top mb-30">
-                <div class="trend-top-img">
-                    <img src={{ asset('assets/frontend/img/trending/trending_top02.jpg') }} alt="">
-                    <div class="trend-top-cap">
-                        <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
-                            data-duration="1000ms">Business</span>
-                        <h2><a href="latest_news.html" data-animation="fadeInUp" data-delay=".4s"
-                                data-duration="1000ms">Anna
-                                Lora Stuns In White At Her Australian
-                                Premiere</a></h2>
-                        <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-                            Alice cloe - Jun 19, 2020</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Single -->
-        <div class="single-slider">
-            <div class="trending-top mb-30">
-                <div class="trend-top-img">
-                    <img src={{ asset('assets/frontend/img/trending/trending_top03.jpg') }} alt="">
-                    <div class="trend-top-cap">
-                        <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
-                            data-duration="1000ms">Business</span>
-                        <h2><a href="latest_news.html" data-animation="fadeInUp" data-delay=".4s"
-                                data-duration="1000ms">Anna
-                                Lora Stuns In White At Her Australian
-                                Premiere</a></h2>
-                        <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-                            Alice cloe - Jun 19, 2020</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+            @endforeach
+        @endif
     </div>
 @endsection
 {{-- col-lg-8 --}}
 
 {{-- col-lg-4 --}}
 @section('trending_right')
-    <div class="col-lg-12 col-md-6 col-sm-6">
-        <div class="trending-top mb-30">
-            <div class="trend-top-img">
-                <img src={{ asset('assets/frontend/img/trending/trending_top3.jpg') }} alt="">
-                <div class="trend-top-cap trend-top-cap2">
-                    <span class="bgb">FASHION</span>
-                    <h2><a href="latest_news.html">Secretart for Economic Air
-                            plane that looks like</a></h2>
-                    <p>by Alice cloe - Jun 19, 2020</p>
+    @if ($trending_right)
+        @foreach ($trending_right as $tren_r)
+            <div class="col-lg-12 col-md-6 col-sm-6">
+                <div class="trending-top mb-30">
+                    <div class="trend-top-img">
+                        <img src="{{ $tren_r->image_path }}" alt="">
+                        <div class="trend-top-cap trend-top-cap2">
+                            <span class="bgg">TECH </span>
+                            <h2><a href="latest_news.html">{{ $tren_r->short_conten }}</a></h2>
+                            <p>by {{ $tren_r->to_writer()->getResults()->name }} -
+                                {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-lg-12 col-md-6 col-sm-6">
-        <div class="trending-top mb-30">
-            <div class="trend-top-img">
-                <img src={{ asset('assets/frontend/img/trending/trending_top4.jpg') }} alt="">
-                <div class="trend-top-cap trend-top-cap2">
-                    <span class="bgg">TECH </span>
-                    <h2><a href="latest_news.html">Secretart for Economic Air plane that looks
-                            like</a></h2>
-                    <p>by Alice cloe - Jun 19, 2020</p>
-                </div>
-            </div>
-        </div>
+        @endforeach
+    @endif
     </div>
 @endsection
 {{-- col-lg-4 --}}
@@ -114,16 +73,17 @@
                     <!--Nav Button  -->
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                role="tab" aria-controls="nav-home" aria-selected="true">Lifestyle</a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                                role="tab" aria-controls="nav-profile" aria-selected="false">Travel</a>
-                            <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact"
-                                role="tab" aria-controls="nav-contact" aria-selected="false">Fashion</a>
-                            <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab"
-                                aria-controls="nav-contact" aria-selected="false">Sports</a>
-                            <a class="nav-item nav-link" id="nav-Sports" data-toggle="tab" href="#nav-nav-Sport"
-                                role="tab" aria-controls="nav-contact" aria-selected="false">Technology</a>
+                            @if ($list_center)
+                                <?php $i = 0; ?>
+                                @foreach ($list_center as $center_item)
+                                    <a class="nav-item nav-link {{ $i == 0 ? 'active' : '' }}"
+                                        id="{{ 'nav-' . $center_item->id }}" data-toggle="tab"
+                                        href="{{ 'nav-' . $center_item->id }}" role="tab"
+                                        aria-controls="{{ 'nav-' . $center_item->id }}"
+                                        aria-selected="{{ $i == 0 ? 'true' : 'false' }}">{{ $center_item->name }}</a>
+                                    <?php $i += 1; ?>
+                                @endforeach
+                            @endif
                         </div>
                     </nav>
                     <!--End Nav Button  -->
@@ -138,8 +98,7 @@
                 <!-- Nav Card -->
                 <div class="tab-content" id="nav-tabContent">
                     <!-- card one -->
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                        aria-labelledby="nav-home-tab">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                         <div class="row">
                             <!-- Left Details Caption -->
                             <div class="col-xl-6 col-lg-12">

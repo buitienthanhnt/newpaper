@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
- Route::get("/", function(){
-     return view("frontend/templates/homeconten");
- })->name("/");
+ Route::get("/", "ManagerController@homePage")->name("/");
 
 Route::get("basepage", function(){
     return view("frontend/templates/home");

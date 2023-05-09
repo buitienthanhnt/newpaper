@@ -7,6 +7,10 @@
 @section('body_overview')
     @include('adminhtml.layouts.body_overview')
 @endsection
+
+@section('admin_title')
+    setup category
+@endsection
 @section('after_css')
     <style type="text/css">
         .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
@@ -64,7 +68,14 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="setup_type">setup type: </label>
+                                <div class="col-sm-10">
+                                    <input id="setup_type" class="form-control" type="text" name="setup_type">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

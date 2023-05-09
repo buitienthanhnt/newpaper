@@ -39,11 +39,14 @@
         <div>
             <div class="card-body">
                 <h4 class="card-title">add new source</h4>
-                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
+                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_update', ["paper_id" => $paper->id]) }}>
                     @csrf
 
                     @if ($message = session('success'))
-                        <?php alert()->success('server message', $message); ?>
+                        <?php
+                        alert()->success('server message', $message);
+                        session()->forget("success");
+                         ?>
                     @elseif ($error = session('error'))
                         <?php alert()->warning('server mesage', $error); ?>
                     @endif
@@ -140,7 +143,7 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea id="conten" name="conten" class="form-control">{!!$paper->conten !!} <img src="a.jpg" alt=""></textarea>
+                                <textarea id="conten" name="conten" class="form-control">{!!$paper->conten !!}</textarea>
                             </div>
                         </div>
                     </div>
@@ -208,7 +211,7 @@
             tags: true,
             tokenSeparators: [',', ' ']
         });
-       
+
     </script>
 @endsection
 
