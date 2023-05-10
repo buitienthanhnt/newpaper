@@ -21,7 +21,7 @@
                                 <h2><a href="latest_news.html" data-animation="fadeInUp" data-delay=".4s"
                                         data-duration="1000ms">{{ $tren->title }}</a></h2>
                                 <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-                                    {{ $tren->to_writer()->getResults()->name }} -
+                                    {{ $tren->to_writer()->getResults() ? $tren->to_writer()->getResults()->name : '' }} -
                                     {{ date('M d, Y', strtotime($tren->updated_at)) }}</p>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                         <div class="trend-top-cap trend-top-cap2">
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
                             <h2><a href="latest_news.html">{{ $tren_r->title }}</a></h2>
-                            <p>by {{ $tren_r->to_writer()->getResults()->name }} -
+                            <p>by {{$tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }} -
                                 {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                                                     </div>
                                                     <div class="whates-caption">
                                                         <h4><a href="#">{{ $paper_first->title }}</a></h4>
-                                                        <span>by {{ $paper_first->to_writer()->getResults()->name }} -
+                                                        <span>by {{$paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }} -
                                                             {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
                                                         <p>{{ $paper_first->short_conten }}</p>
                                                     </div>
@@ -139,7 +139,7 @@
                                                                 </div>
                                                                 <div class="whats-right-cap">
                                                                     <span
-                                                                        class="colorb">{{ $paper->to_writer()->getResults()->name }}</span>
+                                                                        class="colorb">{{$paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}</span>
                                                                     <h4><a
                                                                             href="latest_news.html">{{ $paper->short_conten }}</a>
                                                                     </h4>
@@ -233,7 +233,7 @@
                         <span class="bgbeg">Vogue</span>
                         <h4><a href="latest_news.html">What to Wear: 9+ Cute Work <br>
                                 Outfits to Wear This.</a></h4>
-                        <p>{{ $first_recent->to_writer()->getResults()->name }} | 2 hours ago</p>
+                        <p>{{ $first_recent->to_writer()->getResults() ? $first_recent->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
                     </div>
                 </div>
             </div>
@@ -245,7 +245,7 @@
                         </div>
                         <div class="most-recent-capt">
                             <h4><a href="latest_news.html">{{ $af_recent->title }}</a></h4>
-                            <p>{{ $af_recent->to_writer()->getResults()->name }} | 2 hours ago</p>
+                            <p>{{$af_recent->to_writer()->getResults() ? $af_recent->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
                         </div>
                     </div>
                 @endforeach
@@ -293,7 +293,7 @@
                                 <div class="weekly2-caption">
                                     <h4><a href="#">{{ $popular_item->title }}</a>
                                     </h4>
-                                    <p>{{ $popular_item->to_writer()->getResults()->name }} | 2 hours ago</p>
+                                    <p>{{$popular_item->to_writer()->getResults() ? $popular_item->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
                                 </div>
                             </div>
                         @endforeach
