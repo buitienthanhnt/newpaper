@@ -3,6 +3,8 @@
 @section('page_main')
     <main>
 
+        @yield('main_conten')
+
         <!-- morning_post Area Start -->
         @yield('morning_post')
         <!-- morning_post Area End -->

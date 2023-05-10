@@ -37,4 +37,6 @@ Route::get("/{category}.htm", function($category){
 
 })->name("front_category");
 
+Route::get("/{page}.html", "ManagerController@pageDetail")->name("front_page_detail");
+
 ?>

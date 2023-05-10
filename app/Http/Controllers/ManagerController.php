@@ -45,4 +45,11 @@ class ManagerController extends Controller
 
         return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center", "most_recent", "most_popular", "trendings", "weekly3_contens", "video_contens"));
     }
+
+    public function pageDetail($page)
+    {
+        $paper = $this->paper->find($page);
+        // echo($paper->conten);
+        return view("frontend.templates.paper.paper_detail", compact("paper"));
+    }
 }
