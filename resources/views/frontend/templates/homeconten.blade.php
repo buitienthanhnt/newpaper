@@ -12,12 +12,14 @@
                         <div class="trend-top-img">
                             <img src="{{ $tren->image_path }}" alt="">
                             <div class="trend-top-cap">
-                                <a href="">
-                                    <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
-                                        data-duration="1000ms">{{ $tren->to_category()->first()->for_category()->first()->name }}</span>
-                                </a>
+                                @if ($first_category = $tren->to_category()->first())
+                                    <a href="">
+                                        <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
+                                            data-duration="1000ms">{{ $first_category->for_category()->first()->name }}</span>
+                                    </a>
+                                @endif
                                 <h2><a href="latest_news.html" data-animation="fadeInUp" data-delay=".4s"
-                                        data-duration="1000ms">{{ $tren->short_conten }}</a></h2>
+                                        data-duration="1000ms">{{ $tren->title }}</a></h2>
                                 <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
                                     {{ $tren->to_writer()->getResults()->name }} -
                                     {{ date('M d, Y', strtotime($tren->updated_at)) }}</p>
@@ -41,7 +43,7 @@
                         <img src="{{ $tren_r->image_path }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
-                            <h2><a href="latest_news.html">{{ $tren_r->short_conten }}</a></h2>
+                            <h2><a href="latest_news.html">{{ $tren_r->title }}</a></h2>
                             <p>by {{ $tren_r->to_writer()->getResults()->name }} -
                                 {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
                         </div>
@@ -106,44 +108,52 @@
                                 id="{{ 'nav-' . $center_conten->id }}" role="tabpanel"
                                 aria-labelledby="{{ 'nav-' . $center_conten->id . '-tab' }}">
                                 <div class="row">
-                                    <!-- Left Details Caption -->
-                                    <div class="col-xl-6">
-                                        <div class="whats-news-single mb-40">
-                                            <div class="whates-img">
-                                                <img src={{ asset('assets/frontend/img/gallery/whats_right_img2.png') }}
-                                                    alt="">
+                                    @if ($papers = $center_conten->get_product())
+                                        <!-- Left Details Caption -->
+                                        @if ($paper_first = $papers->first())
+                                            <div class="col-xl-6">
+                                                <div class="whats-news-single mb-40">
+                                                    <div class="whates-img">
+                                                        <img src="{{ $paper_first->image_path }}" alt="">
+                                                    </div>
+                                                    <div class="whates-caption">
+                                                        <h4><a href="#">{{ $paper_first->title }}</a></h4>
+                                                        <span>by {{ $paper_first->to_writer()->getResults()->name }} -
+                                                            {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
+                                                        <p>{{ $paper_first->short_conten }}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="whates-caption">
-                                                <h4><a href="#">{{ $center_conten->name }}</a></h4>
-                                                <span>by Alice cloe - Jun 19, 2020</span>
-                                                <p>Struggling to sell one multi-million dollar home currently on
-                                                    the market won’t stop actress and singer Jennifer Lopez.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Right single caption -->
-                                    <div class="col-xl-6 col-lg-12">
-                                        <div class="row">
-                                            <!-- single -->
-                                            @if ($papers = $center_conten->get_product())
-                                                @foreach ($papers as $paper)
-                                                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-10">
-                                                        <div class="whats-right-single mb-20">
-                                                            <div class="whats-right-img">
-                                                                <img src="{{ $paper->image_path }}" style="width: 124px; height: 104px;"
-                                                                    alt="">
-                                                            </div>
-                                                            <div class="whats-right-cap">
-                                                                <span class="colorb">{{ $paper->to_writer()->getResults()->name }}</span>
-                                                                <h4><a href="latest_news.html">{{ $paper->short_conten }}</a></h4>
-                                                                <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}</p>
+                                        @endif
+                                        <!-- Right single caption -->
+                                        <div class="col-xl-6 col-lg-12">
+                                            <div class="row">
+                                                <!-- single -->
+                                                @if ($papers->first() && ($papers = $papers->diff([$papers->first()])))
+                                                    @foreach ($papers as $paper)
+                                                        <div class="col-xl-12 col-lg-6 col-md-6 col-sm-10">
+                                                            <div class="whats-right-single mb-20">
+                                                                <div class="whats-right-img">
+                                                                    <img src="{{ $paper->image_path }}"
+                                                                        style="width: 124px; height: 104px;" alt="">
+                                                                </div>
+                                                                <div class="whats-right-cap">
+                                                                    <span
+                                                                        class="colorb">{{ $paper->to_writer()->getResults()->name }}</span>
+                                                                    <h4><a
+                                                                            href="latest_news.html">{{ $paper->short_conten }}</a>
+                                                                    </h4>
+                                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
+                                                    @endforeach
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
+
                                 </div>
                             </div>
                             <?php $center_one += 1; ?>
@@ -215,38 +225,32 @@
             <h4>Most Recent</h4>
         </div>
         <!-- Details -->
-        <div class="most-recent mb-40">
-            <div class="most-recent-img">
-                <img src={{ asset('assets/frontend/img/gallery/most_recent.png') }} alt="">
-                <div class="most-recent-cap">
-                    <span class="bgbeg">Vogue</span>
-                    <h4><a href="latest_news.html">What to Wear: 9+ Cute Work <br>
-                            Outfits to Wear This.</a></h4>
-                    <p>Jhon | 2 hours ago</p>
+        @if ($most_recent && ($first_recent = $most_recent->first()))
+            <div class="most-recent mb-40">
+                <div class="most-recent-img">
+                    <img src="{{ $first_recent->image_path }}" alt="">
+                    <div class="most-recent-cap">
+                        <span class="bgbeg">Vogue</span>
+                        <h4><a href="latest_news.html">What to Wear: 9+ Cute Work <br>
+                                Outfits to Wear This.</a></h4>
+                        <p>{{ $first_recent->to_writer()->getResults()->name }} | 2 hours ago</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Single -->
-        <div class="most-recent-single">
-            <div class="most-recent-images">
-                <img src={{ asset('assets/frontend/img/gallery/most_recent1.png') }} alt="">
-            </div>
-            <div class="most-recent-capt">
-                <h4><a href="latest_news.html">Scarlett’s disappointment at latest accolade</a></h4>
-                <p>Jhon | 2 hours ago</p>
-            </div>
-        </div>
-        <!-- Single -->
-        <div class="most-recent-single">
-            <div class="most-recent-images">
-                <img src={{ asset('assets/frontend/img/gallery/most_recent2.png') }} alt="">
-            </div>
-            <div class="most-recent-capt">
-                <h4><a href="latest_news.html">Most Beautiful Things to Do in Sidney with Your BF</a>
-                </h4>
-                <p>Jhon | 3 hours ago</p>
-            </div>
-        </div>
+            @if ($af_recents = $most_recent->diff([$most_recent->first()]))
+                @foreach ($af_recents as $af_recent)
+                    <div class="most-recent-single">
+                        <div class="most-recent-images">
+                            <img src="{{ $af_recent->image_path }}" style="width: 85px; height: 79px;" alt="">
+                        </div>
+                        <div class="most-recent-capt">
+                            <h4><a href="latest_news.html">{{ $af_recent->title }}</a></h4>
+                            <p>{{ $af_recent->to_writer()->getResults()->name }} | 2 hours ago</p>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        @endif
     </div>
 @endsection
 {{-- col-lg-4 --}}
@@ -280,49 +284,20 @@
             <div class="col-lg-12">
                 <div class="weekly2-news-active d-flex">
                     <!-- Single -->
-                    <div class="weekly2-single">
-                        <div class="weekly2-img">
-                            <img src={{ asset('assets/frontend/img/gallery/weeklyNews1.png') }} alt="">
-                        </div>
-                        <div class="weekly2-caption">
-                            <h4><a href="#">Scarlett’s disappointment at latest accolade</a>
-                            </h4>
-                            <p>Jhon | 2 hours ago</p>
-                        </div>
-                    </div>
-                    <!-- Single -->
-                    <div class="weekly2-single">
-                        <div class="weekly2-img">
-                            <img src={{ asset('assets/frontend/img/gallery/weeklyNews2.png') }} alt="">
-                        </div>
-                        <div class="weekly2-caption">
-                            <h4><a href="#">Scarlett’s disappointment at latest accolade</a>
-                            </h4>
-                            <p>Jhon | 2 hours ago</p>
-                        </div>
-                    </div>
-                    <!-- Single -->
-                    <div class="weekly2-single">
-                        <div class="weekly2-img">
-                            <img src={{ asset('assets/frontend/img/gallery/weeklyNews3.png') }} alt="">
-                        </div>
-                        <div class="weekly2-caption">
-                            <h4><a href="#">Scarlett’s disappointment at latest accolade</a>
-                            </h4>
-                            <p>Jhon | 2 hours ago</p>
-                        </div>
-                    </div>
-                    <!-- Single -->
-                    <div class="weekly2-single">
-                        <div class="weekly2-img">
-                            <img src={{ asset('assets/frontend/img/gallery/weeklyNews2.png') }} alt="">
-                        </div>
-                        <div class="weekly2-caption">
-                            <h4><a href="#">Scarlett’s disappointment at latest accolade</a>
-                            </h4>
-                            <p>Jhon | 2 hours ago</p>
-                        </div>
-                    </div>
+                    @if ($most_popular)
+                        @foreach ($most_popular as $popular_item)
+                            <div class="weekly2-single">
+                                <div class="weekly2-img">
+                                    <img src="{{ $popular_item->image_path }}" alt="">
+                                </div>
+                                <div class="weekly2-caption">
+                                    <h4><a href="#">{{ $popular_item->title }}</a>
+                                    </h4>
+                                    <p>{{ $popular_item->to_writer()->getResults()->name }} | 2 hours ago</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -348,63 +323,25 @@
 @section('articles_conten')
     <div class="col-12">
         <div class="recent-active dot-style d-flex dot-style">
-            <!-- Single -->
-            <div class="single-recent">
-                <div class="what-img">
-                    <img src={{ asset('assets/frontend/img/gallery/tranding1.png') }} alt="">
-                </div>
-                <div class="what-cap">
-                    <h4><a href="#">
-                            <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                                    ations</a></h4>
-                        </a></h4>
-                    <P>Jun 19, 2020</P>
-                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span
-                            class="flaticon-play-button"></span></a>
+            @if ($trendings)
+                @foreach ($trendings as $trending)
+                    <!-- Single -->
+                    <div class="single-recent">
+                        <div class="what-img">
+                            <img src="{{ $trending->image_path }}" alt="">
+                        </div>
+                        <div class="what-cap">
+                            <h4><a href="#">
+                                    <h4><a href="latest_news.html">{{ $trending->title }}</a></h4>
+                                </a></h4>
+                            <P>{{ date('M d, Y', strtotime($trending->updated_at)) }}</P>
+                            <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span
+                                    class="flaticon-play-button"></span></a>
 
-                </div>
-            </div>
-            <!-- Single -->
-            <div class="single-recent">
-                <div class="what-img">
-                    <img src={{ asset('assets/frontend/img/gallery/tranding2.png') }} alt="">
-                </div>
-                <div class="what-cap">
-                    <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin ations</a>
-                    </h4>
-                    <P>Jun 19, 2020</P>
-                    <a class="popup-video" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span
-                            class="flaticon-play-button"></span></a>
-                </div>
-            </div>
-            <!-- Single -->
-            <div class="single-recent">
-                <div class="what-img">
-                    <img src={{ asset('assets/frontend/img/gallery/tranding1.png') }} alt="">
-                </div>
-                <div class="what-cap">
-                    <h4><a href="latest_news.html">
-                            <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                                    ations</a></h4>
-                        </a></h4>
-                    <P>Jun 19, 2020</P>
-                    <a class="popup-video" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span
-                            class="flaticon-play-button"></span></a>
-                </div>
-            </div>
-            <!-- Single -->
-            <div class="single-recent">
-                <div class="what-img">
-                    <img src={{ asset('assets/frontend/img/gallery/tranding2.png') }} alt="">
-                </div>
-                <div class="what-cap">
-                    <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin ations</a>
-                    </h4>
-                    <P>Jun 19, 2020</P>
-                    <a class="popup-video" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span
-                            class="flaticon-play-button"></span></a>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </div>
 @endsection
@@ -417,95 +354,39 @@
 {{-- container --}}
 @section('video_area_conten')
     <div class="row">
-
         <div class="col-12">
             <div class="video-items-active">
-
-                <div class="video-items text-center">
-                    <video controls>
-                        <source src={{ asset('assets/frontend/video/news2.mp4') }} type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-items text-center">
-                    <video controls>
-                        <source src={{ asset('assets/frontend/video/news1.mp4') }} type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-items text-center">
-                    <video controls>
-                        <source src={{ asset('assets/frontend/video/news3.mp4') }} type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-items text-center">
-                    <video controls>
-                        <source src={{ asset('assets/frontend/video/news1.mp4') }} type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-items text-center">
-                    <video controls>
-                        <source src={{ asset('assets/frontend/video/news3.mp4') }} type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-
+                @if ($video_contens)
+                    @foreach ($video_contens as $video)
+                        <div class="video-items text-center">
+                            <video controls>
+                                <source src={{ asset('assets/frontend/video/news2.mp4') }} type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
-
     </div>
 
     <div class="video-info">
         <div class="row">
             <div class="col-12">
                 <div class="testmonial-nav text-center">
-                    <div class="single-video">
-                        <video controls>
-                            <source src={{ asset('assets/frontend/video/news2.mp4') }} type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="video-intro">
-                            <h4>Old Spondon News - 2020 </h4>
-                        </div>
-                    </div>
-                    <div class="single-video">
-                        <video controls>
-                            <source src={{ asset('assets/frontend/video/news1.mp4') }} type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="video-intro">
-                            <h4>Banglades News Video </h4>
-                        </div>
-                    </div>
-                    <div class="single-video">
-                        <video controls>
-                            <source src={{ asset('assets/frontend/video/news3.mp4') }} type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="video-intro">
-                            <h4>Latest Video - 2020 </h4>
-                        </div>
-                    </div>
-                    <div class="single-video">
-                        <video controls>
-                            <source src={{ asset('assets/frontend/video/news1.mp4') }} type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="video-intro">
-                            <h4>Spondon News -2019 </h4>
-                        </div>
-                    </div>
-                    <div class="single-video">
-                        <video controls>
-                            <source src={{ asset('assets/frontend/video/news3.mp4') }} type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="video-intro">
-                            <h4>Latest Video - 2020</h4>
-                        </div>
-                    </div>
+                    @if ($video_contens)
+                        @foreach ($video_contens as $video)
+                            <div class="single-video">
+                                <video controls>
+                                    <source src={{ asset('assets/frontend/video/news2.mp4') }} type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="video-intro">
+                                    <h4>{{ $video->title }}</h4>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -519,62 +400,19 @@
 {{-- col-lg-12 --}}
 @section('weekly3_conten')
     <div class="weekly3-news-active dot-style d-flex">
-
-        <div class="weekly3-single">
-            <div class="weekly3-img">
-                <img src={{ asset('assets/frontend/img/gallery/weekly2News1.png') }} alt="">
-            </div>
-            <div class="weekly3-caption">
-                <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                        ations</a></h4>
-                <p>19 Jan 2020</p>
-            </div>
-        </div>
-
-        <div class="weekly3-single">
-            <div class="weekly3-img">
-                <img src={{ asset('assets/frontend/img/gallery/weekly2News2.png') }} alt="">
-            </div>
-            <div class="weekly3-caption">
-                <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                        ations</a></h4>
-                <p>19 Jan 2020</p>
-            </div>
-        </div>
-
-        <div class="weekly3-single">
-            <div class="weekly3-img">
-                <img src={{ asset('assets/frontend/img/gallery/weekly2News3.png') }} alt="">
-            </div>
-            <div class="weekly3-caption">
-                <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                        ations</a></h4>
-                <p>19 Jan 2020</p>
-            </div>
-        </div>
-
-        <div class="weekly3-single">
-            <div class="weekly3-img">
-                <img src={{ asset('assets/frontend/img/gallery/weekly2News4.png') }} alt="">
-            </div>
-            <div class="weekly3-caption">
-                <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                        ations</a></h4>
-                <p>19 Jan 2020</p>
-            </div>
-        </div>
-
-        <div class="weekly3-single">
-            <div class="weekly3-img">
-                <img src={{ asset('assets/frontend/img/gallery/weekly2News2.png') }} alt="">
-            </div>
-            <div class="weekly3-caption">
-                <h4><a href="latest_news.html">What to Expect From the 2020 Oscar Nomin
-                        ations</a></h4>
-                <p>19 Jan 2020</p>
-            </div>
-        </div>
-
+        @if ($weekly3_contens)
+            @foreach ($weekly3_contens as $weekly3_conten)
+                <div class="weekly3-single">
+                    <div class="weekly3-img">
+                        <img src="{{ $weekly3_conten->image_path }}" alt="">
+                    </div>
+                    <div class="weekly3-caption">
+                        <h4><a href="latest_news.html">{{ $weekly3_conten->title }}</a></h4>
+                        <p>{{ date('M d, Y', strtotime($weekly3_conten->updated_at)) }}</p>
+                    </div>
+                </div>
+            @endforeach
+        @endif
     </div>
 @endsection
 {{-- col-lg-12 --}}
