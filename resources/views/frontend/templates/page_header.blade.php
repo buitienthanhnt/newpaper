@@ -45,7 +45,7 @@
                         <div class="col-xl-8 col-lg-8 col-md-12 header-flex">
                             <!-- sticky -->
                             <div class="sticky-logo">
-                                <a href="index.html"><img src={{ asset('assets/frontend/img/logo/logo.png') }}
+                                <a href="{{ route('/', ['id'=>1]) }}"><img src={{ asset('assets/frontend/img/logo/logo.png') }}
                                         alt=""></a>
                             </div>
                             <!-- Main-menu -->
