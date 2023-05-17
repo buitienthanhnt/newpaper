@@ -291,7 +291,7 @@
                                     <img src="{{ $popular_item->image_path }}" alt="">
                                 </div>
                                 <div class="weekly2-caption">
-                                    <h4><a href="#">{{ $popular_item->title }}</a>
+                                    <h4><a href="{{ route('front_page_detail', ['page'=>$popular_item->id]) }}">{{ $popular_item->title }}</a>
                                     </h4>
                                     <p>{{$popular_item->to_writer()->getResults() ? $popular_item->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
                                 </div>
