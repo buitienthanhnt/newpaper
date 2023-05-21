@@ -61,14 +61,21 @@
                     <!-- Trending Tittle -->
                     <div class="about-right mb-90">
                         <div class="about-img">
-                            <img src="{{ $paper->image_path }}" alt="" style="height: 400px;">
+                            @if (isset($paper->image_path))
+                                <img src="{{ $paper->image_path }}" alt="" style="height: 400px;">
+                            @endif
+                            
                         </div>
                         <div class="heading-news mb-30 pt-30">
+                            @isset($paper->title)
                             <h3>{{ $paper->title }}</h3>
+                            @endisset
                         </div>
 
                         <div class="col-md-12">
+                            @isset($paper->conten)
                             {!! $paper->conten !!}
+                            @endisset
                         </div>
 
                         <div class="social-share pt-30">

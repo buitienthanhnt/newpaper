@@ -41,7 +41,8 @@ class ManagerController extends Controller
         }
 
         $most_recent = $this->paper->orderBy("updated_at", "ASC")->take(3)->get();
-        $most_popular = $trendings = $weekly3_contens = $video_contens = $this->paper->all();
+        $most_popular =  $this->paper->all();
+        $video_contens  = $weekly3_contens = $trendings = $weekly3_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
 
         return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center", "most_recent", "most_popular", "trendings", "weekly3_contens", "video_contens"));
     }
@@ -49,7 +50,6 @@ class ManagerController extends Controller
     public function pageDetail($page)
     {
         $paper = $this->paper->find($page);
-        // echo($paper->conten);
         return view("frontend.templates.paper.paper_detail", compact("paper"));
     }
 }
