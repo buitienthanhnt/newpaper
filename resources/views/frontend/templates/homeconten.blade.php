@@ -141,7 +141,7 @@
                                                                     <span
                                                                         class="colorb">{{$paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}</span>
                                                                     <h4><a
-                                                                            href="latest_news.html">{{ $paper->short_conten }}</a>
+                                                                            href="{{ route('front_page_detail', ['page'=>$paper->id]) }}">{{ $paper->short_conten }}</a>
                                                                     </h4>
                                                                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
                                                                     </p>
