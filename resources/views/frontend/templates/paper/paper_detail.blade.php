@@ -46,7 +46,8 @@
         img {
             vertical-align: middle;
             border-style: none;
-            max-width: -webkit-fill-available;
+            max-width: 100%;
+            height: auto;
         }
     </style>
 @endsection
