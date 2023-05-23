@@ -32,10 +32,7 @@ Route::post("account_post", function(){
     return 123;
 })->name("account_post");
 
-Route::get("/{category}.htm", function($category){
-    return $category;
-
-})->name("front_category");
+Route::get("/{category}.htm", "ManagerController@categoryView")->name("front_category");
 
 Route::get("/{page}.html", "ManagerController@pageDetail")->name("front_page_detail");
 

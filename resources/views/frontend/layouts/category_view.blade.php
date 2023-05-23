@@ -23,24 +23,16 @@
     @include('frontend/layouts/paperComponent/morning_post')
 @endsection
 
-@section('new_post')
-    @include('frontend/layouts/paperComponent/new_post')
-@endsection
-
 @section('weekly2_news')
-    @include('frontend/layouts/paperComponent/weekly2_news')
-@endsection
-
-@section('articles')
-    @include('frontend/layouts/paperComponent/articles')
-@endsection
-
-@section('video_area')
-    @include('frontend/layouts/paperComponent/video_area')
+    @include('frontend/layouts/paperComponent/weekly2ca_news')
 @endsection
 
 @section('weekly3_news')
     @include('frontend/layouts/paperComponent/weekly3_news')
+@endsection
+
+@section('new_post')
+    @include('frontend/layouts/paperComponent/new_post')
 @endsection
 
 @section('banner_last')
