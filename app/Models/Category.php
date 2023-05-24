@@ -67,9 +67,9 @@ class Category extends Model
         return $this->hasMany(PageCategory::class, "category_id");
     }
 
-    public function get_product()
+    public function get_papers()
     {
         $page_id = array_column($this->to_page_category()->getResults()->toArray(), "page_id");
         return Paper::whereIn("id", $page_id)->get();
-    }    
+    }
 }

@@ -78,9 +78,12 @@ class ManagerController extends Controller
         }
 
         $most_recent = $this->paper->orderBy("updated_at", "ASC")->take(3)->get();
-        $most_popular =  $this->paper->all();
-        $weekly3_contens = $this->paper->orderBy("updated_at", "DESC")->get();
+        $most_popular =  $this->paper->take(6)->get();
+        $weekly3_contens = $this->paper->take(8)->orderBy("updated_at", "DESC")->get();
         $list_center = Category::where("url_alias", "like", $category_id)->get();
-        return view("frontend/templates/categories", compact("category", "trending_left", "trending_right", "list_center", "most_recent", "most_popular", "weekly3_contens"));
+        $papers = $category->get_papers();
+        $top_paper = $papers->take(2);
+        $papers = $papers->diff($top_paper);
+        return view("frontend/templates/categories", compact("category", "top_paper", "papers", "trending_left", "trending_right", "list_center", "most_recent", "most_popular", "weekly3_contens"));
     }
 }

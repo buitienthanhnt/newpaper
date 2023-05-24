@@ -3,6 +3,7 @@
 @section('page_title')
     categories
 @endsection
+
 {{-- col-lg-8 --}}
 @section('trending_left')
     <div class="slider-active">
@@ -19,7 +20,8 @@
                                             data-duration="1000ms">{{ $first_category->for_category()->first()->name }}</span>
                                     </a>
                                 @endif
-                                <h2><a href="{{ route('front_page_detail', ['page'=> $tren->id]) }}" data-animation="fadeInUp" data-delay=".4s"
+                                <h2><a href="{{ route('front_page_detail', ['page' => $tren->id]) }}"
+                                        data-animation="fadeInUp" data-delay=".4s"
                                         data-duration="1000ms">{{ $tren->title }}</a></h2>
                                 <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
                                     {{ $tren->to_writer()->getResults() ? $tren->to_writer()->getResults()->name : '' }} -
@@ -44,8 +46,10 @@
                         <img src="{{ $tren_r->image_path }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
-                            <h2><a href="{{ route('front_page_detail', ['page'=> $tren_r->id]) }}">{{ $tren_r->title }}</a></h2>
-                            <p>by {{$tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }} -
+                            <h2><a href="{{ route('front_page_detail', ['page' => $tren_r->id]) }}">{{ $tren_r->title }}</a>
+                            </h2>
+                            <p>by {{ $tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }}
+                                -
                                 {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
                         </div>
                     </div>
@@ -80,9 +84,11 @@
                                     <img src="{{ $popular_item->image_path }}" alt="">
                                 </div>
                                 <div class="weekly2-caption">
-                                    <h4><a href="{{ route('front_page_detail', ['page'=>$popular_item->id]) }}">{{ $popular_item->title }}</a>
+                                    <h4><a
+                                            href="{{ route('front_page_detail', ['page' => $popular_item->id]) }}">{{ $popular_item->title }}</a>
                                     </h4>
-                                    <p>{{$popular_item->to_writer()->getResults() ? $popular_item->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
+                                    <p>{{ $popular_item->to_writer()->getResults() ? $popular_item->to_writer()->getResults()->name : '' }}
+                                        | 2 hours ago</p>
                                 </div>
                             </div>
                         @endforeach
@@ -129,7 +135,7 @@
                     <h3>{{ $category->name }}</h3>
                 </div>
             </div>
-           
+
         </div>
         <!-- Heading & Nav Button -->
 
@@ -139,79 +145,67 @@
                 <!-- Nav Card -->
                 <div class="tab-content" id="nav-tabContent">
                     @if ($list_center)
-                        <?php $center_one = 0; ?>
                         @foreach ($list_center as $center_conten)
-                            <div class="tab-pane fade{{ !$center_one ? ' show active' : '' }}"
+                            <div class="tab-pane active"
                                 id="{{ 'nav-' . $center_conten->id }}" role="tabpanel"
                                 aria-labelledby="{{ 'nav-' . $center_conten->id . '-tab' }}">
                                 <div class="row">
-                                    @if ($papers = $center_conten->get_product())
-                                        <!-- Left Details Caption -->
-                                        @if ($paper_first = $papers->first())
+                                    <!-- Left Details Caption -->
+                                    @if ($top_paper)
+                                        @foreach ($top_paper as $paper_first)
                                             <div class="col-xl-6">
                                                 <div class="whats-news-single mb-20">
                                                     <div class="whates-img">
                                                         <img src="{{ $paper_first->image_path }}" alt="">
                                                     </div>
                                                     <div class="whates-caption">
-                                                        <h4><a href="#">{{ $paper_first->title }}</a></h4>
+                                                        <h4><a href="{{ route('front_page_detail', ['page'=>$paper_first->id]) }}">{{ $paper_first->title }}</a></h4>
                                                         <p>{{ $paper_first->short_conten }}</p>
-                                                        <span>by {{$paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }} -
+                                                        <span>by
+                                                            {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
+                                                            -
                                                             {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-xl-6">
-                                                <div class="whats-news-single mb-20">
-                                                    <div class="whates-img">
-                                                        <img src="{{ $paper_first->image_path }}" alt="">
-                                                    </div>
-                                                    <div class="whates-caption">
-                                                        <h4><a href="#">{{ $paper_first->title }}</a></h4>
-                                                        <p>{{ $paper_first->short_conten }}</p>
-                                                        <span>by {{$paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }} -
-                                                            {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                        <!-- Right single caption -->
-                                        <div class="col-xl-12 col-lg-12">
-                                            <div class="whats-news-single mb-20">
-                                                <!-- single -->
-                                                @if ($papers->first() && ($papers = $papers->diff([$papers->first()])))
-                                                    @foreach ($papers as $paper)
-                                                        <div class="row">
-                                                            <div class="whats-right-single mb-10">
-                                                                <div class="col-md-6">
-                                                                    <img src="{{ $paper->image_path }}" class="whates-img" style="width: 100%; height: auto;" alt="">
-                                                                </div>
-                                                                <div class="col-md-6 whats-right-cap">
-                                                                    <h4>
-                                                                        <a href="{{ route('front_page_detail', ['page'=>$paper->id]) }}">
-                                                                            <h4>
-                                                                                {{ $paper->title }}
-                                                                            </h4>
-                                                                            {{ $paper->short_conten }}
-                                                                        </a>
-                                                                    </h4>
-                                                                    <span
-                                                                        class="colorb">{{$paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
-                                                                    </span>
-                                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}</p>
-                                                                </div>
+                                        @endforeach
+                                    @endif
+                                    <!-- Right single caption -->
+                                    <div class="col-xl-12 col-lg-12">
+                                        <div class="whats-news-single mb-20">
+                                            <!-- single -->
+                                            @if ($top_paper && $papers)
+                                                @foreach ($papers as $paper)
+                                                    <div class="row">
+                                                        <div class="whats-right-single mb-10">
+                                                            <div class="col-md-6">
+                                                                <img src="{{ $paper->image_path }}" class="whates-img"
+                                                                    style="width: 100%; height: auto;" alt="">
+                                                            </div>
+                                                            <div class="col-md-6 whats-right-cap">
+                                                                <h4>
+                                                                    <a
+                                                                        href="{{ route('front_page_detail', ['page' => $paper->id]) }}">
+                                                                        <h4>
+                                                                            {{ $paper->title }}
+                                                                        </h4>
+                                                                        {{ $paper->short_conten }}
+                                                                    </a>
+                                                                </h4>
+                                                                <span
+                                                                    class="colorb">{{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
+                                                                </span>
+                                                                <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
+                                                                </p>
                                                             </div>
                                                         </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                         </div>
-                                    @endif
-
+                                    </div>
                                 </div>
                             </div>
-                            <?php $center_one += 1; ?>
                         @endforeach
                     @endif
                 </div>
@@ -288,7 +282,8 @@
                         <span class="bgbeg">Vogue</span>
                         <h4><a href="latest_news.html">What to Wear: 9+ Cute Work <br>
                                 Outfits to Wear This.</a></h4>
-                        <p>{{ $first_recent->to_writer()->getResults() ? $first_recent->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
+                        <p>{{ $first_recent->to_writer()->getResults() ? $first_recent->to_writer()->getResults()->name : '' }}
+                            | 2 hours ago</p>
                     </div>
                 </div>
             </div>
@@ -300,7 +295,8 @@
                         </div>
                         <div class="most-recent-capt">
                             <h4><a href="latest_news.html">{{ $af_recent->title }}</a></h4>
-                            <p>{{$af_recent->to_writer()->getResults() ? $af_recent->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
+                            <p>{{ $af_recent->to_writer()->getResults() ? $af_recent->to_writer()->getResults()->name : '' }}
+                                | 2 hours ago</p>
                         </div>
                     </div>
                 @endforeach
