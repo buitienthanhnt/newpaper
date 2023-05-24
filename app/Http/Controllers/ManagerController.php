@@ -45,13 +45,13 @@ class ManagerController extends Controller
 
         $most_recent = $this->paper->orderBy("updated_at", "ASC")->take(3)->get();
         $most_popular =  $this->paper->all();
-        $video_contens = $trendings = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
-        $weekly3_contens = $this->paper->orderBy("updated_at", "DESC")->get();
+        $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
+        $weekly3_contens = $trendings = $this->paper->orderBy("updated_at", "DESC")->get();
 
         return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center", "most_recent", "most_popular", "trendings", "weekly3_contens", "video_contens"));
     }
 
-    public function pageDetail($page)
+    public function pageDetail($alias, $page)
     {
         $paper = $this->paper->find($page);
         return view("frontend.templates.paper.paper_detail", compact("paper"));
