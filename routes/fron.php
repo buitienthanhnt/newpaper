@@ -34,6 +34,8 @@ Route::post("account_post", function(){
 
 Route::get("/{category}.htm", "ManagerController@categoryView")->name("front_category");
 
-Route::get("/{alias?}_{page}.html", "ManagerController@pageDetail")->name("front_page_detail");
+Route::get("{alias?}_{page}.html", "ManagerController@pageDetail")->name("front_page_detail");
+
+Route::get("tags/{value}", "ManagerController@tagView")->name("front_tag_view");
 
 ?>
