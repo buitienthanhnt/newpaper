@@ -9,4 +9,10 @@ class PageTag extends Model
 {
     use HasFactory;
     protected $table = "page_tag";
+
+    public function to_paper($tag_value)
+    {
+        $tags = $this->where("type", "=", "page_tag")->where("value", "=", $tag_value)->get()->groupBy("entity_id")->keys();
+        return $tags;
+    }
 }

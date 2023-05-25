@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ConfigCategory;
+use App\Models\PageTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,16 +14,19 @@ class ManagerController extends Controller
     protected $request;
     protected $paper;
     protected $category;
+    protected $pageTag;
 
     public function __construct(
         Request $request,
         Paper $paper,
-        Category $category
+        Category $category,
+        PageTag $pageTag
     )
     {
         $this->request = $request;
         $this->paper = $paper;
         $this->category = $category;
+        $this->pageTag = $pageTag;
     }
 
     public function homePage()
@@ -85,5 +89,16 @@ class ManagerController extends Controller
         $top_paper = $papers->take(2);
         $papers = $papers->diff($top_paper);
         return view("frontend/templates/categories", compact("category", "top_paper", "papers", "trending_left", "trending_right", "list_center", "most_recent", "most_popular", "weekly3_contens"));
+    }
+
+    public function tagView($value)
+    {
+        $papers = null;
+        $paper_ids = $this->pageTag->to_paper($value);
+        if ($paper_ids) {
+            $papers = $this->paper::whereIn("id", $paper_ids)->get();
+        }
+        $trending_left = $papers->first();
+        return view("frontend/templates/tags", ["tag" => $value, "papers" => $papers, "trending_left" => [$trending_left]]);
     }
 }
