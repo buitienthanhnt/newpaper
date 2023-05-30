@@ -36,4 +36,6 @@ Route::get("/{category}.htm", "ManagerController@categoryView")->name("front_cat
 
 Route::get("/{alias?}_{page}.html", "ManagerController@pageDetail")->name("front_page_detail");
 
+Route::get("load_more", "ManagerController@load_more")->name("load_more");
+
 ?>
