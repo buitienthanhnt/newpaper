@@ -30,4 +30,5 @@
 <!-- Jquery Plugins, main Jquery -->
 <script src={{asset('assets/frontend/js/plugins.js')}}></script>
 <script src={{asset('assets/frontend/js/main.js')}}></script>
+
 @yield('js_after')

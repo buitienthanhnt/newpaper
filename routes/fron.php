@@ -38,4 +38,6 @@ Route::get("{alias?}_{page}.html", "ManagerController@pageDetail")->name("front_
 
 Route::get("tags/{value}", "ManagerController@tagView")->name("front_tag_view");
 
+Route::get("load_more", "ManagerController@load_more")->name("load_more");
+
 ?>

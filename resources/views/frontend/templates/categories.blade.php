@@ -172,7 +172,7 @@
                                     @endif
                                     <!-- Right single caption -->
                                     <div class="col-xl-12 col-lg-12">
-                                        <div class="whats-news-single mb-20">
+                                        <div class="whats-news-single mb-20" id="whats-right-single">
                                             <!-- single -->
                                             @if ($top_paper && $papers)
                                                 @foreach ($papers as $paper)
@@ -208,6 +208,12 @@
                             </div>
                         @endforeach
                     @endif
+                    <div>
+                        <center>
+                            <button id="load_more" data-page="1" class="btn btn-info" onclick="load_more()">show more</button>
+                        </center>
+
+                    </div>
                 </div>
                 <!-- End Nav Card -->
             </div>
@@ -319,3 +325,35 @@
 @endsection
 {{-- row --}}
 {{-- =====================banner_last=============================== --}}
+
+
+@section('js_after')
+    <script>
+        var token = "{{ csrf_token() }}";
+        var url = "{{ route('load_more') }}";
+        var type = "{{$category->url_alias}}"
+        function load_more() {
+            var button = $("#load_more");
+            let page = button.attr("data-page");
+            if (page) {
+                $.ajax({
+                    url: url+"?page="+page+"&type="+type,
+                    type: "GET",
+                    success: function(result){
+                        result = JSON.parse(result);
+                        if (result.data) {
+                            let data = result.data;
+                           let conten = $("#whats-right-single");
+                           conten.after(data);
+                           let button = $("#load_more");
+                           button.attr("data-page", Number(button.attr("data-page")) +1);
+                        }
+                    },
+                    error: function(error){
+
+                    }
+                });
+            }
+        }
+    </script>
+@endsection
