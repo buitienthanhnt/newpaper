@@ -53,7 +53,7 @@ class WriterController extends Controller
             "email" => $request->__get("email"),
             "phone" => $request->__get("phone"),
             "address" => $request->__get("address"),
-            "image_path" => $image_upload_path["file_path"] ? url($image_upload_path["file_path"]) : null,
+            "image_path" => isset($image_upload_path) && $image_upload_path["file_path"] ? url($image_upload_path["file_path"]) : null,
             "name_alias" => $request->__get("alias"),
             "active" => $request->__get("active") ?: true,
             "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))

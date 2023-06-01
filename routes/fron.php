@@ -18,7 +18,7 @@ Route::get("home", function (){
 
 Route::get("login", function(){
     return view("frontend/templates/login");
-});
+})->name("user_login");
 
 Route::post("loginpost", function(){
     return 123;

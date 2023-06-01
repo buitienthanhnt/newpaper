@@ -18,7 +18,7 @@
                                             data-duration="1000ms">{{ $first_category->for_category()->first()->name }}</span>
                                     </a>
                                 @endif
-                                <h2><a href="{{ route('front_page_detail', ['page'=> $tren->id]) }}" data-animation="fadeInUp" data-delay=".4s"
+                                <h2><a href="{{ route('front_page_detail', ['page'=> $tren->id, 'alias' => $tren->url_alias]) }}" data-animation="fadeInUp" data-delay=".4s"
                                         data-duration="1000ms">{{ $tren->title }}</a></h2>
                                 <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
                                     {{ $tren->to_writer()->getResults() ? $tren->to_writer()->getResults()->name : '' }} -
@@ -43,7 +43,7 @@
                         <img src="{{ $tren_r->image_path }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
-                            <h2><a href="{{ route('front_page_detail', ['page'=> $tren_r->id]) }}">{{ $tren_r->title }}</a></h2>
+                            <h2><a href="{{ route('front_page_detail', ['page'=> $tren_r->id, 'alias' => $tren->url_alias]) }}">{{ $tren_r->title }}</a></h2>
                             <p>by {{$tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }} -
                                 {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
                         </div>
@@ -141,7 +141,7 @@
                                                                     <span
                                                                         class="colorb">{{$paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}</span>
                                                                     <h4><a
-                                                                            href="{{ route('front_page_detail', ['page'=>$paper->id]) }}">{{ $paper->short_conten }}</a>
+                                                                            href="{{ route('front_page_detail', ['page'=>$paper->id, 'alias' => $paper->url_alias]) }}">{{ $paper->short_conten }}</a>
                                                                     </h4>
                                                                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
                                                                     </p>
@@ -291,7 +291,7 @@
                                     <img src="{{ $popular_item->image_path }}" alt="">
                                 </div>
                                 <div class="weekly2-caption">
-                                    <h4><a href="{{ route('front_page_detail', ['page'=>$popular_item->id]) }}">{{ $popular_item->title }}</a>
+                                    <h4><a href="{{ route('front_page_detail', ['page'=>$popular_item->id, 'alias' => $popular_item->url_alias]) }}">{{ $popular_item->title }}</a>
                                     </h4>
                                     <p>{{$popular_item->to_writer()->getResults() ? $popular_item->to_writer()->getResults()->name : '' }} | 2 hours ago</p>
                                 </div>

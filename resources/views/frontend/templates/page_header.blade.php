@@ -88,7 +88,7 @@
                                     <li><a href="https://www.fb.com/sai4ull"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="#"><i class="fab fa-twitter"></i></a></li>
                                     <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                    <li> <a href="#"><i class="fab fa-youtube"></i></a></li>
+                                    <li> <a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
                                 </ul>
                                 <!-- Search Nav -->
                                 <div class="nav-search search-switch">

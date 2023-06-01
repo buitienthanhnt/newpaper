@@ -64,7 +64,7 @@ class PaperController extends Controller
             $paper = $this->paper;
             $paper->fill([
                 "title" => $request->__get("page_title"),
-                "url_alias" => $request->__get("alias") ?str_replace(" ", "-", $request->__get("alias")) : str_replace(" ", "_", $request->get("page_title")),
+                "url_alias" => $request->__get("alias") ? str_replace(" ", "-", $request->__get("alias")) : str_replace(" ", "-", $request->get("page_title")),
                 "short_conten" => $request->__get("short_conten"),
                 "conten" => $request->__get("conten"),
                 "active" => $request->__get("active") ? true : false,
