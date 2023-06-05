@@ -58,7 +58,12 @@ class ManagerController extends Controller
     public function pageDetail($alias, $page)
     {
         $paper = $this->paper->find($page);
-        return view("frontend.templates.paper.paper_detail", compact("paper"));
+        $category = Category::where("url_alias", "like", "today")->get()->first();
+        $list_center = Category::where("url_alias", "like", 2)->take(4)->get();
+        $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
+        $top_paper = $papers->take(2);
+        $papers = $papers->diff($top_paper);
+        return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
     }
 
     public function categoryView($category_id)
