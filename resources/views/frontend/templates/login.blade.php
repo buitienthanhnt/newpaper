@@ -35,7 +35,7 @@
 @endsection
 
 @section('trending_right')
-    <a href="{{ route('new_account') }}">
+    <a href="{{ route('account_create') }}">
         <h3 class="text-info">Create new account</h3>
     </a>
 @endsection

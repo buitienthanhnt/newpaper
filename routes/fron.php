@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
  Route::get("/", "ManagerController@homePage")->name("/");
@@ -16,21 +17,16 @@ Route::get("home", function (){
     return view("frontend/templates/homepage");
 });
 
-Route::get("login", function(){
-    return view("frontend/templates/login");
-})->name("user_login");
+Route::prefix("user")->group(function(){
 
-Route::post("loginpost", function(){
-    return 123;
-})->name("login_post");
+    Route::get("create", "UserController@createAccount")->name("account_create");
 
-Route::get("new_account", function(){
-    return view("frontend/templates/new_account");
-})->name("new_account");
+    Route::post('add', "UserController@accountAdd")->name("account_add");
 
-Route::post("account_post", function(){
-    return 123;
-})->name("account_post");
+    Route::get('login', "UserController@loginPage")->name("user_login");
+
+    Route::post("loginPost", "UserController@login")->name("login_post");
+});
 
 Route::get("/{category}.htm", "ManagerController@categoryView")->name("front_category");
 

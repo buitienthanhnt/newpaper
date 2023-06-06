@@ -23,8 +23,14 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 pt-10 pb-10">
-                <form action="{{ route('account_post') }}" method="post">
+                <form action="{{ route('account_add') }}" method="post">
                     @csrf
+
+                    <div class="form-group">
+                        <label for="user_name">name:</label>
+                        <input id="user_name" class="form-control" type="text" name="user_name" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="user_email">email:</label>
                         <input id="user_email" class="form-control" type="email" name="user_email" required>
@@ -32,7 +38,7 @@
 
                     <div class="form-group">
                         <label for="user_pass">password:</label>
-                        <input id="user_pass" class="form-control" type="password" name="pass" required>
+                        <input id="user_pass" class="form-control" type="password" name="password" required>
                     </div>
 
                     <div class="form-group">
