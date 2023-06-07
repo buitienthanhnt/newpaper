@@ -58,7 +58,7 @@ class ManagerController extends Controller
     public function pageDetail($alias, $page)
     {
         $paper = $this->paper->find($page);
-        $category = Category::where("url_alias", "like", "to_day")->get()->first(); // lys
+        $category = Category::where("url_alias", "like", "today")->get()->first(); // lys
         $list_center = Category::where("url_alias", "like", 2)->take(4)->get();
         $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
         $top_paper = $papers->take(2);
