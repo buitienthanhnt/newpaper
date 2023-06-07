@@ -25,7 +25,7 @@ class UserController extends Controller
     public function loginPage()
     {
         if (Auth::check()) {
-            return view("frontend/templates/userDetail");
+            return redirect(route("user_detail"));
         }else {
             return view("frontend/templates/login");
         }
@@ -66,6 +66,26 @@ class UserController extends Controller
             }
         }
         return redirect()->back();
+    }
+
+    public function detail()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            dd($user);
+            return view("frontend/templates/userDetail");
+        }else {
+            return redirect(route("user_login"));
+        }
+    }
+
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::logout();
+            return redirect("/");
+        }
+        return redirect()->back(302);
     }
 
     public function authenticate(Request $request)

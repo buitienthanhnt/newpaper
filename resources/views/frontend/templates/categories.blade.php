@@ -1,7 +1,7 @@
 @extends('frontend/layouts/category_view')
 
 @section('page_title')
-{{ $category->name }}
+    {{ $category->name }}
 @endsection
 
 {{-- col-lg-8 --}}
@@ -46,7 +46,8 @@
                         <img src="{{ $tren_r->image_path }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
-                            <h2><a href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>
+                            <h2><a
+                                    href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>
                             </h2>
                             <p>by {{ $tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }}
                                 -
@@ -146,8 +147,7 @@
                 <div class="tab-content" id="nav-tabContent">
                     @if ($list_center)
                         @foreach ($list_center as $center_conten)
-                            <div class="tab-pane active"
-                                id="{{ 'nav-' . $center_conten->id }}" role="tabpanel"
+                            <div class="tab-pane active" id="{{ 'nav-' . $center_conten->id }}" role="tabpanel"
                                 aria-labelledby="{{ 'nav-' . $center_conten->id . '-tab' }}">
                                 <div class="row">
                                     <!-- Left Details Caption -->
@@ -159,12 +159,17 @@
                                                         <img src="{{ $paper_first->image_path }}" alt="">
                                                     </div>
                                                     <div class="whates-caption">
-                                                        <h4><a href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias,'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a></h4>
-                                                        <p>{{ $paper_first->short_conten }}</p>
-                                                        <span>by
-                                                            {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
+                                                        <h4><a
+                                                                href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
+                                                        </h4>
+                                                        <h6>{{ $paper_first->short_conten }}</h6>
+                                                        <p>by
+                                                            <a href="" class="text text-info">
+                                                                {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
+                                                            </a>
                                                             -
-                                                            {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
+                                                            {{ date('M d, Y', strtotime($paper_first->updated_at)) }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -186,17 +191,14 @@
                                                                 <h4>
                                                                     <a
                                                                         href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
-                                                                        <h4>
-                                                                            {{ $paper->title }}
-                                                                        </h4>
-                                                                        {{ $paper->short_conten }}
+                                                                        <h4>{{ $paper->title }}</h4>
                                                                     </a>
                                                                 </h4>
-                                                                <span
-                                                                    class="colorb">{{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
+                                                                <h6>{{ $paper->short_conten }}</h6>
+                                                                <span class="colorb">
+                                                                    {{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
                                                                 </span>
-                                                                <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
-                                                                </p>
+                                                                <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -210,7 +212,8 @@
                     @endif
                     <div>
                         <center>
-                            <button id="load_more" data-page="1" class="btn btn-info" onclick="load_more()">show more</button>
+                            <button id="load_more" data-page="1" class="btn btn-info" onclick="load_more()">show
+                                more</button>
                         </center>
 
                     </div>
@@ -331,25 +334,26 @@
     <script>
         var token = "{{ csrf_token() }}";
         var url = "{{ route('load_more') }}";
-        var type = "{{$category->url_alias}}"
+        var type = "{{ $category->url_alias }}"
+
         function load_more() {
             var button = $("#load_more");
             let page = button.attr("data-page");
             if (page) {
                 $.ajax({
-                    url: url+"?page="+page+"&type="+type,
+                    url: url + "?page=" + page + "&type=" + type,
                     type: "GET",
-                    success: function(result){
+                    success: function(result) {
                         result = JSON.parse(result);
                         if (result.data) {
                             let data = result.data;
-                           let conten = $("#whats-right-single");
-                           conten.after(data);
-                           let button = $("#load_more");
-                           button.attr("data-page", Number(button.attr("data-page")) +1);
+                            let conten = $("#whats-right-single");
+                            conten.after(data);
+                            let button = $("#load_more");
+                            button.attr("data-page", Number(button.attr("data-page")) + 1);
                         }
                     },
-                    error: function(error){
+                    error: function(error) {
 
                     }
                 });

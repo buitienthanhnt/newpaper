@@ -5,19 +5,19 @@
 @endsection
 
 @section('trending_left')
-    <h4>login form</h4>
     <div class="row">
         <div class="col-sm-8">
+            <center><h4>Login form</h4></center>
             <form action="{{ route('login_post') }}" method="post">
                 @csrf
                 <div class="form-group">
                     <label for="user_email">email:</label>
-                    <input id="user_email" class="form-control" type="email" name="email" placeholder="enter your email">
+                    <input id="user_email" class="form-control" type="email" name="email" required placeholder="enter your email">
                 </div>
 
                 <div class="form-group">
                     <label for="user_pass">password:</label>
-                    <input id="user_pass" class="form-control" type="password" name="password"
+                    <input id="user_pass" class="form-control" type="password" name="password" required
                         placeholder="enter your password">
                 </div>
 
@@ -25,8 +25,8 @@
                     <a href="" class="text-info"><label>Forgot password?</label></a>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-info btn-sm">login</button>
+                <div class="form-group clear">
+                    <center><button type="submit" class="btn btn-info btn-sm">login</button></center>
                 </div>
 
             </form>

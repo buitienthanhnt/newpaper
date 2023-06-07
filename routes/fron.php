@@ -25,7 +25,15 @@ Route::prefix("user")->group(function(){
 
     Route::get('login', "UserController@loginPage")->name("user_login");
 
+    Route::get('detail', "UserController@detail")->name("user_detail");
+
+    Route::get('edit/{id}', "UserController@loginPage")->name("user_edit");
+
+    Route::put('update/{id}', "UserController@loginPage")->name("user_update");
+
     Route::post("loginPost", "UserController@login")->name("login_post");
+
+    Route::get('logout', "UserController@logout")->name("user_logout");
 });
 
 Route::get("/{category}.htm", "ManagerController@categoryView")->name("front_category");

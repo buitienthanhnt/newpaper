@@ -45,8 +45,8 @@
                         <div class="col-xl-8 col-lg-8 col-md-12 header-flex">
                             <!-- sticky -->
                             <div class="sticky-logo">
-                                <a href="{{ route('/', ['id'=>1]) }}"><img src={{ asset('assets/frontend/img/logo/logo.png') }}
-                                        alt=""></a>
+                                <a href="{{ route('/', ['id' => 1]) }}"><img
+                                        src={{ asset('assets/frontend/img/logo/logo.png') }} alt=""></a>
                             </div>
                             <!-- Main-menu -->
                             <div class="main-menu d-none d-md-block">
@@ -54,7 +54,9 @@
                                     <ul id="navigation">
                                         @isset($topcategory)
                                             @foreach ($topcategory as $item)
-                                                <li><a href="{{ route('front_category', ['category'=>$item->url_alias]) }}">{{$item->name}}</a></li>
+                                                <li><a
+                                                        href="{{ route('front_category', ['category' => $item->url_alias]) }}">{{ $item->name }}</a>
+                                                </li>
                                             @endforeach
 
                                             {{-- <li><a href="index.html">Home 1</a></li>
@@ -88,7 +90,13 @@
                                     <li><a href="https://www.fb.com/sai4ull"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="#"><i class="fab fa-twitter"></i></a></li>
                                     <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                    <li> <a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
+                                    @if (Auth::check())
+                                        <li> <a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a></li>
+                                    @else
+                                    {{-- D:\xampp\htdocs\newpaper\public\assets\frontend\css\fontawesome-all.min.css --}}
+                                        <li> <a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
+                                    @endif
+
                                 </ul>
                                 <!-- Search Nav -->
                                 <div class="nav-search search-switch">
