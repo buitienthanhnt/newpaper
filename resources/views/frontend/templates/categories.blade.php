@@ -187,7 +187,7 @@
                                                                 <img src="{{ $paper->image_path }}" class="whates-img"
                                                                     style="width: 100%; height: auto;" alt="">
                                                             </div>
-                                                            <div class="col-md-6 whats-right-cap">
+                                                            <div class="col-md-6 whats-right-cap" style="padding-left: 15px">
                                                                 <h4>
                                                                     <a
                                                                         href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
@@ -348,7 +348,8 @@
                         if (result.data) {
                             let data = result.data;
                             let conten = $("#whats-right-single");
-                            conten.after(data);
+                            // conten.after(data);
+                            conten.append(data);
                             let button = $("#load_more");
                             button.attr("data-page", Number(button.attr("data-page")) + 1);
                         }
