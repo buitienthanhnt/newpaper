@@ -5,13 +5,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = "admin";
 
-    Route::get("/", function () {
-        return view("adminhtml/templates/home");
-    })->name("admin");
+    Route::get("login", "AdminController@adminLogin")->name($admin."_login");
 
-    Route::get("default", function () {
-        return view("adminhtml/templates/default");
-    });
+    Route::post("loginpost", "AdminController@loginPost")->name($admin."login_post");
+
+    Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
 
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
 
@@ -74,4 +72,6 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
     });
+
+    Route::get("default", "AdminController@default")->name($admin."_default");
 });
