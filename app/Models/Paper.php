@@ -31,4 +31,15 @@ class Paper extends Model
     {
         return $this->belongsTo(Writer::class, "writer");
     }
+
+    public function save_new($value)
+    {
+        try {
+            $this->fill($value)->save();
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
+    }
 }

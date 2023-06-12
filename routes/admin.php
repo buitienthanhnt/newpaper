@@ -11,6 +11,8 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
 
+    Route::get("extension", "ExtensionController@source")->name($admin."_source");
+
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
 
         Route::get("list", "PaperController@listPaper")->name($admin . "_paper_list");

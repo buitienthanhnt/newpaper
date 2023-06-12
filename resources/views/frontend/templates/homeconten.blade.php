@@ -42,10 +42,12 @@
                     <div class="trend-top-img">
                         <img src="{{ $tren_r->image_path }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
+                            @if ($tren_r->to_category()->first())
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
                             <h2><a href="{{ route('front_page_detail', ['page'=> $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a></h2>
                             <p>by {{$tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }} -
                                 {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
+                            @endif
                         </div>
                     </div>
                 </div>
