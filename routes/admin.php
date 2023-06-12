@@ -5,15 +5,13 @@ use Illuminate\Support\Facades\Route;
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = "admin";
 
-    Route::get("/", function () {
-        return view("adminhtml/templates/home");
-    })->name("admin");
+    Route::get("login", "AdminController@adminLogin")->name($admin."_login");
 
-    Route::get("default", function () {
-        return view("adminhtml/templates/default");
-    });
+    Route::post("loginpost", "AdminController@loginPost")->name($admin."login_post");
 
-    Route::prefix('paper')->group(function () use ($admin) {
+    Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
+
+    Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
 
         Route::get("list", "PaperController@listPaper")->name($admin . "_paper_list");
 
@@ -28,7 +26,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "PaperController@deletePaper")->name($admin."_paper_delete");
     });
 
-    Route::prefix('writer')->group(function () use ($admin) {
+    Route::prefix('writer')->middleware("adminLogin")->group(function () use ($admin) {
         Route::get("/", "WriterController@listOfWriter")->name($admin . "_writer_list");
 
         Route::get("create", "WriterController@createWriter")->name($admin . "_writer_create");
@@ -42,7 +40,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "WriterController@deleteWriter")->name($admin . "_writer_delete");
     });
 
-    Route::prefix('file')->group(function () use ($admin) {
+    Route::prefix('file')->middleware("adminLogin")->group(function () use ($admin) {
 
         Route::group(['prefix' => 'manager'], function () {
             \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -57,7 +55,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
-    Route::prefix('category')->group(function () {
+    Route::prefix('category')->middleware("adminLogin")->group(function () {
         Route::get("list", "CategoryController@listCategory")->name("category_admin_list");
 
         Route::get("create", "CategoryController@createCategory")->name("category_admin_create");
@@ -74,4 +72,6 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
     });
+
+    Route::get("default", "AdminController@default")->name($admin."_default");
 });
