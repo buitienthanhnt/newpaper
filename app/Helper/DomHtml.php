@@ -122,7 +122,7 @@ trait DomHtml
     }
 
     /**
-     * Undocumented function 
+     * Undocumented function
      * $ss = cut_str("Mới nhất vụ tấn công 2 trụ sở xã ở Đắk Lắk: Người dân hỗ trợ công an bắt giữ", 100, "...");
      *
      * @param string $str
@@ -134,10 +134,8 @@ trait DomHtml
     {
         $result = "";
         if ($str && $len) {
-            if (strlen($str) + strlen($noi) < $len) {
-                $result = $str + $noi;
-            } elseif (strlen($str) == $len) {
-                $result = $str;
+            if (strlen($str) <= $len) {
+               $result = $str;
             } else {
                 $arrs = array_filter(explode(" ", $str));
                 $i = 0;
@@ -150,4 +148,5 @@ trait DomHtml
         }
         return $result;
     }
+
 }
