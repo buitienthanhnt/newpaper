@@ -108,17 +108,16 @@ class ExtensionController extends Controller
 
     function get_dantri_value($doc): array
     {
-        // for vietnamnet.vn
+        // for dantri.com.vn
         $nodes = $this->findByXpath($doc, "class", "e-magazine__body"); // load content: (image error)
         $title = $this->getTitle($doc);
         $url_alias = $this->vn_to_str($title, 1);
         $short_conten = $this->findByXpath($doc, "class", "e-magazine__sapo");
         $short_conten_value = $short_conten[0]->textContent;
         $conten = $this->getNodeHtml($nodes[0]);
-        // for vietnamnet.vn
+        // for dantri.com.vn
 
         $request = $this->request;
-        dd();
         return [
             "title" => $title,
             "url_alias" => $url_alias,
