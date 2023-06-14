@@ -149,4 +149,28 @@ trait DomHtml
         return $result;
     }
 
+    public function read_file($file): string{
+        $r_file = fopen($file, "r");
+        $old_text = fread($r_file, filesize($file)); // read file
+        fclose($r_file);
+        return $old_text;
+    }
+    
+    public function write_file($file, $text_value = ""): int{
+        $w_file = fopen($file, "w");
+        $res = fprintf($w_file, $text_value); // tra ve so luong ky tu.
+        fclose($w_file);
+        return $res;
+    }
+
+    public function add_text($file, $text_value, $return_text = false)
+    {
+        $old_text = $this->read_file($file);
+        $write_length = $this->write_file($old_text."\n".$text_value);
+        if ($return_text) {
+            return $this->read_file($file);
+        }
+        return $write_length;
+    }
+
 }

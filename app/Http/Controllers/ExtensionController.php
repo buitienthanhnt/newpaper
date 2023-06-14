@@ -55,85 +55,22 @@ class ExtensionController extends Controller
     public function get_soha_value($doc)
     {
         // for soha.vn
-        $nodes = $this->findByXpath($doc, "class", "clearfix news-content");
-        $title = $this->getTitle($doc);
-        $url_alias = $this->vn_to_str($title, 1);
-        $short_conten = $this->findByXpath($doc, "class", "news-sapo");
-        $short_conten_value = $short_conten[0]->textContent;
-        $conten = $this->getNodeHtml($nodes[0]);
-        // for soha.vn
-
-        $request = $this->request;
-        return [
-            "title" => $title,
-            "url_alias" => $url_alias,
-            "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
-            "conten" => $conten,
-            "active" => $request->__get("active") ? true : false,
-            "show" => $request->__get("show") ? true : false,
-            "auto_hide" => $request->__get("auto_hide") ? true : false,
-            "show_writer" => $request->__get("show_writer") ? true : false,
-            "show_time" => $request->__get("show_time"),
-            "image_path" => $request->__get("image_path") ?: "",
-            "writer" => $request->get("writer", null)
-        ];
+        return $this->getValueByClassName($doc, "clearfix news-content", "news-sapo");
     }
 
     function get_vietnamnet_value($doc)
     {
         // for vietnamnet.vn
-        $nodes = $this->findByXpath($doc, "class", "maincontent main-content"); // load content
-        $title = $this->getTitle($doc);
-        $url_alias = $this->vn_to_str($title, 1);
-        $short_conten = $this->findByXpath($doc, "class", "content-detail-sapo");
-        $short_conten_value = $short_conten[0]->textContent;
-        $conten = $this->getNodeHtml($nodes[0]);
-        // for vietnamnet.vn
-
-        $request = $this->request;
-        return [
-            "title" => $title,
-            "url_alias" => $url_alias,
-            "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
-            "conten" => $conten,
-            "active" => $request->__get("active") ? true : false,
-            "show" => $request->__get("show") ? true : false,
-            "auto_hide" => $request->__get("auto_hide") ? true : false,
-            "show_writer" => $request->__get("show_writer") ? true : false,
-            "show_time" => $request->__get("show_time"),
-            "image_path" => $request->__get("image_path") ?: "",
-            "writer" => $request->get("writer", null)
-        ];
+        return $this->getValueByClassName($doc, "maincontent main-content", "content-detail-sapo");
     }
 
     function get_dantri_value($doc): array
     {
         // for dantri.com.vn
-        $nodes = $this->findByXpath($doc, "class", "e-magazine__body"); // load content: (image error)
-        $title = $this->getTitle($doc);
-        $url_alias = $this->vn_to_str($title, 1);
-        $short_conten = $this->findByXpath($doc, "class", "e-magazine__sapo");
-        $short_conten_value = $short_conten[0]->textContent;
-        $conten = $this->getNodeHtml($nodes[0]);
-        // for dantri.com.vn
-
-        $request = $this->request;
-        return [
-            "title" => $title,
-            "url_alias" => $url_alias,
-            "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
-            "conten" => $conten,
-            "active" => $request->__get("active") ? true : false,
-            "show" => $request->__get("show") ? true : false,
-            "auto_hide" => $request->__get("auto_hide") ? true : false,
-            "show_writer" => $request->__get("show_writer") ? true : false,
-            "show_time" => $request->__get("show_time"),
-            "image_path" => $request->__get("image_path") ?: "",
-            "writer" => $request->get("writer", null)
-        ];
+        return $this->getValueByClassName($doc, "e-magazine__body", "e-magazine__sapo");
     }
 
-    function check_type($request)
+    protected function check_type($request)
     {
         if ($request) {
             try {
@@ -145,5 +82,30 @@ class ExtensionController extends Controller
             }
         }
         return false;
+    }
+
+    protected function getValueByClassName($doc, $class_conten, $class_short_conten)
+    {
+        $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
+        $title = $this->getTitle($doc);
+        $url_alias = str_replace(":", "", $this->vn_to_str($title, 1));
+        $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
+        $short_conten_value = $short_conten[0]->textContent;
+        $conten = $this->getNodeHtml($nodes[0]);
+
+        $request = $this->request;
+        return [
+            "title" => $title,
+            "url_alias" => $url_alias,
+            "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
+            "conten" => $conten,
+            "active" => $request->__get("active") ? true : false,
+            "show" => $request->__get("show") ? true : false,
+            "auto_hide" => $request->__get("auto_hide") ? true : false,
+            "show_writer" => $request->__get("show_writer") ? true : false,
+            "show_time" => $request->__get("show_time"),
+            "image_path" => $request->__get("image_path") ?: "",
+            "writer" => $request->get("writer", null)
+        ];
     }
 }
