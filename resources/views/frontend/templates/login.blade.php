@@ -28,7 +28,6 @@
                 <div class="form-group clear">
                     <center><button type="submit" class="btn btn-info btn-sm">login</button></center>
                 </div>
-
             </form>
         </div>
     </div>

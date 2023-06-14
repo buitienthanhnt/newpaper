@@ -7,7 +7,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get("login", "AdminController@adminLogin")->name($admin."_login");
 
-    Route::post("loginpost", "AdminController@loginPost")->name($admin."login_post");
+    Route::post("loginpost", "AdminController@loginPost")->name($admin."_login_post");
 
     Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
 

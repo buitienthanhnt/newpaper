@@ -17,9 +17,13 @@ class AdminController extends Controller
         return view("adminhtml/templates/adminLogin");
     }
 
-    public function loginPost()
+    public function loginPost(Request $request)
     {
-        # code...
+        if ($request->get("admin_email") && $request->get("admin_password")) {
+
+        }else {
+            # code...
+        }
     }
 
     public function home()
