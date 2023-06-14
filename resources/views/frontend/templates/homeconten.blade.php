@@ -1,5 +1,5 @@
 @extends('frontend.layouts.home_default')
-
+@inject('DomHtml', 'App\Helper\HelperFunction')
 {{-- ========================trending============================ --}}
 
 {{-- col-lg-8 --}}
@@ -44,7 +44,7 @@
                         <div class="trend-top-cap trend-top-cap2">
                             @if ($tren_r->to_category()->first())
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
-                            <h2><a href="{{ route('front_page_detail', ['page'=> $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a></h2>
+                            <h2 title="{{ $tren_r->title }}"><a href="{{ route('front_page_detail', ['page'=> $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $DomHtml->cut_str($tren_r->title, 60, "...") }}</a></h2>
                             <p>by {{$tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }} -
                                 {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
                             @endif
@@ -140,13 +140,13 @@
                                                                         style="width: 124px; height: 104px;" alt="">
                                                                 </div>
                                                                 <div class="whats-right-cap">
-                                                                    <span
-                                                                        class="colorb">{{$paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}</span>
-                                                                    <h4><a
-                                                                            href="{{ route('front_page_detail', ['page'=>$paper->id, 'alias' => $paper->url_alias]) }}">{{ $paper->short_conten }}</a>
+                                                                    <h4><a title="{{ $paper->short_conten }}"
+                                                                            href="{{ route('front_page_detail', ['page'=>$paper->id, 'alias' => $paper->url_alias]) }}">{{ $DomHtml->cut_str($paper->short_conten, 76  , "...") }}</a>
                                                                     </h4>
-                                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
-                                                                    </p>
+                                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}</p>
+                                                                    <span
+                                                                        class="colorb mb-10">{{$paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
+                                                                    </span>
                                                                 </div>
                                                             </div>
                                                         </div>

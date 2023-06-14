@@ -34,11 +34,13 @@ class Paper extends Model
 
     public function save_new($value)
     {
-        try {
-            $this->fill($value)->save();
-            return true;
-        } catch (\Throwable $th) {
-            //throw $th;
+        if ($value) {
+            try {
+                $this->fill($value)->save();
+                return true;
+            } catch (\Throwable $th) {
+                throw new \Exception($th->getMessage(), 1);
+            }
         }
         return false;
     }
