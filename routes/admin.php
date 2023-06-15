@@ -5,11 +5,15 @@ use Illuminate\Support\Facades\Route;
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = "admin";
 
+    Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
+
     Route::get("login", "AdminController@adminLogin")->name($admin."_login");
 
     Route::post("loginpost", "AdminController@loginPost")->name($admin."_login_post");
 
-    Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
+    Route::get("createUser", "AdminUserController@createUser")->name($admin."_create_user");
+
+    Route::post("insetUser", "AdminUserController@insertUser")->name($admin."_insert_user");
 
     Route::get("extension", "ExtensionController@source")->name($admin."_source");
 

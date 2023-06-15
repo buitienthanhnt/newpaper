@@ -21,9 +21,9 @@
             <form action="{{ route('admin_login_post') }}" method="post">
                 @csrf
                 <div class="form-group">
-                    <label for="user_email">email:</label>
-                    <input id="user_email" class="form-control" type="email" name="admin_email" required
-                        placeholder="enter your admin email">
+                    <label for="admin_user">user name:</label>
+                    <input id="admin_user" class="form-control" type="text" name="admin_user" required
+                        placeholder="enter your admin user name">
                 </div>
 
                 <div class="form-group">
@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                     <a href="" class="text-info"><label>Forgot password?</label></a>
-                    <a href="" class="text-info" style="float: right"><label>new account?</label></a>
+                    <a href="{{ route('admin_create_user') }}" class="text-info" style="float: right"><label>new account?</label></a>
                 </div>
 
                 <div class="form-group clear">

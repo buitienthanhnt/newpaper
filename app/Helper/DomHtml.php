@@ -149,20 +149,31 @@ trait DomHtml
         return $result;
     }
 
+    /**
+     * đọc nội dung file.
+     */
     public function read_file($file): string{
         $r_file = fopen($file, "r");
         $old_text = fread($r_file, filesize($file)); // read file
         fclose($r_file);
         return $old_text;
     }
-    
-    public function write_file($file, $text_value = ""): int{
-        $w_file = fopen($file, "w");
+
+    /**
+     * $type = "w" là ghi đè nội dung file; $type = "a" là ghi nối tiếp với nội dung cũ.
+     * trả về số lượng ký tự mới thêm vào.
+     */
+    public function write_file($file, $text_value = "", $type = "w"): int{
+        $w_file = fopen($file, $type);
         $res = fprintf($w_file, $text_value); // tra ve so luong ky tu.
         fclose($w_file);
         return $res;
     }
 
+    /**
+     * ghi nối tiếp nội dung
+     * $return_text = false: trả về số lượng ký tự mới ghi thêm. $return_text = true: trả về nội dung file mới.
+     */
     public function add_text($file, $text_value, $return_text = false)
     {
         $old_text = $this->read_file($file);
@@ -173,4 +184,11 @@ trait DomHtml
         return $write_length;
     }
 
+    /**
+     *tạo mới file bằng: "fopen" dùng đuôi: "a" hoặc "w". nếu chưa tồn tại sẽ tạo file mới, có rồi sẽ mở file đó.
+     */
+    function create_file($file) {
+        $new_file = fopen($file, "a");
+        fclose($new_file);
+    }
 }

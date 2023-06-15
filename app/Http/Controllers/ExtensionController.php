@@ -15,7 +15,7 @@ class ExtensionController extends Controller
     const SOURCE = [
         "soha.vn" => "get_soha_value",
         "vietnamnet.vn" => "get_vietnamnet_value",
-        "dantri.com.vn" => "get_dantri_value"
+        "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
     public function __construct(
