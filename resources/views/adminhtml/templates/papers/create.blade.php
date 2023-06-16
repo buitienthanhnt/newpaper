@@ -53,7 +53,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Title:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="page_title" required value="@isset($title){{ $title }}@endisset" />
+                                    <input type="text" class="form-control" name="page_title" required value="@isset($title){{ $title }}@endisset" required placeholder="page title"/>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                             <div class="form-group row">
                                 <label for="url-alias" class="col-sm-2">url alias:</label>
                                 <div class="col-sm-8">
-                                    <input id="url-alias" class="form-control" type="text" name="alias" required value="@isset($url_alias){{ $url_alias }}@endisset">
+                                    <input id="url-alias" class="form-control" type="text" name="alias" placeholder="use page title if this value is null" value="@isset($url_alias){{ $url_alias }}@endisset">
                                 </div>
                             </div>
                         </div>
@@ -93,9 +93,7 @@
                         <div class="col-md-6">
                             <label for="short_conten" class="col-sm-2">short conten:</label>
                             <div class="col-sm-10">
-                                <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                                    style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset
-                                </textarea>
+                                <textarea id="short_conten" name="short_conten" class="form-control" rows="4" style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset</textarea>
                             </div>
                         </div>
 

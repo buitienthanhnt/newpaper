@@ -20,6 +20,7 @@ class ExtensionController extends Controller
         "soha.vn" => "get_soha_value",
         "vietnamnet.vn" => "get_vietnamnet_value",
         "github.com" => "get_gitgub_value",
+        "tienphong.vn" => "tienphong_vn",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -77,25 +78,30 @@ class ExtensionController extends Controller
 
     public function get_soha_value($doc)
     {
-        // for soha.vn
+        // for: soha.vn
         return $this->getValueByClassName($doc, "clearfix news-content", "news-sapo");
     }
 
     function get_vietnamnet_value($doc)
     {
-        // for vietnamnet.vn
+        // for: vietnamnet.vn
         return $this->getValueByClassName($doc, "maincontent main-content", "content-detail-sapo");
     }
 
     function get_dantri_value($doc): array
     {
-        // for dantri.com.vn
+        // for: dantri.com.vn
         return $this->getValueByClassName($doc, "e-magazine__body", "e-magazine__sapo");
     }
 
     public function get_gitgub_value($doc){
-        // for github.com
+        // for: github.com
         return $this->getValueByClassName($doc, "js-quote-selection-container", "js-issue-title markdown-title");
+    }
+
+    public function tienphong_vn($doc){
+        // for: tienphong.vn
+        return $this->getValueByClassName($doc, "article__body cms-body", "article__sapo cms-desc");
     }
 
     protected function check_type($request)
