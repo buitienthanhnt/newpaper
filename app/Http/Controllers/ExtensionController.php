@@ -54,9 +54,11 @@ class ExtensionController extends Controller
             throw new \Exception($th->getMessage(), 1);
         }
 
-        $value = call_user_func_array([$this, $type], [$doc]);
-        // dd($value);
-        // $check = $this->paper->save_new($value);
+        if (method_exists($this, str_replace(".", "_", $type))){
+            $value = $this->{$type}($doc);
+        }else{
+            $value = call_user_func_array([$this, $type], [$doc]);
+        }
 
         if (!$value) {
             return redirect()->back()->with("error", "can not parse source!");
@@ -92,6 +94,7 @@ class ExtensionController extends Controller
     }
 
     public function get_gitgub_value($doc){
+        // for github.com
         return $this->getValueByClassName($doc, "js-quote-selection-container", "js-issue-title markdown-title");
     }
 
@@ -101,10 +104,9 @@ class ExtensionController extends Controller
             try {
                 $url_values = parse_url($request);
                 if (in_array($url_values["host"], array_keys(self::SOURCE))) {
-                    return self::SOURCE[$url_values["host"]];
+                    return method_exists($this, str_replace(".", "", $url_values["host"])) ? $url_values["host"] : self::SOURCE[$url_values["host"]];
                 }
-            } catch (\Throwable $th) {
-            }
+            } catch (\Throwable $th) {}
         }
         return false;
     }
