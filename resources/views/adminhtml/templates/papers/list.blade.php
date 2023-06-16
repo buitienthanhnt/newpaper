@@ -28,6 +28,7 @@
         <div class="col-md-12">
             <a href="{{ route('admin_paper_create') }}"><span class="btn btn-info">new paper</span></a>
             <span class="btn btn-primary">setting paper info</span>
+            <a href="{{ route('admin_new_by_url') }}" class="btn btn-info">new by url</a>
         </div>
     </div>
     <div class="row">

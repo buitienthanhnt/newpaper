@@ -53,7 +53,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Title:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="page_title" required />
+                                    <input type="text" class="form-control" name="page_title" required value="@isset($title){{ $title }}@endisset" />
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,9 @@
                             <div class="form-group row">
                                 <label for="active" class="col-sm-1">Active:</label>
                                 <div class="col-sm-1">
-                                    <input id="active" class="form-check-input" type="checkbox" name="active" checked>
+                                    <input id="active" class="form-check-input" type="checkbox" name="active"
+                                        value="@if (isset($active)){{ $active ? 'checked' : '' }} @else checked @endif"
+                                    >
                                 </div>
 
                             </div>
@@ -74,7 +76,7 @@
                             <div class="form-group row">
                                 <label for="url-alias" class="col-sm-2">url alias:</label>
                                 <div class="col-sm-8">
-                                    <input id="url-alias" class="form-control" type="text" name="alias" required>
+                                    <input id="url-alias" class="form-control" type="text" name="alias" required value="@isset($url_alias){{ $url_alias }}@endisset">
                                 </div>
                             </div>
                         </div>
@@ -82,7 +84,7 @@
                         <div class="col-md-6 row">
                             <label for="show" class="col-sm-1">show:</label>
                             <div class="col-sm-1">
-                                <input id="show" class="form-check-input" type="checkbox" name="show" checked>
+                                <input id="show" class="form-check-input" type="checkbox" name="show" value="@if (isset($show)) {{ $show ? 'checked' : '' }} @else checked @endif">
                             </div>
                         </div>
                     </div>
@@ -92,14 +94,15 @@
                             <label for="short_conten" class="col-sm-2">short conten:</label>
                             <div class="col-sm-10">
                                 <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                                    style="padding: 10px; height: 100%;"></textarea>
+                                    style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset
+                                </textarea>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="auto_hide">auto hide: </label>
-                                <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide">
+                                <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide" value=" @if (isset($show)){{ $show ? 'checked' : '' }} @else checked @endif">
                             </div>
                         </div>
                     </div>
@@ -140,7 +143,11 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea id="conten" name="conten" class="form-control">{!! old('content', '') !!}</textarea>
+                                <textarea id="conten" name="conten" class="form-control">@if (isset($conten))
+                                    {{ $conten }}
+                                @else
+                                {!! old('content', '') !!}
+                                @endif</textarea>
                             </div>
                         </div>
                     </div>

@@ -168,4 +168,8 @@ class PaperController extends Controller
             "value" => "delete error. Please try again!"
         ]), 401);
     }
+
+    public function new_by_url() {
+        return view("adminhtml.templates.papers.new_by_url");
+    }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DomHtml;
+use App\Models\Category;
 use App\Models\Paper;
+use App\Models\Writer;
 use Illuminate\Http\Request;
 
 class ExtensionController extends Controller
@@ -12,6 +14,8 @@ class ExtensionController extends Controller
 
     protected $request;
     protected $paper;
+    protected $category;
+
     const SOURCE = [
         "soha.vn" => "get_soha_value",
         "vietnamnet.vn" => "get_vietnamnet_value",
@@ -19,11 +23,13 @@ class ExtensionController extends Controller
     ];
 
     public function __construct(
+        Request $request,
         Paper $paper,
-        Request $request
+        Category $category
     ) {
         $this->request = $request;
         $this->paper = $paper;
+        $this->category = $category;
     }
 
     public function source(Request $request)
@@ -48,8 +54,22 @@ class ExtensionController extends Controller
         }
 
         $value = call_user_func_array([$this, $type], [$doc]);
-        $check = $this->paper->save_new($value);
-        return $check ? "save success" : "save error";
+        // dd($value);
+        // $check = $this->paper->save_new($value);
+
+        if (!$value) {
+            return redirect()->back()->with("error", "can not parse source!");
+        }else {
+            $writers = Writer::all();
+            $values = array_merge($value, [
+                "category_option" => $this->category->category_tree_option(),
+                "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
+                "filemanager_url_base" => url("adminhtml/file/manager"),
+                "writers" => $writers
+            ]);
+
+            return view("adminhtml.templates.papers.create", $values);
+        }
     }
 
     public function get_soha_value($doc)
@@ -88,7 +108,7 @@ class ExtensionController extends Controller
     {
         $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
         $title = $this->getTitle($doc);
-        $url_alias = str_replace(":", "", $this->vn_to_str($title, 1));
+        $url_alias = str_replace([":", "'", '"', "“", "”", ","], "", $this->vn_to_str($title, 1));
         $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
         $short_conten_value = $short_conten[0]->textContent;
         $conten = $this->getNodeHtml($nodes[0]);
