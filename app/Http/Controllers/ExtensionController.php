@@ -19,6 +19,7 @@ class ExtensionController extends Controller
     const SOURCE = [
         "soha.vn" => "get_soha_value",
         "vietnamnet.vn" => "get_vietnamnet_value",
+        "github.com" => "get_gitgub_value",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -90,6 +91,10 @@ class ExtensionController extends Controller
         return $this->getValueByClassName($doc, "e-magazine__body", "e-magazine__sapo");
     }
 
+    public function get_gitgub_value($doc){
+        return $this->getValueByClassName($doc, "js-quote-selection-container", "js-issue-title markdown-title");
+    }
+
     protected function check_type($request)
     {
         if ($request) {
@@ -108,7 +113,7 @@ class ExtensionController extends Controller
     {
         $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
         $title = $this->getTitle($doc);
-        $url_alias = str_replace([":", "'", '"', "“", "”", ","], "", $this->vn_to_str($title, 1));
+        $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " "], "", $this->vn_to_str($title, 1));
         $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
         $short_conten_value = $short_conten[0]->textContent;
         $conten = $this->getNodeHtml($nodes[0]);
