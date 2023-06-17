@@ -21,6 +21,8 @@ class ExtensionController extends Controller
         "vietnamnet.vn" => "get_vietnamnet_value",
         "github.com" => "get_gitgub_value",
         "tienphong.vn" => "tienphong_vn",
+        "tuoitre.vn" => "get_tuoitre_vn",
+        "giaoducthoidai.vn" => "get_giaoducthoidai_vn",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -64,6 +66,8 @@ class ExtensionController extends Controller
         if (!$value) {
             return redirect()->back()->with("error", "can not parse source!");
         }else {
+            // echo($value["conten"]);
+            // dd();
             $writers = Writer::all();
             $values = array_merge($value, [
                 "category_option" => $this->category->category_tree_option(),
@@ -91,7 +95,8 @@ class ExtensionController extends Controller
     function get_dantri_value($doc): array
     {
         // for: dantri.com.vn
-        return $this->getValueByClassName($doc, "e-magazine__body", "e-magazine__sapo");
+        // return $this->getValueByClassName($doc, "e-magazine__body", "e-magazine__sapo");
+        return $this->getValueByClassName($doc, "singular-content", "e-magazine__sapo");
     }
 
     public function get_gitgub_value($doc){
@@ -102,6 +107,14 @@ class ExtensionController extends Controller
     public function tienphong_vn($doc){
         // for: tienphong.vn
         return $this->getValueByClassName($doc, "article__body cms-body", "article__sapo cms-desc");
+    }
+
+    public function get_giaoducthoidai_vn($doc){
+        return $this->getValueByClassName($doc, "article__body cms-body", "article__sapo cms-desc");
+    }
+    public function get_tuoitre_vn($doc)
+    {
+        return $this->getValueByClassName($doc, "detail-cmain", "detail-sapo");
     }
 
     protected function check_type($request)
@@ -119,14 +132,20 @@ class ExtensionController extends Controller
 
     protected function getValueByClassName($doc, $class_conten, $class_short_conten)
     {
+        $request = $this->request;
         $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
         $title = $this->getTitle($doc);
         $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " "], "", $this->vn_to_str($title, 1));
-        $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
-        $short_conten_value = $short_conten[0]->textContent;
-        $conten = $this->getNodeHtml($nodes[0]);
+        $short_conten_value = "";  $conten = "";
+        try {
+            $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
+            $short_conten_value = $short_conten[0]->textContent;
+        }catch (\Exception $e){}
 
-        $request = $this->request;
+        try {
+            $conten = $this->getNodeHtml($nodes[0]);
+        }catch (\Exception $e){}
+
         return [
             "title" => $title,
             "url_alias" => $url_alias,

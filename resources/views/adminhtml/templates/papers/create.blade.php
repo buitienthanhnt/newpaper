@@ -142,7 +142,7 @@
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
                                 <textarea id="conten" name="conten" class="form-control">@if (isset($conten))
-                                    {{ $conten }}
+                                    {!! $conten !!}
                                 @else
                                 {!! old('content', '') !!}
                                 @endif</textarea>
@@ -211,10 +211,7 @@
 
 @section('after_js')
     <script>
-        $(document).ready(function() {
-
-        });
-
+        encodeURI('\uD800\uDFFF');
         tinymce.init({
             convert_urls: false,
             selector: "textarea#conten",
