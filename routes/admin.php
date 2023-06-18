@@ -21,7 +21,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
 
-        Route::get("list", "PaperController@listPaper")->name($admin . "_paper_list");
+        Route::get("/", "PaperController@listPaper")->name($admin . "_paper_list");
 
         Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
 

@@ -51,6 +51,21 @@ trait DomHtml
     public function getNodeHtml($node)
     {
         $html = $node->ownerDocument->saveHTML($node);
+        //(dantri error with image)
+        // <img
+        //     title="Không quân, pháo binh Nga hiệp đồng tác chiến chặn đà tiến của Ukraine - 1"
+        //     src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20680%20453'%3E%3Crect%20x='0'%20y='0'%20width='100%'%20height='100%'%20style='fill:rgb(241,%20245,%20249)'%20%2F%3E%3C%2Fsvg%3E"
+        //     alt="Không quân, pháo binh Nga hiệp đồng tác chiến chặn đà tiến của Ukraine - 1" data-width="680"
+        //     data-height="453"
+        //     data-original="https://icdn.dantri.com.vn/2023/06/17/phan-cong-ukrainereuters-crop-1681224851660-1686975211997.jpeg"
+        //     data-photo-id="2511139" data-track-content="" data-content-name="article-content-image"
+        //     data-content-piece="article-content-image_2511139"
+        //     data-content-target="/the-gioi/khong-quan-phao-binh-nga-hiep-dong-tac-chien-chan-da-tien-cua-ukraine-20230617111944211.htm"
+        //     data-src="https://icdn.dantri.com.vn/thumb_w/680/2023/06/17/phan-cong-ukrainereuters-crop-1681224851660-1686975211997.jpeg"
+        // >
+        // dd($html);
+        $html = preg_replace('/src="data:image/', 'data-old="data:image/', $html); // for dantri.com.vn
+        $html = str_replace("data-src", "src", $html);                             // for dantri.com.vn
         return $html;
     }
 
