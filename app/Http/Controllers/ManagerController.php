@@ -32,7 +32,7 @@ class ManagerController extends Controller
     public function homePage()
     {
         $list_center = []; $list_center_conten = []; $most_recent = null; $most_popular = null; $trendings= null; $weekly3_contens = null; $video_contens = null;
-        $trending_left = $this->paper->take(3)->get();
+        $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
         $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){return null;});
         if ($center_category) {
@@ -48,9 +48,9 @@ class ManagerController extends Controller
         }
 
         $most_recent = $this->paper->orderBy("updated_at", "ASC")->take(3)->get();
-        $most_popular =  $this->paper->all();
+        $most_popular =  $this->paper->take(8)->get();
         $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
-        $weekly3_contens = $trendings = $this->paper->orderBy("updated_at", "DESC")->get();
+        $weekly3_contens = $trendings = $this->paper->orderBy("updated_at", "DESC")->take(8)->get();
 
         return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center", "most_recent", "most_popular", "trendings", "weekly3_contens", "video_contens"));
     }
@@ -71,7 +71,7 @@ class ManagerController extends Controller
         $category = Category::where("url_alias", "like", $category_id)->get()->first();
 
         $list_center = []; $list_center_conten = []; $most_recent = null; $most_popular = null; $trendings= null; $weekly3_contens = null; $video_contens = null;
-        $trending_left = $this->paper->take(3)->get();
+        $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
         $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){return null;});
         if ($center_category) {

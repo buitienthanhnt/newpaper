@@ -45,6 +45,16 @@ class AdminController extends Controller
         }
     }
 
+    public function logout()
+    {
+        if ($this->adminUser->check_login()) {
+            $this->adminUser->admin_logout();
+            return redirect()->route("admin")->with("success", "logout!, many thanks.");
+        }else{
+            return redirect()->route("admin")->with("error", "can not logout, please login first!!");
+        }
+    }
+
     protected function admin_login($adminUser){
         if (!Session::isStarted()) {
             Session::start();

@@ -20,6 +20,7 @@ class AdminUser extends Model
         Request $request
     )
     {
+        $this->session_begin();
         $this->request = $request;
     }
 
@@ -35,16 +36,18 @@ class AdminUser extends Model
     }
 
     function admin_logout() : void{
-
+        if ($admin_user = Session::get("admin_user")) {
+            Session::remove("admin_user");
+        }
     }
 
     public function get_admin_user() : mixed {
-        $this->session_begin();
-        return Session::get("user_admin", null);
+        // $this->session_begin();
+        return Session::get("admin_user", null);
     }
 
     public function check_login() : bool {
-        $this->session_begin();
+        // $this->session_begin();
         return Session::has("admin_user") ;
     }
 
@@ -52,5 +55,26 @@ class AdminUser extends Model
         if (!Session::isStarted()) {
             Session::start();
         }
+    }
+
+    /**
+     * login by admin user
+     *
+     * @return bool
+     */
+    public function login_by_admin_user() : bool
+    {
+        try {
+            Session::push("admin_user", $this);
+            Session::save();
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
+    }
+
+    public function __destruct()
+    {
     }
 }

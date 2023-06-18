@@ -185,7 +185,7 @@ trait DomHtml
     }
 
     /**
-     *tạo mới file bằng: "fopen" dùng đuôi: "a" hoặc "w". nếu chưa tồn tại sẽ tạo file mới, có rồi sẽ mở file đó.
+     * tạo mới file bằng: "fopen" dùng đuôi: "a" hoặc "w". nếu chưa tồn tại sẽ tạo file mới, có rồi sẽ mở file đó.
      */
     function create_file($file) {
         $new_file = fopen($file, "a");
