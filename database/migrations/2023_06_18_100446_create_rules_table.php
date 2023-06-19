@@ -15,7 +15,7 @@ class CreateRulesTable extends Migration
     {
         Schema::create('rules', function (Blueprint $table) {
             $table->id();
-            $table->integer("paermission_id");
+            $table->integer("permission_id");
             $table->string("label");
             $table->softDeletes();
             $table->timestamps();

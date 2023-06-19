@@ -24,6 +24,8 @@ class ExtensionController extends Controller
         "tuoitre.vn" => "get_tuoitre_vn",
         "giaoducthoidai.vn" => "get_giaoducthoidai_vn",
         "viblo.asia" => "get_viblo_asia",
+        "dinhnt.com" => "get_dinhnt_com",
+        "xuanthulab.net" => "get_xuanthulab_net",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -118,8 +120,17 @@ class ExtensionController extends Controller
         return $this->getValueByClassName($doc, "detail-cmain", "detail-sapo");
     }
 
+    function get_dinhnt_com($doc){
+        return $this->getValueByClassName($doc, "blog-single-1x", "overlay-text text-left");
+    }
+
+    function get_xuanthulab_net($doc){
+        //
+        return $this->getValueByClassName($doc, "main-post", "overlay-text text-left");
+    }
+
     function get_viblo_asia($doc) {
-        return $this->getValueByClassName($doc, "md-contents", "detail-sapo");
+        return $this->getValueByClassName($doc, "md-contents", "");
     }
 
     protected function check_type($request)
@@ -135,6 +146,12 @@ class ExtensionController extends Controller
         return false;
     }
 
+    /**
+     * @param $doc                       // source for search
+     * @param string $class_conten       // for main of conten
+     * @param string $class_short_conten // for short conten
+     * @return array
+     */
     protected function getValueByClassName($doc, $class_conten, $class_short_conten)
     {
         $request = $this->request;
