@@ -152,7 +152,7 @@ trait DomHtml
             if (strlen($str) <= $len) {
                $result = $str;
             } else {
-                $arrs = array_filter(explode(" ", $str));
+                $arrs = array_values(array_filter(explode(" ", $str)));
                 $i = 0;
                 while (strlen($result) + strlen($arrs[$i]) + 1 + strlen($noi) <= $len) {
                     $result .= ($i == 0 ? "" : " ") . $arrs[$i];

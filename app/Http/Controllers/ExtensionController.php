@@ -26,6 +26,8 @@ class ExtensionController extends Controller
         "viblo.asia" => "get_viblo_asia",
         "dinhnt.com" => "get_dinhnt_com",
         "xuanthulab.net" => "get_xuanthulab_net",
+        "hoclaptrinh.vn" => "get_hoclaptrinh_vn",
+        "sql.js.org" => "get_sql_js_org",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -127,6 +129,15 @@ class ExtensionController extends Controller
     function get_xuanthulab_net($doc){
         //
         return $this->getValueByClassName($doc, "main-post", "overlay-text text-left");
+    }
+
+    function get_hoclaptrinh_vn($doc){
+        // https://hoclaptrinh.vn/tutorial/hoc-sqlite-co-ban-va-nang-cao/su-dung-sqlite-voi-php
+        return $this->getValueByClassName($doc, "question-detail-wrapper", "");
+    }
+
+    function get_sql_js_org($doc){ // https://sql.js.org/#/ not work.
+        return $this->getValueByClassName($doc, "content", "");
     }
 
     function get_viblo_asia($doc) {
