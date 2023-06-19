@@ -39,9 +39,9 @@ class AdminController extends Controller
             }else {
                 dd("auth found");
             }
-            dd(Session::get("admin_user"));
+            return redirect()->route("admin")->with("success", "login success. Hello $adminUser->name");
         }else {
-            # code...
+            return redirect()->back()->with("error", "can not login. Please check again user name and passsword.");
         }
     }
 
@@ -49,7 +49,7 @@ class AdminController extends Controller
     {
         if ($this->adminUser->check_login()) {
             $this->adminUser->admin_logout();
-            return redirect()->route("admin")->with("success", "logout!, many thanks.");
+            return redirect()->route("admin_login")->with("success", "logout! see you again.");
         }else{
             return redirect()->route("admin")->with("error", "can not logout, please login first!!");
         }

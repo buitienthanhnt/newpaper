@@ -23,8 +23,6 @@ class AdminUserController extends Controller
     }
 
     function insertUser(Request $request) {
-        // dd($request->toArray());
-
         $adminUser = $this->adminUser;
         $adminUser->fill([
             "name" => $request->get("admin_user"),

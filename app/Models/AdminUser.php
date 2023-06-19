@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
@@ -17,11 +16,9 @@ class AdminUser extends Model
     protected $request;
 
     public function __construct(
-        Request $request
     )
     {
         $this->session_begin();
-        $this->request = $request;
     }
 
     public function admin_login($user_name, $pass_word) : mixed {
@@ -65,9 +62,11 @@ class AdminUser extends Model
     public function login_by_admin_user() : bool
     {
         try {
-            Session::push("admin_user", $this);
-            Session::save();
-            return true;
+            if ($this->toArray()) {
+                Session::push("admin_user", $this);
+                Session::save();
+                return true;
+            }
         } catch (\Throwable $th) {
             //throw $th;
         }

@@ -23,6 +23,7 @@ class ExtensionController extends Controller
         "tienphong.vn" => "tienphong_vn",
         "tuoitre.vn" => "get_tuoitre_vn",
         "giaoducthoidai.vn" => "get_giaoducthoidai_vn",
+        "viblo.asia" => "get_viblo_asia",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -51,7 +52,7 @@ class ExtensionController extends Controller
                 $html = file_get_contents($request_url);
                 $doc = $this->loadDom($html);  // for load html text to dom
             } else {
-                dd("input url not found");
+                return redirect()->back()->with("error", "input url not found");
             }
         } catch (\Throwable $th) {
             throw new \Exception($th->getMessage(), 1);
@@ -117,6 +118,10 @@ class ExtensionController extends Controller
         return $this->getValueByClassName($doc, "detail-cmain", "detail-sapo");
     }
 
+    function get_viblo_asia($doc) {
+        return $this->getValueByClassName($doc, "md-contents", "detail-sapo");
+    }
+
     protected function check_type($request)
     {
         if ($request) {
@@ -133,9 +138,8 @@ class ExtensionController extends Controller
     protected function getValueByClassName($doc, $class_conten, $class_short_conten)
     {
         $request = $this->request;
-        $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
         $title = $this->getTitle($doc);
-        $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " "], "", $this->vn_to_str($title, 1));
+        $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " ", "|"], "", $this->vn_to_str($title, 1));
         $short_conten_value = "";  $conten = "";
         try {
             $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
@@ -143,6 +147,7 @@ class ExtensionController extends Controller
         }catch (\Exception $e){}
 
         try {
+            $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
             $conten = $this->getNodeHtml($nodes[0]);
         }catch (\Exception $e){}
 

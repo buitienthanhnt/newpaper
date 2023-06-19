@@ -15,6 +15,18 @@
 @section('body_main_conten')
     <div class="row">
         <div class="col-md-6 offset-md-3">
+            @if (session('error'))
+                <div class="alert alert-success" id="error-message" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success" id="error-message" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <center>
                 <h4>Login admin form</h4>
             </center>
@@ -34,7 +46,8 @@
 
                 <div class="form-group">
                     <a href="" class="text-info"><label>Forgot password?</label></a>
-                    <a href="{{ route('admin_create_user') }}" class="text-info" style="float: right"><label>new account?</label></a>
+                    <a href="{{ route('admin_create_user') }}" class="text-info" style="float: right"><label>new
+                            account?</label></a>
                 </div>
 
                 <div class="form-group clear">
@@ -43,6 +56,15 @@
             </form>
         </div>
     </div>
+
+    <script>
+        setInterval(() => {
+            var error_message = $("#error-message");
+            if (error_message.length) {
+                $(error_message).remove()
+            }
+        }, 3000);
+    </script>
 @endsection
 
 @section('body_left_colum')

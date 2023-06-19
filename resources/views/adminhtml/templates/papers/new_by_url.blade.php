@@ -39,9 +39,9 @@
         <div>
             <div class="card-body">
                 <h4 class="card-title">add new source</h4>
-                <form class="form-sample" style="margin-top: 12px" method="GET" enctype="multipart/form-data" action={{ route('admin_source') }}>
+                <form class="form-sample" style="margin-top: 12px" method="GET" enctype="multipart/form-data"
+                    action={{ route('admin_source') }}>
                     @csrf
-
                     @if ($message = session('success'))
                         <?php alert()->success('server message', $message); ?>
                     @elseif ($error = session('error'))
@@ -52,7 +52,8 @@
                         <div class="col-md-12 row">
                             <label for="source_request" class="col-sm-2">URL source--->:</label>
                             <div class="col-sm-10">
-                                <input id="source_request" class="form-control" type="text" name="source_request" required>
+                                <input id="source_request" class="form-control" type="text" name="source_request"
+                                    required>
                             </div>
                         </div>
                     </div>
