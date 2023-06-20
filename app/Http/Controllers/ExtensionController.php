@@ -28,6 +28,9 @@ class ExtensionController extends Controller
         "xuanthulab.net" => "get_xuanthulab_net",
         "hoclaptrinh.vn" => "get_hoclaptrinh_vn",
         "sql.js.org" => "get_sql_js_org",
+        "vtc.vn" => "get_vtc_vn",
+        "www.qdnd.vn" => "get_www_qdnd_vn",
+        "www.delftstack.com" => "get_www_delftstack_com",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -142,6 +145,18 @@ class ExtensionController extends Controller
 
     function get_viblo_asia($doc) {
         return $this->getValueByClassName($doc, "md-contents", "");
+    }
+
+    function get_www_delftstack_com($doc) {
+        return $this->getValueByClassName($doc, "col-md-9 col-sm-9 main-content", "");
+    }
+
+    function get_vtc_vn($doc) {
+        return $this->getValueByClassName($doc, "edittor-content box-cont mt15 clearfix", "font18 bold inline-nb");
+    }
+
+    function get_www_qdnd_vn($doc){
+        return $this->getValueByClassName($doc, "post-content", "");
     }
 
     protected function check_type($request)

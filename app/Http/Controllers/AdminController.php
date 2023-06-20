@@ -34,15 +34,18 @@ class AdminController extends Controller
         }
         if ($request->get("admin_user") && $request->get("admin_password")) {
             $adminUser = $this->adminUser->where("name", "=", $request->get("admin_user"))->get()->first();
-            if (Hash::check($request->get("admin_password"), $adminUser->password)) {
-                $this->admin_login($adminUser);
-            }else {
-                dd("auth found");
+            if ($adminUser) {
+                if (Hash::check($request->get("admin_password"), $adminUser->password)) {
+                    $this->admin_login($adminUser);
+                }else {
+                    dd("auth found");
+                }
+                return redirect()->route("admin")->with("success", "login success. Hello $adminUser->name");
             }
-            return redirect()->route("admin")->with("success", "login success. Hello $adminUser->name");
         }else {
             return redirect()->back()->with("error", "can not login. Please check again user name and passsword.");
         }
+        return redirect()->back()->with("error", "can not login. Please check again user name and passsword.");
     }
 
     public function logout()
