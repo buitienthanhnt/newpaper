@@ -65,10 +65,10 @@ class ExtensionController extends Controller
             throw new \Exception($th->getMessage(), 1);
         }
 
-        if (method_exists($this, str_replace(".", "_", $type))){
-            $value = $this->{$type}($doc);
+        if (method_exists($this, str_replace(".", "_", $type))){ // kiểm tra xem class có tồn tại function có tên như biến $type không.
+            $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
         }else{
-            $value = call_user_func_array([$this, $type], [$doc]);
+            $value = call_user_func_array([$this, $type], [$doc]); // gọi bằng call_user_func_array() với class, method, param truyền vào.
         }
 
         if (!$value) {
