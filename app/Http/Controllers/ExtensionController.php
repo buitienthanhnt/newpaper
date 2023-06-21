@@ -17,21 +17,21 @@ class ExtensionController extends Controller
     protected $category;
 
     const SOURCE = [
-        "soha.vn" => "get_soha_value",
-        "vietnamnet.vn" => "get_vietnamnet_value",
-        "github.com" => "get_gitgub_value",
-        "tienphong.vn" => "tienphong_vn",
-        "tuoitre.vn" => "get_tuoitre_vn",
+        "soha.vn"           => "get_soha_value",
+        "vietnamnet.vn"     => "get_vietnamnet_value",
+        "github.com"        => "get_gitgub_value",
+        "tienphong.vn"      => "tienphong_vn",
+        "tuoitre.vn"        => "get_tuoitre_vn",
         "giaoducthoidai.vn" => "get_giaoducthoidai_vn",
-        "viblo.asia" => "get_viblo_asia",
-        "dinhnt.com" => "get_dinhnt_com",
-        "xuanthulab.net" => "get_xuanthulab_net",
-        "hoclaptrinh.vn" => "get_hoclaptrinh_vn",
-        "sql.js.org" => "get_sql_js_org",
-        "vtc.vn" => "get_vtc_vn",
-        "www.qdnd.vn" => "get_www_qdnd_vn",
-        "www.delftstack.com" => "get_www_delftstack_com",
-        "dantri.com.vn" => "get_dantri_value" // host => function
+        "viblo.asia"        => "get_viblo_asia",
+        "dinhnt.com"        => "get_dinhnt_com",
+        "xuanthulab.net"    => "get_xuanthulab_net",
+        "hoclaptrinh.vn"    => "get_hoclaptrinh_vn",
+        "sql.js.org"        => "get_sql_js_org",
+        "vtc.vn"            => "get_vtc_vn",
+        "www.qdnd.vn"       => "get_www_qdnd_vn",
+        "www.delftstack.com"=> "get_www_delftstack_com",
+        "dantri.com.vn"     => "get_dantri_value" // host => function
     ];
 
     public function __construct(
