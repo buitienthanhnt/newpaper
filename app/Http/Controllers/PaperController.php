@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\Page;
 use App\Models\Category;
 use App\Models\Paper;
+use App\Models\RemoteSourceHistory;
 use App\Models\Writer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ class PaperController extends Controller
     protected $request;
     protected $paper;
     protected $category;
+    const PAGE_TYPE = 1;
 
     public function __construct(
         Request $request,
@@ -79,6 +81,13 @@ class PaperController extends Controller
             if ($new_id = $paper->id) {
                 $this->insert_page_category($new_id, $category_option);
                 $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAGE_TAG);
+
+                /**
+                 * save for history
+                 */
+                if ($request_url = $request->get("request_url")) {
+                    $this->save_remote_source_history($request_url, self::PAGE_TYPE, $new_id, true);
+                }
             }
             return redirect()->back()->with("success", "add success");
         } catch (\Exception $e) {
@@ -169,7 +178,21 @@ class PaperController extends Controller
         ]), 401);
     }
 
-    public function new_by_url() {
+    public function new_by_url()
+    {
         return view("adminhtml.templates.papers.new_by_url");
+    }
+
+    /**
+     * @return bool
+     */
+    function save_remote_source_history($request_url = "", $type = null, $paper_id = null, $active = true)
+    {
+        // save for history
+        if (!$request_url) {
+            return false;
+        }
+        $history = new RemoteSourceHistory(["url_value" => $request_url, "type" => $type, "paper_id" => $paper_id, "active" => $active]);
+        return $history->save();
     }
 }
