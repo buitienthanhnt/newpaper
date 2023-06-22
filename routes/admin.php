@@ -19,6 +19,20 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get("extension", "ExtensionController@source")->name($admin."_source");
 
+    Route::prefix('rule')->middleware("adminLogin")->group(function () use($admin){
+        Route::get('/', "RuleController@list")->name($admin."_rule_list");
+
+        Route::get('/create', "RuleController@create")->name($admin."_rule_create");
+
+        Route::post('/insert', "RuleController@insert")->name($admin."_rule_insert");
+
+        Route::get("edit", "RuleController@edit")->name($admin."_rule_edit");
+    });
+
+    Route::prefix('permission')->middleware("adminLogin")->group(function () use($admin){
+        Route::get('/', "PermissionController@list")->name($admin."_permission_list");
+    });
+
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
 
         Route::get("/", "PaperController@listPaper")->name($admin . "_paper_list");
