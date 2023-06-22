@@ -1,0 +1,49 @@
+@extends('adminhtml.layouts.body_main')
+
+@section('body_top_tab')
+    @include('adminhtml.layouts.body_top_tab')
+@endsection
+
+@section('body_overview')
+    @include('adminhtml.layouts.body_overview')
+@endsection
+
+@section('admin_title')
+    rule list
+@endsection
+
+@section('body_main_conten')
+    <span>noi dung rule create</span>
+    <div class="col-md-12">
+        <a href="{{ route('admin_rule_create') }}" class="btn btn-info">create rule</a>
+    </div>
+
+    <div class="col-md-12">
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <td>select</td>
+                    <td>label</td>
+                    <td>parent</td>
+                    <td>action</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                @isset($rules)
+                    @foreach ($rules as $rule)
+                    <tr>
+                        <td></td>
+                        <td>{{ $rule->label }}</td>
+                        <td>{{ $rule->getParent() ? $rule->getParent()->label : "root" }}</td>
+                        <td>
+                            <a href="{{ route('admin_rule_edit', ['id'=>$rule->id]) }}" class="btn btn-primary">edit</a>
+                            <a href="" class="btn btn-danger">delete</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                @endisset
+            </tbody>
+        </table>
+    </div>
+@endsection
