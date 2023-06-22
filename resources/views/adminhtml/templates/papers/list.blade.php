@@ -82,7 +82,7 @@
                 </table>
             </div>
 
-            <div class="row">
+            <div class="row" style="float: left">
                 <div class="col-md-12 mt-20 d-flex flex-row-reverse">
                     {{ $page_lists->links() }}
                 </div>
