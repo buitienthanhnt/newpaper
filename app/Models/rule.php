@@ -77,6 +77,19 @@ class Rule extends Model
         return $html;
     }
 
+    function root_rules_html() : string {
+        $html = "";
+        $root = $this::all();
+        if ($root->count()) {
+            $html.="<ul>";
+            foreach ($root as $value) {
+                $html.= "<li>".$value->label."</li>";
+            }
+            $html.="</ul>";
+        }
+        return $html;
+    }
+
     public function setSelected($_selected = [])
     {
         $this->_selected = $_selected;
