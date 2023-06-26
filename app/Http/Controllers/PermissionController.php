@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rule;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
-    //
+    function create() {
+        $rules = Rule::all();
+        return view("adminhtml/templates/permission/create", ["rules" => $rules]);
+    }
+
     function list() {
-        dd(222);
-        return;
+        return view("adminhtml/templates/permission/list");
     }
 }

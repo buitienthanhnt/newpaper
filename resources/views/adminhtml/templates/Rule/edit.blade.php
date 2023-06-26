@@ -9,25 +9,12 @@
 @endsection
 
 @section('admin_title')
-    Rule create
+    Rule edit
 @endsection
 
 @section('body_main_conten')
-    <style type="text/css">
-        .select2-selection--multiple {
-            .select2-selection__choice {
-                color: color(white);
-                border: 0;
-                border-radius: 3px;
-                padding: 6px;
-                font-size: larger !important;
-                font-family: inherit;
-                line-height: 1;
-            }
-        }
-    </style>
     <div class="col-md-12">
-        {{-- <a href="{{ route('admin_rule_add_children', ['parent_id' => $rule->id]) }}" class="btn btn-info">add children</a> --}}
+        <a href="{{ route('admin_rule_add_children', ['parent_id' => $rule->id]) }}" class="btn btn-info">add children</a>
         <a href="{{ route('admin_rule_list') }}" class="btn btn-info">list rules</a>
     </div>
 
@@ -42,15 +29,23 @@
 
             <div class="form-group">
                 <label for="name">rule name:</label>
-                <input id="name" class="form-control" type="text" name="label" required>
+                <input id="name" class="form-control" type="text" name="label" required
+                    value="{{ $rule->label }}">
             </div>
 
             <div class="form-group hidden">
-                <label for="name">{{ isset($parent) ? $parent->label : '' }}</label>
-                {{-- <input id="parent" class="form-control" type="hidden" name="parent_id" value="{{isset($parent) ? $parent->id : 0}}"> --}}
-                <select id="rules_option" class="form-control" name="children[]" multiple="multiple">
-                    @if ($rules_option)
-                        {!! $rules_option !!}
+                <label for="name">parent: {{ isset($parent) ? $parent->label : '' }}</label>
+                <input id="parent" class="form-control" type="hidden" name="parent_id"
+                    value="{{ isset($parent) ? $parent->id : 0 }}">
+            </div>
+
+            <div class="form-group">
+                <label for="children">childrent:</label>
+                <select id="category_option" class="form-control" name="children[]" multiple="multiple">
+                    @if ($children)
+                        @foreach ($children as $item)
+                            <option value="{{ $item->id }}" selected>{{ $item->label }}</option>
+                        @endforeach
                     @endif
                 </select>
             </div>
@@ -62,12 +57,4 @@
 
         </form>
     </div>
-
-    <script>
-        $("#rules_option").select2({
-            placeholder: 'Select an option',
-            tags: true,
-            tokenSeparators: [',', ' ']
-        });
-    </script>
 @endsection

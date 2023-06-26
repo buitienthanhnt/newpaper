@@ -27,10 +27,16 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post('/insert', "RuleController@insert")->name($admin."_rule_insert");
 
         Route::get("edit", "RuleController@edit")->name($admin."_rule_edit");
+
+        Route::delete("delete", "RuleController@delete")->name($admin."_rule_delete");
+
+        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin."_rule_add_children");
     });
 
     Route::prefix('permission')->middleware("adminLogin")->group(function () use($admin){
         Route::get('/', "PermissionController@list")->name($admin."_permission_list");
+
+        Route::get("create", "PermissionController@create")->name($admin."_permission_create");
     });
 
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {

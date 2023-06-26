@@ -17,11 +17,6 @@ class Category extends Model
     use SoftDeletes;
     protected $_selected = array();
 
-    public function category_tree_html()
-    {
-        # code...
-    }
-
     public function category_tree_option($category = null)
     {
         $parent_category = '<option value="0">Root category</option>';
