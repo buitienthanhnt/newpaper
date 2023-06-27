@@ -44,4 +44,13 @@ Route::get("tags/{value}", "ManagerController@tagView")->name("front_tag_view");
 
 Route::get("load_more", "ManagerController@load_more")->name("load_more");
 
+Route::get("testJson", function ()
+{
+    echo(json_encode([
+        "a" => 1,
+        "b" => 2,
+        "c" => "asd"
+    ]));
+})
+
 ?>

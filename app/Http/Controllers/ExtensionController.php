@@ -8,6 +8,7 @@ use App\Models\Paper;
 use App\Models\Writer;
 use Illuminate\Http\Request;
 
+// https://www.php.net/manual/en/langref.php php
 class ExtensionController extends Controller
 {
     use DomHtml;
@@ -56,7 +57,22 @@ class ExtensionController extends Controller
              */
             $type = $this->check_type($request_url);
             if ($type) {
-                $html = file_get_contents($request_url);
+
+                $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
+                    "ssl" => array(
+                        // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                         ),
+                     // skyp error "failed to open stream: operation failed" + "Redirection limit reached"
+                     'http' => array(
+                          'max_redirects' => 101,
+                          'ignore_errors' => '1'
+                      ),
+
+                  );
+
+                $html = file_get_contents($request_url, false, stream_context_create($arrContextOptions));
                 $doc = $this->loadDom($html);  // for load html text to dom
             } else {
                 return redirect()->back()->with("error", "input url not found");

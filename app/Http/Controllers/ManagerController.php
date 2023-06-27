@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use App\Models\PageTag;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ManagerController extends Controller
 {
+    use DomHtml;
+
     protected $request;
     protected $paper;
     protected $category;
@@ -128,9 +131,12 @@ class ManagerController extends Controller
         $papers = Paper::paginate($request->get("limit",  4));
         $data = $papers->toArray();
         if ($data["data"]) {
-            define("URI", "192.168.100.210");
+            // define("URI", "192.168.100.210");
+            define("URI2", "192.168.1.153/laravel1/public");
             foreach ($data["data"] as &$item) {
-                $item["image_path"] = str_replace("localhost", URI, $item["image_path"]);
+                // $item["image_path"] = str_replace("localhost", URI, $item["image_path"]);
+                $item["image_path"] = str_replace("laravel1.com", URI2, $item["image_path"]);
+                $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
             }
         }
         return $data;
