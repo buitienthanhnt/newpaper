@@ -12,6 +12,14 @@
     permission create
 @endsection
 
+@section('head_js_after')
+    <script src={{ asset('assets/adminhtml/json-hierarchical-tree-picker/jquery.simple-tree-picker.js') }}></script>
+@endsection
+    <link rel="stylesheet" href={{asset('assets/adminhtml/json-hierarchical-tree-picker/jquery.simple-tree-picker.css')}}>
+@section('after_css')
+
+@endsection
+
 @section('body_main_conten')
     <style type="text/css">
         .select2-selection--multiple {
@@ -41,15 +49,9 @@
                 <input id="name" class="form-control" type="text" name="label" required>
             </div>
 
-            <div class="form-group hidden">
-                <label for="name">{{ isset($parent) ? $parent->label : '' }}</label>
-                <select id="rules_option" class="form-control" name="rules[]" multiple="multiple">
-                    @if ($rules)
-                        {!! $rules !!}
-                    @endif
-                </select>
-
-                {!! $ul_rules !!}
+            <div class="form-group">
+                <p class="sel">Selected areas: <span id="selected">Nothing selected</span> </p>
+                <div class="tree"></div>
             </div>
 
             <div class="form-group">
@@ -64,5 +66,23 @@
             placeholder: 'Select an option',
             tags: true
         });
+
+        var demoTreeData = <?php echo($rules) ?>;
+
+        // Initialize Simple Tree Picker
+        // Pass it an onclick function to update the view
+        // Pass it an initial selected state
+        $('.tree').simpleTreePicker({
+            "tree": demoTreeData,
+            "onclick": function () {
+                var selected = $(".tree").simpleTreePicker("display");
+                $("#selected").html(!!selected.length ? selected.toString().replace(/,/g, ', ') : "Nothing Selected");
+            },
+            // "selected": ["ZZ-654-66", "SS-001-99"],
+            "name": "room-selection-tree"
+        });
+
+        // Update view with initial state (onclick isn't called for initial selection)
+        $("#selected").html($(".tree").simpleTreePicker("display").toString().replace(/,/g, ', '));
     </script>
 @endsection

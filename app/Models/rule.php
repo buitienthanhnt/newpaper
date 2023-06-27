@@ -95,4 +95,28 @@ class Rule extends Model
         $this->_selected = $_selected;
         return $this;
     }
+
+    function rule_tree_array($rule = null) {
+        if (!$rule) {
+            $childrens = $this->all()->where("parent_id", "=", 0);
+        }else {
+            $childrens =  $this->all()->where("parent_id", "=", $rule->id);
+        }
+
+        if ($childrens) {
+            $data = [];
+            foreach ($childrens as $children) {
+                $res = ["Name" => $children->label, "Number" => $children->id];
+                if ($this->all()->where("parent_id", "=", $children->id)->count()) {
+                    $res["Children"] = $this->rule_tree_array($children);
+                }else {
+                    $res["Children"] = [];
+                }
+                $data[] = $res;
+            }
+            return $data;
+        }else {
+            return [];
+        }
+    }
 }

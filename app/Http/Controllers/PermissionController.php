@@ -14,9 +14,9 @@ class PermissionController extends Controller
     }
 
     function create() {
-        $rules = $this->rule->rule_tree_option();
+        $rules = $this->rule->rule_tree_array();
         $ul_rules = $this->rule->root_rules_html();
-        return view("adminhtml/templates/permission/create", ["rules" => $rules, "ul_rules" => $ul_rules]);
+        return view("adminhtml/templates/permission/create", ["rules" => json_encode(["Name" => "all", "Number" => 0, "Children" => $rules]), "ul_rules" => $ul_rules]);
     }
 
     function list() {
