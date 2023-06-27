@@ -123,4 +123,16 @@ class ManagerController extends Controller
             "data" => $data
         ]));
     }
+
+    function apiSourcePapers(Request $request) {
+        $papers = Paper::paginate($request->get("limit",  4));
+        $data = $papers->toArray();
+        if ($data["data"]) {
+            define("URI", "192.168.100.210");
+            foreach ($data["data"] as &$item) {
+                $item["image_path"] = str_replace("localhost", URI, $item["image_path"]);
+            }
+        }
+        return $data;
+    }
 }
