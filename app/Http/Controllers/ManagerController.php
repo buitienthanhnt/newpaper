@@ -128,7 +128,8 @@ class ManagerController extends Controller
     }
 
     function apiSourcePapers(Request $request) {
-        $papers = Paper::paginate($request->get("limit",  4));
+        // $papers = Paper::paginate($request->get("limit",  4))->orderBy("updated_at", "DESC");
+        $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
         $data = $papers->toArray();
         if ($data["data"]) {
             // define("URI", "192.168.100.210");
