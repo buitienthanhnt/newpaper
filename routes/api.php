@@ -20,3 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('getpapers', 'ManagerController@apiSourcePapers');
+
+Route::get("getpaperdetail/{paper_id}", "ManagerController@getPaperDetail");

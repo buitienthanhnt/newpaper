@@ -138,8 +138,14 @@ class ManagerController extends Controller
                 // $item["image_path"] = str_replace("localhost", URI, $item["image_path"]);
                 $item["image_path"] = str_replace("laravel1.com", URI2, $item["image_path"]);
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
+                $item["title"] = $this->cut_str($item["title"], 80, "../");
             }
         }
         return $data;
+    }
+
+    public function getPaperDetail($paper_id)
+    {
+        return $this->paper->find($paper_id);
     }
 }
