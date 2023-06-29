@@ -132,11 +132,12 @@ class ManagerController extends Controller
         $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
         $data = $papers->toArray();
         if ($data["data"]) {
-            // define("URI", "192.168.100.210");
-            define("URI2", "192.168.1.153/laravel1/public");
+            define("URI", "192.168.100.210");
+//            define("URI2", "192.168.1.153/laravel1/public");
             foreach ($data["data"] as &$item) {
-                // $item["image_path"] = str_replace("localhost", URI, $item["image_path"]);
-                $item["image_path"] = str_replace("laravel1.com", URI2, $item["image_path"]);
+                $asset_path = "/newpaper/public/assets/";   // http:://192.168.100.210/newpaper/public/asset/pub_image/defaul.PNG
+                 $item["image_path"] = $item["image_path"] ? str_replace("localhost", URI, $item["image_path"]) : "http://".URI.$asset_path."pub_image/defaul.PNG";
+//                $item["image_path"] = str_replace("laravel1.com", URI2, $item["image_path"]);
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
                 $item["title"] = $this->cut_str($item["title"], 80, "../");
             }
