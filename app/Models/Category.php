@@ -16,6 +16,7 @@ class Category extends Model
     protected $guarded = [];
     use SoftDeletes;
     protected $_selected = array();
+    protected $select_key = "*";
 
     public function category_tree_html()
     {
@@ -62,6 +63,12 @@ class Category extends Model
         return $this;
     }
 
+    public function setSelectKey($key = [])
+    {
+        $this->select_key = $key;
+        return $this;
+    }
+
     public function to_page_category(): HasMany
     {
         return $this->hasMany(PageCategory::class, "category_id");
@@ -73,11 +80,11 @@ class Category extends Model
         $result = null;
         if ($limit) {
             if ($order_by) {
-                $result =  Paper::whereIn("id", $page_id)->offset($offset*$limit)->orderBy(...$order_by)->take($limit);
+                $result =  Paper::whereIn("id", $page_id)->offset($offset*$limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
             }
-            $result =  Paper::whereIn("id", $page_id)->take($limit)->offset($offset*$limit);
+            $result =  Paper::whereIn("id", $page_id)->take($limit)->offset($offset*$limit)->select($this->select_key);
         }else {
-            $result = Paper::whereIn("id", $page_id)->offset($offset*$limit);
+            $result = Paper::whereIn("id", $page_id)->offset($offset*$limit)->select($this->select_key);
         }
         return $result->get();
     }

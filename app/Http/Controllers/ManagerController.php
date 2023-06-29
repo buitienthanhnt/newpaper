@@ -18,6 +18,8 @@ class ManagerController extends Controller
     protected $paper;
     protected $category;
     protected $pageTag;
+    const URI = "192.168.100.210";
+    const URI2 = "192.168.1.153/laravel1/public";
 
     public function __construct(
         Request $request,
@@ -132,12 +134,10 @@ class ManagerController extends Controller
         $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
         $data = $papers->toArray();
         if ($data["data"]) {
-//             define("URI", "192.168.100.210");
-           define("URI2", "192.168.1.153/laravel1/public");
             foreach ($data["data"] as &$item) {
                 $asset_path = "/newpaper/public/assets/";   // http:://192.168.100.210/newpaper/public/asset/pub_image/defaul.PNG
-//                 $item["image_path"] = $item["image_path"] ? str_replace("localhost", URI, $item["image_path"]) : "http://".URI.$asset_path."pub_image/defaul.PNG";
-                $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", URI2, $item["image_path"]) : "http://".URI2."/assets/pub_image/defaul.PNG";
+//                 $item["image_path"] = $item["image_path"] ? str_replace("localhost", self::URI, $item["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";
+                $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", self::URI2, $item["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";
 
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
 //                 $item["title"] = $this->cut_str($item["title"], 80, "../");
@@ -149,5 +149,25 @@ class ManagerController extends Controller
     public function getPaperDetail($paper_id)
     {
         return $this->paper->find($paper_id);
+    }
+
+    public function getCategoryTop()
+    {
+        $top_category = ConfigCategory::where("path", "=", ConfigCategory::TOP_CATEGORY);
+        $values = Category::whereIn("id", explode("&", $top_category->first()->value))->get()->toArray();
+        foreach ($values as &$value) {
+            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";
+        }
+        return $values;
+    }
+
+    public function getPaperCategory($category_id, Request $request)
+    {
+        $category = $this->category->find($category_id);
+        $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) -1)->toArray();
+        foreach ($papers as &$value) {
+            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";
+        }
+        return $papers;
     }
 }
