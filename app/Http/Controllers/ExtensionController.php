@@ -32,6 +32,7 @@ class ExtensionController extends Controller
         "vtc.vn" => "get_vtc_vn",
         "www.qdnd.vn" => "get_www_qdnd_vn",
         "www.delftstack.com" => "get_www_delftstack_com",
+        "quantrimang.com" => "get_quantrimang_com",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -173,6 +174,10 @@ class ExtensionController extends Controller
 
     function get_www_qdnd_vn($doc){
         return $this->getValueByClassName($doc, "post-content", "");
+    }
+
+    function get_quantrimang_com($doc){
+        return $this->getValueByClassName($doc, "content-detail", "");
     }
 
     protected function check_type($request)
