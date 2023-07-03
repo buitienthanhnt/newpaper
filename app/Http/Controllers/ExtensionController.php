@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\Paper;
+use App\Models\RemoteSourceHistory;
 use App\Models\Writer;
 use Illuminate\Http\Request;
 
@@ -91,14 +92,16 @@ class ExtensionController extends Controller
         if (!$value) {
             return redirect()->back()->with("error", "can not parse source!");
         }else {
-            // echo($value["conten"]);
-            // dd();
+            /**
+             * get write for
+             */
             $writers = Writer::all();
             $values = array_merge($value, [
                 "category_option" => $this->category->category_tree_option(),
                 "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
                 "filemanager_url_base" => url("adminhtml/file/manager"),
-                "writers" => $writers
+                "writers" => $writers,
+                "request_url" => $request_url
             ]);
 
             return view("adminhtml.templates.papers.create", $values);

@@ -42,6 +42,8 @@
                 <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
                     @csrf
 
+                    <input class="form-control" type="text" name="request_url" value="{{ isset($request_url) ? $request_url : "" }}" hidden>
+
                     @if ($message = session('success'))
                         <?php alert()->success('server message', $message); ?>
                     @elseif ($error = session('error'))
