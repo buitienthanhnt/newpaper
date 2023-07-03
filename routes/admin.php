@@ -37,6 +37,14 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get('/', "PermissionController@list")->name($admin."_permission_list");
 
         Route::get("create", "PermissionController@create")->name($admin."_permission_create");
+
+        Route::post("insert", "PermissionController@insert")->name($admin."_permission_insert");
+
+        Route::get("edit/{permission_id}", "PermissionController@edit")->name($admin."_permission_edit");
+
+        Route::post("update", "PermissionController@update")->name($admin."_permission_update");
+
+        Route::delete("delete", "PermissionController@delete")->name($admin."_permission_delete");
     });
 
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {

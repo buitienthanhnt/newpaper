@@ -35,8 +35,12 @@
         }
     </style>
 
+    <div class="col-md-12">
+        <a href="{{ route('admin_permission_list') }}" class="btn btn-info">list permission</a>
+    </div>
+
     <div class="col-md-6">
-        <form action="{{ route('admin_rule_insert') }}" method="post">
+        <form action="{{ route('admin_permission_insert') }}" method="post">
             @csrf
             @if ($message = session('success'))
                 <?php alert()->success('server message', $message); ?>

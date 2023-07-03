@@ -36,4 +36,9 @@ trait Nan
     {
         return "page_tag";
     }
+
+    public function permissionRulesTable()
+    {
+        return "rule_permissions";
+    }
 }

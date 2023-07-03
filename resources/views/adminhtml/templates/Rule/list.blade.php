@@ -46,6 +46,13 @@
             </tbody>
         </table>
     </div>
+
+    <div class="row" style="float: left">
+        <div class="col-md-12 mt-20 d-flex flex-row-reverse">
+            {{ $rules->links() }}
+        </div>
+
+    </div>
 @endsection
 
 @section('after_js')
