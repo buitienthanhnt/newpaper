@@ -18,11 +18,6 @@ class Category extends Model
     protected $_selected = array();
     protected $select_key = "*";
 
-    public function category_tree_html()
-    {
-        # code...
-    }
-
     public function category_tree_option($category = null)
     {
         $parent_category = '<option value="0">Root category</option>';

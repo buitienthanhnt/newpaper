@@ -19,11 +19,11 @@ class ExtensionController extends Controller
     protected $category;
 
     const SOURCE = [
-        "soha.vn" => "get_soha_value",
-        "vietnamnet.vn" => "get_vietnamnet_value",
-        "github.com" => "get_gitgub_value",
-        "tienphong.vn" => "tienphong_vn",
-        "tuoitre.vn" => "get_tuoitre_vn",
+        "soha.vn"           => "get_soha_value",
+        "vietnamnet.vn"     => "get_vietnamnet_value",
+        "github.com"        => "get_gitgub_value",
+        "tienphong.vn"      => "tienphong_vn",
+        "tuoitre.vn"        => "get_tuoitre_vn",
         "giaoducthoidai.vn" => "get_giaoducthoidai_vn",
         "viblo.asia" => "get_viblo_asia",
         "dinhnt.com" => "get_dinhnt_com",
@@ -33,7 +33,6 @@ class ExtensionController extends Controller
         "vtc.vn" => "get_vtc_vn",
         "www.qdnd.vn" => "get_www_qdnd_vn",
         "www.delftstack.com" => "get_www_delftstack_com",
-        "quantrimang.com" => "get_quantrimang_com",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -83,10 +82,10 @@ class ExtensionController extends Controller
             throw new \Exception($th->getMessage(), 1);
         }
 
-        if (method_exists($this, str_replace(".", "_", $type))){
-            $value = $this->{$type}($doc);
+        if (method_exists($this, str_replace(".", "_", $type))){ // kiểm tra xem class có tồn tại function có tên như biến $type không.
+            $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
         }else{
-            $value = call_user_func_array([$this, $type], [$doc]);
+            $value = call_user_func_array([$this, $type], [$doc]); // gọi bằng call_user_func_array() với class, method, param truyền vào.
         }
 
         if (!$value) {

@@ -28,6 +28,12 @@
                     <li class="nav-item"> <a class="nav-link" href={{ url('adminhtml/file/manager') }}>file manager</a>
                     </li>
 
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin_rule_list') }}">rules</a>
+                    </li>
+
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin_permission_list') }}">permisstion</a>
+                    </li>
+
                     <li class="nav-item"> <a class="nav-link"
                             href={{ asset('assets/adminhtml/pages/ui-features/buttons.html') }}>Buttons</a>
                     </li>

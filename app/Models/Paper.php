@@ -22,6 +22,9 @@ class Paper extends Model
         return $this->hasMany("\App\Models\pageCategory", "page_id");
     }
 
+    /**
+     * tìm 1 khóa chính -> nhiều khóa phụ.
+     */
     public function to_tag(): HasMany
     {
         return $this->hasMany(PageTag::class, "entity_id");

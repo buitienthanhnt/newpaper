@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRulesTable extends Migration
+class CreateRulePermissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('rules', function (Blueprint $table) {
+        Schema::create('rule_permissions', function (Blueprint $table) {
             $table->id();
             $table->integer("permission_id");
-            $table->string("label");
-            $table->softDeletes();
+            $table->integer("rule_id");
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateRulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rules');
+        Schema::dropIfExists('rule_permissions');
     }
 }
