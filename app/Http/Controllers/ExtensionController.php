@@ -33,6 +33,8 @@ class ExtensionController extends Controller
         "vtc.vn" => "get_vtc_vn",
         "www.qdnd.vn" => "get_www_qdnd_vn",
         "www.delftstack.com" => "get_www_delftstack_com",
+        "niithanoi.edu.vn" => "get_niithanoi_edu_vn",
+        "techmaster.vn" => "get_techmaster_vn",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -180,6 +182,14 @@ class ExtensionController extends Controller
 
     function get_quantrimang_com($doc){
         return $this->getValueByClassName($doc, "content-detail", "");
+    }
+
+    function get_niithanoi_edu_vn($doc) {
+        return call_user_func(fn()=>$this->getValueByClassName($doc, "noidung TextSize noidungList", ""));
+    }
+
+    function get_techmaster_vn($doc) {
+        return call_user_func(fn()=>$this->getValueByClassName($doc, "techmaster-font-open-sans post-content", ""));
     }
 
     protected function check_type($request)
