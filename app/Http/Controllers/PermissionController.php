@@ -89,4 +89,12 @@ class PermissionController extends Controller
         ]), 401);
     }
 
+    /**
+     * @/return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    function detail($permission_id): ?\Illuminate\Contracts\View\View{
+        dd($permission_id);
+        return view();
+    }
+
 }

@@ -29,6 +29,8 @@ class RuleController extends Controller
 
     function insert(Request $request)
     {
+        // phpinfo();
+        // dd($request->toArray());
         try {
             $rule = new Rule($request->toArray() + ["parent_id" => $request->get("parent_id", 0)]);
             $save_status = $rule->save();

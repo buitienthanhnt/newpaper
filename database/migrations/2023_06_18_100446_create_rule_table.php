@@ -29,6 +29,6 @@ class CreateRuleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rules');
+        Schema::dropIfExists('rule');
     }
 }

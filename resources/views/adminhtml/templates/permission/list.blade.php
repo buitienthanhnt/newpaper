@@ -42,7 +42,7 @@
                         @foreach ($permissions as $permission)
                         <tr>
                             <td>{{ $permission->id }}</td>
-                            <td>{{ $permission->label }}</td>
+                            <td><a href="{{ route('admin_permission_detail', ['permission_id'=>$permission->id]) }}">{{ $permission->label }}</a></td>
                             <td>
                                 <a href="" class="btn btn-info">edit</a>
                                 <a href="" class="">

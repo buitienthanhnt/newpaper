@@ -45,6 +45,8 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post("update", "PermissionController@update")->name($admin."_permission_update");
 
         Route::delete("delete", "PermissionController@delete")->name($admin."_permission_delete");
+
+        Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin."_permission_detail");
     });
 
     Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
