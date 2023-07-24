@@ -12,6 +12,14 @@ class Permission extends Model
     protected $guarded = [];
 
     function rulePermission() : HasMany {
-        return $this->hasMany(RulePermission::class, "permission_id");
+        return $this->hasMany(PermissionRules::class, "permission_id");
+    }
+
+    function allRules() : array {
+        $rules = $this->rulePermission()->getResults();
+        $rules = $rules->map(function($rule){
+            return str_replace(["\\", "/", "@"], ["-", "__", "_"], $rule->rule_value);
+        });
+        return $rules->toArray();
     }
 }

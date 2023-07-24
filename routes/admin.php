@@ -22,6 +22,8 @@ Route::group(["prefix" => "adminhtml"], function () {
     Route::prefix('rule')->middleware("adminLogin")->group(function () use($admin){
         Route::get('/', "RuleController@list")->name($admin."_rule_list");
 
+        Route::get("all", "RuleController@allRules")->name($admin."_rule_all");
+
         Route::get('/create', "RuleController@create")->name($admin."_rule_create");
 
         Route::post('/insert', "RuleController@insert")->name($admin."_rule_insert");

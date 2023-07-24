@@ -4,14 +4,87 @@ namespace App\Http\Controllers;
 
 use App\Models\Rule;
 use Illuminate\Http\Request;
+// use Illuminate\Routing\Route;
+// use Illuminate\Routing\Router;
 
 class RuleController extends Controller
 {
     protected $rule;
+    protected $route;
+    protected $router;
+
     function __construct(
-        Rule $rule
+        Rule $rule,
+        \Illuminate\Routing\Route $route,
+        \Illuminate\Routing\Router $router
     ) {
         $this->rule = $rule;
+        $this->route = $route;
+        $this->router = $router;
+    }
+
+    function allRules() {
+        $allOfRoute = $this->router->getRoutes();
+        $actions = collect($allOfRoute)->map(function($item){
+            $action =  $item->getAction();
+            if (strpos($action["prefix"], "adminhtml") !== false) {
+                return $action;
+            }
+        })->filter();
+        $prefixGroup = $this->actionByController($actions->toArray());
+        dd($prefixGroup);
+        return ;
+    }
+
+    function actionByController($actions = []) : array {
+        if ($actions) {
+            $controllerGroups = [];
+            $prefixGroups = [];
+            foreach ($actions as $action) {
+                $prefixGroups[$action["prefix"]][] = [
+                    "Name"     => explode("@", $action["controller"], 2)[1],
+                    "Number"   => $action["controller"],
+                    "Children" => []
+                ];
+            }
+
+            $rulesTree = [];
+            foreach ($prefixGroups as $key => $value) {
+                $rulesTree[] = [
+                    "Name"      => str_replace("/", " ", $key),
+                    "Number"    => $key,
+                    "Children"  => $value
+                ];
+            }
+            return [
+                "Name" => "root admin",
+                "Number" => "root_admin",
+                "Children" => $rulesTree
+            ];
+        }
+        return [];
+    }
+
+    /**
+     * Compile the routes into a displayable format.
+     *
+     * @return array
+     */
+    protected function getRoutes($router)
+    {
+        $routes = collect($router->getRoutes())->map(function ($route) {
+            return $this->getRouteInformation($route);
+        })->filter()->all();
+
+        if (($sort = $this->option('sort')) !== 'precedence') {
+            $routes = $this->sortRoutes($sort, $routes);
+        }
+
+        if ($this->option('reverse')) {
+            $routes = array_reverse($routes);
+        }
+
+        return $this->pluckColumns($routes);
     }
 
     function list()

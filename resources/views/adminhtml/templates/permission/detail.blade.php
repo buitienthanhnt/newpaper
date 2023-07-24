@@ -21,5 +21,72 @@
 @endsection
 
 @section('body_main_conten')
-	<p>detail of permission</p>
+    <style type="text/css">
+        .select2-selection--multiple {
+            .select2-selection__choice {
+                color: color(white);
+                border: 0;
+                border-radius: 3px;
+                padding: 6px;
+                font-size: larger !important;
+                font-family: inherit;
+                line-height: 1;
+            }
+        }
+    </style>
+
+    <div class="col-md-12">
+        <a href="{{ route('admin_permission_list') }}" class="btn btn-info">list permission</a>
+    </div>
+
+    <div class="col-md-6">
+        <form action="{{ route('admin_permission_insert') }}" method="post">
+            @csrf
+            @if ($message = session('success'))
+                <?php alert()->success('server message', $message); ?>
+            @elseif ($error = session('error'))
+                <?php alert()->warning('server mesage', $error); ?>
+            @endif
+
+            <div class="form-group">
+                <label for="name">permission name:</label>
+                <input id="name" class="form-control" type="text" name="label" value="{{ $permission->label }}" required>
+            </div>
+
+            <div class="form-group">
+                <p class="sel">Selected areas: <span id="selected">Nothing selected</span> </p>
+                <div class="tree"></div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-info btn-lg" style="width: -webkit-fill-available;">save permission</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        $("#rules_option").select2({
+            placeholder: 'Select an option',
+            tags: true
+        });
+
+        var demoTreeData = <?php echo($rules) ?>;
+        var rules_selected = <?php echo($rules_selected) ?>;
+
+        // Initialize Simple Tree Picker
+        // Pass it an onclick function to update the view
+        // Pass it an initial selected state
+        $('.tree').simpleTreePicker({
+            "tree": demoTreeData,
+            "onclick": function () {
+                var selected = $(".tree").simpleTreePicker("display");
+                $("#selected").html(!!selected.length ? selected.toString().replace(/,/g, ', ') : "Nothing Selected");
+            },
+            "selected": rules_selected,
+            "name": "room-selection-tree"
+        });
+
+        // Update view with initial state (onclick isn't called for initial selection)
+        $("#selected").html($(".tree").simpleTreePicker("display").toString().replace(/,/g, ', '));
+    </script>
 @endsection

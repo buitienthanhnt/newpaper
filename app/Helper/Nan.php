@@ -37,8 +37,13 @@ trait Nan
         return "page_tag";
     }
 
+    // public function permissionRulesTable()
+    // {
+    //     return "rule_permissions";
+    // }
+
     public function permissionRulesTable()
     {
-        return "rule_permissions";
+        return "permission_rules";
     }
 }

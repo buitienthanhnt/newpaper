@@ -4,31 +4,78 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use App\Models\Rule;
-use App\Models\RulePermission;
+use App\Models\PermissionRules;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 
 class PermissionController extends Controller
 {
+    protected $router;
     protected $rule;
     protected $permission;
-    protected $rulePermission;
+    protected $permissionRules;
 
     function __construct(
+        Router $router,
         Rule $rule,
         Permission $permission,
-        RulePermission $rulePermission
+        PermissionRules $permissionRules
     )
     {
+        $this->router = $router;
         $this->rule = $rule;
         $this->permission = $permission;
-        $this->rulePermission = $rulePermission;
+        $this->permissionRules = $permissionRules;
     }
 
     function create()
     {
         $rules = $this->rule->rule_tree_array();
         $ul_rules = $this->rule->root_rules_html();
-        return view("adminhtml/templates/permission/create", ["rules" => json_encode(["Name" => "all", "Number" => 0, "Children" => $rules]), "ul_rules" => $ul_rules]);
+        $prefixGroup = $this->allRules();
+        return view("adminhtml/templates/permission/create", ["rules" => json_encode($prefixGroup), "ul_rules" => $ul_rules]);
+        // return view("adminhtml/templates/permission/create", ["rules" => json_encode(["Name" => "all", "Number" => 0, "Children" => $rules]), "ul_rules" => $ul_rules]);
+    }
+
+    function allRules() : array {
+        
+        $allOfRoute = $this->router->getRoutes();
+        $actions = collect($allOfRoute)->map(function($item){
+            $action =  $item->getAction();
+            if (strpos($action["prefix"], "adminhtml") !== false) {
+                return $action;
+            }
+        })->filter();
+        return $prefixGroup = $this->actionByController($actions->toArray());
+    }
+
+    function actionByController($actions = []) : array {
+        if ($actions) {
+            $controllerGroups = [];
+            $prefixGroups = [];
+            foreach ($actions as $action) {
+                $prefixGroups[$action["prefix"]][] = [
+                    "Name"     => explode("@", $action["controller"], 2)[1],
+                    "Number"   => str_replace(["\\", "/", "@"], ["-", "__", "_"], $action["controller"]),
+                    "Children" => []
+                ];
+            }
+
+            $rulesTree = [];
+            foreach ($prefixGroups as $key => $value) {
+                $rulesTree[] = [
+                    "Name"      => str_replace("/", " ", $key),
+                    "Number"    => $key,
+                    "Children"  => $value
+                ];
+            }
+            return [
+                "Name" => "root admin",
+                "Number" => "root_admin",
+                "Children" => $rulesTree
+            ];
+        }
+        return [];
     }
 
     function list()
@@ -41,17 +88,17 @@ class PermissionController extends Controller
     {
         $params = $request->toArray();
         $rules = array_filter($params, function ($value, $key) {
-            var_dump($key, $value);
             if ($value == "on") {
                 return true;
             }
         }, ARRAY_FILTER_USE_BOTH);
 
         $rules = array_map(fn($value): String => str_replace("checkbox-", "", $value), array_keys($rules));
+        // dd($rules);
         $new_permission = new Permission(["label" => $params["label"]]);
         $value = $new_permission->save();
         if ($value) {
-            $check_insert_rules = $this->rulePermission->insert_permission_rules($new_permission->id, $rules);
+            $check_insert_rules = $this->permissionRules->insert_permission_rules($new_permission->id, $rules);
             return redirect()->back()->with("success", "add new permission!!");
         }
         return redirect()->back()->with("error", "cant insert permission");
@@ -70,8 +117,8 @@ class PermissionController extends Controller
         if ($permission_id) {
             try {
                 $permission = $this->permission->find($permission_id);
-                $rulePermission = $permission->rulePermission()->getResults();
-                foreach ($rulePermission as $rule) {
+                $permissionRules = $permission->permissionRules()->getResults();
+                foreach ($permissionRules as $rule) {
                     $rule->delete();
                 }
                 $permission->delete();
@@ -93,8 +140,12 @@ class PermissionController extends Controller
      * @/return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
     function detail($permission_id): ?\Illuminate\Contracts\View\View{
-        dd($permission_id);
-        return view();
+        // dd($permission_id);
+        $permission = Permission::find($permission_id);
+        $prefixGroup = $this->allRules();
+        $permissionRules = $permission->allRules();
+        // dd($permissionRules);
+        return view("adminhtml.templates.permission.detail", ["permission" => $permission, "rules" => json_encode($prefixGroup), "rules_selected" => json_encode($permissionRules)]);
     }
 
 }

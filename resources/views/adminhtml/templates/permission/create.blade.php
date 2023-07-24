@@ -59,8 +59,7 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-info btn-lg" style="width: -webkit-fill-available;">save
-                    permission</button>
+                <button type="submit" class="btn btn-info btn-lg" style="width: -webkit-fill-available;">save permission</button>
             </div>
         </form>
     </div>
@@ -82,7 +81,7 @@
                 var selected = $(".tree").simpleTreePicker("display");
                 $("#selected").html(!!selected.length ? selected.toString().replace(/,/g, ', ') : "Nothing Selected");
             },
-            // "selected": ["ZZ-654-66", "SS-001-99"],
+            "selected": ["App-Http-Controllers-CategoryController_setupCategory"],
             "name": "room-selection-tree"
         });
 
