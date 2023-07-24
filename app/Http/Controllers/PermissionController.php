@@ -38,7 +38,7 @@ class PermissionController extends Controller
     }
 
     function allRules() : array {
-        
+
         $allOfRoute = $this->router->getRoutes();
         $actions = collect($allOfRoute)->map(function($item){
             $action =  $item->getAction();
@@ -94,7 +94,6 @@ class PermissionController extends Controller
         }, ARRAY_FILTER_USE_BOTH);
 
         $rules = array_map(fn($value): String => str_replace("checkbox-", "", $value), array_keys($rules));
-        // dd($rules);
         $new_permission = new Permission(["label" => $params["label"]]);
         $value = $new_permission->save();
         if ($value) {
@@ -140,11 +139,9 @@ class PermissionController extends Controller
      * @/return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
     function detail($permission_id): ?\Illuminate\Contracts\View\View{
-        // dd($permission_id);
         $permission = Permission::find($permission_id);
         $prefixGroup = $this->allRules();
         $permissionRules = $permission->allRules();
-        // dd($permissionRules);
         return view("adminhtml.templates.permission.detail", ["permission" => $permission, "rules" => json_encode($prefixGroup), "rules_selected" => json_encode($permissionRules)]);
     }
 

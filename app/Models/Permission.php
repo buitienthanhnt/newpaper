@@ -17,9 +17,7 @@ class Permission extends Model
 
     function allRules() : array {
         $rules = $this->rulePermission()->getResults();
-        $rules = $rules->map(function($rule){
-            return str_replace(["\\", "/", "@"], ["-", "__", "_"], $rule->rule_value);
-        });
+        $rules = $rules->map(fn($rule) => str_replace(["\\", "/", "@"], ["-", "__", "_"], $rule->rule_value));
         return $rules->toArray();
     }
 }
