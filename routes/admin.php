@@ -13,10 +13,6 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get('logout', "AdminController@logout")->name($admin."_logout");
 
-    Route::get("createUser", "AdminUserController@createUser")->name($admin."_create_user");
-
-    Route::post("insetUser", "AdminUserController@insertUser")->name($admin."_insert_user");
-
     Route::get("extension", "ExtensionController@source")->name($admin."_source");
 
     Route::prefix('rule')->middleware("adminLogin")->group(function () use($admin){
@@ -113,6 +109,18 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("setup", "CategoryController@setupCategory")->name("category_top_setup");
 
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
+    });
+
+    Route::prefix('user')->middleware("adminLogin")->group(function() use($admin){
+        Route::get("listUser", "AdminUserController@listUser")->name($admin."_user_list");
+
+        Route::get("editUser/{user_id}", "AdminUserController@editUser")->name($admin."_user_edit");
+
+        Route::post("updateUser/{user_id}", "AdminUserController@updateUser")->name($admin."_user_update");
+
+        Route::get("createUser", "AdminUserController@createUser")->name($admin."_create_user");
+
+        Route::post("insetUser", "AdminUserController@insertUser")->name($admin."_insert_user");
     });
 
     Route::get("default", "AdminController@default")->name($admin."_default");

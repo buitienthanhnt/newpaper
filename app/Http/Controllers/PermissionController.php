@@ -71,7 +71,7 @@ class PermissionController extends Controller
             }
             return [
                 "Name" => "root admin",
-                "Number" => "root_admin",
+                "Number" => "rootAdmin",
                 "Children" => $rulesTree
             ];
         }
@@ -84,6 +84,13 @@ class PermissionController extends Controller
         return view("adminhtml/templates/permission/list", ["permissions" => $permission]);
     }
 
+    function filterRules($rules): array{
+        if (in_array("rootAdmin", $rules)) {
+            return ["rootAdmin"];
+        }
+        return $rules;
+    }
+
     function insert(Request $request)
     {
         $params = $request->toArray();
@@ -93,7 +100,7 @@ class PermissionController extends Controller
             }
         }, ARRAY_FILTER_USE_BOTH);
 
-        $rules = array_map(fn($value): String => str_replace("checkbox-", "", $value), array_keys($rules));
+        $rules = $this->filterRules(array_map(fn($value): String => str_replace("checkbox-", "", $value), array_keys($rules)));
         $new_permission = new Permission(["label" => $params["label"]]);
         $value = $new_permission->save();
         if ($value) {
