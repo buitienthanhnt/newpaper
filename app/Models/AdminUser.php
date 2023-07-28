@@ -6,10 +6,13 @@ use App\Helper\Nan;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+// use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class AdminUser extends Model
 {
@@ -81,13 +84,19 @@ class AdminUser extends Model
         return false;
     }
 
-    public function savePermissions($user_id, $permissions)
+    public function savePermissions($user, $permissions)
     {
-        if ($user_id && $permissions) {
+        if ($user && $permissions) {
+            $userPermission = $user->hasMany(AdminUserPermission::class, "user_id");
+            $userPermission = $userPermission->getResults();
+            /**
+             * delete old permission
+             */
+            collect($userPermission)->map(fn($item)=> $item->delete());
             DB::beginTransaction();
             try {
                 foreach ($permissions as $permission) {
-                    DB::table($this->userPermissionTable())->updateOrInsert(["permission_id" => $permission, "user_id" => $user_id]);
+                    DB::table($this->userPermissionTable())->updateOrInsert(["permission_id" => $permission, "user_id" => $user->id]);
                 }
                 DB::commit();
                 return true;
@@ -96,6 +105,26 @@ class AdminUser extends Model
                 throw new Exception($e->getMessage());
             }
         }
+    }
+
+    /**
+     * get germissions
+     */
+    function getPermissionsIds() {
+       $permissions = $this->hasMany(AdminUserPermission::class, "user_id"); 
+       $permissionValues = array_column($permissions->getResults()->toArray(), "permission_id");
+       return $permissionValues;
+    }
+
+    function getPermissionRules() {
+        $rules = [];
+        $data = $this->hasMany(AdminUserPermission::class, "user_id");
+        // Illuminate\Support\Collection 
+        $permissions = collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
+        foreach ($permissions->all() as $permission) {
+            $rules = [...$rules, ...$permission->hasMany(PermissionRules::class, "permission_id")->getResults()->map(fn($item)=> $item->rule_value)->all()];
+        }
+        return $rules;
     }
 
     public function __destruct()

@@ -31,7 +31,7 @@ class PaperController extends Controller
 
     public function listPaper()
     {
-        $page_lists = $this->paper->paginate(8);
+        $page_lists = $this->paper->orderBy("updated_at", "DESC")->paginate(8);
         foreach ($page_lists as &$page) {
             $resuls = [];
             $categories = $page->to_category()->get("category_id")->toArray();

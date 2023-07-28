@@ -3,6 +3,9 @@
 {{-- @section('body_top_tab')
     @include('adminhtml.layouts.body_top_tab')
 @endsection --}}
+@section('admin_title')
+    user create
+@endsection
 
 @section('body_footer')
     @include('adminhtml.layouts.body_footer')
@@ -14,6 +17,13 @@
 
 @section('body_main_conten')
     <div class="row">
+
+        @if ($message = session('success'))
+            <?php alert()->success('server message', $message); ?>
+        @elseif ($error = session('error'))
+            <?php alert()->warning('server mesage', $error); ?>
+        @endif
+
         <div class="col-md-6 offset-md-3">
             <center>
                 <h4>Login admin form</h4>
@@ -41,8 +51,8 @@
 
                 <div class="form-group">
                     <label for="admin_co_user_pass">confirm password:</label>
-                    <input id="admin_co_user_pass" class="form-control" type="password" name="confirm_admin_password" required
-                        placeholder="enter your admin password">
+                    <input id="admin_co_user_pass" class="form-control" type="password" name="confirm_admin_password"
+                        required placeholder="enter your admin password">
                 </div>
 
                 {{-- <div class="form-group">

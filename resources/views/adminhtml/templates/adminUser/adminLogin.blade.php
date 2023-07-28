@@ -46,7 +46,7 @@
 
                 <div class="form-group">
                     <a href="" class="text-info"><label>Forgot password?</label></a>
-                    <a href="{{ route('admin_create_user') }}" class="text-info" style="float: right"><label>new
+                    <a href="{{ route('admin_user_create') }}" class="text-info" style="float: right"><label>new
                             account?</label></a>
                 </div>
 

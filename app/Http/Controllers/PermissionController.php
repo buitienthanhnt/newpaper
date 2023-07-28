@@ -123,7 +123,7 @@ class PermissionController extends Controller
         if ($permission_id) {
             try {
                 $permission = $this->permission->find($permission_id);
-                $permissionRules = $permission->permissionRules()->getResults();
+                $permissionRules = $permission->rulePermission()->getResults();
                 foreach ($permissionRules as $rule) {
                     $rule->delete();
                 }

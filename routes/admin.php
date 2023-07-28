@@ -7,47 +7,47 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
 
-    Route::get("login", "AdminController@adminLogin")->name($admin."_login");
+    Route::get("login", "AdminController@adminLogin")->name($admin . "_login");
 
-    Route::post("loginpost", "AdminController@loginPost")->name($admin."_login_post");
+    Route::post("loginpost", "AdminController@loginPost")->name($admin . "_login_post");
 
-    Route::get('logout', "AdminController@logout")->name($admin."_logout");
+    Route::get('logout', "AdminController@logout")->name($admin . "_logout");
 
-    Route::get("extension", "ExtensionController@source")->name($admin."_source");
+    Route::get("extension", "ExtensionController@source")->name($admin . "_source");
 
-    Route::prefix('rule')->middleware("adminLogin")->group(function () use($admin){
-        Route::get('/', "RuleController@list")->name($admin."_rule_list");
+    Route::prefix('rule')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        Route::get('/', "RuleController@list")->name($admin . "_rule_list");
 
-        Route::get("all", "RuleController@allRules")->name($admin."_rule_all");
+        Route::get("all", "RuleController@allRules")->name($admin . "_rule_all");
 
-        Route::get('/create', "RuleController@create")->name($admin."_rule_create");
+        Route::get('/create', "RuleController@create")->name($admin . "_rule_create");
 
-        Route::post('/insert', "RuleController@insert")->name($admin."_rule_insert");
+        Route::post('/insert', "RuleController@insert")->name($admin . "_rule_insert");
 
-        Route::get("edit", "RuleController@edit")->name($admin."_rule_edit");
+        Route::get("edit", "RuleController@edit")->name($admin . "_rule_edit");
 
-        Route::delete("delete", "RuleController@delete")->name($admin."_rule_delete");
+        Route::delete("delete", "RuleController@delete")->name($admin . "_rule_delete");
 
-        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin."_rule_add_children");
+        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin . "_rule_add_children");
     });
 
-    Route::prefix('permission')->middleware("adminLogin")->group(function () use($admin){
-        Route::get('/', "PermissionController@list")->name($admin."_permission_list");
+    Route::prefix('permission')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        Route::get('/', "PermissionController@list")->name($admin . "_permission_list");
 
-        Route::get("create", "PermissionController@create")->name($admin."_permission_create");
+        Route::get("create", "PermissionController@create")->name($admin . "_permission_create");
 
-        Route::post("insert", "PermissionController@insert")->name($admin."_permission_insert");
+        Route::post("insert", "PermissionController@insert")->name($admin . "_permission_insert");
 
-        Route::get("edit/{permission_id}", "PermissionController@edit")->name($admin."_permission_edit");
+        Route::get("edit/{permission_id}", "PermissionController@edit")->name($admin . "_permission_edit");
 
-        Route::post("update", "PermissionController@update")->name($admin."_permission_update");
+        Route::post("update", "PermissionController@update")->name($admin . "_permission_update");
 
-        Route::delete("delete", "PermissionController@delete")->name($admin."_permission_delete");
+        Route::delete("delete", "PermissionController@delete")->name($admin . "_permission_delete");
 
-        Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin."_permission_detail");
+        Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin . "_permission_detail");
     });
 
-    Route::prefix('paper')->middleware("adminLogin")->group(function () use ($admin) {
+    Route::prefix('paper')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
 
         Route::get("/", "PaperController@listPaper")->name($admin . "_paper_list");
 
@@ -57,14 +57,14 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
 
-        Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin."_paper_edit");
+        Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin . "_paper_edit");
 
         Route::post("update/{paper_id}", "PaperController@updatePaper")->name($admin . "_paper_update");
 
-        Route::delete("delete", "PaperController@deletePaper")->name($admin."_paper_delete");
+        Route::delete("delete", "PaperController@deletePaper")->name($admin . "_paper_delete");
     });
 
-    Route::prefix('writer')->middleware("adminLogin")->group(function () use ($admin) {
+    Route::prefix('writer')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         Route::get("/", "WriterController@listOfWriter")->name($admin . "_writer_list");
 
         Route::get("create", "WriterController@createWriter")->name($admin . "_writer_create");
@@ -78,7 +78,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "WriterController@deleteWriter")->name($admin . "_writer_delete");
     });
 
-    Route::prefix('file')->middleware("adminLogin")->group(function () use ($admin) {
+    Route::prefix('file')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
 
         Route::group(['prefix' => 'manager'], function () {
             \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -93,7 +93,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
-    Route::prefix('category')->middleware("adminLogin")->group(function () {
+    Route::prefix('category')->middleware(["adminLogin", "AdminPermission"])->group(function () {
         Route::get("list", "CategoryController@listCategory")->name("category_admin_list");
 
         Route::get("create", "CategoryController@createCategory")->name("category_admin_create");
@@ -111,17 +111,19 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
     });
 
-    Route::prefix('user')->middleware("adminLogin")->group(function() use($admin){
-        Route::get("listUser", "AdminUserController@listUser")->name($admin."_user_list");
+    Route::prefix('user')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        Route::get("listUser", "AdminUserController@listUser")->name($admin . "_user_list");
 
-        Route::get("editUser/{user_id}", "AdminUserController@editUser")->name($admin."_user_edit");
+        Route::get("editUser/{user_id}", "AdminUserController@editUser")->name($admin . "_user_edit");
 
-        Route::post("updateUser/{user_id}", "AdminUserController@updateUser")->name($admin."_user_update");
+        Route::post("updateUser/{user_id}", "AdminUserController@updateUser")->name($admin . "_user_update");
 
-        Route::get("createUser", "AdminUserController@createUser")->name($admin."_create_user");
+        Route::get("createUser", "AdminUserController@createUser")->name($admin . "_user_create");
 
-        Route::post("insetUser", "AdminUserController@insertUser")->name($admin."_insert_user");
+        Route::post("insetUser", "AdminUserController@insertUser")->name($admin . "_insert_user");
+
+        Route::delete("deleteUser", "AdminUserController@deleteUser")->name($admin . "_user_delete");
     });
 
-    Route::get("default", "AdminController@default")->name($admin."_default");
+    Route::get("default", "AdminController@default")->name($admin . "_default");
 });

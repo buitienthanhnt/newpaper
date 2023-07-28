@@ -34,9 +34,9 @@ class AdminUserController extends Controller
         ]);
         $res = $adminUser->save();
         if ($res) {
-            dd("created new adminuser");
+            return redirect()->back()->with("success", "add new adminUser");
         }else {
-            dd("cant create admin user");
+            return redirect()->back("error", "can`t not save adminUser, please check your input data");
         }
     }
 
@@ -59,8 +59,8 @@ class AdminUserController extends Controller
     public function editUser($user_id, Request $request) {
         $user = AdminUser::findOrFail($user_id);
         $allPermission = Permission::all();
-        // dd($allPermission);
-        return view("adminhtml.templates.adminUser.edit", ["user" => $user, "permissions" => $allPermission]);
+        $userPermissions = $user->getPermissionsIds();
+        return view("adminhtml.templates.adminUser.edit", ["user" => $user, "permissions" => $allPermission, "userPermissions" => $userPermissions]);
     }
 
     /**
@@ -78,10 +78,29 @@ class AdminUserController extends Controller
         $user->name = $request->get("admin_user");
         $user->save();
         if ($permisssions = $request->get("permission_values")) {
-            $this->adminUser->savePermissions($user->id, $permisssions);
+            $this->adminUser->savePermissions($user, $permisssions);
         }
         return redirect()->back()->with([
             "success" => "updated the user data"
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function deleteUser(Request $request) {
+        $user_id = $request->get("user_id");
+        $adminUser = AdminUser::find($user_id);
+        if ($adminUser) {
+            $adminUser->delete();
+            return response(json_encode([
+                "message" => "deleted the user",
+                "code" => 200
+            ]));
+        }
+        return response(json_encode([
+            "message" => " can`t delete the user",
+            "code" => 301
+        ]));
     }
 }

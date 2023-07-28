@@ -10,7 +10,7 @@
 @endsection
 
 @section('admin_title')
-    permission create
+    permission list
 @endsection
 
 @section('head_js_after')
@@ -42,9 +42,9 @@
                         @foreach ($permissions as $permission)
                         <tr>
                             <td>{{ $permission->id }}</td>
-                            <td><a href="{{ route('admin_permission_detail', ['permission_id'=>$permission->id]) }}">{{ $permission->label }}</a></td>
+                            <td>{{ $permission->label }}</td>
                             <td>
-                                <a href="" class="btn btn-info">edit</a>
+                                <a href="{{ route('admin_permission_detail', ['permission_id' => $permission->id]) }}" class="btn btn-info">edit</a>
                                 <a href="" class="">
                                     <button class="btn btn-danger btn-flat show_confirm" data-id="{{ $permission->id }}">delete</button>
                                 </a>
@@ -70,7 +70,7 @@
     <script type="text/javascript">
         var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
-            var id = $(this).attr("data-id");
+            var permission_id = $(this).attr("data-id");
             var url = "{{ route('admin_permission_delete') }}";
 
             event.preventDefault();
@@ -90,7 +90,7 @@
                         contentType: 'application/json',
                         data: JSON.stringify({
                             _token: token,
-                            permission_id: id
+                            permission_id: permission_id
                         }),
                         success: function(result) {
                             // console.log(result, this);
