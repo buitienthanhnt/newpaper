@@ -178,7 +178,7 @@ class PaperController extends Controller
         ]), 401);
     }
 
-    public function new_by_url()
+    public function newByUrl()
     {
         return view("adminhtml.templates.papers.new_by_url");
     }

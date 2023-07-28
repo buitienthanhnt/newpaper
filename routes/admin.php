@@ -53,7 +53,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
 
-        Route::get("newbyurl", "PaperController@new_by_url")->name($admin . "_new_by_url");
+        Route::get("newbyurl", "PaperController@newByUrl")->name($admin . "_new_by_url");
 
         Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
 
