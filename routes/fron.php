@@ -44,6 +44,10 @@ Route::get("tags/{value}", "ManagerController@tagView")->name("front_tag_view");
 
 Route::get("load_more", "ManagerController@load_more")->name("load_more");
 
+Route::prefix('paper')->group(function () {
+    Route::post("comment/{paper_id}", "PaperController@addComment")->name("paper_add_comment");
+});
+
 Route::get("testJson", function ()
 {
     echo(json_encode([

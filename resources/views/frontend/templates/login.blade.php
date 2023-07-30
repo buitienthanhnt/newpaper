@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="form-group clear">
-                    <center><button type="submit" class="btn btn-info btn-sm">login</button></center>
+                    <center><button type="submit" class="genric-btn success circle">login</button></center>
                 </div>
             </form>
         </div>

@@ -195,4 +195,8 @@ class PaperController extends Controller
         $history = new RemoteSourceHistory(["url_value" => $request_url, "type" => $type, "paper_id" => $paper_id, "active" => $active]);
         return $history->save();
     }
+
+    public function addComment($page_id) {
+        dd($page_id);
+    }
 }

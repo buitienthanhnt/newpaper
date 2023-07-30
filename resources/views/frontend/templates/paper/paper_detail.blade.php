@@ -55,6 +55,124 @@
             color: #007bff;
             outline: medium none
         }
+
+        .img-sm {
+            width: 46px;
+            height: 46px;
+        }
+
+        .panel {
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.075);
+            border-radius: 0;
+            border: 0;
+            margin-bottom: 15px;
+        }
+
+        .panel .panel-footer,
+        .panel>:last-child {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .panel .panel-heading,
+        .panel>:first-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .panel-body {
+            padding: 25px 20px;
+        }
+
+
+        .media-block .media-left {
+            display: block;
+            float: left
+        }
+
+        .media-block .media-right {
+            float: right
+        }
+
+        .media-block .media-body {
+            display: block;
+            overflow: hidden;
+            width: auto;
+            padding-left: 8px;
+        }
+
+        .middle .media-left,
+        .middle .media-right,
+        .middle .media-body {
+            vertical-align: middle
+        }
+
+        .thumbnail {
+            border-radius: 0;
+            border-color: #e9e9e9
+        }
+
+        .tag.tag-sm,
+        .btn-group-sm>.tag {
+            padding: 5px 10px;
+        }
+
+        .tag:not(.label) {
+            background-color: #fff;
+            padding: 6px 12px;
+            border-radius: 2px;
+            border: 1px solid #cdd6e1;
+            font-size: 12px;
+            line-height: 1.42857;
+            vertical-align: middle;
+            -webkit-transition: all .15s;
+            transition: all .15s;
+        }
+
+        .text-muted,
+        a.text-muted:hover,
+        a.text-muted:focus {
+            color: #acacac;
+        }
+
+        .text-sm {
+            font-size: 0.9em;
+        }
+
+        .text-5x,
+        .text-4x,
+        .text-5x,
+        .text-2x,
+        .text-lg,
+        .text-sm,
+        .text-xs {
+            line-height: 1.25;
+        }
+
+        .btn-trans {
+            background-color: transparent;
+            border-color: transparent;
+            color: #929292;
+        }
+
+        .btn-icon {
+            padding-left: 9px;
+            padding-right: 9px;
+        }
+
+        .btn-sm,
+        .btn-group-sm>.btn,
+        .btn-icon.btn-sm {
+            padding: 5px 10px !important;
+        }
+
+        .mar-top {
+            margin-top: 1
+        }
+
+        /* .mar-btm{
+            padding-left: 8px;
+        } */
     </style>
 @endsection
 
@@ -86,61 +204,19 @@
                         </div>
 
                         <div class="social-share pt-30">
-                            <div class="section-tittle">
-                                <h3 class="mr-20">Tags:</h3>
-                                <ul>
-                                    @if ($paper && $tags = $paper->to_tag()->getResults())
-                                        @foreach ($tags as $tag)
-                                            <li><a href="{{ route('front_tag_view', ['value' => $tag->value]) }}"
-                                                    class="btn btn-sm btn-info">{{ $tag->value }}</a></li>
-                                        @endforeach
-                                    @endif
-                                </ul>
-                            </div>
+                            {!! view('frontend.templates.paper.component.Tags', ['paper' => $paper])->render(); !!}
                         </div>
 
                     </div>
                     <!-- From -->
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <form class="form-contact contact_form mb-80" action="contact_process.php" method="post"
-                                id="contactForm" novalidate="novalidate">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <textarea class="form-control w-100 error" name="message" id="message" cols="30" rows="9"
-                                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input class="form-control error" name="name" id="name" type="text"
-                                                onfocus="this.placeholder = ''"
-                                                onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input class="form-control error" name="email" id="email" type="email"
-                                                onfocus="this.placeholder = ''"
-                                                onblur="this.placeholder = 'Enter email address'" placeholder="Email">
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <input class="form-control error" name="subject" id="subject" type="text"
-                                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'"
-                                                placeholder="Enter Subject">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <button type="submit"
-                                        class="button button-contactForm boxed-btn boxed-btn2">Send</button>
-                                </div>
-                            </form>
-                        </div>
+                    <div class="col-md-12 bootstrap snippets">
+
+                        {!! view('frontend.templates.paper.component.commentForm', ['paper'=> $paper])->render(); !!}
+
+                        {!! view('frontend.templates.paper.component.commentHistory')->render(); !!}
+                        
                     </div>
+
                 </div>
                 <div class="col-lg-4">
                     <!-- Flow Socail -->

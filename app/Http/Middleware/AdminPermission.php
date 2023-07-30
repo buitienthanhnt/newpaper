@@ -48,8 +48,5 @@ class AdminPermission
             return true;
         }
         return false;
-        // dd(route("admin"));
-        // header("Location:".route("admin"));
-        // redirect()->route("admin")->with("error", "you not has permission to resource!");
     }
 }
