@@ -51,7 +51,7 @@ class AdminUserController extends Controller
     /**
      * https://phpgrid.com/blog/time-to-use-php-return-types-in-your-code/
      * https://www.php.net/manual/en/language.types.declarations.php
-     * 
+     *
      * @param integer $user_id
      * @param Request
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
@@ -66,7 +66,7 @@ class AdminUserController extends Controller
     /**
      * https://phpgrid.com/blog/time-to-use-php-return-types-in-your-code/
      * https://www.php.net/manual/en/language.types.declarations.php
-     * 
+     *
      * @param integer $user_id
      * @param Request
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse

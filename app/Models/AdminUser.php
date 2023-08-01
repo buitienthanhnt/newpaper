@@ -25,6 +25,7 @@ class AdminUser extends Model
     public function __construct()
     {
         $this->session_begin();
+        parent::__construct(...func_get_args());
     }
 
     public function admin_login($user_name, $pass_word): mixed
@@ -111,7 +112,7 @@ class AdminUser extends Model
      * get germissions
      */
     function getPermissionsIds() {
-       $permissions = $this->hasMany(AdminUserPermission::class, "user_id"); 
+       $permissions = $this->hasMany(AdminUserPermission::class, "user_id");
        $permissionValues = array_column($permissions->getResults()->toArray(), "permission_id");
        return $permissionValues;
     }
@@ -119,7 +120,7 @@ class AdminUser extends Model
     function getPermissionRules() {
         $rules = [];
         $data = $this->hasMany(AdminUserPermission::class, "user_id");
-        // Illuminate\Support\Collection 
+        // Illuminate\Support\Collection
         $permissions = collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
         foreach ($permissions->all() as $permission) {
             $rules = [...$rules, ...$permission->hasMany(PermissionRules::class, "permission_id")->getResults()->map(fn($item)=> $item->rule_value)->all()];
