@@ -11,4 +11,8 @@ class Comment extends Model
     use HasFactory;
     use SoftDeletes;
     protected $guarded = [];
+
+    public function getChildrent() {
+        return $this->hasMany($this, "parent_id")->getResults();
+    }
 }

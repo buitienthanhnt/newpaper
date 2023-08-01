@@ -47,4 +47,9 @@ class Paper extends Model
         }
         return false;
     }
+
+    public function getComments() {
+        $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->getResults();
+        return $comments;
+    }
 }

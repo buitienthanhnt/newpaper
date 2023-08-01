@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\Page;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Paper;
 use App\Models\RemoteSourceHistory;
 use App\Models\Writer;
@@ -196,7 +197,31 @@ class PaperController extends Controller
         return $history->save();
     }
 
-    public function addComment($page_id) {
-        dd($page_id);
+    public function addComment($page_id, Request $request)
+    {
+        try {
+            $comment = new Comment([
+                "paper_id" => $page_id,
+                "email" => $request->get("email"),
+                "name" => $request->get("name"),
+                "subject" => $request->get("subject"),
+                "content" => $request->get("message")
+            ]);
+
+            $comment->save();
+            return response(json_encode([
+                "code" => 200,
+                "data" => 123
+            ], 200));
+        } catch (\Throwable $th) {
+            return response(json_encode([
+                "code" => 200,
+                "data" => 123
+            ], 500));
+        }
+        return response(json_encode([
+            "code" => 200,
+            "data" => 123
+        ], 500));
     }
 }

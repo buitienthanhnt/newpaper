@@ -81,7 +81,7 @@
         }
 
         .panel-body {
-            padding: 25px 20px;
+            padding: 10px 10px;
         }
 
 
@@ -213,7 +213,9 @@
 
                         {!! view('frontend.templates.paper.component.commentForm', ['paper'=> $paper])->render(); !!}
 
-                        {!! view('frontend.templates.paper.component.commentHistory')->render(); !!}
+                        <div class="panel">
+                            {!! view('frontend.templates.paper.component.commentHistory', ['comments'=> $paper->getComments()])->render(); !!}
+                        </div>
                         
                     </div>
 

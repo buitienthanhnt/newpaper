@@ -1,5 +1,6 @@
 <div class="panel">
     <div class="panel-body">
+        <div class="alert alert-success hide" id="response-message" role="alert"></div>
         <form class="form-contact contact_form mb-80" action="{{ route('paper_add_comment', ['paper_id'=>$paper->id]) }}" method="post" id="contactForm"
             >
 			@csrf
@@ -10,6 +11,8 @@
                             onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message"></textarea>
                     </div>
                 </div>
+
+                <input type="hidden" name="paper_id" value="{{ $paper->id }}">
 
                 @if (!Auth::check())
                     <div class="col-sm-6">
@@ -53,3 +56,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    setInterval(() => {
+        var error_message = $("#response-message");
+        if (error_message.length) {
+            $(error_message).hide();
+        }
+    }, 4000);
+</script>
