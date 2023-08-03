@@ -111,18 +111,17 @@ class AdminUser extends Model
      * get germissions
      */
     function getPermissionsIds() {
-       $permissions = $this->hasMany(AdminUserPermission::class, "user_id"); 
+       $permissions = $this->hasMany(AdminUserPermission::class, "user_id");
        $permissionValues = array_column($permissions->getResults()->toArray(), "permission_id");
        return $permissionValues;
     }
 
     function getPermissionRules() {
         $rules = [];
-        $data = $this->hasMany(AdminUserPermission::class, "user_id");
-        // Illuminate\Support\Collection 
-        $permissions = collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
-        foreach ($permissions->all() as $permission) {
-            $rules = [...$rules, ...$permission->hasMany(PermissionRules::class, "permission_id")->getResults()->map(fn($item)=> $item->rule_value)->all()];
+        $userPermissions =  collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
+        foreach ($userPermissions->all() as $userPermission) {
+            $data_rules = $userPermission->hasMany(PermissionRules::class, "permission_id", "permission_id")->getResults()->map(fn($item)=> $item->rule_value)->all();
+            $rules = [...$rules, ...$data_rules];
         }
         return $rules;
     }
