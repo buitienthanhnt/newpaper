@@ -9,7 +9,8 @@
 
                     <div class="media-body">
                         <div class="mar-btm">
-                            <a href="#" class="btn-link text-semibold media-heading box-inline">{{ $item->name }}</a>
+                            <a href="#"
+                                class="btn-link text-semibold media-heading box-inline">{{ $item->name }}</a>
                             <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> -
                                 From Mobile - 11 min ago</p>
                         </div>
@@ -24,13 +25,15 @@
                                 <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i
                                         class="fa fa-thumbs-down"></i></a>
                             </div>
-                            <a class="btn btn-sm btn-default btn-hover-primary" href="#">Comment</a>
+
+							{!! view('frontend.templates.paper.component.commentReply', ["item" => $item]); !!}
+
                         </div>
 
-						@if (count($childrents = $item->getChildrent()))
-						{!! view('frontend.templates.paper.component.commentHistory', ['comments'=> $childrents])->render(); !!}
-						@endif
-						<span class="panel"></span>
+                        @if (count($childrents = $item->getChildrent()))
+                            {!! view('frontend.templates.paper.component.commentHistory', ['comments'=> $childrents])->render(); !!}
+                        @endif
+                        <span class="panel"></span>
                     </div>
 
                 </div>

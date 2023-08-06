@@ -2,6 +2,7 @@
 
 @section('page_top_head')
     @include('frontend.templates.page_top_head')
+    <script src="{{ asset('assets/frontend/js/commentReply.js') }}"></script>
 @endsection
 
 @section('page_header')
@@ -19,161 +20,7 @@
 @endsection
 
 @section('css_after')
-    <style>
-        .btn {
-            background: rgba(0, 123, 255, .5);
-            text-transform: uppercase;
-            color: #fff;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 14px;
-            font-weight: 400;
-            padding: 10px 10px;
-            border-radius: 0px;
-            letter-spacing: 1px;
-            line-height: 0;
-            -moz-user-select: none;
-            cursor: pointer;
-            transition: color 0.4s linear;
-            position: relative;
-            z-index: 1;
-            border: 0;
-            overflow: hidden;
-            margin: 0;
-            border-radius: 10px
-        }
-
-        img {
-            vertical-align: middle;
-            border-style: none;
-            max-width: 100%;
-            height: auto;
-        }
-
-        a,
-        button {
-            color: #007bff;
-            outline: medium none
-        }
-
-        .img-sm {
-            width: 46px;
-            height: 46px;
-        }
-
-        .panel {
-            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.075);
-            border-radius: 0;
-            border: 0;
-            margin-bottom: 15px;
-        }
-
-        .panel .panel-footer,
-        .panel>:last-child {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        .panel .panel-heading,
-        .panel>:first-child {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-        }
-
-        .panel-body {
-            padding: 10px 10px;
-        }
-
-
-        .media-block .media-left {
-            display: block;
-            float: left
-        }
-
-        .media-block .media-right {
-            float: right
-        }
-
-        .media-block .media-body {
-            display: block;
-            overflow: hidden;
-            width: auto;
-            padding-left: 8px;
-        }
-
-        .middle .media-left,
-        .middle .media-right,
-        .middle .media-body {
-            vertical-align: middle
-        }
-
-        .thumbnail {
-            border-radius: 0;
-            border-color: #e9e9e9
-        }
-
-        .tag.tag-sm,
-        .btn-group-sm>.tag {
-            padding: 5px 10px;
-        }
-
-        .tag:not(.label) {
-            background-color: #fff;
-            padding: 6px 12px;
-            border-radius: 2px;
-            border: 1px solid #cdd6e1;
-            font-size: 12px;
-            line-height: 1.42857;
-            vertical-align: middle;
-            -webkit-transition: all .15s;
-            transition: all .15s;
-        }
-
-        .text-muted,
-        a.text-muted:hover,
-        a.text-muted:focus {
-            color: #acacac;
-        }
-
-        .text-sm {
-            font-size: 0.9em;
-        }
-
-        .text-5x,
-        .text-4x,
-        .text-5x,
-        .text-2x,
-        .text-lg,
-        .text-sm,
-        .text-xs {
-            line-height: 1.25;
-        }
-
-        .btn-trans {
-            background-color: transparent;
-            border-color: transparent;
-            color: #929292;
-        }
-
-        .btn-icon {
-            padding-left: 9px;
-            padding-right: 9px;
-        }
-
-        .btn-sm,
-        .btn-group-sm>.btn,
-        .btn-icon.btn-sm {
-            padding: 5px 10px !important;
-        }
-
-        .mar-top {
-            margin-top: 1
-        }
-
-        /* .mar-btm{
-            padding-left: 8px;
-        } */
-    </style>
+    <link rel="stylesheet" href={{asset('assets/frontend/css/paper/detail.css')}}>
 @endsection
 
 
@@ -226,7 +73,7 @@
                         <div class="single-box">
                             <div class="follow-us d-flex align-items-center">
                                 <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-fb.png" alt=""></a>
+                                    <a href="#"><img src="{{ asset('assets/frontend/img/news/icon-fb.png') }}" alt=""></a>
                                 </div>
                                 <div class="follow-count">
                                     <span>8,045</span>
@@ -235,7 +82,7 @@
                             </div>
                             <div class="follow-us d-flex align-items-center">
                                 <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-tw.png" alt=""></a>
+                                    <a href="#"><img src="{{ asset('assets/frontend/img/news/icon-tw.png') }}" alt=""></a>
                                 </div>
                                 <div class="follow-count">
                                     <span>8,045</span>
@@ -244,7 +91,7 @@
                             </div>
                             <div class="follow-us d-flex align-items-center">
                                 <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-ins.png" alt=""></a>
+                                    <a href="#"><img src="{{ asset('assets/frontend/img/news/icon-ins.png') }}" alt=""></a>
                                 </div>
                                 <div class="follow-count">
                                     <span>8,045</span>
@@ -253,7 +100,7 @@
                             </div>
                             <div class="follow-us d-flex align-items-center">
                                 <div class="follow-social">
-                                    <a href="#"><img src="assets/img/news/icon-yo.png" alt=""></a>
+                                    <a href="#"><img src="{{ asset('assets/frontend/img/news/icon-yo.png') }}" alt=""></a>
                                 </div>
                                 <div class="follow-count">
                                     <span>8,045</span>
@@ -355,4 +202,10 @@
             </div>
         </div>
     </div>
+
+    <script>
+        var reply_comment_url = '{{route("paper_reply_comment")}}';
+        var token = "{{ csrf_token() }}";
+        var paper_value = "{{$paper->id}}"
+    </script>
 @endsection

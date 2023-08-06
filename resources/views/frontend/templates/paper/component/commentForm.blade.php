@@ -1,9 +1,9 @@
 <div class="panel">
     <div class="panel-body">
-        <div class="alert alert-success hide" id="response-message" role="alert"></div>
-        <form class="form-contact contact_form mb-80" action="{{ route('paper_add_comment', ['paper_id'=>$paper->id]) }}" method="post" id="contactForm"
-            >
-			@csrf
+        <div class="alert alert-success hide response-message" role="alert"></div>
+        <form class="form-contact contact_form mb-80" action="{{ route('paper_add_comment', ['paper_id' => $paper->id]) }}"
+            method="post" id="contactForm">
+            @csrf
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
@@ -45,7 +45,7 @@
             </div>
         </form>
         <div class="mar-top clearfix">
-            <button class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-pencil fa-fw"></i>
+            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-pencil fa-fw"></i>
                 Share</button>
             <a class="btn btn-trans btn-icon fab fa-video-camera add-tooltip" href="#"><i
                     class="fa fa-camera"></i></a>
@@ -59,7 +59,7 @@
 
 <script>
     setInterval(() => {
-        var error_message = $("#response-message");
+        var error_message = $(".response-message");
         if (error_message.length) {
             $(error_message).hide();
         }
