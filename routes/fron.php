@@ -48,13 +48,4 @@ Route::prefix('paper')->group(function () {
     Route::post("comment/{paper_id}", "PaperController@addComment")->name("paper_add_comment");
 });
 
-Route::get("testJson", function ()
-{
-    echo(json_encode([
-        "a" => 1,
-        "b" => 2,
-        "c" => "asd"
-    ]));
-})
-
 ?>

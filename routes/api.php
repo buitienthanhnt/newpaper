@@ -26,3 +26,13 @@ Route::get("getpaperdetail/{paper_id}", "ManagerController@getPaperDetail");
 Route::get("getcategorytop", "ManagerController@getCategoryTop");
 
 Route::get("papercategory/{category_id}", "ManagerController@getPaperCategory");
+
+
+Route::get("testJson", function ()
+{
+    echo(json_encode([
+        "a" => 1,
+        "b" => 2,
+        "c" => "asd"
+    ]));
+});
