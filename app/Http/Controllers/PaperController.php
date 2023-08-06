@@ -224,4 +224,33 @@ class PaperController extends Controller
             "data" => 123
         ], 500));
     }
+
+    function replyComment($comment_id, Request $request) {
+        return response(json_encode([
+            "code" => 300,
+            "data" => 123
+        ], 500));
+
+        try {
+            $comment = new Comment([
+                "paper_id" => $request->get("paper_value"),
+                "parent_id" => $comment_id,
+                "email" => $request->get("email"),
+                "name" => $request->get("name"),
+                "content" => $request->get("conten")
+            ]);
+
+            $comment->save();
+            return response(json_encode([
+                "code" => 200,
+                "data" => 123
+            ], 200));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return response(json_encode([
+            "code" => 200,
+            "data" => 123
+        ], 500));
+    }
 }
