@@ -22,6 +22,7 @@ class CreateCommentsTable extends Migration
             $table->integer("parent_id")->nullable();
             $table->integer("paper_id");
             $table->boolean("show")->default(false);
+            $table->integer("like")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

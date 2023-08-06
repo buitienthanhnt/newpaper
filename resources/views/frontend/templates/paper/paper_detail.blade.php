@@ -3,6 +3,7 @@
 @section('page_top_head')
     @include('frontend.templates.page_top_head')
     <script src="{{ asset('assets/frontend/js/commentReply.js') }}"></script>
+    <script src="{{ asset('assets/frontend/js/commentHistory.js') }}"></script>
 @endsection
 
 @section('page_header')
@@ -205,6 +206,7 @@
 
     <script>
         var reply_comment_url = '{{route("paper_reply_comment")}}';
+        var like_url = '{{route("paper_like")}}';
         var token = "{{ csrf_token() }}";
         var paper_value = "{{$paper->id}}"
     </script>

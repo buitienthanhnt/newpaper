@@ -17,13 +17,17 @@
                         <p>{{ $item->content }}</p>
 
                         <div class="pad-ver">
-                            <span class="tag tag-sm"><i class="fa fa-heart text-danger"></i>
-                                250 Likes</span>
+                            <span class="tag tag-sm">
+								<i class="fa fa-heart text-danger"></i>
+								<span>250 Likes</span>
+                            </span>
                             <div class="btn-group">
-                                <a class="btn btn-sm btn-default btn-hover-success" href="#"><i
-                                        class="fa fa-thumbs-up"></i></a>
-                                <a class="btn btn-sm btn-default btn-hover-danger" href="#"><i
-                                        class="fa fa-thumbs-down"></i></a>
+                                <button class="btn btn-sm" onclick="like(this, {{$item->id}}, 'like')">
+									<i class="fa fa-thumbs-up"></i>
+								</button>
+                                <button class="btn btn-sm" onclick="like(this, {{$item->id}}, 'dislike')">
+									<i class="fa fa-thumbs-down"></i>
+								</button>
                             </div>
 
 							{!! view('frontend.templates.paper.component.commentReply', ["item" => $item]); !!}

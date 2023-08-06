@@ -199,6 +199,8 @@ class PaperController extends Controller
 
     public function addComment($page_id, Request $request)
     {
+        throw new \Exception("Error Processing Request", 500);
+        
         try {
             $comment = new Comment([
                 "paper_id" => $page_id,
@@ -251,6 +253,34 @@ class PaperController extends Controller
         return response(json_encode([
             "code" => 200,
             "data" => 123
+        ], 500));
+    }
+
+    function like($comment_id, Request $request) {
+        $type = $request->get("type");
+        if ($type == "like") {
+            $comment = Comment::find($comment_id);
+            $comment->like = $comment->like+1;
+            $comment->save();
+            return response(json_encode([
+                "code" => 200,
+                "count" => $comment->like,
+                "message" => ""
+            ], 200));
+        }elseif ($type == "dislike") {
+            $comment = Comment::find($comment_id);
+            $comment->like = $comment->like-1 <= 0 ? 0 : $comment->like-1;
+            $comment->save();
+            return response(json_encode([
+                "code" => 200,
+                "count" => $comment->like,
+                "message" => ""
+            ], 200));
+        }
+        return response(json_encode([
+            "code" => 500,
+            "count" => 123,
+            "message" => ""
         ], 500));
     }
 }

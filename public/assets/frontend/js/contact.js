@@ -52,7 +52,7 @@ $(document).ready(function(){
                     data: $(form).serialize(),
                     url: $(form).attr("action"),
                     success: function() {
-                        $("#response-message").text("add comment success! wait for validate.").show();
+                        $("#response-message").addClass("alert-success").text("add comment success! wait for validate.").show();
                         // $('#contactForm :input').attr('disabled', 'disabled');
                         // $('#contactForm').fadeTo( "slow", 1, function() {
                         //     $(this).find(':input').attr('disabled', 'disabled');
@@ -63,7 +63,7 @@ $(document).ready(function(){
                         // })
                     },
                     error: function() {
-                        $("#response-message").text("add comment error! please try again.").show();
+                        $("#response-message").addClass("alert-warning").text("add comment error! please try again.").show();
                         $('#contactForm').fadeTo( "slow", 1, function() {
                             $('#error').fadeIn()
                             $('.modal').modal('hide');
