@@ -1,4 +1,15 @@
 <header>
+    <style>
+        @media only screen and (min-width: 720px) {
+            li:hover > ul.chilMenu {
+                top: 0% !important;
+                visibility: visible;
+                opacity: 1;
+                display: inline-block;
+                margin-left: 120px !important;
+            }
+        }
+    </style>
     <!-- Header Start -->
     <div class="header-area">
         <div class="main-header ">
@@ -54,8 +65,29 @@
                                     <ul id="navigation">
                                         @isset($topcategory)
                                             @foreach ($topcategory as $item)
-                                                <li><a
-                                                        href="{{ route('front_category', ['category' => $item->url_alias]) }}">{{ $item->name }}</a>
+                                                <li>
+                                                    <a href="{{ route('front_category', ['category' => $item->url_alias]) }}">{{ $item->name }}</a>
+                                                    <ul class="submenu">
+                                                        <li>
+                                                            <a href="blog.html">Blog</a>
+                                                            <ul class="submenu chilMenu">
+                                                                <li><a href="blog.html">Blog</a></li>
+                                                                <li><a href="blog_details.html">Blog Details</a></li>
+                                                                <li><a href="elements.html">Element</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a href="blog_details.html">Blog Details</a>
+                                                            <ul class="submenu chilMenu">
+                                                                <li><a href="blog.html">Blog</a></li>
+                                                                <li><a href="blog_details.html">Blog Details</a></li>
+                                                                <li><a href="elements.html">Element</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            <a href="elements.html">Element</a>
+                                                        </li>
+                                                    </ul>
                                                 </li>
                                             @endforeach
 
@@ -65,14 +97,15 @@
                                             <li><a href="latest_news.html">Latest News</a></li>
                                             <li><a href="#">Pages</a>
                                                 <ul class="submenu">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="blog_details.html">Blog Details</a></li>
-                                                    <li><a href="elements.html">Element</a>
-                                                        <ul class="submenu">
+                                                    <li>
+                                                        <a href="blog.html">Blog</a>
+                                                        <ul class="submenu chilMenu">
                                                             <li><a href="blog.html">Blog</a></li>
                                                             <li><a href="blog_details.html">Blog Details</a></li>
                                                             <li><a href="elements.html">Element</a></li>
-                                                        </ul>
+                                                        </ul></li>
+                                                    <li><a href="blog_details.html">Blog Details</a></li>
+                                                    <li><a href="elements.html">Element</a>
                                                     </li>
                                                 </ul>
                                             </li>

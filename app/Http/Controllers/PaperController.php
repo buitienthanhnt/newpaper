@@ -199,8 +199,8 @@ class PaperController extends Controller
 
     public function addComment($page_id, Request $request)
     {
-        throw new \Exception("Error Processing Request", 500);
-        
+//        throw new \Exception("Error Processing Request", 500);
+
         try {
             $comment = new Comment([
                 "paper_id" => $page_id,
@@ -221,17 +221,9 @@ class PaperController extends Controller
                 "data" => 123
             ], 500));
         }
-        return response(json_encode([
-            "code" => 200,
-            "data" => 123
-        ], 500));
     }
 
     function replyComment($comment_id, Request $request) {
-        return response(json_encode([
-            "code" => 300,
-            "data" => 123
-        ], 500));
 
         try {
             $comment = new Comment([
