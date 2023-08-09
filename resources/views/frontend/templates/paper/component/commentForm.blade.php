@@ -29,14 +29,6 @@
                                 placeholder="Email">
                         </div>
                     </div>
-
-                    <div class="col-12">
-                        <div class="form-group">
-                            <input class="form-control error" name="subject" id="subject" type="text"
-                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'"
-                                placeholder="Enter Subject">
-                        </div>
-                    </div>
                 @endif
 
             </div>

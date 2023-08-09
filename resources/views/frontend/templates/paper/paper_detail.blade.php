@@ -61,10 +61,10 @@
 
                         {!! view('frontend.templates.paper.component.commentForm', ['paper'=> $paper])->render(); !!}
 
-                        <div class="panel">
+                        <div class="panel" id="commentHistory">
                             {!! view('frontend.templates.paper.component.commentHistory', ['comments'=> $paper->getComments()])->render(); !!}
                         </div>
-                        
+
                     </div>
 
                 </div>

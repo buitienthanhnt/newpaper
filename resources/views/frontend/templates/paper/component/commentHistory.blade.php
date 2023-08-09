@@ -65,7 +65,7 @@
 
 				<img class="img-responsive thumbnail" src="https://www.bootdey.com/image/400x300"
 					alt="Image">
-					
+
 				<div class="pad-ver">
 					<span class="tag tag-sm"><i class="fa fa-heart text-danger"></i>
 						250 Likes</span>

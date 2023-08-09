@@ -2,7 +2,7 @@
     Reply
 </a>
 
-<div class="collapse" id="{{ $item->id }}-reply">
+<div class="collapse" id="{{ $item->id }}-reply" data-parent="#commentHistory">
 	<div class="alert alert-success hide response-message" id="response-message-{{ $item->id }}" role="alert"></div>
     <div class="row">
         <div class="col-12">
