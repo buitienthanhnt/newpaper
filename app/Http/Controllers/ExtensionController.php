@@ -35,6 +35,7 @@ class ExtensionController extends Controller
         "www.delftstack.com" => "get_www_delftstack_com",
         "niithanoi.edu.vn" => "get_niithanoi_edu_vn",
         "techmaster.vn" => "get_techmaster_vn",
+        "kienthuc.net.vn" => "get_kienthuc_net_vn",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -190,6 +191,10 @@ class ExtensionController extends Controller
 
     function get_techmaster_vn($doc) {
         return call_user_func(fn()=>$this->getValueByClassName($doc, "techmaster-font-open-sans post-content", ""));
+    }
+
+    function get_kienthuc_net_vn($doc) {
+        return call_user_func(fn()=>$this->getValueByClassName($doc, "cms-body", "sapo cms-desc"));
     }
 
     protected function check_type($request)

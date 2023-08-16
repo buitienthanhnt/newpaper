@@ -19,7 +19,7 @@ class ManagerController extends Controller
     protected $category;
     protected $pageTag;
     const URI = "192.168.100.210";                  // jm-destop
-    const URI2 = "192.168.1.153/laravel1/public";   // mochi-m4700
+    const URI2 = "192.168.1.150/laravel1/public";   // mochi-m4700
 
     public function __construct(
         Request $request,
