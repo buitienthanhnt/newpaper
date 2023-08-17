@@ -27,6 +27,9 @@ Route::get("getcategorytop", "ManagerController@getCategoryTop");
 
 Route::get("papercategory/{category_id}", "ManagerController@getPaperCategory");
 
+Route::get("getRelatedPaper", "ManagerController@getRelatedPaper");
+
+Route::get("getcategorytree", "ManagerController@getCategoryTree");
 
 Route::get("testJson", function ()
 {

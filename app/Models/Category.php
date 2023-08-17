@@ -24,11 +24,10 @@ class Category extends Model
         $list_catergory = $this->all()->where("parent_id", "=", 0);
         if ($list_catergory->count()) {
             if ($category) {
-                $parent_category.= $this->category_tree($list_catergory, "", $category->parent_id);
-            }else {
-                $parent_category.= $this->category_tree($list_catergory);
+                $parent_category .= $this->category_tree($list_catergory, "", $category->parent_id);
+            } else {
+                $parent_category .= $this->category_tree($list_catergory);
             }
-
         }
         return $parent_category;
     }
@@ -37,14 +36,14 @@ class Category extends Model
     {
         $html = "";
         foreach ($catergory as $cate) {
-            $html.='<option value="'.$cate->id.'" '.($this->_selected ? (in_array($cate->id, $this->_selected) ? "selected " : "") : ($selected === $cate->id ? "selected " : "")).'>'.$begin.$cate->name.'</option>';
+            $html .= '<option value="' . $cate->id . '" ' . ($this->_selected ? (in_array($cate->id, $this->_selected) ? "selected " : "") : ($selected === $cate->id ? "selected " : "")) . '>' . $begin . $cate->name . '</option>';
             if ($list_catergory = $this->all()->where("parent_id", "=", $cate->id)) {
                 if ($list_catergory->count()) {
                     $_be = $begin;
-                    $begin.="___";
-                    $html.=$this->category_tree($list_catergory, $begin, $selected);
+                    $begin .= "___";
+                    $html .= $this->category_tree($list_catergory, $begin, $selected);
                     $begin = $_be;
-                }else {
+                } else {
                     continue;
                 }
             }
@@ -75,13 +74,39 @@ class Category extends Model
         $result = null;
         if ($limit) {
             if ($order_by) {
-                $result =  Paper::whereIn("id", $page_id)->offset($offset*$limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
+                $result =  Paper::whereIn("id", $page_id)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
             }
-            $result =  Paper::whereIn("id", $page_id)->take($limit)->offset($offset*$limit)->select($this->select_key);
-        }else {
-            $result = Paper::whereIn("id", $page_id)->offset($offset*$limit)->select($this->select_key);
+            $result =  Paper::whereIn("id", $page_id)->take($limit)->offset($offset * $limit)->select($this->select_key);
+        } else {
+            $result = Paper::whereIn("id", $page_id)->offset($offset * $limit)->select($this->select_key);
         }
         return $result->get();
     }
 
+    function getCategoryTree($root = false)
+    {
+        if ($root) {
+            $cat["name"] = "";
+            $cat["id"] = 0;
+        }else{
+            $cat["name"] = $this->name;
+            $cat["id"] = $this->id;
+        }
+        $childrens = $this->all()->where("parent_id", "=", $root ? 0 :$this->id);
+        $values = null;
+        if (count($childrens)) {
+            $items = null;
+            foreach ($childrens as $children) {
+                if (!$children->active) {
+                    continue;
+                }
+                $category = $children->getCategoryTree();
+                $items[] = $category;
+            }
+            $cat["items"] = $items;
+        } else {
+            $cat["items"] = null;
+        }
+        return $cat;
+    }
 }
