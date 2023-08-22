@@ -31,6 +31,10 @@ Route::get("getRelatedPaper", "ManagerController@getRelatedPaper");
 
 Route::get("getcategorytree", "ManagerController@getCategoryTree");
 
+Route::get('sdetail', "ManagerController@getAdetail");
+
+Route::get('getStore', "ManagerController@getStores");
+
 Route::get("testJson", function ()
 {
     echo(json_encode([
