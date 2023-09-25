@@ -31,6 +31,8 @@ Route::get("getRelatedPaper", "ManagerController@getRelatedPaper");
 
 Route::get("getcategorytree", "ManagerController@getCategoryTree");
 
+Route::get("parseUrl", 'ManagerController@parseUrl');
+
 Route::get('sdetail', "ManagerController@getAdetail");
 
 Route::get('getStore', "ManagerController@getStores");
