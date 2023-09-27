@@ -36,6 +36,7 @@ class ExtensionController extends Controller
         "niithanoi.edu.vn" => "get_niithanoi_edu_vn",
         "techmaster.vn" => "get_techmaster_vn",
         "kienthuc.net.vn" => "get_kienthuc_net_vn",
+        "www.thivien.net" => "get_www_thivien_net",
         "dantri.com.vn" => "get_dantri_value" // host => function
     ];
 
@@ -195,6 +196,11 @@ class ExtensionController extends Controller
 
     function get_kienthuc_net_vn($doc) {
         return call_user_func(fn()=>$this->getValueByClassName($doc, "cms-body", "sapo cms-desc"));
+    }
+
+    // get_www_thivien_net
+    function get_www_thivien_net($doc) {
+        return call_user_func(fn()=>$this->getValueByClassName($doc, "poem-content", "page-header"));
     }
 
     protected function check_type($request)
