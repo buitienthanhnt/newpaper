@@ -25,19 +25,19 @@ class ExtensionController extends Controller
         "tienphong.vn"      => "tienphong_vn",
         "tuoitre.vn"        => "get_tuoitre_vn",
         "giaoducthoidai.vn" => "get_giaoducthoidai_vn",
-        "viblo.asia" => "get_viblo_asia",
-        "dinhnt.com" => "get_dinhnt_com",
-        "xuanthulab.net" => "get_xuanthulab_net",
-        "hoclaptrinh.vn" => "get_hoclaptrinh_vn",
-        "sql.js.org" => "get_sql_js_org",
-        "vtc.vn" => "get_vtc_vn",
-        "www.qdnd.vn" => "get_www_qdnd_vn",
-        "www.delftstack.com" => "get_www_delftstack_com",
-        "niithanoi.edu.vn" => "get_niithanoi_edu_vn",
-        "techmaster.vn" => "get_techmaster_vn",
-        "kienthuc.net.vn" => "get_kienthuc_net_vn",
-        "www.thivien.net" => "get_www_thivien_net",
-        "dantri.com.vn" => "get_dantri_value" // host => function
+        "viblo.asia"        => "get_viblo_asia",
+        "dinhnt.com"        => "get_dinhnt_com",
+        "xuanthulab.net"    => "get_xuanthulab_net",
+        "hoclaptrinh.vn"    => "get_hoclaptrinh_vn",
+        "sql.js.org"        => "get_sql_js_org",
+        "vtc.vn"            => "get_vtc_vn",
+        "www.qdnd.vn"       => "get_www_qdnd_vn",
+        "www.delftstack.com"=> "get_www_delftstack_com",
+        "niithanoi.edu.vn"  => "get_niithanoi_edu_vn",
+        "techmaster.vn"     => "get_techmaster_vn",
+        "kienthuc.net.vn"   => "get_kienthuc_net_vn",
+        "www.thivien.net"   => "get_www_thivien_net",
+        "dantri.com.vn"     => "get_dantri_value" // host => function
     ];
 
     public function __construct(
