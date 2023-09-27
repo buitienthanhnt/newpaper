@@ -19,7 +19,7 @@ class ManagerController extends Controller
     protected $paper;
     protected $category;
     protected $pageTag;
-    const URI = "192.168.4.113";                  // jm-destop
+    const URI = "192.168.100.156";                    // jm-destop
     // const URI = "192.168.1.214";                    // m6800
     const URI2 = "192.168.1.150/laravel1/public";   // mochi-m4700
 
