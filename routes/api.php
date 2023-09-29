@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,9 +41,24 @@ Route::get('getStore', "ManagerController@getStores");
 
 Route::get("testJson", function ()
 {
-    echo(json_encode([
+    // throw new Exception("Error Processing Request", 401);
+    return (json_encode([
         "a" => 1,
         "b" => 2,
-        "c" => "asd"
+        "c" => "asd",
+        'arr' => [23, 34, 45, 56]
+    ]));
+});
+
+Route::post("testPost", function ()
+{
+    // throw new Exception("Error Processing Request", 406);
+    // throw new HttpException(500, 'opopop');
+
+    return(json_encode([
+        "name" => 'tha',
+        "id" => 2,
+        "title" => "demo for post api",
+        'arr' => [23, 34, 45, 56]
     ]));
 });

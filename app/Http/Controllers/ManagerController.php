@@ -37,18 +37,10 @@ class ManagerController extends Controller
 
     public function homePage()
     {
-        $list_center = [];
-        $list_center_conten = [];
-        $most_recent = null;
-        $most_popular = null;
-        $trendings = null;
-        $weekly3_contens = null;
-        $video_contens = null;
+        $list_center = []; $list_center_conten = []; $most_recent = null; $most_popular = null; $trendings= null; $weekly3_contens = null; $video_contens = null;
         $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
-            return null;
-        });
+        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){return null;});
         if ($center_category) {
             $list_center = Category::find(explode("&", $center_category->value));
             $list_papers = [];
@@ -84,18 +76,10 @@ class ManagerController extends Controller
     {
         $category = Category::where("url_alias", "like", $category_id)->get()->first();
 
-        $list_center = [];
-        $list_center_conten = [];
-        $most_recent = null;
-        $most_popular = null;
-        $trendings = null;
-        $weekly3_contens = null;
-        $video_contens = null;
+        $list_center = []; $list_center_conten = []; $most_recent = null; $most_popular = null; $trendings= null; $weekly3_contens = null; $video_contens = null;
         $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
-            return null;
-        });
+        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){return null;});
         if ($center_category) {
             $list_center = Category::find(explode("&", $center_category->value));
             $list_papers = [];
@@ -146,19 +130,18 @@ class ManagerController extends Controller
         ]));
     }
 
-    function apiSourcePapers(Request $request)
-    {
+    function apiSourcePapers(Request $request) {
         // $papers = Paper::paginate($request->get("limit",  4))->orderBy("updated_at", "DESC");
         $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
         $data = $papers->toArray();
         if ($data["data"]) {
             foreach ($data["data"] as &$item) {
                 $asset_path = "/newpaper/public/assets/";   // http:://192.168.100.210/newpaper/public/asset/pub_image/defaul.PNG
-                $item["image_path"] = $item["image_path"] ? str_replace("localhost", self::URI, $item["image_path"]) : "http://" . self::URI . $asset_path . "pub_image/defaul.PNG";     // windown jmm-desk
-                //                $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", self::URI2, $item["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
+                 $item["image_path"] = $item["image_path"] ? str_replace("localhost", self::URI, $item["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
+//                $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", self::URI2, $item["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
 
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
-                //                 $item["title"] = $this->cut_str($item["title"], 80, "../");
+//                 $item["title"] = $this->cut_str($item["title"], 80, "../");
             }
         }
         return $data;
@@ -175,8 +158,8 @@ class ManagerController extends Controller
         $values = Category::whereIn("id", explode("&", $top_category->first()->value))->get()->toArray();
         $asset_path = "/newpaper/public/assets/";
         foreach ($values as &$value) {
-            //            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-            $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://" . self::URI . $asset_path . "pub_image/defaul.PNG";     // windown jmm-desk
+//            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
+             $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
         }
         return $values;
     }
@@ -184,33 +167,31 @@ class ManagerController extends Controller
     public function getPaperCategory($category_id, Request $request)
     {
         $category = $this->category->find($category_id);
-        $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) - 1)->toArray();
+        $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) -1)->toArray();
         $asset_path = "/newpaper/public/assets/";
         foreach ($papers as &$value) {
-            //            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";  // ubutnu m4700
-            $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://" . self::URI . $asset_path . "pub_image/defaul.PNG";      // windown jmm-desk
+//            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";  // ubutnu m4700
+             $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";      // windown jmm-desk
         }
         return $papers;
     }
 
-    function getRelatedPaper()
-    {
+    function getRelatedPaper(){
         $papers = Paper::all()->random(5)->toArray();
         $asset_path = "/newpaper/public/assets/";
         foreach ($papers as &$value) {
-            //            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-            $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://" . self::URI . $asset_path . "pub_image/defaul.PNG";     // windown jmm-desk
+//            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
+            $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
         }
         return ['data' => $papers];
     }
 
-    function getCategoryTree(Request $request)
-    {
+    function getCategoryTree(Request $request){
         $category_id = $request->get("category_id", 0);
         if ($category_id) {
             $category = $this->category->find($category_id);
             $categories = $category->getCategoryTree();
-        } else {
+        }else {
             $categories = $this->category->getCategoryTree(true);
         }
         return $categories;
