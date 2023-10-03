@@ -111,9 +111,12 @@
                         </div>
                     </div>
                     <!-- New Poster -->
-                    <div class="news-poster d-none d-lg-block">
-                        <img src="assets/img/news/news_card.jpg" alt="">
-                    </div>
+                    {{-- <div class="news-poster d-none d-lg-block"> --}}
+                        {{-- <img src="assets/img/news/news_card.jpg" alt=""> --}}
+                    {{-- </div> --}}
+
+                    {{-- most of view --}}
+                    {!! view('frontend.templates.paper.component.mostViewDetail')->render(); !!}
                 </div>
             </div>
         </div>

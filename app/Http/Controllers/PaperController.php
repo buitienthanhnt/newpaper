@@ -199,8 +199,7 @@ class PaperController extends Controller
 
     public function addComment($page_id, Request $request)
     {
-//        throw new \Exception("Error Processing Request", 500);
-
+        //throw new \Exception("Error Processing Request", 500);
         try {
             $comment = new Comment([
                 "paper_id" => $page_id,

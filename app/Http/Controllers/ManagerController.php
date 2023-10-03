@@ -221,4 +221,9 @@ class ManagerController extends Controller
         $paper = Paper::where('url_alias', '=', $url)->first();
         return $paper;
     }
+
+    function mostviewdetail(Request $request) {
+        $papers = Paper::take(6)->orderBy("updated_at", "ASC")->get(['id', 'title']);
+        return $papers;
+    }
 }

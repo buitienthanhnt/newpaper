@@ -50,4 +50,8 @@ trait Nan
     public function userPermissionTable() : string {
         return "admin_user_permissions";
     }
+
+    function viewSourceTable() : string {
+        return 'view_sources';
+    }
 }

@@ -37,6 +37,8 @@ Route::get('sdetail', "ManagerController@getAdetail");
 
 Route::get('getStore', "ManagerController@getStores");
 
+Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("mostviewdetail");
+
 Route::get("testJson", function ()
 {
     echo(json_encode([
