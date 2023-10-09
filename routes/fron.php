@@ -17,6 +17,8 @@ Route::get("home", function (){
     return view("frontend/templates/homepage");
 });
 
+Route::get("download/file", "ExtensionController@download")->name('download');
+
 Route::prefix("user")->group(function(){
 
     Route::get("create", "UserController@createAccount")->name("account_create");

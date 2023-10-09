@@ -20,8 +20,8 @@ class ManagerController extends Controller
     protected $category;
     protected $pageTag;
     const URI = "192.168.100.156";                    // jm-destop
-    // const URI = "192.168.1.214";                    // m6800
-    const URI2 = "192.168.1.150/laravel1/public";   // mochi-m4700
+    // const URI = "192.168.1.214";                   // m6800
+    const URI2 = "192.168.1.150/laravel1/public";     // mochi-m4700
 
     public function __construct(
         Request $request,
@@ -137,8 +137,8 @@ class ManagerController extends Controller
         if ($data["data"]) {
             foreach ($data["data"] as &$item) {
                 $asset_path = "/newpaper/public/assets/";   // http:://192.168.100.210/newpaper/public/asset/pub_image/defaul.PNG
-                 $item["image_path"] = $item["image_path"] ? str_replace("localhost", self::URI, $item["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
-//                $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", self::URI2, $item["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
+                //  $item["image_path"] = $item["image_path"] ? str_replace("localhost", self::URI, $item["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
+               $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", self::URI2, $item["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
 
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
 //                 $item["title"] = $this->cut_str($item["title"], 80, "../");
@@ -158,8 +158,8 @@ class ManagerController extends Controller
         $values = Category::whereIn("id", explode("&", $top_category->first()->value))->get()->toArray();
         $asset_path = "/newpaper/public/assets/";
         foreach ($values as &$value) {
-//            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-             $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
+           $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
+            //  $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
         }
         return $values;
     }
@@ -170,8 +170,8 @@ class ManagerController extends Controller
         $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) -1)->toArray();
         $asset_path = "/newpaper/public/assets/";
         foreach ($papers as &$value) {
-//            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";  // ubutnu m4700
-             $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";      // windown jmm-desk
+           $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";  // ubutnu m4700
+            //  $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";      // windown jmm-desk
         }
         return $papers;
     }
@@ -180,8 +180,8 @@ class ManagerController extends Controller
         $papers = Paper::all()->random(5)->toArray();
         $asset_path = "/newpaper/public/assets/";
         foreach ($papers as &$value) {
-//            $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-            $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
+           $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
+            // $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
         }
         return ['data' => $papers];
     }

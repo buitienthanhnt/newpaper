@@ -8,6 +8,7 @@ use App\Models\Paper;
 use App\Models\RemoteSourceHistory;
 use App\Models\Writer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 // https://www.php.net/manual/en/langref.php php
 class ExtensionController extends Controller
@@ -251,5 +252,15 @@ class ExtensionController extends Controller
             "image_path" => $request->__get("image_path") ?: "",
             "writer" => $request->get("writer", null)
         ];
+    }
+
+    function download() {
+        $file= public_path(). "/vendor/app-release.apk";
+
+        // $headers = array(
+        //       'Content-Type: application/pdf',
+        //     );
+
+        return Response::download($file, 'app-release.apk');
     }
 }
