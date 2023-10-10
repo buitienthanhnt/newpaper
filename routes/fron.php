@@ -54,4 +54,8 @@ Route::prefix('paper')->group(function () {
     Route::post("like/{comment_id?}", "PaperController@like")->name("paper_like");
 });
 
+Route::prefix('notification')->group(function(){
+    Route::post("registerFcm", "NotificationController@registerFcm")->name('registerFcm');
+});
+
 ?>
