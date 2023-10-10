@@ -39,19 +39,22 @@ Route::get('sdetail', "ManagerController@getAdetail");
 
 Route::get('getStore', "ManagerController@getStores");
 
-Route::get("testJson", function ()
-{
-    // throw new Exception("Error Processing Request", 401);
-    return (json_encode([
-        "a" => 1,
-        "b" => 2,
-        "c" => "asd",
-        'arr' => [23, 34, 45, 56]
-    ]));
+Route::prefix('notification')->group(function(){
+    Route::post("registerFcm", "NotificationController@registerFcm")->name('registerFcm');
+
+    Route::get('push', "NotificationController@push_notification")->name("notification_push");
 });
 
-Route::post("testPost", function ()
+Route::get("testJson", function (Request $request)
 {
+    // throw new Exception("Error Processing Request", 401);
+    return $request->getContent();
+});
+
+Route::post("testPost", function (Request $request)
+{
+    $params = $request->getContent();
+    return $params;
     // throw new Exception("Error Processing Request", 406);
     // throw new HttpException(500, 'opopop');
 
