@@ -74,7 +74,7 @@ class HelperFunction
         );
         $data_string = json_encode($data);
         $url = "https://fcm.googleapis.com/fcm/send"; // $url = "http://laravel1.com/api/testPost";
-        $url = "https://fcm.googleapis.com/v1/projects/react-cli4/messages";
+        // $url = "https://fcm.googleapis.com/v1/projects/react-cli4/messages";
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
