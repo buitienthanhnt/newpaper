@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\HelperFunction;
 use App\Helper\Page;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Models\Paper;
 use App\Models\RemoteSourceHistory;
 use App\Models\Writer;
@@ -18,16 +20,22 @@ class PaperController extends Controller
     protected $request;
     protected $paper;
     protected $category;
+    protected $notification;
+    protected $helperFunction;
     const PAGE_TYPE = 1;
 
     public function __construct(
         Request $request,
         Paper $paper,
-        Category $category
+        Category $category,
+        Notification $notification,
+        HelperFunction $helperFunction
     ) {
         $this->request = $request;
         $this->paper = $paper;
         $this->category = $category;
+        $this->notification = $notification;
+        $this->helperFunction = $helperFunction;
     }
 
     public function listPaper()
@@ -89,6 +97,8 @@ class PaperController extends Controller
                 if ($request_url = $request->get("request_url")) {
                     $this->save_remote_source_history($request_url, self::PAGE_TYPE, $new_id, true);
                 }
+                $all_fcm = $this->notification->where("active", true)->get()->toArray();
+                $this->helperFunction->push_notification_json($all_fcm, $paper);
             }
             return redirect()->back()->with("success", "add success");
         } catch (\Exception $e) {

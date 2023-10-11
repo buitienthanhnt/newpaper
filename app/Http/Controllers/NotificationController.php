@@ -33,7 +33,7 @@ class NotificationController extends Controller
                 return [
                     "message" => "add fcm token seccess",
                     "code" => 200,
-                    "data" => $check_notification->toArray() 
+                    "data" => $check_notification->toArray()
                 ];
             }
             $save_value = $notification->fill([
@@ -45,11 +45,11 @@ class NotificationController extends Controller
                 return [
                     "message" => "add fcm token seccess",
                     "code" => 200,
-                    "data" => $notification->toArray() 
+                    "data" => $notification->toArray()
                 ];
             }
         }
-        
+
         return($request->getContent());
     }
 

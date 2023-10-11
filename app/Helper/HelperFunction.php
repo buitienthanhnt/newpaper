@@ -8,7 +8,7 @@ class HelperFunction
 {
     use DomHtml;
 
-    // post request with request params. 
+    // post request with request params.
     public function push_notification(array $notification_fcm, Paper $paper): bool
     {
         $curl = curl_init();
@@ -48,52 +48,48 @@ class HelperFunction
     }
 
     // post request with json params in body
-    public function push_notification_json(array $notification_fcm, Paper $paper): bool
+    public function push_notification_json(array $notification_fcm = [], Paper $paper): bool
     {
+        if (!$notification_fcm || !$paper) {
+            return false;
+        }
+        $authorization = "key=AAAAeBGZHtQ:APA91bGggB93_pNvy07wXXNSDhqCeq4cx0DUFrZ569ngqgXxanHejv8adyIvuE-GSn0Aui8tSfnadFU1Wc3BykaiOwnVT_h_pzIvU6JlfKTF2rTQ3st28vO9TXAFUxsSWG7BDkDTHUbl";
         $data = array(
-            "serverKey" => "1:515691323092:android:9cc570b98e4b444d95e541",
             'registration_ids' => array_map(fn ($notification) => $notification["fcmToken"], $notification_fcm),
             'notification' => [
                 "title" => $paper->title,
-                "body" => $paper->short_conten
+                "body" => $paper->short_conten,
+                "image" => "https://static.pexels.com/photos/4825/red-love-romantic-flowers.jpg",
+                "icon" => "ic_launcher"
             ],
             "data" => [
                 "link" => $paper->url_alias,
                 "id" => $paper->id,
                 "screen" => "PaperDetail/$paper->id",
+                "image" => "https://static.pexels.com/photos/4825/red-love-romantic-flowers.jpg",
                 "data" => [
                     "id" => $paper->id
                 ]
             ]
         );
         $data_string = json_encode($data);
-        $url = "https://fcm.googleapis.com/fcm/send";
-        // $url = "http://laravel1.com/api/testPost";
-
-        $authHeaders = array();
-        $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
-        $authHeaders[] = 'Authorization: ' . "key=AAAAeBGZHtQ:APA91bGggB93_pNvy07wXXNSDhqCeq4cx0DUFrZ569ngqgXxanHejv8adyIvuE-GSn0Aui8tSfnadFU1Wc3BykaiOwnVT_h_pzIvU6JlfKTF2rTQ3st28vO9TXAFUxsSWG7BDkDTHUbl";
-
+        $url = "https://fcm.googleapis.com/fcm/send"; // $url = "http://laravel1.com/api/testPost";
+        $url = "https://fcm.googleapis.com/v1/projects/react-cli4/messages";
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER,$authHeaders);
-        curl_setopt(
-            $curl,
-            CURLOPT_HTTPHEADER,
+        curl_setopt($curl, CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($data_string),
-                'Authorization: ' . "key=AAAAeBGZHtQ:APA91bGggB93_pNvy07wXXNSDhqCeq4cx0DUFrZ569ngqgXxanHejv8adyIvuE-GSn0Aui8tSfnadFU1Wc3BykaiOwnVT_h_pzIvU6JlfKTF2rTQ3st28vO9TXAFUxsSWG7BDkDTHUbl"
+                'Authorization: ' . $authorization
             )
         );
 
         $result = curl_exec($curl);
         curl_close($curl);
-
-        echo ($result);
         return $result;
     }
 
