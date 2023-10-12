@@ -17,6 +17,25 @@ Route::get("home", function (){
     return view("frontend/templates/homepage");
 });
 
+Route::get("playSound", function(){
+    $sound = <<<SOUND
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <audio controls>
+                <source src="http://192.168.100.156/newpaper/public/Hinh_Bong_Que_Nha.mp3" type="audio/ogg">
+            </audio>
+        </body>
+        </html>
+    SOUND;
+    return($sound);
+});
+
 Route::get("download/file", "ExtensionController@download")->name('download');
 
 Route::prefix("user")->group(function(){
@@ -53,5 +72,3 @@ Route::prefix('paper')->group(function () {
 
     Route::post("like/{comment_id?}", "PaperController@like")->name("paper_like");
 });
-
-?>
