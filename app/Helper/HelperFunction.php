@@ -3,10 +3,55 @@
 namespace App\Helper;
 
 use App\Models\Paper;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class HelperFunction
 {
     use DomHtml;
+    use Nan;
+
+    function saveConfig(string $name, string $value, string $type = "text", string $description = null): array
+    {
+        DB::beginTransaction();
+        try {
+
+            $insert_value = DB::table($this->coreConfigTable())->updateOrInsert(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
+            DB::commit();
+            return ["status" => true, "value" => $insert_value];
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+        return ["status" => false, "value" => null];
+    }
+
+    function replaceImageUrl(string $imageUrl = "") : string {
+        $domain = ""; $ip = ""; $main = "";
+        try {
+            DB::beginTransaction();
+            $domain = DB::table($this->coreConfigTable())->where("name", "=", "domain")->select()->first()->value;
+            $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->select()->first()->value;
+            $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->select()->first()->value;
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $imageUrl;
+        }
+         $img = $imageUrl ? str_replace($domain, $ip."/".$main."/public", $imageUrl) : "http://".$$ip."/".$main."/public"."/assets/pub_image/defaul.PNG";
+        return $img;
+    }
+
+    function defaultUrl() : string {
+        $ip = ""; $main = "";
+        try {
+            DB::beginTransaction();
+            $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->select()->first()->value;
+            $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->select()->first()->value;
+        } catch (\Throwable $th) {
+            return "";
+        }
+        return "http://".$ip."/".$main."/public"."/assets/pub_image/defaul.PNG";
+    }
 
     // post request with request params.
     public function push_notification(array $notification_fcm, Paper $paper): bool
@@ -80,7 +125,9 @@ class HelperFunction
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER,
+        curl_setopt(
+            $curl,
+            CURLOPT_HTTPHEADER,
             array(
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($data_string),

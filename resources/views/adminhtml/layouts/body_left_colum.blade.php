@@ -31,10 +31,15 @@
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin_rule_list') }}">rules</a>
                     </li>
 
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('admin_permission_list') }}">permisstion</a>
+                    <li class="nav-item"> <a class="nav-link"
+                            href="{{ route('admin_permission_list') }}">permisstion</a>
                     </li>
 
                     <li class="nav-item"> <a class="nav-link" href="{{ route('admin_user_list') }}">admin user</a>
+                    </li>
+
+                    <li class="nav-item"> <a class="nav-link"
+                            href="{{ route('admin_config_create') }}">configuration</a>
                     </li>
 
                     <li class="nav-item"> <a class="nav-link"

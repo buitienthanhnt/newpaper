@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DomHtml;
+use App\Helper\HelperFunction;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use App\Models\PageTag;
@@ -19,20 +20,20 @@ class ManagerController extends Controller
     protected $paper;
     protected $category;
     protected $pageTag;
-    const URI = "192.168.100.156";                    // jm-destop
-    // const URI = "192.168.1.214";                   // m6800
-    const URI2 = "192.168.1.150/laravel1/public";     // mochi-m4700
+    protected $helperFunction;
 
     public function __construct(
         Request $request,
         Paper $paper,
         Category $category,
-        PageTag $pageTag
+        PageTag $pageTag,
+        HelperFunction $helperFunction
     ) {
         $this->request = $request;
         $this->paper = $paper;
         $this->category = $category;
         $this->pageTag = $pageTag;
+        $this->helperFunction = $helperFunction;
     }
 
     public function homePage()
@@ -136,12 +137,9 @@ class ManagerController extends Controller
         $data = $papers->toArray();
         if ($data["data"]) {
             foreach ($data["data"] as &$item) {
-                $asset_path = "/newpaper/public/assets/";   // http:://192.168.100.210/newpaper/public/asset/pub_image/defaul.PNG
-                //  $item["image_path"] = $item["image_path"] ? str_replace("localhost", self::URI, $item["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
-               $item["image_path"] = $item["image_path"] ? str_replace("laravel1.com", self::URI2, $item["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-
+                $item["image_path"] = $this->helperFunction->replaceImageUrl($item["image_path"]);
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
-//                 $item["title"] = $this->cut_str($item["title"], 80, "../");
+                // $item["title"] = $this->cut_str($item["title"], 80, "../");
             }
         }
         return $data;
@@ -156,10 +154,8 @@ class ManagerController extends Controller
     {
         $top_category = ConfigCategory::where("path", "=", ConfigCategory::TOP_CATEGORY);
         $values = Category::whereIn("id", explode("&", $top_category->first()->value))->get()->toArray();
-        $asset_path = "/newpaper/public/assets/";
         foreach ($values as &$value) {
-           $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-            //  $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
+            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"]);
         }
         return $values;
     }
@@ -168,20 +164,16 @@ class ManagerController extends Controller
     {
         $category = $this->category->find($category_id);
         $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) -1)->toArray();
-        $asset_path = "/newpaper/public/assets/";
         foreach ($papers as &$value) {
-           $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG";  // ubutnu m4700
-            //  $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";      // windown jmm-desk
+            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"]);
         }
         return $papers;
     }
 
     function getRelatedPaper(){
         $papers = Paper::all()->random(5)->toArray();
-        $asset_path = "/newpaper/public/assets/";
         foreach ($papers as &$value) {
-           $value["image_path"] = $value["image_path"] ? str_replace("laravel1.com", self::URI2, $value["image_path"]) : "http://".self::URI2."/assets/pub_image/defaul.PNG"; // ubuntu m4700
-            // $value["image_path"] = $value["image_path"] ? str_replace("localhost", self::URI, $value["image_path"]) : "http://".self::URI.$asset_path."pub_image/defaul.PNG";     // windown jmm-desk
+            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"]);
         }
         return ['data' => $papers];
     }

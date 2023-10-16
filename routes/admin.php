@@ -125,5 +125,11 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("deleteUser", "AdminUserController@deleteUser")->name($admin . "_user_delete");
     });
 
+    Route::prefix("config")->group(function () use($admin) {
+        Route::get("create", "ConfigController@create")->name($admin."_config_create");
+
+        Route::post("insert", "ConfigController@insert")->name($admin."_config_insert");
+    });
+
     Route::get("default", "AdminController@default")->name($admin . "_default");
 });
