@@ -39,7 +39,7 @@
                     </li>
 
                     <li class="nav-item"> <a class="nav-link"
-                            href="{{ route('admin_config_create') }}">configuration</a>
+                            href="{{ route('admin_config_list') }}">configuration</a>
                     </li>
 
                     <li class="nav-item"> <a class="nav-link"

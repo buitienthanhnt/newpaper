@@ -126,6 +126,8 @@ Route::group(["prefix" => "adminhtml"], function () {
     });
 
     Route::prefix("config")->group(function () use($admin) {
+        Route::get("/", "ConfigController@list")->name($admin."_config_list");
+
         Route::get("create", "ConfigController@create")->name($admin."_config_create");
 
         Route::post("insert", "ConfigController@insert")->name($admin."_config_insert");
