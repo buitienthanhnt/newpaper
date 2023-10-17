@@ -72,7 +72,7 @@ class HelperFunction
         $authHeaders = array();
         $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
         try {
-            $authorization = (boolean) DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
+            $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
         }catch(\Throwable $th){
             $th("not has authorization");
         }
@@ -113,8 +113,9 @@ class HelperFunction
         if (!$notification_fcm || !$paper) {
             return false;
         }
+        $authorization = "";
         try {
-            $authorization = (boolean) DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
+            $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
         }catch(\Throwable $th){
             $th("not has authorization");
         }
