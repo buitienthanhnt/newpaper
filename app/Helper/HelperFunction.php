@@ -11,11 +11,11 @@ class HelperFunction
     use DomHtml;
     use Nan;
 
-    function saveConfig(string $name, string $value, string $type = "text", string $description = null): array
+    // save core config value.
+    public function saveConfig(string $name, string $value, string $type = "text", string $description = null): array
     {
         DB::beginTransaction();
         try {
-
             $insert_value = DB::table($this->coreConfigTable())->updateOrInsert(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
             DB::commit();
             return ["status" => true, "value" => $insert_value];
@@ -26,8 +26,12 @@ class HelperFunction
         return ["status" => false, "value" => null];
     }
 
-    function replaceImageUrl(string $imageUrl = "") : string {
-        $domain = ""; $ip = ""; $main = "";
+    // repalce image url for app by use ip address.
+    public function replaceImageUrl(string $imageUrl = "") : string {
+        if (!$imageUrl) {
+            return $this->defaultUrl();
+        }
+        $domain = ""; $ip = ""; $main = ""; $is_windown = false;
         try {
             DB::beginTransaction();
             $domain = DB::table($this->coreConfigTable())->where("name", "=", "domain")->select()->first()->value;
@@ -37,11 +41,17 @@ class HelperFunction
             //throw $th;
             return $imageUrl;
         }
-         $img = $imageUrl ? str_replace($domain, $ip."/".$main."/public", $imageUrl) : "http://".$$ip."/".$main."/public"."/assets/pub_image/defaul.PNG";
+        // support for windown platform
+        try {
+            $is_windown = (boolean) DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->select()->first()->value;
+        }catch(\Throwable $th){}
+
+         $img = $is_windown ? str_replace($domain, $ip, $imageUrl) : str_replace($domain, $ip."/".$main."/public", $imageUrl);
         return $img;
     }
 
-    function defaultUrl() : string {
+    // allway use default image url.
+    public function defaultUrl() : string {
         $ip = ""; $main = "";
         try {
             DB::beginTransaction();
@@ -61,7 +71,12 @@ class HelperFunction
 
         $authHeaders = array();
         $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
-        $authHeaders[] = 'Authorization: ' . "key=AAAAeBGZHtQ:APA91bGggB93_pNvy07wXXNSDhqCeq4cx0DUFrZ569ngqgXxanHejv8adyIvuE-GSn0Aui8tSfnadFU1Wc3BykaiOwnVT_h_pzIvU6JlfKTF2rTQ3st28vO9TXAFUxsSWG7BDkDTHUbl";
+        try {
+            $authorization = (boolean) DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
+        }catch(\Throwable $th){
+            $th("not has authorization");
+        }
+        $authHeaders[] = 'Authorization: ' . $authorization;
 
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => 1,
@@ -98,7 +113,14 @@ class HelperFunction
         if (!$notification_fcm || !$paper) {
             return false;
         }
-        $authorization = "key=AAAAeBGZHtQ:APA91bGggB93_pNvy07wXXNSDhqCeq4cx0DUFrZ569ngqgXxanHejv8adyIvuE-GSn0Aui8tSfnadFU1Wc3BykaiOwnVT_h_pzIvU6JlfKTF2rTQ3st28vO9TXAFUxsSWG7BDkDTHUbl";
+        try {
+            $authorization = (boolean) DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
+        }catch(\Throwable $th){
+            $th("not has authorization");
+        }
+
+        $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
+        $authHeaders[] = 'Authorization: ' . $authorization;
         $data = array(
             'registration_ids' => array_map(fn ($notification) => $notification["fcmToken"], $notification_fcm),
             'notification' => [
@@ -119,7 +141,7 @@ class HelperFunction
         );
         $data_string = json_encode($data);
         $url = "https://fcm.googleapis.com/fcm/send"; // $url = "http://laravel1.com/api/testPost";
-        // $url = "https://fcm.googleapis.com/v1/projects/react-cli4/messages";
+        // $url = "https://fcm.googleapis.com/v1/projects/react-cli4/messages";  // not run
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
@@ -150,13 +172,10 @@ class HelperFunction
             CURLOPT_USERAGENT => 'Viblo test cURL Request',
             CURLOPT_SSL_VERIFYPEER => false
         ));
-
         $resp = curl_exec($curl);
-
         //Dữ liệu thời tiết ở dạng JSON
         $weather = json_decode($resp);
         var_dump($weather);
-
         curl_close($curl);
     }
 }

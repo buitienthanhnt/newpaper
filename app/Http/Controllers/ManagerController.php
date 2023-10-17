@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DomHtml;
-use App\Helper\HelperFunction;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use App\Models\PageTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Session\Store;
+use App\Helper\HelperFunction;
 
 class ManagerController extends Controller
 {
@@ -137,7 +135,7 @@ class ManagerController extends Controller
         $data = $papers->toArray();
         if ($data["data"]) {
             foreach ($data["data"] as &$item) {
-                $item["image_path"] = $this->helperFunction->replaceImageUrl($item["image_path"]);
+                $item["image_path"] = $this->helperFunction->replaceImageUrl($item["image_path"] ?: '');
                 $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
                 // $item["title"] = $this->cut_str($item["title"], 80, "../");
             }
@@ -155,7 +153,7 @@ class ManagerController extends Controller
         $top_category = ConfigCategory::where("path", "=", ConfigCategory::TOP_CATEGORY);
         $values = Category::whereIn("id", explode("&", $top_category->first()->value))->get()->toArray();
         foreach ($values as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"]);
+            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
         }
         return $values;
     }
@@ -165,7 +163,7 @@ class ManagerController extends Controller
         $category = $this->category->find($category_id);
         $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) -1)->toArray();
         foreach ($papers as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"]);
+            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
         }
         return $papers;
     }
@@ -173,7 +171,7 @@ class ManagerController extends Controller
     function getRelatedPaper(){
         $papers = Paper::all()->random(5)->toArray();
         foreach ($papers as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"]);
+            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
         }
         return ['data' => $papers];
     }
