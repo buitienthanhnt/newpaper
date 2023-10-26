@@ -88,7 +88,8 @@ class HelperFunction
                 'registration_ids' => array_map(fn ($notification) => $notification->fcmToken, $notification_fcm),
                 'notification' => [
                     "title" => $paper->title,
-                    "body" => $paper->short_conten
+                    "body" => $paper->short_conten,
+                    "image" => $this->replaceImageUrl($paper->image_path),
                 ],
                 "data" => [
                     "link" => $paper->url_alias,
@@ -127,14 +128,13 @@ class HelperFunction
             'notification' => [
                 "title" => $paper->title,
                 "body" => $paper->short_conten,
-                "image" => "https://static.pexels.com/photos/4825/red-love-romantic-flowers.jpg",
+                "image" => $this->replaceImageUrl($paper->image_path), // image of notification
                 "icon" => "ic_launcher"
             ],
             "data" => [
                 "link" => $paper->url_alias,
                 "id" => $paper->id,
                 "screen" => "PaperDetail/$paper->id",
-                "image" => "https://static.pexels.com/photos/4825/red-love-romantic-flowers.jpg",
                 "data" => [
                     "id" => $paper->id
                 ]
