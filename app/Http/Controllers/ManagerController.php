@@ -9,6 +9,7 @@ use App\Models\PageTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use App\Helper\HelperFunction;
+use Illuminate\Support\Facades\Cache;
 
 class ManagerController extends Controller
 {
@@ -36,10 +37,18 @@ class ManagerController extends Controller
 
     public function homePage()
     {
-        $list_center = []; $list_center_conten = []; $most_recent = null; $most_popular = null; $trendings= null; $weekly3_contens = null; $video_contens = null;
+        $list_center = [];
+        $list_center_conten = [];
+        $most_recent = null;
+        $most_popular = null;
+        $trendings = null;
+        $weekly3_contens = null;
+        $video_contens = null;
         $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){return null;});
+        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
+            return null;
+        });
         if ($center_category) {
             $list_center = Category::find(explode("&", $center_category->value));
             $list_papers = [];
@@ -75,10 +84,18 @@ class ManagerController extends Controller
     {
         $category = Category::where("url_alias", "like", $category_id)->get()->first();
 
-        $list_center = []; $list_center_conten = []; $most_recent = null; $most_popular = null; $trendings= null; $weekly3_contens = null; $video_contens = null;
+        $list_center = [];
+        $list_center_conten = [];
+        $most_recent = null;
+        $most_popular = null;
+        $trendings = null;
+        $weekly3_contens = null;
+        $video_contens = null;
         $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function(){return null;});
+        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
+            return null;
+        });
         if ($center_category) {
             $list_center = Category::find(explode("&", $center_category->value));
             $list_papers = [];
@@ -129,7 +146,8 @@ class ManagerController extends Controller
         ]));
     }
 
-    function apiSourcePapers(Request $request) {
+    function apiSourcePapers(Request $request)
+    {
         // $papers = Paper::paginate($request->get("limit",  4))->orderBy("updated_at", "DESC");
         $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
         $data = $papers->toArray();
@@ -145,7 +163,15 @@ class ManagerController extends Controller
 
     public function getPaperDetail($paper_id)
     {
-        return $this->paper->find($paper_id);
+        if (Cache::has("detail_$paper_id")) {
+            return  Cache::get("detail_$paper_id");
+        } else {
+            $detail = $this->paper->find($paper_id);
+            if (!Cache::has("detail_$detail->id")) {
+                Cache::put("detail_$detail->id", $detail);
+            }
+            return $detail;
+        }
     }
 
     public function getCategoryTop()
@@ -161,14 +187,15 @@ class ManagerController extends Controller
     public function getPaperCategory($category_id, Request $request)
     {
         $category = $this->category->find($category_id);
-        $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) -1)->toArray();
+        $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) - 1)->toArray();
         foreach ($papers as &$value) {
             $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
         }
         return $papers;
     }
 
-    function getRelatedPaper(){
+    function getRelatedPaper()
+    {
         $papers = Paper::all()->random(5)->toArray();
         foreach ($papers as &$value) {
             $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
@@ -176,18 +203,20 @@ class ManagerController extends Controller
         return ['data' => $papers];
     }
 
-    function getCategoryTree(Request $request){
+    function getCategoryTree(Request $request)
+    {
         $category_id = $request->get("category_id", 0);
         if ($category_id) {
             $category = $this->category->find($category_id);
             $categories = $category->getCategoryTree();
-        }else {
+        } else {
             $categories = $this->category->getCategoryTree(true);
         }
         return $categories;
     }
 
-    function parseUrl(Request $request) {
+    function parseUrl(Request $request)
+    {
         $url = $request->get('url', 'tuyen-viet-nam-dau-hong-kong-hlv-troussier-gay-bat-ngo');
         $paper = Paper::where('url_alias', '=', $url)->first();
         return $paper;

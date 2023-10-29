@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", "ManagerController@homePage")->name("/");
@@ -71,4 +71,21 @@ Route::prefix('paper')->group(function () {
     Route::post('commentReply/{comment_id?}', "PaperController@replyComment")->name("paper_reply_comment");
 
     Route::post("like/{comment_id?}", "PaperController@like")->name("paper_like");
+});
+
+// php artisan cache:table
+// php artisan migrate
+Route::prefix('cache')->group(function () {
+    Route::get('create', function () {
+        $status = Cache::put('tha', [
+            'a' => 123,
+            'b' => 'demo data'
+        ]);
+        return $status;
+    });
+
+    Route::get('get', function () {
+        $value = Cache::get('tha', 123123123);
+        return $value;
+    });
 });
