@@ -74,7 +74,7 @@ class CategoryController extends Controller
         $category->description = $params["description"];
         $category->active = $params["active"];
         $category->parent_id = $this->request->__get("parent_id");
-        $category->url_alias = $params["url_alias"];
+        $category->url_alias = $params["url_alias"] ?: str_replace(" ",'-', strtolower($params['name']));
         $category->save();
 
         if ($category) {
