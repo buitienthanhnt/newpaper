@@ -89,3 +89,5 @@ Route::prefix('cache')->group(function () {
         return $value;
     });
 });
+
+Route::get("sendmail", "ExtensionController@sendMail");
