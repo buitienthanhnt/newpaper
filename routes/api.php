@@ -65,3 +65,5 @@ Route::post("testPost", function (Request $request)
         'arr' => [23, 34, 45, 56]
     ]));
 });
+
+// https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd
