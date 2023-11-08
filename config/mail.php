@@ -33,14 +33,25 @@ return [
     |
     */
 
+    /**
+     * tất cả các thông tin trong mailer này cần được cấu hình trong file: .env và không cấu hình trong đây nếu không sẽ gây ra lỗi
+     *  MAIL_MAILER=smtp
+     *  MAIL_HOST=smtp.gmail.com
+     *  MAIL_PORT=587
+     *  MAIL_USERNAME=buitienthanhnt@gmail.com
+     *  MAIL_PASSWORD=qvxuzhfyfqhgufwt
+     *  MAIL_ENCRYPTION=tls
+     *  MAIL_FROM_ADDRESS=buitienthanhnt@gmail.com
+     *  MAIL_FROM_NAME="${APP_NAME}"
+     */
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME', 'buitienthanhnt@gmail.com'),
-            'password' => env('MAIL_PASSWORD', 'feywzjsrxmjkdzbi'),
+            'host' => env('MAIL_HOST'),
+            'port' => env('MAIL_PORT'),
+            'encryption' => env('MAIL_ENCRYPTION'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'auth_mode' => null,
         ],
@@ -84,7 +95,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'buitienthanhnt@gmail.com'),
+        'address' => env('MAIL_FROM_ADDRESS'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
