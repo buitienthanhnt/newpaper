@@ -22,9 +22,10 @@ class AdminUser extends Model
     protected $guarded = [];
     protected $request;
 
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
         $this->session_begin();
+        parent::__construct($attributes);
     }
 
     public function admin_login($user_name, $pass_word): mixed
