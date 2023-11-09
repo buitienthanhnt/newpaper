@@ -26,6 +26,10 @@
                 <a class="nav-link border-0 text-info" id="more-tab"  href={{ route('category_top_setup') }}
                     role="tab" aria-selected="false">setup category top</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link border-0 text-info" id="more-tab"  href={{ route('admin_new_by_url') }}
+                    role="tab" aria-selected="false">paper by url</a>
+            </li>
         </ul>
         <div>
             <div class="btn-wrapper">

@@ -10,7 +10,7 @@
                 <div class="single-slider">
                     <div class="trending-top mb-30">
                         <div class="trend-top-img">
-                            <img src="{{ $tren->image_path }}" alt="">
+                            <img src="{{ $tren->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                             <div class="trend-top-cap">
                                 @if ($first_category = $tren->to_category()->first())
                                     <a href="">
@@ -40,7 +40,7 @@
             <div class="col-lg-12 col-md-6 col-sm-6">
                 <div class="trending-top mb-30">
                     <div class="trend-top-img">
-                        <img src="{{ $tren_r->image_path }}" alt="">
+                        <img src="{{ $tren_r->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
                             @if ($tren_r->to_category()->first())
                             <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
