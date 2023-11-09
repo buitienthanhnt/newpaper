@@ -177,6 +177,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class, // custom run: composer require intervention/image
         UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
+        Thanhnt\Nan\NanServiceProvider::class,
 
     ],
 

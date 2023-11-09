@@ -30,12 +30,12 @@
     <div class="about-area2 gray-bg pt-60 pb-60">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     <!-- Trending Tittle -->
                     <div class="about-right mb-90">
                         <div class="about-img">
                             @if (isset($paper->image_path))
-                                <img src="{{ $paper->image_path }}" alt="" style="height: 400px;">
+                                <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="" style="height: 400px;">
                             @endif
 
                         </div>
@@ -68,7 +68,7 @@
                     </div>
 
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <!-- Flow Socail -->
                     <div class="single-follow mb-45">
                         <div class="single-box">

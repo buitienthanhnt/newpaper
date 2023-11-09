@@ -17,6 +17,9 @@ class ManagerController extends Controller
 
     protected $request;
     protected $paper;
+    /**
+     * @var \App\Models\Category $category
+     */
     protected $category;
     protected $pageTag;
     protected $helperFunction;
@@ -24,7 +27,7 @@ class ManagerController extends Controller
     public function __construct(
         Request $request,
         Paper $paper,
-        Category $category,
+        \App\Models\Category $category,
         PageTag $pageTag,
         HelperFunction $helperFunction
     ) {
@@ -186,6 +189,9 @@ class ManagerController extends Controller
 
     public function getPaperCategory($category_id, Request $request)
     {
+        /**
+         * @var \App\Models\Category $category
+         */
         $category = $this->category->find($category_id);
         $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) - 1)->toArray();
         foreach ($papers as &$value) {
