@@ -59,62 +59,9 @@
                                 <a href="{{ route('/', ['id' => 1]) }}"><img
                                         src={{ asset('assets/frontend/img/logo/logo.png') }} alt=""></a>
                             </div>
-                            <!-- Main-menu -->
-                            <div class="main-menu d-none d-md-block">
-                                <nav>
-                                    <ul id="navigation">
-                                        @isset($topcategory)
-                                            @foreach ($topcategory as $item)
-                                                <li>
-                                                    <a href="{{ route('front_category', ['category' => $item->url_alias]) }}">{{ $item->name }}</a>
-                                                    <ul class="submenu">
-                                                        <li>
-                                                            <a href="blog.html">Blog</a>
-                                                            <ul class="submenu chilMenu">
-                                                                <li><a href="blog.html">Blog</a></li>
-                                                                <li><a href="blog_details.html">Blog Details</a></li>
-                                                                <li><a href="elements.html">Element</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog_details.html">Blog Details</a>
-                                                            <ul class="submenu chilMenu">
-                                                                <li><a href="blog.html">Blog</a></li>
-                                                                <li><a href="blog_details.html">Blog Details</a></li>
-                                                                <li><a href="elements.html">Element</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li>
-                                                            <a href="elements.html">Element</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            @endforeach
+                            <!-- Main-menu  top category menu -->
+                            @render(\App\Helper\View\TopCategory::class)
 
-                                            {{-- <li><a href="index.html">Home 1</a></li>
-                                            <li><a href="about.html">about</a></li>
-                                            <li><a href="categori.html">Category</a></li>
-                                            <li><a href="latest_news.html">Latest News</a></li>
-                                            <li><a href="#">Pages</a>
-                                                <ul class="submenu">
-                                                    <li>
-                                                        <a href="blog.html">Blog</a>
-                                                        <ul class="submenu chilMenu">
-                                                            <li><a href="blog.html">Blog</a></li>
-                                                            <li><a href="blog_details.html">Blog Details</a></li>
-                                                            <li><a href="elements.html">Element</a></li>
-                                                        </ul></li>
-                                                    <li><a href="blog_details.html">Blog Details</a></li>
-                                                    <li><a href="elements.html">Element</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="contact.html">Contact</a></li> --}}
-                                        @endisset
-                                    </ul>
-
-                                </nav>
-                            </div>
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4">
                             <div class="header-right f-right d-none d-lg-block">

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Models\ConfigCategory;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +17,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // đăng ký 1 blade function cho view.
+        // theo đó trong blade template khi gọi function này(render) nó sẽ chạy vào đây
+        Blade::directive('render', function ($component) {
+            return "<?php echo (app($component))->toHtml(); ?>";
+        });
     }
 
     /**
