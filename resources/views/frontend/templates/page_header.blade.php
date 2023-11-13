@@ -60,7 +60,7 @@
                                         src={{ asset('assets/frontend/img/logo/logo.png') }} alt=""></a>
                             </div>
                             <!-- Main-menu  top category menu -->
-                            @render(\App\Helper\View\TopCategory::class)
+                            @render(\App\ViewBlock\TopCategory::class)
 
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4">

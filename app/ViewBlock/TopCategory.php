@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helper\View;
+namespace App\ViewBlock;
 
 use App\Models\Category;
 use App\Models\ConfigCategory;
