@@ -9,11 +9,11 @@ class Kernel extends ConsoleKernel
 {
     /**
      * The Artisan commands provided by your application.
-     *
+     * https://viblo.asia/p/tim-hieu-ve-task-scheduling-trong-laravel-aWj53O6w56m
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\IndexCommand' // add by tha
     ];
 
     /**
@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('paper:index')->everyMinute(); // add by tha
     }
 
     /**
