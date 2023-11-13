@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CacheClear;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use Illuminate\Http\Request;
@@ -66,22 +67,6 @@ class CategoryController extends Controller
         return $parent_category;
     }
 
-    public function insertCategory()
-    {
-        $params = $this->request->toArray();
-        $category = $this->category;
-        $category->name = $params["name"];
-        $category->description = $params["description"];
-        $category->active = $params["active"];
-        $category->parent_id = $this->request->__get("parent_id");
-        $category->url_alias = $params["url_alias"] ?: str_replace(" ",'-', strtolower($params['name']));
-        $category->save();
-
-        if ($category) {
-           return back()->with("success", "created new category: $category->name");
-        }
-    }
-
     protected function category_tree($catergory, $begin = "", $selected = null)
     {
         $html = "";
@@ -99,6 +84,23 @@ class CategoryController extends Controller
             }
         }
         return $html;
+    }
+
+    public function insertCategory()
+    {
+        $params = $this->request->toArray();
+        $category = $this->category;
+        $category->name = $params["name"];
+        $category->description = $params["description"];
+        $category->active = $params["active"];
+        $category->parent_id = $this->request->__get("parent_id");
+        $category->url_alias = $params["url_alias"] ?: str_replace(" ",'-', strtolower($params['name']));
+        $category->save();
+
+        if ($category) {
+            event(new CacheClear(['top_category','top_menu_view'])); // gọi vào event: CacheClear
+           return back()->with("success", "created new category: $category->name");
+        }
     }
 
     public function editCategory($category_id)
