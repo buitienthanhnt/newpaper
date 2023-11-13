@@ -1,5 +1,7 @@
 <?php
 
+// https://chungnguyen.xyz/laravel/docs/events.md
+
 namespace App\Listeners;
 
 use App\Events\CacheClear;
@@ -7,8 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 
-class ClearCache
+
+class ClearCache implements ShouldQueue
 {
+    use InteractsWithQueue;
+
     /**
      * Create the event listener.
      *

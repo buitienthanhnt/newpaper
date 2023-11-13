@@ -166,13 +166,11 @@ class ManagerController extends Controller
 
     public function getPaperDetail($paper_id)
     {
-        if (Cache::has("detail_$paper_id")) {
-            return  Cache::get("detail_$paper_id");
+        if (Cache::has("api_detail_$paper_id")) {
+            return  Cache::get("api_detail_$paper_id");
         } else {
             $detail = $this->paper->find($paper_id);
-            if (!Cache::has("detail_$detail->id")) {
-                Cache::put("detail_$detail->id", $detail);
-            }
+            Cache::put("api_detail_$detail->id", $detail);
             return $detail;
         }
     }
@@ -189,15 +187,24 @@ class ManagerController extends Controller
 
     public function getPaperCategory($category_id, Request $request)
     {
-        /**
-         * @var \App\Models\Category $category
-         */
-        $category = $this->category->find($category_id);
-        $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($request->get("limit", 4), $request->get("page", 1) - 1)->toArray();
-        foreach ($papers as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
+        $page = $request->get("page", 1);
+        $limit = $request->get("limit", 4);
+        $key = "paper.category.$category_id.$page.$limit";
+
+        if (Cache::has($key)) { // nhanh hon ~50% voi du lieu nang.
+            return Cache::get($key);
+        } else {
+            /**
+             * @var \App\Models\Category $category
+             */
+            $category = $this->category->find($category_id);
+            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1)->toArray();
+            foreach ($papers as &$value) {
+                $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
+            }
+            Cache::put($key, $papers);
+            return $papers;
         }
-        return $papers;
     }
 
     function getRelatedPaper()
