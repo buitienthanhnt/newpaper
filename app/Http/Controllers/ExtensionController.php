@@ -178,7 +178,12 @@ class ExtensionController extends Controller
 
     function get_viblo_asia($doc)
     {
-        return $this->getValueByClassName($doc, "md-contents", "");
+        $conten = $this->getValueByClassName($doc, "md-contents", "");
+        /**
+         * format image for display in the view viblo_asia
+         */
+        $conten['conten'] = preg_replace('/(<canvas).*<\/canvas>/', '', $conten['conten']);
+        return $conten;
     }
 
     function get_www_delftstack_com($doc)
