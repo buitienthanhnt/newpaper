@@ -54,4 +54,8 @@ trait Nan
     function coreConfigTable() : string {
         return "core_config";
     }
+
+    function viewSourceTable() : string {
+        return 'view_sources';
+    }
 }

@@ -4,3 +4,7 @@
 # https://viblo.asia/p/laravel-tinker-AoDKYNQDzvg
 # https://viblo.asia/p/17-laravel-packages-tot-nhat-nam-2019-E375zkRdKGW
 # https://viblo.asia/p/toi-khong-muon-created-at-updated-at-tu-dong-chen-vo-toi-va-WAyK81mnZxX
+# https://www.appsloveworld.com/laravel/100/43/laravel-blade-passing-a-variable-to-a-child-view
+# https://viblo.asia/p/laravel-55-cac-ham-laravel-helper-khac-Eb85oBGkl2G
+# https://viblo.asia/p/co-ban-ve-events-listeners-laravel-1Je5EXG1lnL
+# https://viblo.asia/p/event-trong-laravel-YWOZryYrKQ0

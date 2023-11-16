@@ -45,7 +45,9 @@ Route::prefix('notification')->group(function(){
     Route::get('push', "NotificationController@push_notification")->name("notification_push");
 });
 
-Route::get("testJson", function (Request $request)
+Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("mostviewdetail");
+
+Route::get("testJson", function ()
 {
     // throw new Exception("Error Processing Request", 401);
     return $request->getContent();
