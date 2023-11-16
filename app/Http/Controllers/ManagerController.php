@@ -72,12 +72,16 @@ class ManagerController extends Controller
         return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center", "most_recent", "most_popular", "trendings", "weekly3_contens", "video_contens"));
     }
 
-    public function pageDetail($alias, $page)
+    public function pageDetail($alias, $page_id)
     {
-        $paper = $this->paper->find($page);
-        $category = Category::where("url_alias", "like", "today")->get()->first(); // lys
-        $list_center = Category::where("url_alias", "like", 2)->take(4)->get();
-        $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
+        $key = 'paper_detail'.$page_id;
+        $paper = Cache::remember($key, 15, fn() => $this->paper->find($page_id)); 
+
+        $category = Cache::remember('category.alias.like', 15, function () {
+            return Category::where("url_alias", "like", "today")->get()->first();
+        });
+        $list_center = Cache::remember('listCenter.alias.like', 15, fn() => Category::where("url_alias", "like", 2)->take(4)->get());
+        $papers = Cache::remember('papers_detail'.$page_id, 15, fn()=> $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
         $top_paper = $papers->take(2);
         $papers = $papers->diff($top_paper);
         return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
