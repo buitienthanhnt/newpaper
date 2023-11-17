@@ -20,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\CacheClear' =>[     // đăng ký event
             'App\Listeners\ClearCache', // đăng ký listener lắng nghe và thực thi cho event trên
         ],                              // sau đó chạy: php artisan event:generate để tạo file tự động
+        'App\Events\ViewCount' => [
+            'App\Listeners\ViewCountListen'
+        ],
     ];
 
     /**

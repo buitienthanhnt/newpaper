@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ViewCount;
 use App\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\ConfigCategory;
@@ -84,6 +85,7 @@ class ManagerController extends Controller
         $papers = Cache::remember('papers_detail'.$page_id, 15, fn()=> $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
         $top_paper = $papers->take(2);
         $papers = $papers->diff($top_paper);
+        event(new ViewCount($paper));
         return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
     }
 
@@ -122,6 +124,8 @@ class ManagerController extends Controller
         $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
         $top_paper = $papers->take(2);
         $papers = $papers->diff($top_paper);
+        
+        event(new ViewCount($category));
         return view("frontend/templates/categories", compact("category", "top_paper", "papers", "trending_left", "trending_right", "list_center", "most_recent", "most_popular", "weekly3_contens"));
     }
 
