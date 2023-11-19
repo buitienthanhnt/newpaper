@@ -32,7 +32,7 @@
             <div class="row">
                 <div class="col-lg-9">
                     <!-- Trending Tittle -->
-                    <div class="about-right mb-90">
+                    <div id="detail_main_conten" class="about-right mb-90">
                         <div class="about-img">
                             @if (isset($paper->image_path))
                                 <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="" style="height: 400px;">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="col-lg-3">
                     <!-- Flow Socail -->
-                    <div class="single-follow mb-45">
+                    <div class="single-follow mb-45" id="most_detail_recent">
                         <div class="single-box">
                             <div class="follow-us d-flex align-items-center">
                                 <div class="follow-social">

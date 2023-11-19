@@ -1,10 +1,10 @@
-<div class="most-recent-area" id="most-view-in-detail" data-page="1">
+<div class="most-recent-area" id="most_view_detail" data-page="1">
     <!-- Section Tittle -->
     <div class="small-tittle mb-20">
         <h4>Most Recent</h4>
     </div>
     <!-- Details -->
-    <div class="most-recent mb-40">
+    {{-- <div class="most-recent mb-40">
         <div class="most-recent-img">
             <img src={{ asset('assets/frontend/img/gallery/most_recent.png') }} alt="">
             <div class="most-recent-cap">
@@ -14,19 +14,10 @@
                 <p>Jhon | 2 hours ago</p>
             </div>
         </div>
-    </div>
+    </div> --}}
+
     <!-- Single -->
-    <div class="most-recent-single">
-        <div class="most-recent-images">
-            <img src={{ asset('assets/frontend/img/gallery/most_recent1.png') }} alt="">
-        </div>
-        <div class="most-recent-capt">
-            <h4><a href="latest_news.html">Scarlett’s disappointment at latest accolade</a></h4>
-            <p>Jhon | 2 hours ago</p>
-        </div>
-    </div>
-    <!-- Single -->
-    <div class="most-recent-single">
+    {{-- <div class="most-recent-single">
         <div class="most-recent-images">
             <img src={{ asset('assets/frontend/img/gallery/most_recent2.png') }} alt="">
         </div>
@@ -35,34 +26,58 @@
             </h4>
             <p>Jhon | 3 hours ago</p>
         </div>
-    </div>
+    </div> --}}
+</div>
 
-    <div>
-        <center>
-            <button onclick="loadMostData()" class="btn">load data</button>
-        </center>
-    </div>
-
-    <script>
-        function loadMostData() {
-            var current_page = 1;
-            var data_page = $("#most-view-in-detail").attr('data-page');
+<script>
+    var run = true;
+    $(document).ready(function() {
+        function loadMostView() {
+            let conten_height = $(detail_main_conten).height();
+            var data_page = $("#most_view_detail").attr('data-page');
             let url = "{{ route('mostviewdetail') }}";
-            console.log(url + `/?page=${data_page}`);
+            let most_height = 172; // height of element
+            // console.log(url + `/?page=${data_page}`);
             $.ajax({
                 url: url + `/?page=${data_page}`,
                 type: 'GET',
                 success: function(result) {
                     if (result) {
-                        var data = JSON.parse(result);
-                        if (data.code == 200) {
-                            current_page += 1;
+                        let most_recent = $(".most-recent");
+                        result.forEach(element => {
+                            if ($("#most_view_detail").height() + ($(
+                                    most_detail_recent).height() + 30 * 2 + 45) +
+                                most_height <=
+                                conten_height) {
+                                $(most_view_detail).append(`
+                                    <div class="most-recent mb-40">
+                                        <div class="most-recent-img">
+                                            <img src="${element.image_path}" alt="">
+                                            <div class="most-recent-cap">
+                                                <span class="bgbeg">Vogue</span>
+                                                <h4><a href="${element.url}">${element.title}</a></h4>
+                                                <p>Jhon | 2 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                            } else {
+                                run = false;
+                            }
+                        });
 
+                        $("#most_view_detail").attr('data-page', Number(data_page) + 1);
+                        if ($("#most_view_detail").height() + ($(
+                                most_detail_recent).height() + 30 * 2 + 45) + most_height <
+                            conten_height) {
+                            loadMostView(); // run again
                         }
                     }
                 }.bind(this),
                 error: function(e) {}
             })
         }
-    </script>
-</div>
+
+        loadMostView(); // run first
+    })
+</script>
