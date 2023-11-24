@@ -52,7 +52,7 @@ class ViewCountListen
         $data_source = $this->viewSource->firstOrCreate(["type" => $type, "source_id" => $source->id], ["value" => 1]);
         if ($data_source->id && $data_source->value > 1) {
             $data_source->value = $data_source->value + 1;
-            $data_source->save();
+            $data_source->save(); // save new source value.
         }
         $this->logTha->logEvent('info', "update source for type: $type with id: {id}, count: {count}", ['id' => $data_source->source_id, 'count' => $data_source->value]);
         return $event;

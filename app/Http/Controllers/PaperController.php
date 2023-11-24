@@ -12,6 +12,7 @@ use App\Models\RemoteSourceHistory;
 use App\Models\Writer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Thanhnt\Nan\Helper\LogTha;
 
 class PaperController extends Controller
 {
@@ -22,6 +23,8 @@ class PaperController extends Controller
     protected $category;
     protected $notification;
     protected $helperFunction;
+    protected $logTha;
+
     const PAGE_TYPE = 1;
 
     public function __construct(
@@ -29,10 +32,12 @@ class PaperController extends Controller
         Paper $paper,
         Category $category,
         Notification $notification,
-        HelperFunction $helperFunction
+        HelperFunction $helperFunction,
+        LogTha $logTha
     ) {
         $this->request = $request;
         $this->paper = $paper;
+        $this->logTha = $logTha;
         $this->category = $category;
         $this->notification = $notification;
         $this->helperFunction = $helperFunction;
@@ -95,7 +100,14 @@ class PaperController extends Controller
                  * save for history
                  */
                 if ($request_url = $request->get("request_url")) {
+                    /**
+                     * save source into database.
+                     */
                     $this->save_remote_source_history($request_url, self::PAGE_TYPE, $new_id, true);
+                    /**
+                     * log remote source of paper.
+                     */
+                    $this->logTha->logRemoteSource("info", urldecode($request_url));
                 }
                 $all_fcm = $this->notification->where("active", true)->get()->toArray();
                 $this->helperFunction->push_notification_json($all_fcm, $paper);
