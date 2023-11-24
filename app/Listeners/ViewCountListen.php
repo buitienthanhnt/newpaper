@@ -54,7 +54,7 @@ class ViewCountListen
             $data_source->value = $data_source->value + 1;
             $data_source->save(); // save new source value.
         }
-        $this->logTha->logEvent('info', "update source for type: $type with id: {id}, count: {count}", ['id' => $data_source->source_id, 'count' => $data_source->value]);
+        $this->logTha->logViewCount('info', "update source for type: $type with id: {id}, count: {count}", ['id' => $data_source->source_id, 'count' => $data_source->value]);
         return $event;
     }
 }

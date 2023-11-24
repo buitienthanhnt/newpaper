@@ -5,7 +5,9 @@ namespace Thanhnt\Nan\Helper;
 class LogTha
 {
 	const LOG_PATH = "logs/tha/";
+	
 	const EVENT_TYPE = "event";
+	const VIEW_COUNT = "viewCount";
 	const SOURCE_URL_TYPE = "remoteSource";
 
 	/**
@@ -28,6 +30,10 @@ class LogTha
 
 	public function logEvent(string $type, string $message, array $params = []) : void {
 		$this->log(self::EVENT_TYPE, ...func_get_args());
+	}
+
+	public function logViewCount(string $type, string $message, array $params = []) : void {
+		$this->log(self::VIEW_COUNT, ...func_get_args());
 	}
 
 	public function logRemoteSource(string $type, string $message, array $params = []) : void {
