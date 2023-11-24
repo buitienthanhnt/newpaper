@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
              * @render(\App\ViewBlock\TopCategory::class)
              * return "<?php echo (app($component))->toHtml(); ?>";
              */
-            return app($component)->toHtml(); 
+            return (app($component))->toHtml(); 
         });
     }
 
