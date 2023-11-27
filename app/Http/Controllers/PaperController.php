@@ -93,7 +93,13 @@ class PaperController extends Controller
             ]);
             $paper->save();
             if ($new_id = $paper->id) {
+                /**
+                 * save in DB page category
+                 */
                 $this->insert_page_category($new_id, $category_option);
+                /**
+                 * save in DB page tags
+                 */
                 $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAGE_TAG);
 
                 /**
@@ -109,6 +115,9 @@ class PaperController extends Controller
                      */
                     $this->logTha->logRemoteSource("info", urldecode($request_url));
                 }
+                /**
+                 * push notification to mobile
+                 */
                 $all_fcm = $this->notification->where("active", true)->get()->toArray();
                 $this->helperFunction->push_notification_json($all_fcm, $paper);
             }
