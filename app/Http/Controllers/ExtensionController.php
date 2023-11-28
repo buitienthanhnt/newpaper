@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper\DomHtml;
+use App\Helper\ImageUpload;
 use App\Models\Category;
 use App\Models\Paper;
 use App\Models\RemoteSourceHistory;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Response;
 class ExtensionController extends Controller
 {
     use DomHtml;
+    use ImageUpload;
 
     protected $request;
     protected $paper;
@@ -314,5 +316,24 @@ class ExtensionController extends Controller
             return;
         }
         return 123;
+    }
+
+    /**
+     * upload image from mobile(cli4)
+     */
+    function uploadImageFromMobile(Request $request) {
+        if ($file = $request->__get("upload_file")){
+            $image_upload_path = '';
+            $image_upload_path = $this->uploadImage($file, "public/images/cli4Mb", "images/resize/cli4Mb");
+            return [
+                'path' => $image_upload_path,
+                'code' => 200
+            ];
+        }
+
+        return [
+            'path' => null,
+            'code' => 500
+        ];
     }
 }
