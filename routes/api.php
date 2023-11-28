@@ -47,6 +47,8 @@ Route::prefix('notification')->group(function(){
 
 Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("mostviewdetail");
 
+Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
+
 Route::get("testJson", function (Request $request)
 {
     // throw new Exception("Error Processing Request", 401);
