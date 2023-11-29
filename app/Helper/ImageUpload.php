@@ -2,13 +2,9 @@
 
 namespace App\Helper;
 
-// use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-// use \Illuminate\Foundation\Application;
-use Illuminate\Contracts\Foundation\Application;
-
 /**
  * php artisan storage:link
  */
@@ -20,7 +16,7 @@ trait ImageUpload
      * @\param \Symfony\Component\HttpFoundation\File\UploadedFile $file
      * @param string $save_folder
      * @param string $resize_path
-     * @return string|bool
+     * @return string|bool|array
      */
     public function uploadImage($file, $save_folder = "public/images", $resize_path = null)
     {

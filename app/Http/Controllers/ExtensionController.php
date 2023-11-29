@@ -231,7 +231,7 @@ class ExtensionController extends Controller
 
     public function get_topdev_vn($doc)
     {
-        return call_user_func(fn()=>$this->getValueByClassName($doc, "td-post-content", "entry-title"));
+        return call_user_func(fn () => $this->getValueByClassName($doc, "td-post-content", "entry-title"));
     }
 
     protected function check_type($request)
@@ -304,11 +304,14 @@ class ExtensionController extends Controller
         try {
             // Mail::to('buisuphu01655@gmail.com')->send(new UserEmail());  // php artisan make:mail UserEmail
 
-            Mail::send('welcome', [], function ($message) {
-                $message->from('buitienthanhnt@gmail.com', "tha nan");
-                $message->to("thanh.bui@jmango360.com", 'user1');
-                $message->subject("demo by send mail laravel newpaper");
-            }
+            Mail::send(
+                'welcome',
+                [],
+                function ($message) {
+                    $message->from('buitienthanhnt@gmail.com', "tha nan");
+                    $message->to("thanh.bui@jmango360.com", 'user1');
+                    $message->subject("demo by send mail laravel newpaper");
+                }
             );
         } catch (\Throwable $th) {
             //throw $th;
@@ -321,18 +324,24 @@ class ExtensionController extends Controller
     /**
      * upload image from mobile(cli4)
      */
-    function uploadImageFromMobile(Request $request) {
-        if ($file = $request->__get("upload_file")){
-            $image_upload_path = '';
-            $image_upload_path = $this->uploadImage($file, "public/images/cli4Mb", "images/resize/cli4Mb");
+    function uploadImageFromMobile(Request $request)
+    {
+        $res_data = null;
+        if ($files = $request->__get("upload_file")) {
+            // multi files:
+            foreach ($files as $file) {
+                $image_upload_path = '';
+                $image_upload_path = $this->uploadImage($file, "public/images/cli4Mb");
+                $res_data[] = $image_upload_path;
+            }
             return [
-                'path' => $image_upload_path,
+                'path' => $res_data,
                 'code' => 200
             ];
         }
 
         return [
-            'path' => null,
+            'path' => $res_data,
             'code' => 500
         ];
     }
