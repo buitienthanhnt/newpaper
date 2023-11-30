@@ -42,7 +42,8 @@ class ExtensionController extends Controller
         "kienthuc.net.vn"   => "get_kienthuc_net_vn",
         "www.thivien.net"   => "get_www_thivien_net",
         "dantri.com.vn"     => "get_dantri_value", // host => function
-        "topdev.vn"         => "get_topdev_vn" // host => function
+        "topdev.vn"         => "get_topdev_vn", // host => function
+        "toidicode.com"     => "get_toidicode_com"
     ];
 
     public function __construct(
@@ -233,6 +234,13 @@ class ExtensionController extends Controller
     {
         return call_user_func(fn () => $this->getValueByClassName($doc, "td-post-content", "entry-title"));
     }
+
+    public function get_toidicode_com($doc)
+    {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "entry-main-content", "entry-title"));
+    }
+
+    // ===================================================================//
 
     protected function check_type($request)
     {
