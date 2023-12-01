@@ -45,7 +45,7 @@
                     <div class="trend-top-img">
                         <img src="{{ $tren_r->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                         <div class="trend-top-cap trend-top-cap2">
-                            <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
+                            <span class="bgg">{{ $tren_r->to_category()->first() ? $tren_r->to_category()->first()->for_category()->first()->name: '' }}</span>
                             <h2><a
                                     href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>
                             </h2>

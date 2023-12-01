@@ -165,9 +165,10 @@ trait DomHtml
     }
 
     /**
+     * @param string $file
      * đọc nội dung file.
      */
-    public function read_file($file): string{
+    public function read_file(string $file): string{
         $r_file = fopen($file, "r");
         $old_text = fread($r_file, filesize($file)); // read file
         fclose($r_file);
