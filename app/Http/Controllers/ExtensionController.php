@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\DomHtml;
+use Thanhnt\Nan\Helper\DomHtml;
 use App\Helper\ImageUpload;
 use App\Models\Category;
 use App\Models\Paper;

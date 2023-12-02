@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Thanhnt\Nan\Helper\LogTha;
-use App\Helper\DomHtml;
+use Thanhnt\Nan\Helper\DomHtml;
 use Thanhnt\Nan\Helper\RemoteSourceManager;
 use App\Models\Paper;
 
@@ -51,6 +51,8 @@ class RemoteRource extends Command
      */
     public function handle()
     {
+        echo(123);
+        return;
         $sourcePath = storage_path(LogTha::LOG_PATH.LogTha::SOURCE_URL_TYPE.'.log');
         // file(path) return array of line.
         $logLines = file($sourcePath);

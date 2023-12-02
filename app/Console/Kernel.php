@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\IndexCommand' // add by tha
+        'App\Console\Commands\IndexCommand', // add by tha
+        'Thanhnt\Nan\Commands\DemoCommand',  // add for class in custom pack
     ];
 
     /**

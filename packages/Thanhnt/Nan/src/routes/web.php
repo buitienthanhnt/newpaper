@@ -5,9 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Thanhnt\Nan\Helper\TokenManager;
+use App\ViewBlock\TopCategory;
 
 Route::get('/test', function () {
-    return asset('public/assets/pub_image/defaul.PNG');
+    $top = new TopCategory();
+    echo($top->setTemplate('')->toHtml());
+    // return asset('public/assets/pub_image/defaul.PNG');
     // return "Test package google webhook calendar";
     return view('welcome');
 });

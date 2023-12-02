@@ -3,14 +3,13 @@
 namespace Thanhnt\Nan\Helper;
 
 use Illuminate\Http\Request;
-use App\Helper\DomHtml;
-use App\Helper\ImageUpload;
+use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\RemoteSourceHistory;
+use Illuminate\Support\Facades\Response;
 
 class RemoteSourceManager
 {
     use DomHtml;
-    use ImageUpload;
 
     const SOURCE = [
         "soha.vn"           => "get_soha_value",
@@ -56,7 +55,7 @@ class RemoteSourceManager
      */
     public function source($request)
     {
-        $request_url = \is_string($request) ? $request : $this->request->get("source_request");
+        $request_url = is_string($request) ? $request : $this->request->get("source_request");
         if (!strlen(str_replace(" ", "", $request_url))) {
             dd("input url not found");
         }

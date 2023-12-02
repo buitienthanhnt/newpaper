@@ -5,6 +5,7 @@ namespace App\Helper;
 use App\Models\Paper;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Thanhnt\Nan\Helper\DomHtml;
 
 class HelperFunction
 {

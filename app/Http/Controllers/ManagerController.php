@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ViewCount;
-use App\Helper\DomHtml;
+use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use App\Models\PageTag;

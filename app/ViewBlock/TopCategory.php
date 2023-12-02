@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\View;
 
 class TopCategory implements Htmlable
 {
+	protected $template = 'frontend.templates.share.topCategory';
+	
 	function toHtml()
 	{
 		if (Cache::has('top_menu_view')) {
@@ -33,9 +35,14 @@ class TopCategory implements Htmlable
 					return '';
 				}
 			}
-			$top_menu_view = View::make('frontend.templates.share.topCategory')->with('topcategory', $_topcategory)->render();
+			$top_menu_view = View::make($this->template)->with('topcategory', $_topcategory)->render();
 			Cache::put('top_menu_view', $top_menu_view);
 			return $top_menu_view;
 		}
+	}
+
+	function setTemplate(string $template) : TopCategory {
+		$this->template = $template;
+		return $this;
 	}
 }
