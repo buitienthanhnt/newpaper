@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Services\FirebaseService;
+use Illuminate\Support\Str;
+use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
+use Google\Cloud\Storage\Connection\Rest;
 
 class UserController extends BaseController
 {
@@ -126,8 +129,54 @@ class UserController extends BaseController
             }
             $snapshot = $userRef->getSnapshot();
             dd($snapshot->getValue());
-        }else{
+        } else {
             dd('not has data!');
+        }
+    }
+
+    /**
+     * Verify password agains firebase
+     * @param $email
+     * @param $password
+     * @return bool|string
+     */
+    public function verifyPassword(Request $request)
+    {
+        $email = $request->get('email', 'buisuphu01655@gmail.com');
+        $password = $request->get('password', 'admin123');
+
+        try {
+            $response = $this->firebase->createAuth()->signInWithEmailAndPassword($email, $password);
+            dd($response);
+            return $response->uid;
+        } catch (FirebaseEmailExists $e) {
+            echo ($e->getMessage());
+            logger()->info('Error login to firebase: Tried to create an already existent user');
+        } catch (Exception $e) {
+            echo ($e->getMessage());
+            logger()->error('Error login to firebase: ' . $e->getMessage());
+        }
+        return false;
+    }
+
+    function upLoadImage()
+    {
+        $firebaseFolder = 'demo/';
+        $image_path = 'app/public/files/Screenshot_1664559104.png';
+        $image = fopen(storage_path('app/public/files/Screenshot_1664559104.png'), 'r');
+        try {
+            /**
+             * @var Kreait\Firebase\Contract\Storage $storage
+             */
+            $storage = $this->firebase->createStorage();
+            $bucket = $storage->getBucket();
+
+            // upload 1 file lên store
+            $response = $bucket->upload($image, ['name' => $firebaseFolder.Str::random(10).'.'.explode('.', $image_path, 2)[1]]);
+            $uri = $response->info()['mediaLink'];
+            dd(str_replace(Rest::DEFAULT_API_ENDPOINT.'/download/storage/v1', 'https://firebasestorage.googleapis.com/v0', $uri));
+        } catch (\Throwable $th) {
+            echo ($th->getMessage());
         }
     }
 }

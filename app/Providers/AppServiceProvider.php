@@ -20,11 +20,11 @@ class AppServiceProvider extends ServiceProvider
         // đăng ký 1 blade function cho view.
         // theo đó trong blade template khi gọi function này(render) nó sẽ chạy vào đây
         Blade::directive('render', function ($component) {
-            /**
-             * @render(\App\ViewBlock\TopCategory::class)
-             * return "<?php echo (app($component))->toHtml(); ?>";
-             */
-            return (app($component))->toHtml(); 
+            
+            //  * @render(\App\ViewBlock\TopCategory::class)
+            return "<?php echo (app($component))->toHtml(); ?>";
+            // $html = (app($component))->toHtml();
+            // return $html; 
         });
     }
 

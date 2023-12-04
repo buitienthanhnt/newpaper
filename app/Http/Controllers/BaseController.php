@@ -1,7 +1,6 @@
 <?php
  namespace App\Http\Controllers;
  
-use Kreait\Firebase\Factory;
 use App\Services\FirebaseService;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller;
@@ -11,6 +10,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class BaseController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    /**
+     * @var Kreait\Firebase
+     */
     protected $firebase;
     protected $database;
     

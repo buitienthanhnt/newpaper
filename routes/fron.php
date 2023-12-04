@@ -93,3 +93,6 @@ Route::prefix('cache')->group(function () {
 Route::get("sendmail", "ExtensionController@sendMail");
 
 Route::get('firebase', "UserController@addFireBaseData");
+Route::get('verifyPassword', "UserController@verifyPassword");
+// upLoadImage
+Route::get('upLoadImage', "UserController@upLoadImage");
