@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Paper;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,8 +21,7 @@ class UserController extends BaseController
         Request $request,
         User $user,
         FirebaseService $firebaseService
-    )
-    {
+    ) {
         $this->request = $request;
         $this->user = $user;
         parent::__construct($firebaseService);
@@ -31,7 +31,7 @@ class UserController extends BaseController
     {
         if (Auth::check()) {
             return redirect(route("user_detail"));
-        }else {
+        } else {
             return view("frontend/templates/login");
         }
     }
@@ -47,7 +47,7 @@ class UserController extends BaseController
             $verify_email = $this->user->where("email", "=", $this->request->get("user_email"))->get();
             if ($verify_email->count()) {
                 return redirect()->back(302, "the email exist");
-            }else {
+            } else {
                 $user = $this->user;
                 $user->email = $this->request->get("user_email");
                 $user->password = Hash::make($this->request->get("password"));
@@ -62,7 +62,7 @@ class UserController extends BaseController
     public function login()
     {
         if ($email = $this->request->get("email") && $password = $this->request->get("password")) {
-            $check_login = Auth::attempt(["email" => $this->request->get("email"), "password" =>$this->request->get("password")]);
+            $check_login = Auth::attempt(["email" => $this->request->get("email"), "password" => $this->request->get("password")]);
             if ($check_login) {
                 $user = $this->user->where("email", "=", $email)->first();
                 if ($user) {
@@ -79,7 +79,7 @@ class UserController extends BaseController
             $user = Auth::user();
             dd($user);
             return view("frontend/templates/userDetail");
-        }else {
+        } else {
             return redirect(route("user_login"));
         }
     }
@@ -111,19 +111,23 @@ class UserController extends BaseController
         ])->onlyInput('email');
     }
 
-    function addFireBaseData() {
-        $testData = [
-            'name' => 'tha.nan.laravel1',
-            'email' => 'tha.nan.laravel1@sun-asterisk.com',
-        ];
-         try {
-            $userRef = $this->database->getReference('users');
-            $userRef->push($testData);
-        } catch (Exception $exception) {
-            Log::error($exception->getMessage());
+    function addFireBaseData(Request $request)
+    {
+        /**
+         * khong lay field conten
+         */
+        $paper = Paper::find($request->get('paper_id', 1))->makeHidden(['conten'])->toArray();
+        if ($paper) {
+            try {
+                $userRef = $this->database->getReference('/newpaper/papers');
+                $userRef->push($paper);
+            } catch (Exception $exception) {
+                Log::error($exception->getMessage());
+            }
+            $snapshot = $userRef->getSnapshot();
+            dd($snapshot->getValue());
+        }else{
+            dd('not has data!');
         }
-
-        $snapshot = $userRef->getSnapshot();
-        dd($snapshot->getValue());
     }
 }
