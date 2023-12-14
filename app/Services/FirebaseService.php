@@ -15,6 +15,10 @@ use Kreait\Firebase\Factory;
 
 class FirebaseService
 {
+
+//    const CONNECT_FIREBASE_PROJECT = 'firebase-cli4';
+    const CONNECT_FIREBASE_PROJECT = 'firebase-cli6';
+
     /**
      * @var Firebase
      */
@@ -22,7 +26,7 @@ class FirebaseService
 
     public function __construct()
     {
-        $path = storage_path('app/firebaseConfig.json');
+        $path = storage_path("app/".self::CONNECT_FIREBASE_PROJECTC."/firebaseConfig.json");
         $this->firebase = (new Factory)->withServiceAccount($path)->withDatabaseUri(env('FIREBASE_DATABASE_URL', 'https://react-cli4-default-rtdb.firebaseio.com/'));
     }
 }
