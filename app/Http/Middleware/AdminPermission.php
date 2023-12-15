@@ -40,6 +40,10 @@ class AdminPermission
      */
     public function checPermission(Request $request)
     {
+        // admin_user (quản trị viên) => 
+        //           admin_user_permission ( các quyền quản trị viên) => 
+        //                                 permission (thông tin quyền) => 
+        //                                            permission_rules(các quy tắc router gốc)
         $userAdmin = Session::get("admin_user");
         $userAdminPermissions = $userAdmin[0]->getPermissionRules();
         if (in_array("rootAdmin", $userAdminPermissions)) {

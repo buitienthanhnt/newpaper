@@ -41,10 +41,15 @@ class PermissionController extends Controller
 
         $allOfRoute = $this->router->getRoutes();
         $actions = collect($allOfRoute)->map(function($item){
-            $action =  $item->getAction();
-            if (strpos($action["prefix"], "adminhtml") !== false) {
-                return $action;
+            try {
+                $action =  $item->getAction();
+                if (strpos($action["prefix"], "adminhtml") !== false) {
+                    return $action;
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
             }
+            
         })->filter();
         return $prefixGroup = $this->actionByController($actions->toArray());
     }
