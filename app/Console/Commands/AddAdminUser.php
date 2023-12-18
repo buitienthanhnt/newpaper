@@ -16,6 +16,7 @@ class AddAdminUser extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * php artisan adminUser:add tha tha@gmail.com admin123
      *
      * @var string
