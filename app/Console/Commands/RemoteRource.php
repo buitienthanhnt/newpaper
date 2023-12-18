@@ -51,8 +51,6 @@ class RemoteRource extends Command
      */
     public function handle()
     {
-        echo(123);
-        return;
         $sourcePath = storage_path(LogTha::LOG_PATH.LogTha::SOURCE_URL_TYPE.'.log');
         // file(path) return array of line.
         $logLines = file($sourcePath);
@@ -60,10 +58,12 @@ class RemoteRource extends Command
             $sourceUri = trim(\explode('LogEvent:', $value, 2)[1]);
             if(!$this->remoteSourceManager->checkSourceExit($sourceUri)){
                 $data = $this->remoteSourceManager->source($sourceUri);
-                $paper = $this->paper;
+                $paper = new Paper();
                 $paper->fill($data)->save();
                 $this->remoteSourceManager->save_remote_source_history($sourceUri, 1, $paper->id, true);
                 echo("added remoteSource to database with uri: $sourceUri \n");
+            }else {
+                echo("source uri: $sourceUri exist \n");
             }
         }
     }
