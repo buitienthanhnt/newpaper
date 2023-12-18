@@ -311,7 +311,6 @@ class ExtensionController extends Controller
     {
         try {
             // Mail::to('buisuphu01655@gmail.com')->send(new UserEmail());  // php artisan make:mail UserEmail
-
             Mail::send(
                 'welcome',
                 [],
