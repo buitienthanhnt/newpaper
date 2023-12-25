@@ -120,7 +120,7 @@ class ExtensionController extends Controller
     public function get_soha_value($doc)
     {
         // for: soha.vn
-        return $this->getValueByClassName($doc, "clearfix news-content", "news-sapo");
+        return $this->getValueByClassName($doc, "page-detail", "news-sapo");
     }
 
     function get_vietnamnet_value($doc)
