@@ -101,7 +101,7 @@ class RemoteSourceManager
     public function get_soha_value($doc)
     {
         // for: soha.vn
-        return $this->getValueByClassName($doc, "clearfix news-content", "news-sapo");
+        return $this->getValueByClassName($doc, "detail-content", "news-sapo");
     }
 
     function get_vietnamnet_value($doc)
