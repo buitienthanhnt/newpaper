@@ -12,6 +12,17 @@ class HelperFunction
     use DomHtml;
     use Nan;
 
+    public function getConfig(string $name, $default = null)
+    {
+        try {
+            $value = DB::table($this->coreConfigTable())->where('name', $name)->select()->first()->value;
+            return $value;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return $default;
+    }
+
     // save core config value.
     public function saveConfig(string $name, string $value, string $type = "text", string $description = null): array
     {
