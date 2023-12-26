@@ -27,12 +27,45 @@ class HelperFunction
         return ["status" => false, "value" => null];
     }
 
+    function updateConfig(string $name, string $value, string $type = "text", string $description = null)
+    {
+
+        DB::beginTransaction();
+        try {
+            $insert_value = DB::table($this->coreConfigTable())->where('name', $name)->limit(1)->update(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
+            DB::commit();
+            return ["status" => true, "value" => $insert_value];
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+        return ["status" => false, "value" => null];
+    }
+
+    function deleteConfig(int $config_id)
+    {
+        DB::beginTransaction();
+        try {
+            DB::table($this->coreConfigTable())->delete($config_id);
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+        return false;
+    }
+
     // repalce image url for app by use ip address.
-    public function replaceImageUrl(string $imageUrl = "") : string {
+    public function replaceImageUrl(string $imageUrl = ""): string
+    {
         if (!$imageUrl) {
             return $this->defaultUrl();
         }
-        $domain = ""; $ip = ""; $main = ""; $is_windown = false;
+        $domain = "";
+        $ip = "";
+        $main = "";
+        $is_windown = false;
         try {
             DB::beginTransaction();
             $domain = DB::table($this->coreConfigTable())->where("name", "=", "domain")->select()->first()->value;
@@ -44,16 +77,19 @@ class HelperFunction
         }
         // support for windown platform
         try {
-            $is_windown = (boolean) DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->select()->first()->value;
-        }catch(\Throwable $th){}
+            $is_windown = (bool) DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->select()->first()->value;
+        } catch (\Throwable $th) {
+        }
 
-         $img = $is_windown ? str_replace($domain, $ip, $imageUrl) : str_replace($domain, $ip."/".$main."/public", $imageUrl);
+        $img = $is_windown ? str_replace($domain, $ip, $imageUrl) : str_replace($domain, $ip . "/" . $main . "/public", $imageUrl);
         return $img;
     }
 
     // allway use default image url.
-    public function defaultUrl() : string {
-        $ip = ""; $main = "";
+    public function defaultUrl(): string
+    {
+        $ip = "";
+        $main = "";
         try {
             DB::beginTransaction();
             $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->select()->first()->value;
@@ -61,7 +97,7 @@ class HelperFunction
         } catch (\Throwable $th) {
             return "";
         }
-        return "http://".$ip."/".$main."/public"."/assets/pub_image/defaul.PNG";
+        return "http://" . $ip . "/" . $main . "/public" . "/assets/pub_image/defaul.PNG";
     }
 
     // post request with request params.
@@ -74,7 +110,7 @@ class HelperFunction
         $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
         try {
             $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
-        }catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $th("not has authorization");
         }
         $authHeaders[] = 'Authorization: ' . $authorization;
@@ -118,7 +154,7 @@ class HelperFunction
         $authorization = "";
         try {
             $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
-        }catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $th("not has authorization");
         }
 

@@ -131,6 +131,10 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("create", "ConfigController@create")->name($admin."_config_create");
 
         Route::post("insert", "ConfigController@insert")->name($admin."_config_insert");
+
+        Route::post("update", "ConfigController@update")->name($admin."_config_update");
+
+        Route::delete("delete", "ConfigController@delete")->name($admin."_config_delete");
     });
 
     Route::get("default", "AdminController@default")->name($admin . "_default");

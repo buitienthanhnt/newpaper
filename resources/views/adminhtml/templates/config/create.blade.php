@@ -26,19 +26,24 @@
 
 @section('body_main_conten')
     <div class="container">
+        <div>
+            <a href="{{ route('admin_config_list') }}" class="btn btn-info"> list config</a>
+        </div>
         <div class="col-md-6">
             <form action="{{ route('admin_config_insert') }}" method="post">
                 @csrf
                 <div class="form-group">
-                  <label for="name">name</label>
-                  <input type="text" class="form-control" name="name" id="name" aria-describedby="helpId" placeholder="input name of config" required>
-                  <small id="helpId" class="form-text text-muted">not use space character</small>
+                    <label for="name">name</label>
+                    <input type="text" class="form-control" name="name" id="name" aria-describedby="helpId"
+                        placeholder="input name of config" required>
+                    <small id="helpId" class="form-text text-muted">not use space character</small>
                 </div>
 
                 <div class="form-group">
-                  <label for="value">value</label>
-                  <input type="text" name="value" id="value" class="form-control" placeholder="input value of config" aria-describedby="helpId" required>
-                  <small id="helpId" class="text-muted">Help text</small>
+                    <label for="value">value</label>
+                    <input type="text" name="value" id="value" class="form-control"
+                        placeholder="input value of config" aria-describedby="helpId" required>
+                    <small id="helpId" class="text-muted">Help text</small>
                 </div>
 
                 <div class="form-check d-flex justify-content-center">
