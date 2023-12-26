@@ -57,11 +57,16 @@ class RemoteRource extends Command
         foreach ($logLines as $key => $value) {
             $sourceUri = trim(\explode('LogEvent:', $value, 2)[1]);
             if(!$this->remoteSourceManager->checkSourceExit($sourceUri)){
-                $data = $this->remoteSourceManager->source($sourceUri);
-                $paper = new Paper();
-                $paper->fill($data)->save();
-                $this->remoteSourceManager->save_remote_source_history($sourceUri, 1, $paper->id, true);
-                echo("added remoteSource to database with uri: $sourceUri \n");
+                try {
+                    $data = $this->remoteSourceManager->source($sourceUri);
+                    $paper = new Paper();
+                    $paper->fill($data)->save();
+                    $this->remoteSourceManager->save_remote_source_history($sourceUri, 1, $paper->id, true);
+                    echo("added remoteSource to database with uri: $sourceUri \n");
+                } catch (\Throwable $th) {
+                    echo("add source: $sourceUri error: ". $th->getMessage());
+                }
+               
             }else {
                 echo("source uri: $sourceUri exist \n");
             }
