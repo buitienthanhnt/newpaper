@@ -42,14 +42,7 @@ class ManagerController extends Controller
     public function homePage()
     {
         $list_center = [];
-        $list_center_conten = [];
-        $most_recent = null;
-        $most_popular = null;
-        $trendings = null;
-        $weekly3_contens = null;
         $video_contens = null;
-        $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
-        $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
         $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
             return null;
         });
@@ -60,29 +53,21 @@ class ManagerController extends Controller
                 $page_category = $center->to_page_category()->getResults()->toArray();
                 $list_papers = array_unique([...array_column($page_category, "page_id"), ...$list_papers]);
             }
-            if ($list_papers) {
-                $list_center_conten = $this->paper->whereIn("id", $list_papers)->get();
-            }
         }
-
-        $most_recent = $this->paper->orderBy("updated_at", "ASC")->take(3)->get();
-        $most_popular =  $this->paper->take(8)->get();
         $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
-        $weekly3_contens = $trendings = $this->paper->orderBy("updated_at", "DESC")->take(8)->get();
-
-        return view("frontend/templates/homeconten", compact("trending_left", "trending_right", "list_center", "most_recent", "most_popular", "trendings", "weekly3_contens", "video_contens"));
+        return view("frontend/templates/homeconten", compact("list_center", "video_contens"));
     }
 
     public function pageDetail($alias, $page_id)
     {
-        $key = 'paper_detail'.$page_id;
-        $paper = Cache::remember($key, 15, fn() => $this->paper->find($page_id)); 
+        $key = 'paper_detail' . $page_id;
+        $paper = Cache::remember($key, 15, fn () => $this->paper->find($page_id));
 
         $category = Cache::remember('category.alias.like', 15, function () {
             return Category::where("url_alias", "like", "today")->get()->first();
         });
-        $list_center = Cache::remember('listCenter.alias.like', 15, fn() => Category::where("url_alias", "like", 2)->take(4)->get());
-        $papers = Cache::remember('papers_detail'.$page_id, 15, fn()=> $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
+        $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
+        $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
         $top_paper = $papers->take(2);
         $papers = $papers->diff($top_paper);
         event(new ViewCount($paper));
@@ -92,41 +77,9 @@ class ManagerController extends Controller
     public function categoryView($category_id)
     {
         $category = Category::where("url_alias", "like", $category_id)->get()->first();
-
-        $list_center = [];
-        $list_center_conten = [];
-        $most_recent = null;
-        $most_popular = null;
-        $trendings = null;
-        $weekly3_contens = null;
-        $video_contens = null;
-        $trending_left = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
-        $trending_right = $this->paper->orderBy("updated_at", "DESC")->take(2)->get();
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
-            return null;
-        });
-        if ($center_category) {
-            $list_center = Category::find(explode("&", $center_category->value));
-            $list_papers = [];
-            foreach ($list_center as $center) {
-                $page_category = $center->to_page_category()->getResults()->toArray();
-                $list_papers = array_unique([...array_column($page_category, "page_id"), ...$list_papers]);
-            }
-            if ($list_papers) {
-                $list_center_conten = $this->paper->whereIn("id", $list_papers)->get();
-            }
-        }
-
-        $most_recent = $this->paper->orderBy("updated_at", "ASC")->take(3)->get();
-        $most_popular =  $this->paper->take(6)->get();
-        $weekly3_contens = $this->paper->take(8)->orderBy("updated_at", "DESC")->get();
-        $list_center = Category::where("url_alias", "like", $category_id)->take(4)->get();
         $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
-        $top_paper = $papers->take(2);
-        $papers = $papers->diff($top_paper);
-        
         event(new ViewCount($category));
-        return view("frontend/templates/categories", compact("category", "top_paper", "papers", "trending_left", "trending_right", "list_center", "most_recent", "most_popular", "weekly3_contens"));
+        return view("frontend/templates/categories", compact("category", "papers"));
     }
 
     public function tagView($value)
@@ -243,7 +196,8 @@ class ManagerController extends Controller
         return $paper;
     }
 
-    function mostviewdetail(Request $request) {
+    function mostviewdetail(Request $request)
+    {
         $papers = Paper::take($request->get('size', 15))->orderBy("updated_at", "ASC")->get(['id', 'title', 'image_path', 'updated_at', 'url_alias']);
         foreach ($papers as &$value) {
             $value->url = route('front_page_detail', ['alias' => $value->url_alias, 'page' => $value->id]);

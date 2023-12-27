@@ -40,7 +40,7 @@
                                 <div class="offset-1 action flex-row">
                                     <a href="#" class="btn btn-primary edit-action"
                                         style="display: table-cell">edit</a>
-                                    <a href="#" class="btn btn-danger cancel-action" style="display: none">cancel</a>
+                                    <a href="#" class="btn btn-warning cancel-action" style="display: none">cancel</a>
                                     <a href="#" class="btn btn-danger delete-action" style="display: table-cell"
                                         data-id="{{ $item->id }}">delete</a>
                                 </div>

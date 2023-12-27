@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Paper;
+use App\Models\ViewSource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +16,12 @@ Route::get("page_str", function(){
 });
 
 Route::get("home", function (){
-    return view("frontend/templates/homepage");
+    // $views = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
+    // dd(array_column($views, "source_id"));
+    // $papers = Paper::find(array_column($views, "source_id"));
+    // $papers = Paper::limit(3)->orderBy('created_at', 'DESC')->get();
+    $trendingLeft = Paper::take(3)->orderBy('created_at', "DESC")->get();
+    dd($trendingLeft);
 });
 
 Route::get("playSound", function(){
