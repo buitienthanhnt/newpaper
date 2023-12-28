@@ -23,4 +23,9 @@ class MostPopulator implements Htmlable
 
 		return '';
 	}
+
+	// public static function __callStatic($methodName, $arguments)
+	// {
+	// 	return static::connection()->$methodName(...$arguments);
+	// }
 }

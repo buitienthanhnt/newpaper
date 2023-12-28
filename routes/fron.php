@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", "ManagerController@homePage")->name("/");
 
 Route::get("basepage", function(){
-    return view("frontend/templates/home");
+    return view("frontend/templates/elements/dragula");
 });
 
 Route::get("page_str", function(){

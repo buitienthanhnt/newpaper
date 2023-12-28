@@ -10,6 +10,9 @@ use App\Models\PageTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use App\Helper\HelperFunction;
+use App\ViewBlock\LikeMost;
+use App\ViewBlock\MostPopulator;
+use App\ViewBlock\Trending;
 use Illuminate\Support\Facades\Cache;
 
 class ManagerController extends Controller
@@ -24,19 +27,28 @@ class ManagerController extends Controller
     protected $category;
     protected $pageTag;
     protected $helperFunction;
+    protected $mostPopulator;
+    protected $likeMost;
+    protected $trending;
 
     public function __construct(
         Request $request,
         Paper $paper,
         \App\Models\Category $category,
         PageTag $pageTag,
-        HelperFunction $helperFunction
+        HelperFunction $helperFunction,
+        MostPopulator $mostPopulator,
+        LikeMost $likeMost,
+        Trending $trending
     ) {
         $this->request = $request;
         $this->paper = $paper;
         $this->category = $category;
         $this->pageTag = $pageTag;
         $this->helperFunction = $helperFunction;
+        $this->mostPopulator = $mostPopulator;
+        $this->likeMost = $likeMost;
+        $this->trending = $trending;
     }
 
     public function homePage()
@@ -203,5 +215,31 @@ class ManagerController extends Controller
             $value->url = route('front_page_detail', ['alias' => $value->url_alias, 'page' => $value->id]);
         }
         return $papers;
+    }
+
+    function mostPopulator()
+    {
+        $mostPopulatorHtml = $this->mostPopulator->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $mostPopulatorHtml
+        ];
+    }
+
+    function likeMost()
+    {
+        $likeMostHtml = $this->likeMost->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $likeMostHtml
+        ];
+    }
+
+    function trending() {
+        $trendingHtml = $this->trending->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $trendingHtml
+        ];
     }
 }

@@ -70,4 +70,14 @@ Route::post("testPost", function (Request $request)
     ]));
 });
 
+Route::prefix('share')->group(function(){
+    Route::get("mostPopulator", "ManagerController@mostPopulator")->name('mostPopulator');
+
+    Route::get("likeMost", "ManagerController@likeMost")->name('likeMost');
+
+    Route::get('trending', "ManagerController@trending")->name("trending");
+});
+
+
+
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd
