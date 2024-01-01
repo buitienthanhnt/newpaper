@@ -143,7 +143,7 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea id="conten" name="conten" class="form-control">{!!$paper->conten !!}</textarea>
+                                <textarea style="height: 720px" id="conten" name="conten" class="form-control">{!!$paper->conten !!}</textarea>
                             </div>
                         </div>
                     </div>

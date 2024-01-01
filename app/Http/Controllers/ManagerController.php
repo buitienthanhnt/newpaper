@@ -58,6 +58,7 @@ class ManagerController extends Controller
         $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
             return null;
         });
+
         if ($center_category) {
             $list_center = Category::find(explode("&", $center_category->value));
             $list_papers = [];
