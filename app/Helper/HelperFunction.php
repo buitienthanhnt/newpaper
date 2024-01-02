@@ -57,9 +57,13 @@ class HelperFunction
     {
         DB::beginTransaction();
         try {
+            $config = DB::table($this->coreConfigTable())->find($config_id);
             DB::table($this->coreConfigTable())->delete($config_id);
             DB::commit();
-            return true;
+            return [
+                'status' => true,
+                'configValue' => $config
+            ];
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
