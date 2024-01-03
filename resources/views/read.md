@@ -77,3 +77,10 @@ sử dụng:
         // });
     </script>
 ===================================================================================================
+<!-- plugin jquery drag and drop -->
+
+<!-- https://github.com/bevacqua/dragula -->
+
+<!-- https://www.cssscript.com/lightweig-html5-drag-drop-sortable-library-html5sortable/ -->
+
+===================================================================================================

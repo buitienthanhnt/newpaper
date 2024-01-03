@@ -9,7 +9,7 @@
             <!-- section Tittle -->
 
             {{-- Trending articles_conten --}}
-            <div class="row">
+            <div class="row" id="most-trending">
                 @yield('articles_conten')
             </div>
             {{-- articles_conten --}}

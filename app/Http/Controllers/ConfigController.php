@@ -6,17 +6,21 @@ use App\Helper\HelperFunction;
 use App\Helper\Nan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Thanhnt\Nan\Helper\LogTha;
 
 class ConfigController extends Controller
 {
     use Nan;
 
     protected $helperFunction;
+    protected $logTha;
 
     function __construct(
-        HelperFunction $helperFunction
+        HelperFunction $helperFunction,
+        LogTha $logTha
     ) {
         $this->helperFunction = $helperFunction;
+        $this->logTha = $logTha;
     }
 
     function list()
@@ -60,10 +64,15 @@ class ConfigController extends Controller
         }
     }
 
-    function delete(Request $request) {
+    function delete(Request $request)
+    {
         $config_id = $request->get('config_id');
         try {
-            $this->helperFunction->deleteConfig($config_id);
+            extract($this->helperFunction->deleteConfig($config_id));
+            $this->logTha->logEvent('warning', "deleted config with : {key} & {value}", [
+                'key' => $configValue->name,
+                'value' => $configValue->value
+            ]);
             return response(json_encode([
                 "code" => "200",
                 "value" => "deleted: success!"

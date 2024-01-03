@@ -72,17 +72,14 @@ class Category extends Model
         return $this->hasMany(PageCategory::class, "category_id");
     }
 
-    public function get_papers($limit = 4, $offset = 1, $order_by = [])
+    public function get_papers($limit = 4, $offset = 0, $order_by = [])
     {
         $page_id = array_column($this->to_page_category()->getResults()->toArray(), "page_id");
         $result = null;
-        if ($limit) {
-            if ($order_by) {
-                $result =  Paper::whereIn("id", $page_id)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
-            }
+        if ($order_by) {
+            $result =  Paper::whereIn("id", $page_id)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
+        }else {
             $result =  Paper::whereIn("id", $page_id)->take($limit)->offset($offset * $limit)->select($this->select_key);
-        } else {
-            $result = Paper::whereIn("id", $page_id)->offset($offset * $limit)->select($this->select_key);
         }
         return $result->get();
     }

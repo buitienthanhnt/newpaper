@@ -8,6 +8,8 @@
     @yield('page_main')
 
     @yield('page_footer')
+    
+    @include('frontend.templates.elements.page_footer')
 @endsection
 
 @section('head_css')

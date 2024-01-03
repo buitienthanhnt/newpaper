@@ -10,7 +10,9 @@
                 <img src="{{ $first_recent->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                 <div class="most-recent-cap">
                     <span class="bgbeg">Vogue</span>
-                    <h4><a href="latest_news.html">What to Wear: 9+ Cute Work <br>
+                    <h4><a
+                            href="{{ route('front_page_detail', ['page' => $first_recent->id, 'alias' => $first_recent->url_alias]) }}">What
+                            to Wear: 9+ Cute Work <br>
                             Outfits to Wear This.</a></h4>
                     <p>{{ $first_recent->to_writer()->getResults() ? $first_recent->to_writer()->getResults()->name : '' }}
                         | 2 hours ago</p>
@@ -21,10 +23,13 @@
             @foreach ($af_recents as $af_recent)
                 <div class="most-recent-single">
                     <div class="most-recent-images">
-                        <img src="{{ $af_recent->image_path ?: asset('assets/pub_image/defaul.PNG') }}" style="width: 85px; height: 79px;" alt="">
+                        <img src="{{ $af_recent->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
+                            style="width: 85px; height: 79px;" alt="">
                     </div>
                     <div class="most-recent-capt">
-                        <h4><a href="latest_news.html">{{ $af_recent->title }}</a></h4>
+                        <h4><a
+                                href="{{ route('front_page_detail', ['page' => $af_recent->id, 'alias' => $af_recent->url_alias]) }}">{{ $af_recent->title }}</a>
+                        </h4>
                         <p>{{ $af_recent->to_writer()->getResults() ? $af_recent->to_writer()->getResults()->name : '' }}
                             | 2 hours ago</p>
                     </div>

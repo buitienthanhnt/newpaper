@@ -9,6 +9,7 @@ class LogTha
 	const EVENT_TYPE = "event";
 	const VIEW_COUNT = "viewCount";
 	const SOURCE_URL_TYPE = "remoteSource";
+	const ERROR_TYPE = 'error';
 
 	/**
 	 * @var \Illuminate\Http\Request
@@ -38,6 +39,10 @@ class LogTha
 
 	public function logRemoteSource(string $type, string $message, array $params = []) : void {
 		$this->log(self::SOURCE_URL_TYPE, ...func_get_args());
+	}
+
+	function logError(string $type, string $message, array $params = []) : void {
+		$this->log(self::ERROR_TYPE, ...func_get_args());
 	}
 
 	protected function log(string $logType ,string $type = 'info', string $message = '', array $params = []) : void {

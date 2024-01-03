@@ -143,7 +143,7 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea id="conten" name="conten" class="form-control">@if (isset($conten))
+                                <textarea style="height: 1000px" id="conten" name="conten" class="form-control">@if (isset($conten))
                                     {!! $conten !!}
                                 @else
                                 {!! old('content', '') !!}

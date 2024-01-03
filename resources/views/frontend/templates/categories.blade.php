@@ -19,14 +19,18 @@
 
 {{-- col-lg-9 --}}
 @section('weekly2_conten')
-    @render(\App\ViewBlock\MostPopulator::class)
+    <div id="most-populator">
+        {{-- @render(\App\ViewBlock\MostPopulator::class) --}}
+    </div>
 @endsection
 {{-- col-lg-9 --}}
 
 {{-- =====================weekly3_news=============================== --}}
 {{-- col-lg-12 --}}
 @section('weekly3_conten')
-    @render(App\ViewBlock\LikeMost::class)
+    <div id="likeMost">
+        {{-- @render(App\ViewBlock\LikeMost::class) --}}
+    </div>
 @endsection
 {{-- col-lg-12 --}}
 {{-- =====================weekly3_news=============================== --}}
@@ -166,6 +170,10 @@
     <script>
         var token = "{{ csrf_token() }}";
         var url = "{{ route('load_more') }}";
+        var mostPopulatorUrl = "{{ route('mostPopulator') }}";
+        var likeMost = "{{ route('likeMost') }}";
+
+
         var type = "{{ $category->url_alias }}"
 
         function load_more() {
@@ -192,5 +200,119 @@
                 });
             }
         }
+
+        $(document).ready(function() {
+            $.ajax({
+                url: mostPopulatorUrl,
+                type: "GET",
+                success: function(result) {
+                    if (result.dataHtml) {
+                        let mostPopur = $("#most-populator")
+                        mostPopur.append(result.dataHtml);
+                        $('.weekly2-news-active').slick({
+                            dots: false,
+                            infinite: true,
+                            speed: 500,
+                            arrows: true,
+                            autoplay: true,
+                            loop: true,
+                            slidesToShow: 3,
+                            prevArrow: '<button type="button" class="slick-prev"><i class="ti-angle-left"></i></button>',
+                            nextArrow: '<button type="button" class="slick-next"><i class="ti-angle-right"></i></button>',
+                            slidesToScroll: 1,
+                            responsive: [{
+                                    breakpoint: 1200,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1,
+                                        infinite: true,
+                                        dots: false,
+                                    }
+                                },
+                                {
+                                    breakpoint: 992,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 700,
+                                    settings: {
+                                        arrows: false,
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 480,
+                                    settings: {
+                                        arrows: false,
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                }
+                            ]
+                        });
+                    }
+                }
+            })
+
+            $.ajax({
+                url: likeMost,
+                type: "GET",
+                success: function(result) {
+                    if (result.dataHtml) {
+                        let likeMost = $("#likeMost")
+                        likeMost.append(result.dataHtml);
+                        $('.weekly3-news-active').slick({
+                            dots: true,
+                            infinite: true,
+                            speed: 500,
+                            arrows: false,
+                            autoplay: true,
+                            loop: true,
+                            slidesToShow: 4,
+                            prevArrow: '<button type="button" class="slick-prev"><i class="ti-angle-left"></i></button>',
+                            nextArrow: '<button type="button" class="slick-next"><i class="ti-angle-right"></i></button>',
+                            slidesToScroll: 1,
+                            responsive: [{
+                                    breakpoint: 1200,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1,
+                                        infinite: true,
+                                        dots: true,
+                                    }
+                                },
+                                {
+                                    breakpoint: 992,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 700,
+                                    settings: {
+                                        arrows: false,
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 480,
+                                    settings: {
+                                        arrows: false,
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                }
+                            ]
+                        });
+                    }
+                }
+            })
+        })
     </script>
 @endsection
