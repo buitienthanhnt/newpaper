@@ -163,7 +163,7 @@ class UserController extends BaseController
     {
         $firebaseFolder = 'demo/';
         $image_path = 'app/public/files/Screenshot_1664559104.png';
-        $image = fopen(storage_path('app/public/files/Screenshot_1664559104.png'), 'r');
+        $image = fopen(public_path('assets\pub_image\defaul.PNG'), 'r');
         try {
             /**
              * @var Kreait\Firebase\Contract\Storage $storage

@@ -20,8 +20,8 @@ class FirebaseService
     //   const FIREBASE_DATABASE_URL = 'https://react-cli4-default-rtdb.firebaseio.com/';
 
 
-    const CONNECT_FIREBASE_PROJECT = 'firebase-cli6';
-    const FIREBASE_DATABASE_URL = 'https://cli6-c4945-default-rtdb.firebaseio.com/';
+    const CONNECT_FIREBASE_PROJECT = 'firebase-newpaper';
+    const FIREBASE_DATABASE_URL = 'https://newpaper-25148-default-rtdb.firebaseio.com/';
 
     /**
      * @var Firebase
