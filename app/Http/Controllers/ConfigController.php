@@ -44,7 +44,13 @@ class ConfigController extends Controller
 
     function insert(Request $request)
     {
-        $this->helperFunction->saveConfig($request->get("name"), $request->get("value"));
+        extract($this->helperFunction->saveConfig($request->get("name"), $request->get("value")));
+        if ($status) {
+            $this->logTha->logEvent('info', "added config with : {key} & {value}", [
+                'key' => $configValue->name,
+                'value' => $configValue->value
+            ]);
+        }
         return redirect()->back()->with("success", "saved config value!");
     }
 

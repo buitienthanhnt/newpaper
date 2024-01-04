@@ -12,10 +12,21 @@ class HelperFunction
     use DomHtml;
     use Nan;
 
+    public function getConfigData(string $name)
+    {
+        try {
+            $value = DB::table($this->coreConfigTable())->where('name', $name)->select()->first();
+            return $value;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return null;
+    }
+
     public function getConfig(string $name, $default = null)
     {
         try {
-            $value = DB::table($this->coreConfigTable())->where('name', $name)->select()->first()->value;
+            $value = $this->getConfigData($name)->value;
             return $value;
         } catch (\Throwable $th) {
             //throw $th;
@@ -28,9 +39,14 @@ class HelperFunction
     {
         DB::beginTransaction();
         try {
-            $insert_value = DB::table($this->coreConfigTable())->updateOrInsert(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
+            $saveStatus = DB::table($this->coreConfigTable())->updateOrInsert(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
+            if ($saveStatus) {
+                $configValue = $this->getConfigData($name);
+            }else {
+                throw new Exception();
+            }
             DB::commit();
-            return ["status" => true, "value" => $insert_value];
+            return ["status" => true, "configValue" => $configValue];
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
