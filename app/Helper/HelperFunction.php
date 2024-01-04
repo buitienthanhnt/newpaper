@@ -137,14 +137,18 @@ class HelperFunction
         $curl = curl_init();
         $url = "https://fcm.googleapis.com/fcm/send";
 
-        $authHeaders = array();
-        $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
+        $authorization = ''; // $authHeaders = array();  
+        //$authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
         try {
             $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
         } catch (\Throwable $th) {
+            return false;
             $th("not has authorization");
         }
-        $authHeaders[] = 'Authorization: ' . $authorization;
+        if (empty($authorization)) {
+            return false;
+        }
+        // $authHeaders[] = 'Authorization: ' . $authorization;
 
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => 1,
@@ -182,15 +186,16 @@ class HelperFunction
         if (!$notification_fcm || !$paper) {
             return false;
         }
-        $authorization = "";
+        $authorization = ""; //$authHeaders = [];
         try {
             $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
         } catch (\Throwable $th) {
+            return false;
             $th("not has authorization");
         }
 
-        $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
-        $authHeaders[] = 'Authorization: ' . $authorization;
+        // $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
+        // $authHeaders[] = 'Authorization: ' . $authorization;
         $data = array(
             'registration_ids' => array_map(fn ($notification) => $notification["fcmToken"], $notification_fcm),
             'notification' => [
@@ -219,7 +224,7 @@ class HelperFunction
         curl_setopt(
             $curl,
             CURLOPT_HTTPHEADER,
-            array(
+            array(  // || $authHeaders
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($data_string),
                 'Authorization: ' . $authorization

@@ -43,3 +43,4 @@
 # https://freetuts.net/hoc-php/danh-sach-ham-trong-php 
 # https://freetuts.net/hoc-php/hoc-lap-trinh-php-nang-cao
 # https://freetuts.net/hoc-php/hoc-curl-php
+# https://laravel.com/docs/10.x/mix

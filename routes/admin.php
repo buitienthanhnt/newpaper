@@ -125,7 +125,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("deleteUser", "AdminUserController@deleteUser")->name($admin . "_user_delete");
     });
 
-    Route::prefix("config")->group(function () use($admin) {
+    Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use($admin) {
         Route::get("/", "ConfigController@list")->name($admin."_config_list");
 
         Route::get("create", "ConfigController@create")->name($admin."_config_create");
