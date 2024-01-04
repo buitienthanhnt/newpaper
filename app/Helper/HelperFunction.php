@@ -15,7 +15,7 @@ class HelperFunction
     public function getConfigData(string $name)
     {
         try {
-            $value = DB::table($this->coreConfigTable())->where('name', $name)->select()->first();
+            $value = DB::table($this->coreConfigTable())->where('name', $name)->first();
             return $value;
         } catch (\Throwable $th) {
             //throw $th;
@@ -123,8 +123,8 @@ class HelperFunction
         $main = "";
         try {
             DB::beginTransaction();
-            $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->select()->first()->value;
-            $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->select()->first()->value;
+            $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->first('value')->value;
+            $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->first('value')->value;
         } catch (\Throwable $th) {
             return "";
         }
@@ -137,7 +137,7 @@ class HelperFunction
         $curl = curl_init();
         $url = "https://fcm.googleapis.com/fcm/send";
 
-        $authorization = ''; // $authHeaders = array();  
+        $authorization = ''; // $authHeaders = array();
         //$authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
         try {
             $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
