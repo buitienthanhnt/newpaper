@@ -147,13 +147,10 @@ class UserController extends BaseController
 
         try {
             $response = $this->firebase->createAuth()->signInWithEmailAndPassword($email, $password);
-            dd($response);
             return $response->uid;
         } catch (FirebaseEmailExists $e) {
-            echo ($e->getMessage());
             logger()->info('Error login to firebase: Tried to create an already existent user');
         } catch (Exception $e) {
-            echo ($e->getMessage());
             logger()->error('Error login to firebase: ' . $e->getMessage());
         }
         return false;

@@ -84,7 +84,7 @@ class PaperController extends Controller
                 "short_conten" => $request->__get("short_conten"),
                 "conten" => $request->__get("conten"),
                 "active" => $request->__get("active") ? true : false,
-                "show" => $request->__get("show") ? true : false,
+                "show" => $request->get("show", false),
                 "auto_hide" => $request->__get("auto_hide") ? true : false,
                 "show_writer" => $request->__get("show_writer") ? true : false,
                 "show_time" => $request->__get("show_time"),

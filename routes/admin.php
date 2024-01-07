@@ -137,5 +137,13 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "ConfigController@delete")->name($admin."_config_delete");
     });
 
+    Route::prefix('firebase')->middleware(["adminLogin", 'AdminPermission'])->group(function() use($admin){
+        Route::get('/', "FirebaseController@dashboard")->name($admin."_firebase");
+
+        Route::post('addPaper', "FirebaseController@addPaper")->name($admin."_firebase_addPaper");
+
+        Route::delete('deletePaper', "FirebaseController@deletePaper")->name($admin."_firebase_deletePaper");
+    });
+
     Route::get("default", "AdminController@default")->name($admin . "_default");
 });

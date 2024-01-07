@@ -274,7 +274,7 @@ class RemoteSourceManager
             "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
             "conten" => $conten,
             "active" => $request->__get("active") ? true : false,
-            "show" => $request->__get("show") ? true : false,
+            "show" => $request->get("show", false),
             "auto_hide" => $request->__get("auto_hide") ? true : false,
             "show_writer" => $request->__get("show_writer") ? true : false,
             "show_time" => $request->__get("show_time"),
