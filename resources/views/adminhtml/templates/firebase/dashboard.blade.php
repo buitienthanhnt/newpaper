@@ -19,7 +19,6 @@
 @endsection
 
 @section('body_main_conten')
-    <span>day la noi dung cua firebase dahboard</span>
     <table class="table table-striped table-inverse table-responsive">
         <thead class="thead-inverse">
             <tr>
@@ -36,13 +35,15 @@
                         <td scope="row">{{ $key }}</td>
                         <td>{{ $item['title'] }}</td>
                         <td>
-                            <img src="{{ $item['image_path'] }}"
+                            <img @isset($item['image_path'])
+                                    src="{{ $item['image_path'] }}"
+                                @endisset
                                 class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle}"
                                 alt="">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger fa-pull-right delete_firebase"
-                                data-id="{{ $key }}">delete</button>
+                            <button type="button" class="btn btn-danger fa-pull-right firebase_action delete_firebase"
+                                data-id="{{ $key }}">del in firebase</button>
 
                             <a type="button" href="{{ route('admin_paper_edit', ['paper_id' => $item['id']]) }}"
                                 class="btn btn-warning fa-pull-right">view</a>
@@ -60,7 +61,8 @@
                                 alt="">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-info up_firebase" data-id="{{ $paper->id }}">up
+                            <button type="button" class="btn btn-info firebase_action up_firebase"
+                                data-id="{{ $paper->id }}">up to
                                 firebase</button>
 
                             <a type="button" href="{{ route('admin_paper_edit', ['paper_id' => $paper->id]) }}"
@@ -89,113 +91,123 @@
         $(document).ready(function() {
             let _token = "{{ csrf_token() }}";
             let addUrl = "{{ route('admin_firebase_addPaper') }}";
-            $('.up_firebase').click(function() {
 
-                let paperId = $(this).attr('data-id');
-                if (paperId) {
-                    Swal.fire({
-                        title: 'Please Wait !',
-                        html: 'data uploading', // add html attribute if you want or remove
-                        allowOutsideClick: false,
-                        onBeforeOpen: () => {
-                            Swal.showLoading()
-                        },
-                    });
-                    // swal.close();
-
-                    $.ajax({
-                        url: addUrl,
-                        type: "POST",
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            _token: _token,
-                            paper_id: paperId
-                        }),
-                        success: function(result) {
-                            var data = JSON.parse(result);
-                            if (data.code == 200) {
-                                console.log(data);
-                                Swal.fire({
-                                    position: 'center',
-                                    type: 'success',
-                                    title: 'added the paper to firebase',
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                });
-                                $(this).addClass('btn-danger').removeClass('up_firebase').addClass('delete_firebase').html('delete').attr('data-id', data.data);
-                            }
-
-                            if (data.code == 400) {
-                                Swal.fire({
-                                    position: 'center',
-                                    type: 'error',
-                                    title: 'can`t added the paper to firebase',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                        }
-
-                    }.bind(this),
-                    error: function(error) {
+            $('.firebase_action').on('click', function() {
+                if ($(this).hasClass('up_firebase')) {
+                    let paperId = $(this).attr('data-id');
+                    if (paperId) {
                         Swal.fire({
-                            position: 'center',
-                            type: 'error',
-                            title: 'can`t added the paper to firebase',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                        }
-                    })
-                }
-            })
+                            title: 'Please Wait !',
+                            html: 'data uploading', // add html attribute if you want or remove
+                            allowOutsideClick: false,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
+                        // swal.close();
 
-            $('.delete_firebase').click(function() {
-                let sourceId = $(this).attr('data-id');
-                let deleteUrl = "{{ route('admin_firebase_deletePaper') }}";
-                if (sourceId) {
-                    Swal.fire({
-                        title: 'Please Wait !',
-                        html: 'remove running !!!', // add html attribute if you want or remove
-                        allowOutsideClick: false,
-                        onBeforeOpen: () => {
-                            Swal.showLoading()
-                        },
-                    });
-                    $.ajax({
-                        url: deleteUrl,
-                        type: "DELETE",
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            _token: _token,
-                            paper_id: sourceId
-                        }),
-                        success: function(result) {
-                            var data = JSON.parse(result);
-                            if (data.code == 200) {
-                                Swal.fire({
-                                    position: 'center',
-                                    type: 'success',
-                                    title: 'remove the paper in firebase',
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                });
-                                $(this).parent().parent().remove();
-                            }
+                        $.ajax({
+                            url: addUrl,
+                            type: "POST",
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                _token: _token,
+                                paper_id: paperId
+                            }),
+                            success: function(result) {
+                                var data = JSON.parse(result);
+                                if (data.code == 200) {
+                                    console.log(data);
+                                    Swal.fire({
+                                        position: 'center',
+                                        type: 'success',
+                                        title: 'added the paper to firebase',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    $(this).parent().siblings().first().html(data.data);
+                                    $(this).addClass('btn-danger').removeClass('up_firebase')
+                                        .addClass('delete_firebase').html('del in firebase')
+                                        .attr('data-id',
+                                            data.data).off();
+                                }
 
-                            if (data.code == 400) {
-                                Swal.fire({
-                                    position: 'center',
-                                    type: 'error',
-                                    title: 'can`t remove the paper in firebase',
+                                if (data.code == 400) {
+                                    Swal.fire({
+                                        position: 'center',
+                                        type: 'error',
+                                        title: 'can`t added the paper to firebase',
                                     showConfirmButton: false,
                                     timer: 2000
                                 });
                             }
+
                         }.bind(this),
                         error: function(error) {
+                            Swal.fire({
+                                position: 'center',
+                                type: 'error',
+                                title: 'can`t added the paper to firebase',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+                        })
+                    }
+                } else if ($(this).hasClass('delete_firebase')) {
+                    let sourceId = $(this).attr('data-id');
+                    let deleteUrl = "{{ route('admin_firebase_deletePaper') }}";
+                    if (sourceId) {
+                        Swal.fire({
+                            title: 'Please Wait !',
+                            html: 'remove running !!!', // add html attribute if you want or remove
+                            allowOutsideClick: false,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
+                        $.ajax({
+                            url: deleteUrl,
+                            type: "DELETE",
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                _token: _token,
+                                paper_id: sourceId
+                            }),
+                            success: function(result) {
+                                var data = JSON.parse(result);
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        position: 'center',
+                                        type: 'success',
+                                        title: 'remove the paper in firebase',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    // $(this).parent().parent().remove();
+                                    $(this).removeClass('delete_firebase').removeClass(
+                                            'btn-danger')
+                                        .addClass('up_firebase')
+                                        .addClass('btn-info').attr('data-id', data.data).html(
+                                            'up to firebase');
+                                    $(this).parent().siblings().first().html(data.data).off();
+                                }
 
-                        }
-                    })
+                                if (data.code == 400) {
+                                    Swal.fire({
+                                        position: 'center',
+                                        type: 'error',
+                                        title: 'can`t remove the paper in firebase',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+                            }.bind(this),
+                            error: function(error) {
+
+                            }
+                        })
+                    }
                 }
             })
         })

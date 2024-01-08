@@ -4,6 +4,7 @@ namespace App\Api;
 
 use App\Models\Paper;
 use App\Services\FirebaseService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Database\Snapshot;
 
@@ -34,6 +35,7 @@ class PaperApi
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
 				$userRef->push($paper);
 				$snapshot = $userRef->getSnapshot();
+				Cache::put('paper_in_firebase', $snapshot->getValue());
 				return [
 					'status' => true,
 					'value' => array_key_last($snapshot->getValue())
@@ -52,11 +54,22 @@ class PaperApi
 	{
 		try {
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $idInFirebase);
+			$paperId = $userRef->getSnapshot()->getValue()['id'];
 			$userRef->remove();
-			return true;
+			$this->updatePaperCache();
+			return [
+				'status' => true,
+				'value' => $paperId
+			];
 		} catch (\Throwable $th) {
 			//throw $th;
 		}
 		return false;
+	}
+
+	function updatePaperCache() {
+		$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
+		$snapshot = $userRef->getSnapshot();
+		Cache::put('paper_in_firebase', $snapshot->getValue());
 	}
 }
