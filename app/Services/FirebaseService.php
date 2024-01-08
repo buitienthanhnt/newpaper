@@ -33,6 +33,6 @@ class FirebaseService
     {
         $path = storage_path("app/".self::CONNECT_FIREBASE_PROJECT."/firebaseConfig.json");
         $this->firebase = (new Factory)->withServiceAccount($path)->withDatabaseUri(env('FIREBASE_DATABASE_URL', self::FIREBASE_DATABASE_URL));
-        $this->fireStore = (new Factory)->withServiceAccount($path)->createFirestore()->database();
+//        $this->fireStore = (new Factory)->withServiceAccount($path)->createFirestore()->database();
     }
 }

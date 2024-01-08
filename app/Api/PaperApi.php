@@ -24,7 +24,7 @@ class PaperApi
 	) {
 		$this->firebase = $firebaseService->firebase;
 		$this->firebaseDatabase = $this->firebase->createDatabase();
-		$this->fireStore = $firebaseService->fireStore;
+//		$this->fireStore = $firebaseService->fireStore;
 	}
 
 	function paperInFirebase(): array
