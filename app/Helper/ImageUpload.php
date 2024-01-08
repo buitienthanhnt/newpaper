@@ -106,12 +106,12 @@ trait ImageUpload
     {
         $real_path = null;
         if ($url_path) {
+            $url_path = parse_url($url_path)['path'];
             // /var/www/html/laravel1/storage/app/public/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg
-            $root_path = $this->storage_real_path().(str_replace(asset("storage"), "", $url_path));
-
-            $path = str_replace(asset(""), "", $url_path); // storage/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg
-            if (File::exists($path)) {
-                $real_path = $path;
+            // $root_path = $this->storage_real_path().(str_replace(asset("storage"), "", $url_path));
+            $path = str_replace(parse_url(asset("storage"))['path'], "", $url_path); // storage/images/all/5299-B5LkucU8-TTT-3840-1682000804-1682040272.jpg
+            if (File::exists($check_path = urldecode($this->storage_real_path().$path))) {
+                $real_path = $check_path;
             }
         }
         return $real_path;

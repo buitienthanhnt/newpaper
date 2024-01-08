@@ -26,7 +26,6 @@ class FirebaseController extends BaseController
 
     function dashboard(): \Illuminate\Contracts\View\View
     {
-        $papersInFirebase = [];
         if (Cache::has('paper_in_firebase')) {
             $papersInFirebase = Cache::get('paper_in_firebase');
         } else {
@@ -43,7 +42,7 @@ class FirebaseController extends BaseController
         $params = $request->toArray();
         if (isset($params['paper_id'])) {
             try {
-                $data = $this->paperApi->addFirebase($params['paper_id'], ['conten', 'image_path']);
+                $data = $this->paperApi->addFirebase($params['paper_id'], ['conten']);
                 return response(json_encode([
                     'code' => 200,
                     'data' => $data['value']
