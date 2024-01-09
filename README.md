@@ -44,3 +44,20 @@
 # https://freetuts.net/hoc-php/hoc-lap-trinh-php-nang-cao
 # https://freetuts.net/hoc-php/hoc-curl-php
 # https://laravel.com/docs/10.x/mix
+
+# =========================================================================
+# cài grpc cho fireStore databases: https://firebase-php.readthedocs.io/en/stable/cloud-firestore.html
+#	run:
+#	b4:	sudo apt-get install php8.1-grpc
+#	run: 
+#		composer require google/cloud-firestore
+#		composer update
+
+# (có thể cần chạy: 
+# b1:	sudo pecl install grpc 
+# trước, b3: và thêm:   extension=grpc.so    vào: /etc/php8.1/cli/php.ini)
+# b2: nếu cần thì copy file extension(so) vào thư mục extension của php version. 
+# b5: sudo service apache2 restart
+# nếu lỗi thì xóa bỏ php version rồi cài lại các bước trên.
+# =========================================================================
+
