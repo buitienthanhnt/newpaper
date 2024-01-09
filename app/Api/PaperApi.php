@@ -24,7 +24,7 @@ class PaperApi
 	) {
 		$this->firebase = $firebaseService->firebase;
 		$this->firebaseDatabase = $this->firebase->createDatabase();
-//		$this->fireStore = $firebaseService->fireStore;
+		$this->fireStore = $firebaseService->fireStore;
 	}
 
 	function paperInFirebase(): array
@@ -34,15 +34,23 @@ class PaperApi
 		return $snapshot->getValue() ?: [];
 	}
 
-	public function addFirebase($paperId, $hidden = ['conten']): array
+	public function addFirebase($paperId, $hidden = []): array
 	{
 		try {
-			$paper = Paper::find($paperId)->makeHidden($hidden)->toArray();
+			$paper = Paper::find($paperId)->toArray();
 			if (!empty($paper)) {
 				if (isset($paper['image_path']) && !empty($paper['image_path'])) {
 					$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
-					$paper['image_path'] = $firebaseImage;
+					if ($firebaseImage) {
+						$paper['image_path'] = $firebaseImage;
+					}else {
+						unset($paper['image_path']);
+					}
 				}
+
+				$this->upContentFireStore($paper);
+				$paper = array_diff_key($paper, $hidden);
+
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
 				$userRef->push($paper);
 				$snapshot = $userRef->getSnapshot();
@@ -67,6 +75,7 @@ class PaperApi
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $idInFirebase);
 			$paperId = $userRef->getSnapshot()->getValue()['id'];
 			$userRef->remove();
+			$this->rmContentFireStore($paperId);
 			$this->updatePaperCache();
 			return [
 				'status' => true,
@@ -88,7 +97,11 @@ class PaperApi
 	function upLoadImageFirebase(string $image_link)
 	{
 		$firebaseFolder = 'demo/';
-		$image = fopen($this->url_to_real($image_link), 'r');
+		$real_path = $this->url_to_real($image_link);
+		if (empty($real_path)) {
+			return null;
+		}
+		$image = fopen($real_path, 'r');
 		try {
 			/**
 			 * @var Kreait\Firebase\Contract\Storage $storage
@@ -101,12 +114,28 @@ class PaperApi
 			$uri = $response->info()['mediaLink'];
 			return str_replace(Rest::DEFAULT_API_ENDPOINT . '/download/storage/v1', 'https://firebasestorage.googleapis.com/v0', $uri);
 		} catch (\Throwable $th) {
-			echo ($th->getMessage());
+			// echo ($th->getMessage());
 		}
+		return null;
 	}
 
-	function upContentFireStore()
+	function upContentFireStore($paper)
 	{
-		dd($this->fireStore);
+		$fireStore = $this->fireStore->collection('newpaper')->document('detailcontent')->snapshot()->data();
+
+		// $this->fireStore->collection('newpaper')->document('detailcontent')->set([
+		// 	'12' => '2312312312'
+		// ]);
+
+		// $this->fireStore->collection('detailContent')->newDocument()->create([
+		// 	'121' => '2312312312'
+		// ]);
+
+		// document
+		$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
+	}
+
+	function rmContentFireStore($paperId) {
+		$this->fireStore->collection('detailContent')->document($paperId)->delete();
 	}
 }

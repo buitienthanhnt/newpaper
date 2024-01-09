@@ -77,4 +77,8 @@ class FirebaseController extends BaseController
             "error" => null,
         ]));
     }
+
+    function fireStore() {
+        $this->paperApi->upContentFireStore();
+    }
 }
