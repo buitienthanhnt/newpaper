@@ -46,7 +46,7 @@ class ConfigController extends Controller
     {
         extract($this->helperFunction->saveConfig($request->get("name"), $request->get("value")));
         if ($status) {
-            $this->logTha->logEvent('info', "added config with : {key} & {value}", [
+            $this->logTha->logEvent('info', "added config: ", [
                 'key' => $configValue->name,
                 'value' => $configValue->value
             ]);
