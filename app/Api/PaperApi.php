@@ -103,6 +103,8 @@ class PaperApi
 		}
 		$image = fopen($real_path, 'r');
 		try {
+			$fileType = explode('.', $image_link);
+			$fileType = $fileType[count($fileType)-1];
 			/**
 			 * @var Kreait\Firebase\Contract\Storage $storage
 			 */
@@ -110,7 +112,7 @@ class PaperApi
 			$bucket = $storage->getBucket();
 
 			// upload 1 file lên store
-			$response = $bucket->upload($image, ['name' => $firebaseFolder . Str::random(10) . '.' . explode('.', $image_link, 2)[1]]);
+			$response = $bucket->upload($image, ['name' => $firebaseFolder . Str::random(10) . '.' . $fileType]);
 			$uri = $response->info()['mediaLink'];
 			return str_replace(Rest::DEFAULT_API_ENDPOINT . '/download/storage/v1', 'https://firebasestorage.googleapis.com/v0', $uri);
 		} catch (\Throwable $th) {
