@@ -47,10 +47,10 @@ class PaperApi
 						unset($paper['image_path']);
 					}
 				}
-
 				$this->upContentFireStore($paper);
-				$paper = array_diff_key($paper, $hidden);
-
+				foreach ($hidden as $k) {
+					unset($paper[$k]);
+				}
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
 				$userRef->push($paper);
 				$snapshot = $userRef->getSnapshot();
