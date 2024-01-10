@@ -19,6 +19,8 @@ class PaperApi
 	protected $firebaseDatabase;
 	protected $fireStore;
 
+	const STORERAGE_BUGKET = 'newpaper';
+
 	function __construct(
 		FirebaseService $firebaseService
 	) {
@@ -43,7 +45,7 @@ class PaperApi
 					$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
 					if ($firebaseImage) {
 						$paper['image_path'] = $firebaseImage;
-					}else {
+					} else {
 						unset($paper['image_path']);
 					}
 				}
@@ -73,9 +75,13 @@ class PaperApi
 	{
 		try {
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $idInFirebase);
-			$paperId = $userRef->getSnapshot()->getValue()['id'];
+			$paperData = $userRef->getSnapshot()->getValue();
+			$paperId = $paperData['id'];
 			$userRef->remove();
 			$this->rmContentFireStore($paperId);
+			if (isset($paperData['image_path'])) {
+				$this->removeImageFirebase($paperData['image_path']);
+			}
 			$this->updatePaperCache();
 			return [
 				'status' => true,
@@ -96,7 +102,7 @@ class PaperApi
 
 	function upLoadImageFirebase(string $image_link)
 	{
-		$firebaseFolder = 'demo/';
+		$firebaseFolder = self::STORERAGE_BUGKET . '/';
 		$real_path = $this->url_to_real($image_link);
 		if (empty($real_path)) {
 			return null;
@@ -104,7 +110,7 @@ class PaperApi
 		$image = fopen($real_path, 'r');
 		try {
 			/**
-			 * @var Kreait\Firebase\Contract\Storage $storage
+			 * @var \Kreait\Firebase\Contract\Storage $storage
 			 */
 			$storage = $this->firebase->createStorage();
 			$bucket = $storage->getBucket();
@@ -119,9 +125,25 @@ class PaperApi
 		return null;
 	}
 
+	function removeImageFirebase(string $url_path)
+	{
+		try {
+			/**
+			 * @var \Kreait\Firebase\Contract\Storage $storage
+			 */
+			$storage = $this->firebase->createStorage();
+			$fileName = '/' . self::STORERAGE_BUGKET . explode("/" . self::STORERAGE_BUGKET . "/", parse_url(urldecode($url_path))['path'], 2)[1];
+			$storage->getBucket()->object($fileName)->delete();
+			return true;
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
+		return false;
+	}
+
 	function upContentFireStore($paper)
 	{
-		$fireStore = $this->fireStore->collection('newpaper')->document('detailcontent')->snapshot()->data();
+		// $fireStore = $this->fireStore->collection('newpaper')->document('detailcontent')->snapshot()->data();
 
 		// $this->fireStore->collection('newpaper')->document('detailcontent')->set([
 		// 	'12' => '2312312312'
@@ -135,7 +157,8 @@ class PaperApi
 		$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
 	}
 
-	function rmContentFireStore($paperId) {
+	function rmContentFireStore($paperId)
+	{
 		$this->fireStore->collection('detailContent')->document($paperId)->delete();
 	}
 }
