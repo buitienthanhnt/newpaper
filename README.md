@@ -51,6 +51,16 @@
 # https://stackoverflow.com/questions/34513072/running-laravel-queues-automatically
 # https://laravel.com/docs/5.6/queues#supervisor-configuration
 
+# start:
+#       sudo supervisorctl reread
+ 
+#       sudo supervisorctl update
+ 
+# ===>  sudo supervisorctl start laravel-worker:*
+
+# stop:   sudo systemctl stop supervisor
+
+# start:  sudo systemctl start supervisor
 # =========================================================================
 # cài grpc cho fireStore databases: https://firebase-php.readthedocs.io/en/stable/cloud-firestore.html
 #	run:
