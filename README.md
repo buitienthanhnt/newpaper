@@ -45,6 +45,12 @@
 # https://freetuts.net/hoc-php/hoc-curl-php
 # https://laravel.com/docs/10.x/mix
 
+# =========================laravel queue auto doc================================================
+# https://chungnguyen.xyz/laravel/docs/queues.md
+# https://stackoverflow.com/questions/50967427/laravel-execute-queued-job-automatically
+# https://stackoverflow.com/questions/34513072/running-laravel-queues-automatically
+# https://laravel.com/docs/5.6/queues#supervisor-configuration
+
 # =========================================================================
 # cài grpc cho fireStore databases: https://firebase-php.readthedocs.io/en/stable/cloud-firestore.html
 #	run:

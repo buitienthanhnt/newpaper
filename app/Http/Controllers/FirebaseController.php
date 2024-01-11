@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\CategoryApi;
 use App\Api\PaperApi;
 use App\Models\Paper;
 use Exception;
@@ -12,15 +13,22 @@ use Illuminate\Support\Facades\Log;
 class FirebaseController extends BaseController
 {
     /**
-     * @var \App\Api\PaperApi
+     * @var \App\Api\PaperApi $paperApi
      */
     protected $paperApi;
 
+    /**
+     * @var \App\Api\CategoryApi $categoryApi
+     */
+    protected $categoryApi;
+
     function __construct(
         \App\Services\FirebaseService $firebaseService,
-        PaperApi $paperApi
+        PaperApi $paperApi,
+        CategoryApi $categoryApi
     ) {
         $this->paperApi = $paperApi;
+        $this->categoryApi = $categoryApi;
         parent::__construct($firebaseService);
     }
 
@@ -35,6 +43,11 @@ class FirebaseController extends BaseController
         $uploadedIds = array_column($papersInFirebase, 'id');
         $papers = Paper::where('show', '=', 0)->whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
         return view('adminhtml.templates.firebase.dashboard', ['listPaper' => $papersInFirebase, 'papers' => $papers]);
+    }
+
+    function upCategoryTop() {
+        $categoryTops = $this->categoryApi->addCategoryTopFirebase();
+        dd($categoryTops);
     }
 
     function addPaper(Request $request): \Illuminate\Http\Response

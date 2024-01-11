@@ -145,6 +145,8 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete('deletePaper', "FirebaseController@deletePaper")->name($admin."_firebase_deletePaper");
 
         Route::get('fireStore', "FirebaseController@fireStore")->name($admin."_firebase_fireStore");
+
+        Route::get('topCategory', "FirebaseController@upCategoryTop")->name($admin."_upCategoryTop");
     });
 
     Route::get("default", "AdminController@default")->name($admin . "_default");

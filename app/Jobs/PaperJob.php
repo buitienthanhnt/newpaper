@@ -50,7 +50,8 @@ class PaperJob implements ShouldQueue
             );
         } catch (\Throwable $th) {
             //throw $th;
-            echo ($th->getMessage());
+            // echo ($th->getMessage());
+            Log::stack([$channel])->info($th->getMessage());
             return;
         }
 
