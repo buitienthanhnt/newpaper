@@ -49,12 +49,22 @@ final class CategoryApi extends BaseApi
 
     function addCategoryTopFirebase()
     {
-        $userRef = $this->firebaseDatabase->getReference('/newpaper/categoryTop');
-        $userRef->push($this->categoryTopForFirebase() ?: null);
-        $snapshot = $userRef->getSnapshot();
-        return [
-            'status' => true,
-            'value' => $snapshot->getValue()
-        ];
+        try {
+            $userRef = $this->firebaseDatabase->getReference('/newpaper/categoryTop');
+            if ($userRef->getSnapshot()->getValue()) {
+                $userRef->remove();
+            }
+            $userRef->push($this->categoryTopForFirebase() ?: null);
+            $snapshot = $userRef->getSnapshot();
+            return [
+                'status' => true,
+                'value' => $snapshot->getValue()
+            ];
+        } catch (\Throwable $th) {
+            return [
+                'status' => false,
+                'value' => null
+            ];
+        }
     }
 }

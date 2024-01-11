@@ -22,6 +22,10 @@ class Paper extends Model
         return $this->hasMany("\App\Models\pageCategory", "page_id");
     }
 
+    function listIdCategories(): array {
+        return array_column($this->to_category()->get(["category_id"])->toArray(), "category_id") ?: [];
+    }
+
     /**
      * tìm 1 khóa chính -> nhiều khóa phụ.
      */

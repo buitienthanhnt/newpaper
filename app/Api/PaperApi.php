@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Api;
 
 use App\Models\Paper;
@@ -23,7 +24,9 @@ class PaperApi extends BaseApi
 	public function addFirebase($paperId, $hidden = []): array
 	{
 		try {
-			$paper = Paper::find($paperId)->toArray();
+			$_paper = Paper::find($paperId);
+			$paper = $_paper->toArray();
+			$paper['categories'] = $_paper->listIdCategories();
 			if (!empty($paper)) {
 				if (isset($paper['image_path']) && !empty($paper['image_path'])) {
 					$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
@@ -37,6 +40,7 @@ class PaperApi extends BaseApi
 				foreach ($hidden as $k) {
 					unset($paper[$k]);
 				}
+				$this->addPapersCategory($paper);
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
 				$userRef->push($paper);
 				$snapshot = $userRef->getSnapshot();
@@ -103,5 +107,15 @@ class PaperApi extends BaseApi
 	function rmContentFireStore($paperId)
 	{
 		$this->fireStore->collection('detailContent')->document($paperId)->delete();
+	}
+
+	function addPapersCategory($paper)
+	{
+		if (count($paper['categories'])) {
+			foreach ($paper['categories'] as $value) {
+				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' .$value);
+				$userRef->push($paper);
+			}
+		}
 	}
 }
