@@ -35,6 +35,7 @@
 # https://dotrungquan.info/nhung-tinh-nang-moi-va-cai-tien-dang-chu-y-trong-php-8-2/
 
 
+# https://viblo.asia/p/mot-so-meo-nho-vun-vat-giup-cai-thien-trang-web-cua-ban-ByEZkvPAKQ0
 
 # https://topdev.vn/blog/10-tuyet-ki-tu-trang-web-nhanh-nhat-the-gioi-phan-1/
 # https://topdev.vn/blog/10-tuyet-ki-tu-trang-web-nhanh-nhat-the-gioi-phan-2/

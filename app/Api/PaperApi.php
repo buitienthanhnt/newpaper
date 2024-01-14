@@ -14,6 +14,21 @@ class PaperApi extends BaseApi
 		parent::__construct($firebaseService);
 	}
 
+	public function getDetail(int $paperId): Paper
+	{
+		$paperDetail = null;
+		$paperKey = 'paperDetail_'.$paperId;
+		if (Cache::has($paperKey)) {
+			$paperDetail = Cache::get($paperKey);
+		}else {
+			$paperDetail = Paper::find($paperId);
+			if ($paperDetail) {
+				Cache::put($paperKey, $paperDetail);
+			}
+		}
+		return $paperDetail;
+	}
+
 	function paperInFirebase(): array
 	{
 		$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
