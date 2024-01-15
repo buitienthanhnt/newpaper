@@ -71,13 +71,21 @@
                                                     href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
                                             </h4>
                                             <h6>{{ $paper_first->short_conten }}</h6>
-                                            <p>by
+                                            <div>
+                                                by
                                                 <a href="" class="text text-info">
                                                     {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
                                                 </a>
                                                 -
-                                                {{ date('M d, Y', strtotime($paper_first->updated_at)) }}
-                                            </p>
+                                                {{ date('M d, Y', strtotime($paper_first->updated_at)) }} 
+
+                                                <a class="text text-info" style="float: right;">
+                                                    @if ($count = $paper_first->commentCount())
+                                                        {{ $count }} <i class="fa fa-comment"></i> |
+                                                    @endif
+                                                    <i class="fa fa-eye"></i> {{ $paper_first->viewCount() }}
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +114,10 @@
                                                     <span class="colorb">
                                                         {{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
                                                     </span>
-                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}</p>
+                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
+                                                        <a href="" class="text text-info" style="float: right;"><i
+                                                                class="fa fa-eye"></i> {{ $paper->viewCount() }}</a>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>

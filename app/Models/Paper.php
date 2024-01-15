@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-// use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 // use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Paper extends Model
@@ -55,5 +55,23 @@ class Paper extends Model
     public function getComments() {
         $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->getResults();
         return $comments;
+    }
+
+    function viewCount() : int {
+        try {
+            return $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->get()->first()->value;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }    
+        return 1;
+    }
+
+    function commentCount() : int {
+        try {
+            return count($this->getComments());
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return 1;   
     }
 }

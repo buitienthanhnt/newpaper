@@ -79,7 +79,12 @@
                                                         <span>by
                                                             {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
                                                             -
-                                                            {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
+                                                            {{ date('M d, Y', strtotime($paper_first->updated_at)) }}
+                                                            <a href="" class="text text-info" style="float: right;">
+                                                                <i class="fa fa-eye"></i>
+                                                                {{ $paper_first->viewCount() }}
+                                                            </a>
+                                                        </span>
                                                         <p>{{ $paper_first->short_conten }}</p>
                                                     </div>
                                                 </div>
@@ -101,7 +106,13 @@
                                                                     <h4><a title="{{ $paper->short_conten }}"
                                                                             href="{{ route('front_page_detail', ['page' => $paper->id, 'alias' => $paper->url_alias]) }}">{{ $DomHtml->cut_str($paper->short_conten, 76, '...') }}</a>
                                                                     </h4>
-                                                                    <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
+                                                                    <p>
+                                                                        {{ date('M d, Y', strtotime($paper->updated_at)) }}
+                                                                        <a href="" class="text text-info"
+                                                                            style="float: right;">
+                                                                            {{-- <i class="fa fa-eye"></i>  --}}
+                                                                            {{ $paper->viewCount() }}
+                                                                        </a>
                                                                     </p>
                                                                     <span
                                                                         class="colorb mb-10">{{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}

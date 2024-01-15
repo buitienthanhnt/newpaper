@@ -19,6 +19,8 @@
                         class="colorb">{{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
                     </span>
                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
+                        <a href="" class="text text-info" style="float: right;"><i class="fa fa-eye"></i>
+                            {{ $paper->viewCount() }}</a>
                     </p>
                 </div>
             </div>
