@@ -1,4 +1,4 @@
-<div class="single-follow mb-45" id="most_detail_recent">
+<div class="single-follow mb-45" id="most_detail_recent" style="background-color: #f4f4f4">
     <div class="single-box">
         <div class="follow-us d-flex align-items-center">
             <div class="follow-social">

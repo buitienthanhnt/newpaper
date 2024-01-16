@@ -1,4 +1,4 @@
-<div class="most-recent-area" id="most_view_detail" data-page="1">
+<div class="most-recent-area" id="most_view_detail" data-page="1" style="background-color: #f4f4f4">
     <!-- Section Tittle -->
     <div class="small-tittle mb-20">
         <h4>Most Recent</h4>
