@@ -22,7 +22,8 @@ class Paper extends Model
         return $this->hasMany("\App\Models\pageCategory", "page_id");
     }
 
-    function listIdCategories(): array {
+    function listIdCategories(): array
+    {
         return array_column($this->to_category()->get(["category_id"])->toArray(), "category_id") ?: [];
     }
 
@@ -39,6 +40,11 @@ class Paper extends Model
         return $this->belongsTo(Writer::class, "writer");
     }
 
+    public function writerName(): string
+    {
+        return $this->to_writer()->getResults()->name ?? '';
+    }
+
     public function save_new($value)
     {
         if ($value) {
@@ -52,26 +58,29 @@ class Paper extends Model
         return false;
     }
 
-    public function getComments() {
+    public function getComments()
+    {
         $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->getResults();
         return $comments;
     }
 
-    function viewCount() : int {
-        try {
-            return $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->get()->first()->value;
-        } catch (\Throwable $th) {
-            //throw $th;
-        }    
-        return 1;
-    }
-
-    function commentCount() : int {
+    function commentCount(): int
+    {
         try {
             return count($this->getComments());
         } catch (\Throwable $th) {
             //throw $th;
         }
-        return 1;   
+        return 1;
+    }
+
+    function viewCount(): int
+    {
+        try {
+            return $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->get()->first()->value;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return 1;
     }
 }

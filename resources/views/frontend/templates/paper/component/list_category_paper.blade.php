@@ -16,7 +16,7 @@
                         </a>
                     </h4>
                     <span
-                        class="colorb">{{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
+                        class="colorb">{{ $paper->writerName() }}
                     </span>
                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
                         <a href="" class="text text-info" style="float: right;"><i class="fa fa-eye"></i>

@@ -71,21 +71,7 @@
                                                     href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
                                             </h4>
                                             <h6>{{ $paper_first->short_conten }}</h6>
-                                            <div>
-                                                by
-                                                <a href="" class="text text-info">
-                                                    {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
-                                                </a>
-                                                -
-                                                {{ date('M d, Y', strtotime($paper_first->updated_at)) }} 
-
-                                                <a class="text text-info" style="float: right;">
-                                                    @if ($count = $paper_first->commentCount())
-                                                        {{ $count }} <i class="fa fa-comment"></i> |
-                                                    @endif
-                                                    <i class="fa fa-eye"></i> {{ $paper_first->viewCount() }}
-                                                </a>
-                                            </div>
+                                            {!! view('frontend.templates.elements.dateTime', ['paper' => $paper_first])->render() !!}
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +98,7 @@
                                                     </h4>
                                                     <h6>{{ $paper->short_conten }}</h6>
                                                     <span class="colorb">
-                                                        {{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
+                                                        {{ $paper->writerName() }}
                                                     </span>
                                                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
                                                         <a href="" class="text text-info" style="float: right;"><i

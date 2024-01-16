@@ -22,7 +22,7 @@
                                 <h4><a
                                         href="{{ route('front_page_detail', ['page' => $popular_item->id, 'alias' => $popular_item->url_alias]) }}">{{ $popular_item->title }}</a>
                                 </h4>
-                                <p>{{ $popular_item->to_writer()->getResults() ? $popular_item->to_writer()->getResults()->name : '' }}
+                                <p>{{ $popular_item->writerName() }}
                                     | 2 hours ago</p>
                             </div>
                         </div>

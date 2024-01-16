@@ -25,7 +25,7 @@
                             data-animation="fadeInUp" data-delay=".4s" data-duration="1000ms">{{ $tren->title }}</a>
                     </h2>
                     <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-                        {{ $tren->to_writer()->getResults() ? $tren->to_writer()->getResults()->name : '' }} -
+                        {{ $tren->writerName() }} -
                         {{ date('M d, Y', strtotime($tren->updated_at)) }}</p>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                 <h2><a href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{
                         $tren_r->title }}</a>
                 </h2>
-                <p>by {{ $tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }}
+                <p>by {{ $tren_r->writerName() }}
                     -
                     {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
             </div>
@@ -112,8 +112,7 @@
                                                     {{ $paper->short_conten }}
                                                 </a>
                                             </h4>
-                                            <span class="colorb">{{ $paper->to_writer()->getResults() ?
-                                                $paper->to_writer()->getResults()->name : '' }}
+                                            <span class="colorb">{{ $paper->writerName() }}
                                             </span>
                                             <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
                                             </p>

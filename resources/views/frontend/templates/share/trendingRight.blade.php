@@ -11,7 +11,7 @@
                     <h2><a
                             href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>
                     </h2>
-                    <p>by {{ $tren_r->to_writer()->getResults() ? $tren_r->to_writer()->getResults()->name : '' }}
+                    <p>by {{ $tren_r->writerName() }}
                         -
                         {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
                 </div>

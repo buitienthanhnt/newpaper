@@ -62,6 +62,11 @@ class ConfigController extends Controller
             if (count($params)) {
                 foreach ($params as $key => $value) {
                     $this->helperFunction->updateConfig($key, $value);
+                    $this->logTha->logEvent('info', "updated config: ", [
+                        'key' => $key,
+                        'old value' => 'now default null',
+                        'new value' => $value
+                    ]);
                 }
             }
             return redirect()->back()->with("success", "saved config value!");

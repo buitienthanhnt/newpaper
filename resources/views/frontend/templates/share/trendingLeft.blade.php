@@ -17,7 +17,7 @@
 									data-duration="1000ms">{{ $tren->title }}</a>
 							</h2>
 							<p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-								{{ $tren->to_writer()->getResults() ? $tren->to_writer()->getResults()->name : '' }} -
+								{{ $tren->writerName() }} -
 								{{ date('M d, Y', strtotime($tren->updated_at)) }}</p>
 						</div>
 					</div>

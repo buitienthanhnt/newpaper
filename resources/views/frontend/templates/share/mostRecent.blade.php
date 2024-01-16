@@ -14,7 +14,7 @@
                             href="{{ route('front_page_detail', ['page' => $first_recent->id, 'alias' => $first_recent->url_alias]) }}">What
                             to Wear: 9+ Cute Work <br>
                             Outfits to Wear This.</a></h4>
-                    <p>{{ $first_recent->to_writer()->getResults() ? $first_recent->to_writer()->getResults()->name : '' }}
+                    <p>{{ $first_recent->writerName() }}
                         | 2 hours ago</p>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         <h4><a
                                 href="{{ route('front_page_detail', ['page' => $af_recent->id, 'alias' => $af_recent->url_alias]) }}">{{ $af_recent->title }}</a>
                         </h4>
-                        <p>{{ $af_recent->to_writer()->getResults() ? $af_recent->to_writer()->getResults()->name : '' }}
+                        <p>{{ $af_recent->writerName() }}
                             | 2 hours ago</p>
                     </div>
                 </div>

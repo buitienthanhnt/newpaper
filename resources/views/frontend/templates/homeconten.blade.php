@@ -77,7 +77,7 @@
                                                     <div class="whates-caption">
                                                         <h4><a href="#">{{ $paper_first->title }}</a></h4>
                                                         <span>by
-                                                            {{ $paper_first->to_writer()->getResults() ? $paper_first->to_writer()->getResults()->name : '' }}
+                                                            {{ $paper_first->writerName() }}
                                                             -
                                                             {{ date('M d, Y', strtotime($paper_first->updated_at)) }}
                                                             <a href="" class="text text-info" style="float: right;">
@@ -115,7 +115,7 @@
                                                                         </a>
                                                                     </p>
                                                                     <span
-                                                                        class="colorb mb-10">{{ $paper->to_writer()->getResults() ? $paper->to_writer()->getResults()->name : '' }}
+                                                                        class="colorb mb-10">{{ $paper->writerName() }}
                                                                     </span>
                                                                 </div>
                                                             </div>
