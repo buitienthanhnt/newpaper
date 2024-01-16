@@ -22,8 +22,13 @@
 @section('css_after')
     <link rel="stylesheet" href={{ asset('assets/frontend/css/paper/detail.css') }}>
     <style>
-        .paper_action {color: #13e6ed}
-        .paper_action.checked {color: #cc18b4}
+        .paper_action {
+            color: #13e6ed
+        }
+
+        .paper_action.checked {
+            color: #cc18b4
+        }
     </style>
 @endsection
 
@@ -56,8 +61,8 @@
                         </div>
                         <div class="col-md-12">
                             <span class="float-right">
-                                <i class="fa fa-thumbs-up paper_action like"> 12</i>  &nbsp;
-                                <i class="fa fa-heart paper_action heart"> 8</i> 
+                                <i class="fa fa-thumbs-up paper_action like"> {{ $paper->paperLike() }}</i> &nbsp;
+                                <i class="fa fa-heart paper_action heart"> {{ $paper->paperHeart() }}</i>
                             </span>
                         </div>
                     </div>
@@ -122,23 +127,23 @@
                                 <div class="col-xl-12 col-lg-12">
                                     <div class="whats-news-single mb-20" id="whats-right-single">
                                         @if ($top_paper && $papers)
-                                            @foreach ($papers as $paper)
+                                            @foreach ($papers as $_paper)
                                                 <div class="row">
                                                     <div class="whats-right-single mb-10">
                                                         <div class="col-md-6">
-                                                            <img src="{{ $paper->image_path }}" class="whates-img"
+                                                            <img src="{{ $_paper->image_path }}" class="whates-img"
                                                                 style="width: 100%; height: auto;">
                                                         </div>
                                                         <div class="col-md-6 whats-right-cap">
                                                             <h4>
                                                                 <a
-                                                                    href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
-                                                                    <h4>{{ $paper->title }}</h4>
-                                                                    {{ $paper->short_conten }}
+                                                                    href="{{ route('front_page_detail', ['alias' => $_paper->url_alias, 'page' => $_paper->id]) }}">
+                                                                    <h4>{{ $_paper->title }}</h4>
+                                                                    {{ $_paper->short_conten }}
                                                                 </a>
                                                             </h4>
-                                                            <span class="colorb">{{ $paper->writerName() }}</span>
-                                                            <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}</p>
+                                                            <span class="colorb">{{ $_paper->writerName() }}</span>
+                                                            <p>{{ date('M d, Y', strtotime($_paper->updated_at)) }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -164,17 +169,45 @@
     <script>
         var reply_comment_url = '{{ route('paper_reply_comment') }}';
         var like_url = '{{ route('paper_like') }}';
+        var addLike_url = '{{ route('paper_addLike', ["paper_id" => $paper->id]) }}';
         var token = "{{ csrf_token() }}";
         var paper_value = "{{ $paper->id }}";
         $(document).ready(function() {
             $('.paper_action').click(function() {
+                let type = $(this).hasClass('like') ? 'like' : 'heart';
                 if ($(this).hasClass('checked')) {
-                    $(this).html(' '+ (Number($(this).html()) - 1));
-                    $(this).removeClass('checked');
+                    $.ajax({
+                        url: addLike_url,
+                        type: "POST",
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            _token: token,
+                            action: 'sub',
+                            type: type
+                        }),
+                        success: function(result) {
+                            console.log(result);
+                            $(this).html(' ' + (Number($(this).html()) - 1));
+                            $(this).removeClass('checked');
+                        }.bind(this),
+                    });
                     return;
                 }
-                $(this).html(' ' + (Number($(this).html()) + 1));
-                $(this).addClass('checked');
+                $.ajax({
+                    url: addLike_url,
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        _token: token,
+                        action: 'add',
+                        type: type
+                    }),
+                    success: function(result) {
+                        console.log(result);
+                        $(this).html(' ' + (Number($(this).html()) + 1));
+                        $(this).addClass('checked');
+                    }.bind(this)
+                });
             })
         })
     </script>

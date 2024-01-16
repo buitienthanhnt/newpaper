@@ -32,7 +32,9 @@ class RemoteSourceManager
         "www.thivien.net"   => "get_www_thivien_net",
         "dantri.com.vn"     => "get_dantri_value", // host => function
         "topdev.vn"         => "get_topdev_vn", // host => function
-        "toidicode.com"     => "get_toidicode_com"
+        "toidicode.com"     => "get_toidicode_com",
+        "freetuts.net"      => "get_freetuts_net",
+        "thanhnien.vn"      => "get_thanhnien_vn"
     ];
 
     protected $request;
@@ -219,6 +221,14 @@ class RemoteSourceManager
     public function get_toidicode_com($doc)
     {
         return call_user_func(fn () => $this->getValueByClassName($doc, "entry-main-content", "entry-title"));
+    }
+
+    function get_freetuts_net($doc) : array {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "article", ""));
+    }
+
+    function get_thanhnien_vn($doc) : array {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "detail-cmain", "detail-title"));
     }
 
     // ===================================================================//

@@ -84,6 +84,8 @@ Route::prefix('paper')->group(function () {
     Route::post('commentReply/{comment_id?}', "PaperController@replyComment")->name("paper_reply_comment");
 
     Route::post("like/{comment_id?}", "PaperController@like")->name("paper_like");
+
+    Route::post("addLike/{paper_id}", "PaperController@addLike")->name("paper_addLike");
 });
 
 // php artisan cache:table

@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Paper;
 use App\Models\RemoteSourceHistory;
+use App\Models\ViewSource;
 use App\Models\Writer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -218,7 +219,7 @@ class PaperController extends Controller
     /**
      * @return bool
      */
-    function save_remote_source_history($request_url = "", $type = null, $paper_id = null, $active = true)
+    protected function save_remote_source_history($request_url = "", $type = null, $paper_id = null, $active = true)
     {
         // save for history
         if (!$request_url) {
@@ -276,6 +277,18 @@ class PaperController extends Controller
             "code" => 200,
             "data" => 123
         ], 500));
+    }
+
+    function addLike($paper_id, Request $request) {
+        $params = $request->toArray();
+        $paperSource = ViewSource::where('type', '=', ViewSource::PAPER_TYPE)->where('source_id', '=', $paper_id)->first();
+        if ($params['type'] === 'like') {
+            $paperSource->like =  $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1; 
+        }elseif ($params['type'] === 'heart') {
+            $paperSource->heart = $params['action'] === 'add' ? $paperSource->heart + 1 : $paperSource->heart - 1;
+        }
+        $paperSource->save();
+        return response('success');
     }
 
     function like($comment_id, Request $request) {

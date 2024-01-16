@@ -16,6 +16,7 @@ class Paper extends Model
     use SoftDeletes;
     const PAGE_TAG = "page_tag";
     protected $guarded;
+    protected $viewSource = null;
 
     public function to_category(): HasMany
     {
@@ -74,13 +75,37 @@ class Paper extends Model
         return 1;
     }
 
-    function viewCount(): int
+    /**
+     * get viewSourceInfo of paper
+     * @return ViewSource
+     */
+    function viewSource(): ViewSource
     {
         try {
-            return $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->get()->first()->value;
+            if ($this->viewSource) {
+                return $this->viewSource;
+            }
+            $viewSource = $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->get()->first();
+            $this->viewSource = $viewSource;
+            return $viewSource;
         } catch (\Throwable $th) {
             //throw $th;
         }
-        return 1;
+        return new ViewSource();
+    }
+
+    function viewCount() : int|string {
+        $viewSource = $this->viewSource();
+        return $viewSource->value ?: 1;
+    }
+
+    function paperLike() : int|string {
+        $viewSource = $this->viewSource();
+        return $viewSource->like ?: '';
+    }
+
+    function paperHeart() : int|string {
+        $viewSource = $this->viewSource();
+        return $viewSource->heart ?: '';
     }
 }
