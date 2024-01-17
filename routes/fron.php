@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Paper;
-use App\Models\ViewSource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
@@ -79,6 +78,8 @@ Route::get("load_more", "ManagerController@load_more")->name("load_more");
 Route::get("search", "ManagerController@search")->name("search_all");
 
 Route::prefix('paper')->group(function () {
+    Route::get('commentContent/{paper_id}/{p}', 'PaperController@getCommentContent')->name('paper_comment_content');
+
     Route::post("comment/{paper_id}", "PaperController@addComment")->name("paper_add_comment");
 
     Route::post('commentReply/{comment_id?}', "PaperController@replyComment")->name("paper_reply_comment");

@@ -29,6 +29,14 @@
         .paper_action.checked {
             color: #cc18b4
         }
+
+        .fa-arrow-down{
+            color: #13e6ed
+        }
+
+        .fa-arrow-down:hover{
+            color: #cc18b4
+        }
     </style>
 @endsection
 
@@ -59,19 +67,17 @@
                         <div class="social-share pt-30">
                             {!! view('frontend.templates.paper.component.Tags', ['paper' => $paper])->render() !!}
                         </div>
-                        <div class="col-md-12">
-                            <span class="float-right">
-                                <i class="fa fa-thumbs-up paper_action like"> {{ $paper->paperLike() }}</i> &nbsp;
-                                <i class="fa fa-heart paper_action heart"> {{ $paper->paperHeart() }}</i>
-                            </span>
-                        </div>
+                        {!! view('frontend.templates.paper.component.like', ['paper' => $paper])->render() !!}
                     </div>
                     <!-- From -->
                     <div class="col-md-12 bootstrap snippets">
                         {!! view('frontend.templates.paper.component.commentForm', ['paper' => $paper])->render() !!}
-                        <div class="panel" id="commentHistory">
-                            {!! view('frontend.templates.paper.component.commentHistory', ['comments' => $paper->getComments()])->render() !!}
+                        <div class="panel" id="commentHistory" data-p="0">
+                            {{-- {!! view('frontend.templates.paper.component.commentHistory', ['comments' => $paper->getComments()])->render() !!} --}}
                         </div>
+                        <center id="comment-load">
+                            <i class="fa fa-arrow-down"></i>
+                        </center>
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -167,9 +173,10 @@
     </div>
 
     <script>
+        var baseUrl = '{{ route('/') }}';
         var reply_comment_url = '{{ route('paper_reply_comment') }}';
         var like_url = '{{ route('paper_like') }}';
-        var addLike_url = '{{ route('paper_addLike', ["paper_id" => $paper->id]) }}';
+        var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
         var token = "{{ csrf_token() }}";
         var paper_value = "{{ $paper->id }}";
         $(document).ready(function() {
@@ -209,6 +216,26 @@
                     }.bind(this)
                 });
             })
+
+            $("#comment-load").click(function() {
+                let p = Number($("#commentHistory").attr('data-p')) + 1;
+                $.ajax({
+                    url: baseUrl + '/paper/commentContent/' + paper_value + '/' + p,
+                    type: "GET",
+                    success: function(result) {
+                        $("#commentHistory").append(result).attr('data-p', p + 1);
+                    },
+                });
+            })
+
+            $.ajax({
+                url: baseUrl + '/paper/commentContent/' + paper_value +
+                    `/${$("#commentHistory").attr('data-p')}`,
+                type: "GET",
+                success: function(result) {
+                    $("#commentHistory").html(result);
+                },
+            });
         })
     </script>
 @endsection

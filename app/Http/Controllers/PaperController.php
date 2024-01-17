@@ -189,7 +189,6 @@ class PaperController extends Controller
                             $tag->forceDelete();
                         }
                     }
-
                     if ($categories->count()) {
                         foreach ($categories as $category) {
                             $category->forceDelete();
@@ -227,6 +226,13 @@ class PaperController extends Controller
         }
         $history = new RemoteSourceHistory(["url_value" => $request_url, "type" => $type, "paper_id" => $paper_id, "active" => $active]);
         return $history->save();
+    }
+
+    function getCommentContent($paper_id, $p, Request $request) : string {
+        $_paper = $this->paper->find($paper_id);
+        $comments = $_paper->getComments($p);
+        $commentsHtml = view('frontend.templates.paper.component.commentHistory', ['comments' => $comments])->render();
+        return $commentsHtml;
     }
 
     public function addComment($page_id, Request $request)

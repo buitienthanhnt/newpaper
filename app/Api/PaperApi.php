@@ -29,6 +29,9 @@ class PaperApi extends BaseApi
 		return $paperDetail;
 	}
 
+	function getComments() {
+	}
+
 	function paperInFirebase(): array
 	{
 		$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');

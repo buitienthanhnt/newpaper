@@ -59,16 +59,16 @@ class Paper extends Model
         return false;
     }
 
-    public function getComments()
+    public function getComments(int $page = 0, int $limit = 4)
     {
-        $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->getResults();
+        $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->limit($limit)->offSet($page*$limit)->getResults();
         return $comments;
     }
 
     function commentCount(): int
     {
         try {
-            return count($this->getComments());
+            return count($this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->getResults());
         } catch (\Throwable $th) {
             //throw $th;
         }
