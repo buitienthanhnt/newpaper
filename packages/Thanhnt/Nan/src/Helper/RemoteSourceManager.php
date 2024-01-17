@@ -43,8 +43,7 @@ class RemoteSourceManager
     public function __construct(
         Request $request,
         RemoteSourceHistory $remoteSourceHistory
-    )
-    {
+    ) {
         $this->request = $request;
         $this->remoteSourceHistory = $remoteSourceHistory;
     }
@@ -59,15 +58,15 @@ class RemoteSourceManager
     {
         $request_url = is_string($request) ? $request : $this->request->get("source_request");
         if (!strlen(str_replace(" ", "", $request_url))) {
-            dd("input url not found");
+            return [];
         }
+        $value = [];
         try {
             /**
              * check type of source request for get conten value.
              */
             $type = $this->check_type($request_url);
             if ($type) {
-
                 $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
                     "ssl" => array(
                         // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
@@ -79,24 +78,20 @@ class RemoteSourceManager
                         'max_redirects' => 101,
                         'ignore_errors' => '1'
                     ),
-
                 );
-
                 $html = file_get_contents($request_url, false, stream_context_create($arrContextOptions));
                 $doc = $this->loadDom($html);  // for load html text to dom
             } else {
                 return redirect()->back()->with("error", "input url not found");
             }
+            if (method_exists($this, str_replace(".", "_", $type))) { // kiểm tra xem class có tồn tại function có tên như biến $type không.
+                $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
+            } else {
+                $value = call_user_func_array([$this, $type], [$doc]); // gọi bằng call_user_func_array() với class, method, param truyền vào.
+            }
         } catch (\Throwable $th) {
             throw new \Exception($th->getMessage(), 1);
         }
-
-        if (method_exists($this, str_replace(".", "_", $type))) { // kiểm tra xem class có tồn tại function có tên như biến $type không.
-            $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
-        } else {
-            $value = call_user_func_array([$this, $type], [$doc]); // gọi bằng call_user_func_array() với class, method, param truyền vào.
-        }
-
         return $value;
     }
 
@@ -223,11 +218,13 @@ class RemoteSourceManager
         return call_user_func(fn () => $this->getValueByClassName($doc, "entry-main-content", "entry-title"));
     }
 
-    function get_freetuts_net($doc) : array {
+    function get_freetuts_net($doc): array
+    {
         return call_user_func(fn () => $this->getValueByClassName($doc, "article", ""));
     }
 
-    function get_thanhnien_vn($doc) : array {
+    function get_thanhnien_vn($doc): array
+    {
         return call_user_func(fn () => $this->getValueByClassName($doc, "detail-cmain", "detail-title"));
     }
 
@@ -325,6 +322,4 @@ class RemoteSourceManager
 
         return Response::download($file, 'app-release.apk');
     }
-
-
 }

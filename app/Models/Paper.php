@@ -94,17 +94,17 @@ class Paper extends Model
         return new ViewSource();
     }
 
-    function viewCount() : int|string {
+    function viewCount() : string {
         $viewSource = $this->viewSource();
         return $viewSource->value ?: 1;
     }
 
-    function paperLike() : int|string {
+    function paperLike() : string {
         $viewSource = $this->viewSource();
         return $viewSource->like ?: '';
     }
 
-    function paperHeart() : int|string {
+    function paperHeart() : string {
         $viewSource = $this->viewSource();
         return $viewSource->heart ?: '';
     }
