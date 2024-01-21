@@ -34,7 +34,8 @@ class RemoteSourceManager
         "topdev.vn"         => "get_topdev_vn", // host => function
         "toidicode.com"     => "get_toidicode_com",
         "freetuts.net"      => "get_freetuts_net",
-        "thanhnien.vn"      => "get_thanhnien_vn"
+        "thanhnien.vn"      => "get_thanhnien_vn",
+        "laodong.vn"        => "get_laodong_vn"
     ];
 
     protected $request;
@@ -82,6 +83,7 @@ class RemoteSourceManager
                 $html = file_get_contents($request_url, false, stream_context_create($arrContextOptions));
                 $doc = $this->loadDom($html);  // for load html text to dom
             } else {
+                return [];
                 return redirect()->back()->with("error", "input url not found");
             }
             if (method_exists($this, str_replace(".", "_", $type))) { // kiểm tra xem class có tồn tại function có tên như biến $type không.
@@ -228,6 +230,10 @@ class RemoteSourceManager
         return call_user_func(fn () => $this->getValueByClassName($doc, "detail-cmain", "detail-title"));
     }
 
+    function get_laodong_vn($doc) : array {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "wrapper", "title"));
+    }
+
     // ===================================================================//
 
     /**
@@ -265,7 +271,9 @@ class RemoteSourceManager
         $conten = "";
         try {
             $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
-            $short_conten_value = $short_conten[0]->textContent;
+            if (count($short_conten)) {
+                $short_conten_value = $short_conten[0]->textContent;
+            }
         } catch (\Exception $e) {
         }
 
