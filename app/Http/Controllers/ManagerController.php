@@ -222,6 +222,16 @@ class ManagerController extends Controller
         return $paper;
     }
 
+    function getPaperComment($paper_id, Request $request) {
+        $paper = $this->paper->find($paper_id);
+        $comments = $paper->getCommentTree($request->get('parent_id', null), $request->get('p', 0), $request->get('limit', 4));
+        return [
+            'success' => true,
+            'data' => $comments,
+            'errors' => null
+        ];
+    }
+
     function mostviewdetail(Request $request)
     {
         $papers = Paper::take($request->get('size', 15))->orderBy("updated_at", "ASC")->get(['id', 'title', 'image_path', 'updated_at', 'url_alias']);

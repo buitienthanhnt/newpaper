@@ -35,9 +35,7 @@ Route::get("getcategorytree", "ManagerController@getCategoryTree");
 
 Route::get("parseUrl", 'ManagerController@parseUrl');
 
-Route::get('sdetail', "ManagerController@getAdetail");
-
-Route::get('getStore', "ManagerController@getStores");
+Route::get('paperComment/{paper_id}', "ManagerController@getPaperComment")->name('getPaperComment');
 
 Route::prefix('notification')->group(function(){
     Route::post("registerFcm", "NotificationController@registerFcm")->name('registerFcm');

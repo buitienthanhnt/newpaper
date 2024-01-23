@@ -230,7 +230,7 @@ class PaperController extends Controller
 
     function getCommentContent($paper_id, $p, Request $request) : string {
         $_paper = $this->paper->find($paper_id);
-        $comments = $_paper->getComments($p);
+        $comments = $_paper->getComments(null, $p);
         $commentsHtml = view('frontend.templates.paper.component.commentHistory', ['comments' => $comments])->render();
         return $commentsHtml;
     }

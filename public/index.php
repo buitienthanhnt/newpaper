@@ -44,12 +44,23 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
+
+/** // Illuminate\Foundation\Application
+ * @var Illuminate\Foundation\Application $app
+ */
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
+/**
+ * @var App\Http\Kernel $kernel
+ */
 $kernel = $app->make(Kernel::class);
 
-$response = tap($kernel->handle(
-    $request = Request::capture()
-))->send();
+$request = Request::capture();
+
+$handle = $kernel->handle($request);
+
+$response = tap($handle);
+
+$response->send();
 
 $kernel->terminate($request, $response);

@@ -59,9 +59,24 @@ class Paper extends Model
         return false;
     }
 
-    public function getComments(int $page = 0, int $limit = 4)
+    public function getComments($parentId = null, int $page = 0, int $limit = 4)
     {
-        $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->limit($limit)->offSet($page*$limit)->getResults();
+        $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->limit($limit)->offSet($page * $limit)->getResults();
+        return $comments;
+    }
+
+    function getCommentTree($parentId = null, int $page = 0, int $limit = 4) {
+        $comments = $this->getComments($parentId, $page, $limit);
+        if (count($comments)) {
+            foreach ($comments as &$comment) {
+                $childrents = $this->getComments($comment->id);
+                if (count($childrents)) {
+                    $comment->childrents = $this->getCommentTree($comment->id);
+                }else {
+                    $comment->childrents = null;
+                }
+            }
+        }
         return $comments;
     }
 
@@ -85,7 +100,7 @@ class Paper extends Model
             if ($this->viewSource) {
                 return $this->viewSource;
             }
-            $viewSource = $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->get()->first();
+            $viewSource = $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->first();
             $this->viewSource = $viewSource;
             return $viewSource;
         } catch (\Throwable $th) {
@@ -94,17 +109,20 @@ class Paper extends Model
         return new ViewSource();
     }
 
-    function viewCount() : string {
+    function viewCount(): string
+    {
         $viewSource = $this->viewSource();
         return $viewSource->value ?: 1;
     }
 
-    function paperLike() : string {
+    function paperLike(): string
+    {
         $viewSource = $this->viewSource();
         return $viewSource->like ?: '';
     }
 
-    function paperHeart() : string {
+    function paperHeart(): string
+    {
         $viewSource = $this->viewSource();
         return $viewSource->heart ?: '';
     }
