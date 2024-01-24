@@ -13,7 +13,7 @@
 
         @if (!Auth::check())
             <div class="col-6">
-                <input class="form-control error" name="reply-name-{{ $item->id }}" id="eply-name-{{ $item->id }}" type="text"
+                <input class="form-control error" name="reply-name-{{ $item->id }}" id="reply-name-{{ $item->id }}" type="text"
                     onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'"
                     placeholder="Enter your name">
             </div>

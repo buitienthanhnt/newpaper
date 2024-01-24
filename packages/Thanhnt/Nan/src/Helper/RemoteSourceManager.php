@@ -35,18 +35,22 @@ class RemoteSourceManager
         "toidicode.com"     => "get_toidicode_com",
         "freetuts.net"      => "get_freetuts_net",
         "thanhnien.vn"      => "get_thanhnien_vn",
-        "laodong.vn"        => "get_laodong_vn"
+        "laodong.vn"        => "get_laodong_vn",
+        "vnexpress.net"     => "get_vnexpress_net"
     ];
 
     protected $request;
     protected $remoteSourceHistory;
+    protected $logTha;
 
     public function __construct(
         Request $request,
-        RemoteSourceHistory $remoteSourceHistory
+        RemoteSourceHistory $remoteSourceHistory,
+        LogTha $logTha
     ) {
         $this->request = $request;
         $this->remoteSourceHistory = $remoteSourceHistory;
+        $this->logTha = $logTha;
     }
 
     /**
@@ -68,33 +72,54 @@ class RemoteSourceManager
              */
             $type = $this->check_type($request_url);
             if ($type) {
-                $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
-                    "ssl" => array(
-                        // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
-                        "verify_peer" => false,
-                        "verify_peer_name" => false,
-                    ),
-                    // skyp error "failed to open stream: operation failed" + "Redirection limit reached"
-                    'http' => array(
-                        'max_redirects' => 101,
-                        'ignore_errors' => '1'
-                    ),
-                );
-                $html = file_get_contents($request_url, false, stream_context_create($arrContextOptions));
+                $html = $this->file_get_contents_source($request_url);
+                if (!$html) {return [];}
                 $doc = $this->loadDom($html);  // for load html text to dom
+                if (method_exists($this, str_replace(".", "_", $type))) { // kiểm tra xem class có tồn tại function có tên như biến $type không.
+                    $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
+                } else {
+                    $value = call_user_func_array([$this, $type], [$doc]); // gọi bằng call_user_func_array() với class, method, param truyền vào.
+                }
             } else {
                 return [];
                 return redirect()->back()->with("error", "input url not found");
             }
-            if (method_exists($this, str_replace(".", "_", $type))) { // kiểm tra xem class có tồn tại function có tên như biến $type không.
-                $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
-            } else {
-                $value = call_user_func_array([$this, $type], [$doc]); // gọi bằng call_user_func_array() với class, method, param truyền vào.
-            }
         } catch (\Throwable $th) {
+            $this->logTha->logError('', $th->getMessage());
             throw new \Exception($th->getMessage(), 1);
         }
         return $value;
+    }
+
+    function file_get_contents_source($url) {
+        $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
+            "ssl" => array(
+                // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+            // skyp error "failed to open stream: operation failed" + "Redirection limit reached"
+            'http' => array(
+                'max_redirects' => 101,
+                'ignore_errors' => '1'
+            ),
+        );
+
+        $html = "";
+        try {
+            $html = file_get_contents($url, false, stream_context_create($arrContextOptions));
+            if (!$html) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
+                curl_setopt($ch, CURLOPT_URL, $url);
+                $html = curl_exec($ch);
+                curl_close($ch);
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return $html;
     }
 
     public function get_soha_value($doc)
@@ -232,6 +257,11 @@ class RemoteSourceManager
 
     function get_laodong_vn($doc) : array {
         return call_user_func(fn () => $this->getValueByClassName($doc, "wrapper", "title"));
+    }
+
+    // get_vnexpress_net
+    function get_vnexpress_net($doc) : array {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "fck_detail", "title-detail"));
     }
 
     // ===================================================================//
