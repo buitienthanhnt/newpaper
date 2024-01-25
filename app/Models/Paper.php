@@ -71,7 +71,7 @@ class Paper extends Model
             foreach ($comments as &$comment) {
                 $childrents = $this->getComments($comment->id);
                 if (count($childrents)) {
-                    $comment->childrents = $this->getCommentTree($comment->id);
+                    $comment->childrents = $this->getCommentTree($comment->id, $page, $limit);
                 }else {
                     $comment->childrents = null;
                 }

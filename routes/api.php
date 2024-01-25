@@ -37,6 +37,8 @@ Route::get("parseUrl", 'ManagerController@parseUrl');
 
 Route::get('paperComment/{paper_id}', "ManagerController@getPaperComment")->name('getPaperComment');
 
+Route::post("paperAddComment/{paper_id}", "PaperController@addComment")->name("api_paper_add_comment");
+
 Route::prefix('notification')->group(function(){
     Route::post("registerFcm", "NotificationController@registerFcm")->name('registerFcm');
 
@@ -46,12 +48,6 @@ Route::prefix('notification')->group(function(){
 Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("mostviewdetail");
 
 Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
-
-Route::get("testJson", function (Request $request)
-{
-    // throw new Exception("Error Processing Request", 401);
-    return $request->getContent();
-});
 
 Route::post("testPost", function (Request $request)
 {

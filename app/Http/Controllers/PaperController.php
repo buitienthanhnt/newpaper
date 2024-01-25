@@ -254,8 +254,8 @@ class PaperController extends Controller
             ], 200));
         } catch (\Throwable $th) {
             return response(json_encode([
-                "code" => 200,
-                "data" => 123
+                "code" => 400,
+                "data" => null
             ], 500));
         }
     }
