@@ -39,6 +39,8 @@ Route::get('paperComment/{paper_id}', "ManagerController@getPaperComment")->name
 
 Route::post("paperAddComment/{paper_id}", "PaperController@addComment")->name("api_paper_add_comment");
 
+Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments")->name('upFirebaseComments');
+
 Route::prefix('notification')->group(function(){
     Route::post("registerFcm", "NotificationController@registerFcm")->name('registerFcm');
 

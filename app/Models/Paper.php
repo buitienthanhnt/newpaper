@@ -61,8 +61,10 @@ class Paper extends Model
 
     public function getComments($parentId = null, int $page = 0, int $limit = 4)
     {
-        $comments = $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->limit($limit)->offSet($page * $limit)->getResults();
-        return $comments;
+        if ($page === 0 && $limit === 0 ) {
+            return $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->getResults();
+        }
+        return $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->limit($limit)->offSet($page * $limit)->getResults();
     }
 
     function getCommentTree($parentId = null, int $page = 0, int $limit = 4) {

@@ -133,4 +133,12 @@ class PaperApi extends BaseApi
 			}
 		}
 	}
+
+	function upFirebaseComments($paper) {
+		$commentTree = $paper->getCommentTree(null, 0, 0);
+		if (count($commentTree)) {
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/'.$paper->id);
+			$userRef->push($commentTree);
+		}
+	}
 }

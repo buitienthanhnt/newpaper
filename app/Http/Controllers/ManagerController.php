@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\PaperApi;
 use App\Events\ViewCount;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\Category;
@@ -30,6 +31,7 @@ class ManagerController extends Controller
     protected $mostPopulator;
     protected $likeMost;
     protected $trending;
+    protected $paperApi;
 
     public function __construct(
         Request $request,
@@ -39,7 +41,8 @@ class ManagerController extends Controller
         HelperFunction $helperFunction,
         MostPopulator $mostPopulator,
         LikeMost $likeMost,
-        Trending $trending
+        Trending $trending,
+        PaperApi $paperApi
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -49,6 +52,7 @@ class ManagerController extends Controller
         $this->mostPopulator = $mostPopulator;
         $this->likeMost = $likeMost;
         $this->trending = $trending;
+        $this->paperApi = $paperApi;
     }
 
     public function homePage()
@@ -71,14 +75,15 @@ class ManagerController extends Controller
         return view("frontend/templates/homeconten", compact("list_center", "video_contens"));
     }
 
-    function search(Request $request) {
+    function search(Request $request)
+    {
         $searchValue = strtolower($request->get('search'));
 
         $searchPaper = array_column(Paper::where('title', 'LIKE', "%$searchValue%")
-                                ->orWhere('short_conten', 'LIKE', "%$searchValue%")->get('id')->toArray(), 'id') ?: [];
+            ->orWhere('short_conten', 'LIKE', "%$searchValue%")->get('id')->toArray(), 'id') ?: [];
 
         $searchTags = array_column(PageTag::where('value', 'LIKE', "%$searchValue%")->get('entity_id')->toArray(), 'entity_id') ?: [];
-        
+
         $allValue = array_unique(array_merge($searchPaper, $searchTags));
         $papers = Paper::whereIn('id', $allValue)->get();
         return view('frontend.templates.paper.searchResult', compact('papers'));
@@ -222,12 +227,27 @@ class ManagerController extends Controller
         return $paper;
     }
 
-    function getPaperComment($paper_id, Request $request) {
+    function getPaperComment($paper_id, Request $request)
+    {
         $paper = $this->paper->find($paper_id);
-        $comments = $paper->getCommentTree($request->get('parent_id', null), $request->get('p', 0), $request->get('limit', 4));
+        if ($request->get('all')) {
+            $comments = $paper->getCommentTree($request->get('parent_id', null), 0, 0);
+        } else {
+            $comments = $paper->getCommentTree($request->get('parent_id', null), $request->get('p', 0), $request->get('limit', 4));
+        }
         return [
             'success' => true,
             'data' => $comments,
+            'errors' => null
+        ];
+    }
+
+    function upFirebaseComments($paper_id, Request $request)
+    {
+        $paper = $this->paper->find($paper_id);
+        $this->paperApi->upFirebaseComments($paper);
+        return [
+            'success' => true,
             'errors' => null
         ];
     }
@@ -259,7 +279,8 @@ class ManagerController extends Controller
         ];
     }
 
-    function trending() {
+    function trending()
+    {
         $trendingHtml = $this->trending->toHtml();
         return [
             'code' => 200,
