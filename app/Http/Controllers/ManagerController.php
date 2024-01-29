@@ -55,6 +55,18 @@ class ManagerController extends Controller
         $this->paperApi = $paperApi;
     }
 
+    function info()
+    {
+        return [
+            'data' => [
+                'status' => true,
+                'code' => 200,
+            ],
+            'success' => true,
+            'error' => null
+        ];
+    }
+
     public function homePage()
     {
         $list_center = [];

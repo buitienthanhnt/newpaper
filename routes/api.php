@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('info', "ManagerController@info")->name('info');
+
 Route::get('getpapers', 'ManagerController@apiSourcePapers');
 
 Route::get("getpaperdetail/{paper_id}", "ManagerController@getPaperDetail");
