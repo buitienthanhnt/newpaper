@@ -141,4 +141,10 @@ class PaperApi extends BaseApi
 			$userRef->push($commentTree);
 		}
 	}
+
+	function pullFirebaseComment() {
+		$observer = $this->firebaseDatabase->getReference('/newpaper/addComments/');
+		$snapshot = $observer->getSnapshot();
+		dd($snapshot);
+	}
 }
