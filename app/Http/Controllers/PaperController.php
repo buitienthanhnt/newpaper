@@ -244,7 +244,7 @@ class PaperController extends Controller
                 "email" => $request->get("email"),
                 "name" => $request->get("name"),
                 "subject" => $request->get("subject"),
-                "content" => $request->get("message")
+                "content" => $request->get("message", $request->get("content"))
             ]);
 
             $comment->save();

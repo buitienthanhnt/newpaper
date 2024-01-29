@@ -2,6 +2,7 @@
 
 namespace App\Api;
 
+use App\Models\Comment;
 use App\Models\Paper;
 use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
@@ -17,10 +18,10 @@ class PaperApi extends BaseApi
 	public function getDetail(int $paperId): Paper
 	{
 		$paperDetail = null;
-		$paperKey = 'paperDetail_'.$paperId;
+		$paperKey = 'paperDetail_' . $paperId;
 		if (Cache::has($paperKey)) {
 			$paperDetail = Cache::get($paperKey);
-		}else {
+		} else {
 			$paperDetail = Paper::find($paperId);
 			if ($paperDetail) {
 				Cache::put($paperKey, $paperDetail);
@@ -128,23 +129,39 @@ class PaperApi extends BaseApi
 	{
 		if (count($paper['categories'])) {
 			foreach ($paper['categories'] as $value) {
-				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' .$value);
+				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' . $value);
 				$userRef->push($paper);
 			}
 		}
 	}
 
-	function upFirebaseComments($paper) {
+	function upFirebaseComments($paper)
+	{
+		if (is_numeric($paper)) {
+			$paper = $this->getDetail((int) $paper);
+		}
 		$commentTree = $paper->getCommentTree(null, 0, 0);
 		if (count($commentTree)) {
-			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/'.$paper->id);
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id);
 			$userRef->push($commentTree);
 		}
 	}
 
-	function pullFirebaseComment() {
+	function pullFirebaseComment()
+	{
 		$observer = $this->firebaseDatabase->getReference('/newpaper/addComments/');
-		$snapshot = $observer->getSnapshot();
-		dd($snapshot);
+		$snapshot = $observer->getSnapshot()->getValue();
+		Comment::insert($snapshot);
+		if (!empty($snapshot)) {
+			foreach ($snapshot as $key => $value) {
+				$userRef = $this->firebaseDatabase->getReference('/newpaper/addComments/' . $key);
+				$userRef->remove();
+			}
+		}
+		if ($paperIds = array_unique(array_column($snapshot, 'paper_id'))) {
+			foreach ($paperIds as $id) {
+				$this->upFirebaseComments($id);
+			}
+		}
 	}
 }

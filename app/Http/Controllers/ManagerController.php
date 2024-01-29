@@ -299,4 +299,8 @@ class ManagerController extends Controller
             'dataHtml' => $trendingHtml
         ];
     }
+
+    function commentTest() {
+        $this->paperApi->pullFirebaseComment();
+    }
 }

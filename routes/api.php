@@ -53,6 +53,8 @@ Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("
 
 Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
 
+Route::get('commentTest', "ManagerController@commentTest")->name('commentTest');
+
 Route::post("testPost", function (Request $request)
 {
     $params = $request->getContent();
