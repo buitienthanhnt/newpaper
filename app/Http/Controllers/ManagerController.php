@@ -174,8 +174,15 @@ class ManagerController extends Controller
             return  Cache::get("api_detail_$paper_id");
         } else {
             $detail = $this->paper->find($paper_id);
-            Cache::put("api_detail_$detail->id", $detail);
-            return $detail;
+            $responseData = $detail->toArray();
+            $responseData['info'] = [
+                'view_count' => $detail->viewCount(),
+                'comment_count' => $detail->commentCount(),
+                'like' => $detail->paperLike(),
+                'heart' => $detail->paperHeart(),
+            ];
+            Cache::put("api_detail_$detail->id", $responseData);
+            return $responseData;
         }
     }
 
@@ -300,7 +307,8 @@ class ManagerController extends Controller
         ];
     }
 
-    function commentTest() {
+    function commentTest()
+    {
         $this->paperApi->pullFirebaseComment();
     }
 }
