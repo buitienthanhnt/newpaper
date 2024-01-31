@@ -61,20 +61,21 @@ class Paper extends Model
 
     public function getComments($parentId = null, int $page = 0, int $limit = 4)
     {
-        if ($page === 0 && $limit === 0 ) {
+        if ($page === 0 && $limit === 0) {
             return $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->getResults();
         }
         return $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->limit($limit)->offSet($page * $limit)->getResults();
     }
 
-    function getCommentTree($parentId = null, int $page = 0, int $limit = 4) {
+    function getCommentTree($parentId = null, int $page = 0, int $limit = 4)
+    {
         $comments = $this->getComments($parentId, $page, $limit);
         if (count($comments)) {
             foreach ($comments as &$comment) {
                 $childrents = $this->getComments($comment->id);
                 if (count($childrents)) {
                     $comment->childrents = $this->getCommentTree($comment->id, $page, $limit);
-                }else {
+                } else {
                     $comment->childrents = null;
                 }
             }
@@ -127,5 +128,15 @@ class Paper extends Model
     {
         $viewSource = $this->viewSource();
         return $viewSource->heart ?: '';
+    }
+
+    function paperInfo()
+    {
+        return [
+            'view_count' => $this->viewCount(),
+            'comment_count' => $this->commentCount(),
+            'like' => $this->paperLike(),
+            'heart' => $this->paperHeart(),
+        ];
     }
 }

@@ -157,15 +157,21 @@ class ManagerController extends Controller
     {
         // $papers = Paper::paginate($request->get("limit",  4))->orderBy("updated_at", "DESC");
         $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
-        $data = $papers->toArray();
-        if ($data["data"]) {
-            foreach ($data["data"] as &$item) {
-                $item["image_path"] = $this->helperFunction->replaceImageUrl($item["image_path"] ?: '');
-                $item["short_conten"] = $this->cut_str($item["short_conten"], 90, "...");
+        if ($papers->count()) {
+            foreach ($papers as &$item) {
+                $item->image_path = $this->helperFunction->replaceImageUrl($item->image_path ?: '');
+                $item->short_conten = $this->cut_str($item->short_conten, 90, "...");
                 // $item["title"] = $this->cut_str($item["title"], 80, "../");
+                $item->info = [
+                    'view_count' => $item->viewCount(),
+                    'comment_count' => $item->commentCount(),
+                    'like' => $item->paperLike(),
+                    'heart' => $item->paperHeart(),
+                ];
             }
         }
-        return $data;
+
+        return $papers;
     }
 
     public function getPaperDetail($paper_id)
@@ -174,15 +180,15 @@ class ManagerController extends Controller
             return  Cache::get("api_detail_$paper_id");
         } else {
             $detail = $this->paper->find($paper_id);
-            $responseData = $detail->toArray();
-            $responseData['info'] = [
+            $detail->info = [
                 'view_count' => $detail->viewCount(),
                 'comment_count' => $detail->commentCount(),
                 'like' => $detail->paperLike(),
                 'heart' => $detail->paperHeart(),
             ];
-            Cache::put("api_detail_$detail->id", $responseData);
-            return $responseData;
+            Cache::put("api_detail_$detail->id", $detail);
+            event(new ViewCount($detail));
+            return $detail;
         }
     }
 
@@ -209,10 +215,17 @@ class ManagerController extends Controller
              * @var \App\Models\Category $category
              */
             $category = $this->category->find($category_id);
-            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1)->toArray();
+            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1);
             foreach ($papers as &$value) {
-                $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
+                $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
+                $value->info = [
+                    'view_count' => $value->viewCount(),
+                    'comment_count' => $value->commentCount(),
+                    'like' => $value->paperLike(),
+                    'heart' => $value->paperHeart(),
+                ];
             }
+            $papers = $papers->toArray();
             Cache::put($key, $papers);
             return $papers;
         }

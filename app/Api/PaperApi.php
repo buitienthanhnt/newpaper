@@ -48,6 +48,7 @@ class PaperApi extends BaseApi
 					$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
 					if ($firebaseImage) {
 						$paper['image_path'] = $firebaseImage;
+						$paper['info'] = $_paper->paperInfo();
 					} else {
 						unset($paper['image_path']);
 					}
@@ -57,6 +58,7 @@ class PaperApi extends BaseApi
 					unset($paper[$k]);
 				}
 				$this->addPapersCategory($paper);
+				$this->upFirebaseComments($_paper);
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
 				$userRef->push($paper);
 				$snapshot = $userRef->getSnapshot();
