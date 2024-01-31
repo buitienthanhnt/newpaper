@@ -177,15 +177,12 @@ class ManagerController extends Controller
     public function getPaperDetail($paper_id)
     {
         if (Cache::has("api_detail_$paper_id")) {
-            return  Cache::get("api_detail_$paper_id");
+            $paper =  Cache::get("api_detail_$paper_id");
+            event(new ViewCount($paper));
+            return $paper;
         } else {
             $detail = $this->paper->find($paper_id);
-            $detail->info = [
-                'view_count' => $detail->viewCount(),
-                'comment_count' => $detail->commentCount(),
-                'like' => $detail->paperLike(),
-                'heart' => $detail->paperHeart(),
-            ];
+            $detail->info = $detail->paperInfo();
             Cache::put("api_detail_$detail->id", $detail);
             event(new ViewCount($detail));
             return $detail;
