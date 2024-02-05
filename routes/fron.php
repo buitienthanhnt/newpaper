@@ -91,7 +91,7 @@ Route::prefix('paper')->group(function () {
 
 // php artisan cache:table
 // php artisan migrate
-Route::prefix('cache')->group(function () {
+Route::prefix('cache')->group(function () { 
     Route::get('create', function () {
         $status = Cache::put('tha', [
             'a' => 123,

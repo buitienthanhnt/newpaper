@@ -317,8 +317,12 @@ class ManagerController extends Controller
         ];
     }
 
-    function commentTest()
+    function pullFirebaseComment()
     {
         $this->paperApi->pullFirebaseComment();
+    }
+
+    function pullFirebasePaperLike() {
+        $this->paperApi->pullFirebasePaperLike();
     }
 }

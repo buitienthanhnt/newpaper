@@ -15,7 +15,7 @@ class PaperApi extends BaseApi
 		parent::__construct($firebaseService);
 	}
 
-	public function getDetail(int $paperId): Paper
+	public function getDetail(int $paperId): Paper | null
 	{
 		$paperDetail = null;
 		$paperKey = 'paperDetail_' . $paperId;
@@ -144,7 +144,7 @@ class PaperApi extends BaseApi
 		}
 		$commentTree = $paper->getCommentTree(null, 0, 0);
 		if (count($commentTree)) {
-			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id);
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id)->remove();
 			$userRef->push($commentTree);
 		}
 	}
@@ -155,14 +155,32 @@ class PaperApi extends BaseApi
 		$snapshot = $observer->getSnapshot()->getValue();
 		Comment::insert($snapshot);
 		if (!empty($snapshot)) {
-			foreach ($snapshot as $key => $value) {
-				$userRef = $this->firebaseDatabase->getReference('/newpaper/addComments/' . $key);
-				$userRef->remove();
-			}
+			$observer->remove();
 		}
 		if ($paperIds = array_unique(array_column($snapshot, 'paper_id'))) {
 			foreach ($paperIds as $id) {
 				$this->upFirebaseComments($id);
+			}
+		}
+	}
+
+	function pullFirebasePaperLike()
+	{
+		$observer = $this->firebaseDatabase->getReference('/newpaper/addLike/');
+		$snapshot = $observer->getSnapshot()->getValue();
+		foreach ($snapshot as $value) {
+			if ($paper = $this->getDetail($value['paper_id'])) {
+				$viewSource = $paper->viewSource();
+				$viewSource->like = $viewSource->like + ($value['type'] == 'like' ? ($value['action'] == 'add' ? 1 : 0) : 0);
+				$viewSource->heart = $viewSource->heart + ($value['type'] == 'heart' ? ($value['action'] == 'add' ? 1 : 0) : 0);
+				$viewSource->save();
+			}
+		}
+		$observer->remove();
+
+		if ($paperIds = array_unique(array_column($snapshot, 'paper_id'))) {
+			foreach ($paperIds as $id) {
+				
 			}
 		}
 	}

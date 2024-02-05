@@ -55,7 +55,9 @@ Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("
 
 Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
 
-Route::get('commentTest', "ManagerController@commentTest")->name('commentTest');
+Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name('pullFirebaseComment');
+
+Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
 
 Route::post("testPost", function (Request $request)
 {
@@ -78,6 +80,11 @@ Route::prefix('share')->group(function(){
     Route::get("likeMost", "ManagerController@likeMost")->name('likeMost');
 
     Route::get('trending', "ManagerController@trending")->name("trending");
+});
+
+Route::prefix('paper')->group(function () {
+    Route::post("like/{comment_id?}", "PaperController@like")->name("api_paper_like");
+
 });
 
 
