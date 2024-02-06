@@ -15,7 +15,11 @@ class PaperApi extends BaseApi
 		parent::__construct($firebaseService);
 	}
 
-	public function getDetail(int $paperId): Paper | null
+	/**
+	 * @param int $paperId
+	 * @return Paper| null
+	 */
+	public function getDetail(int $paperId)
 	{
 		$paperDetail = null;
 		$paperKey = 'paperDetail_' . $paperId;
@@ -28,6 +32,15 @@ class PaperApi extends BaseApi
 			}
 		}
 		return $paperDetail;
+	}
+
+	/**
+	 * @param int $paperId
+	 * @return Comment| null
+	 */
+	public function getComment(int $comment_id)
+	{
+		return Comment::find($comment_id);
 	}
 
 	function paperInFirebase(): array
@@ -53,6 +66,7 @@ class PaperApi extends BaseApi
 						unset($paper['image_path']);
 					}
 				}
+				$this->upPaperInfo($_paper);
 				$this->upContentFireStore($paper);
 				foreach ($hidden as $k) {
 					unset($paper[$k]);
@@ -122,6 +136,11 @@ class PaperApi extends BaseApi
 		$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
 	}
 
+	function upPaperInfo($paper)
+	{
+		$this->fireStore->collection('detailInfo')->document($paper->id)->create($paper->paperInfo());
+	}
+
 	function rmContentFireStore($paperId)
 	{
 		$this->fireStore->collection('detailContent')->document($paperId)->delete();
@@ -180,7 +199,30 @@ class PaperApi extends BaseApi
 
 		if ($paperIds = array_unique(array_column($snapshot, 'paper_id'))) {
 			foreach ($paperIds as $id) {
-				
+				$paper = $this->getDetail($id);
+				$this->upPaperInfo($paper);
+			}
+		}
+	}
+
+	function pullFirebaseComLike()
+	{
+		$observer = $this->firebaseDatabase->getReference('/newpaper/addCommentLike/');
+		$snapshot = $observer->getSnapshot()->getValue();
+		$paperIds = [];
+		foreach ($snapshot as $value) {
+			if ($comment = $this->getComment($value['comment_id'])) {
+				$comment->like = $comment->like + ($value['type'] == 'like' ? 1 : -1);
+				$paperIds[] = $comment->paper_id;
+				$comment->save();
+			}
+		}
+		$observer->remove();
+
+		if (count(array_unique($paperIds))) {
+			foreach ($paperIds as $id) {
+				$paper = $this->getDetail($id);
+				$this->upFirebaseComments($paper);
 			}
 		}
 	}

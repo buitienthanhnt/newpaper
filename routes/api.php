@@ -57,7 +57,9 @@ Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name
 
 Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name('pullFirebaseComment');
 
-Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
+Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike'); 
+
+Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name('pullFirebaseComLike');
 
 Route::post("testPost", function (Request $request)
 {
@@ -84,6 +86,8 @@ Route::prefix('share')->group(function(){
 
 Route::prefix('paper')->group(function () {
     Route::post("like/{comment_id?}", "PaperController@like")->name("api_paper_like");
+
+    Route::get("firebase/{paper_id?}", "ManagerController@firebasePaperDetail")->name("api_paper_detail_firebase");
 
 });
 

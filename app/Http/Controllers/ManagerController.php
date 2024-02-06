@@ -271,6 +271,7 @@ class ManagerController extends Controller
         ];
     }
 
+    // {{url}}/api/upFirebaseComments/122
     function upFirebaseComments($paper_id, Request $request)
     {
         $paper = $this->paper->find($paper_id);
@@ -317,12 +318,19 @@ class ManagerController extends Controller
         ];
     }
 
+    // pullFirebaseComment
     function pullFirebaseComment()
     {
         $this->paperApi->pullFirebaseComment();
     }
 
+    // {{url}}/api/pullFirebasePaperLike
     function pullFirebasePaperLike() {
         $this->paperApi->pullFirebasePaperLike();
+    }
+
+    // {{url}}/api/pullFirebaseComLike
+    function pullFirebaseComLike() {
+        $this->paperApi->pullFirebaseComLike();
     }
 }
