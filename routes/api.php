@@ -25,7 +25,7 @@ Route::get('info', "ManagerController@info")->name('info');
 
 Route::get('getpapers', 'ManagerController@apiSourcePapers');
 
-Route::get("getpaperdetail/{paper_id}", "ManagerController@getPaperDetail");
+Route::get("getpaperdetail/{paper_id}", "ManagerController@getPaperDetail")->name('api_paperDetail');
 
 Route::get("getcategorytop", "ManagerController@getCategoryTop");
 

@@ -183,6 +183,7 @@ class ManagerController extends Controller
         } else {
             $detail = $this->paper->find($paper_id);
             $detail->info = $detail->paperInfo();
+            $detail->url = $this->helperFunction->replaceImageUrl(route('front_page_detail', ['alias' => $detail->url_alias, 'page' => $detail->id]));
             Cache::put("api_detail_$detail->id", $detail);
             event(new ViewCount($detail));
             return $detail;
