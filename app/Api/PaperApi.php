@@ -85,7 +85,7 @@ class PaperApi extends BaseApi
 			foreach ($hidden as $k) {
 				unset($paper[$k]);
 			}
-			// $this->addPapersCategory($paper);
+			$this->addPapersCategory($paper);
 			UpPaperFireBase::dispatch($_paper->id);
 			$this->upFirebaseComments($_paper);
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/'.$_paper->id);
