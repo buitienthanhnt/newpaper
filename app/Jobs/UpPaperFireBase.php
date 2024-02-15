@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Api\PaperApi;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,10 +30,13 @@ class UpPaperFireBase implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return voidphp 
+     * @return void
      */
-    public function handle()
+    public function handle(PaperApi $paperApi)
     {
-
+        $paperApi->addPapersCategory($this->paper_id);
+        $paperApi->upFirebaseComments($this->paper_id);
+        $paperApi->upPaperInfo($this->paper_id);
+        $paperApi->upContentFireStore($this->paper_id);
     }
 }

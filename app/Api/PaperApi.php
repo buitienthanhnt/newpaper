@@ -7,6 +7,8 @@ use App\Models\Comment;
 use App\Models\Paper;
 use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Thanhnt\Nan\Helper\LogTha;
 
 class PaperApi extends BaseApi
 {
@@ -57,7 +59,8 @@ class PaperApi extends BaseApi
 		return $values;
 	}
 
-	public function formatPaperFirebase($paperData)	 {
+	public function formatPaperFirebase($paperData)
+	{
 		if (isset($paperData['id'])) {
 			return $paperData;
 		}
@@ -80,15 +83,15 @@ class PaperApi extends BaseApi
 					unset($paper['image_path']);
 				}
 			}
-			$this->upPaperInfo($_paper);
-			$this->upContentFireStore($paper);
 			foreach ($hidden as $k) {
 				unset($paper[$k]);
 			}
-			$this->addPapersCategory($paper);
 			UpPaperFireBase::dispatch($_paper->id);
-			$this->upFirebaseComments($_paper);
-			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/'.$_paper->id);
+			// $this->upFirebaseComments($_paper);
+			// $this->upPaperInfo($_paper);
+			// $this->addPapersCategory($paper);
+			// $this->upContentFireStore($paper);
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $_paper->id);
 			$userRef->push($paper);
 			$snapshot = $userRef->getSnapshot();
 			Cache::put('paper_in_firebase', $snapshot->getValue());
@@ -147,6 +150,9 @@ class PaperApi extends BaseApi
 
 		// document
 		try {
+			if (is_numeric($paper)) {
+				$paper = $this->getDetail($paper)->toArray();
+			}
 			$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
 		} catch (\Throwable $th) {
 			//throw $th;
@@ -156,6 +162,9 @@ class PaperApi extends BaseApi
 	function upPaperInfo($paper)
 	{
 		try {
+			if (is_numeric($paper)) {
+				$paper = $this->getDetail($paper);
+			}
 			$this->fireStore->collection('detailInfo')->document($paper->id)->create($paper->paperInfo());
 		} catch (\Throwable $th) {
 			//throw $th;
@@ -169,7 +178,7 @@ class PaperApi extends BaseApi
 
 	function addPapersCategory($paper = null)
 	{
-		if (is_numeric($paper)) {
+		if (!is_array($paper)) {
 			$paper = $this->getDetail($paper)->toArray();
 		}
 		if (count($paper['categories'])) {
@@ -249,5 +258,10 @@ class PaperApi extends BaseApi
 				$this->upFirebaseComments($paper);
 			}
 		}
+	}
+
+	function demoLog(): void
+	{
+		Log::alert('demo 123');
 	}
 }

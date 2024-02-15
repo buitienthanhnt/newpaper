@@ -50,7 +50,10 @@
 # https://chungnguyen.xyz/laravel/docs/queues.md
 # https://stackoverflow.com/questions/50967427/laravel-execute-queued-job-automatically
 # https://stackoverflow.com/questions/34513072/running-laravel-queues-automatically
-# https://laravel.com/docs/5.6/queues#supervisor-configuration
+# https://laravel.com/docs/7.x/queues#supervisor-configuration
+
+# install supervisor:
+#       sudo apt-get install supervisor
 
 # start:
 #       sudo supervisorctl reread
