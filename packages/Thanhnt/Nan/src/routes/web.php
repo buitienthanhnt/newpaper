@@ -1,6 +1,7 @@
 <?php
 
 use App\Jobs\PaperJob;
+use App\Jobs\UpPaperFireBase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,10 @@ Route::get('log', function (Request $request) {
 });
 
 Route::get('dispath', function(){
-    PaperJob::dispatch();
+    // test email:
+    // $email = 'sa1@gmail.com';
+    // PaperJob::dispatch($email, "tha nan demo add param for queue");
+
+    UpPaperFireBase::dispatch(122);
     return 123;
 });

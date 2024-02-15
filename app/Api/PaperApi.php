@@ -2,6 +2,7 @@
 
 namespace App\Api;
 
+use App\Jobs\UpPaperFireBase;
 use App\Models\Comment;
 use App\Models\Paper;
 use App\Services\FirebaseService;
@@ -84,7 +85,8 @@ class PaperApi extends BaseApi
 			foreach ($hidden as $k) {
 				unset($paper[$k]);
 			}
-			$this->addPapersCategory($paper);
+			// $this->addPapersCategory($paper);
+			UpPaperFireBase::dispatch($_paper->id);
 			$this->upFirebaseComments($_paper);
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/'.$_paper->id);
 			$userRef->push($paper);
@@ -165,8 +167,11 @@ class PaperApi extends BaseApi
 		$this->fireStore->collection('detailContent')->document($paperId)->delete();
 	}
 
-	function addPapersCategory($paper)
+	function addPapersCategory($paper = null)
 	{
+		if (is_numeric($paper)) {
+			$paper = $this->getDetail($paper)->toArray();
+		}
 		if (count($paper['categories'])) {
 			foreach ($paper['categories'] as $value) {
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' . $value);
