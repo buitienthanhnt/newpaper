@@ -51,8 +51,8 @@ class PaperController extends Controller
             $resuls = [];
             $categories = $page->to_category()->get("category_id")->toArray();
             if ($categories) {
-                $id_of_categories = array_map(function ($itm) {
-                    return $itm["category_id"];
+                $id_of_categories = array_map(function ($item) {
+                    return $item["category_id"];
                 }, $categories);
 
                 $resuls = Category::all(['id', "name"])->whereIn("id", $id_of_categories);

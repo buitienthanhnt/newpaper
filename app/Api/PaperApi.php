@@ -47,44 +47,55 @@ class PaperApi extends BaseApi
 	{
 		$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
 		$snapshot = $userRef->getSnapshot();
-		return $snapshot->getValue() ?: [];
+		$values = $snapshot->getValue() ?: [];
+		if ($values) {
+			foreach ($values as $key => &$val) {
+				$val = $this->formatPaperFirebase($val);
+			}
+		}
+		return $values;
+	}
+
+	public function formatPaperFirebase($paperData)	 {
+		if (isset($paperData['id'])) {
+			return $paperData;
+		}
+		return array_values($paperData)[0];
 	}
 
 	public function addFirebase($paperId, $hidden = []): array
 	{
-		try {
-			$_paper = Paper::find($paperId);
-			$paper = $_paper->toArray();
-			$paper['categories'] = $_paper->listIdCategories();
-			if (!empty($paper)) {
-				if (isset($paper['image_path']) && !empty($paper['image_path'])) {
-					$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
-					if ($firebaseImage) {
-						$paper['image_path'] = $firebaseImage;
-						$paper['info'] = $_paper->paperInfo();
-					} else {
-						unset($paper['image_path']);
-					}
+
+		$_paper = Paper::find($paperId);
+		$paper = $_paper->toArray();
+		$paper['categories'] = $_paper->listIdCategories();
+		if (!empty($paper)) {
+			if (isset($paper['image_path']) && !empty($paper['image_path'])) {
+				$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
+				if ($firebaseImage) {
+					$paper['image_path'] = $firebaseImage;
+					$paper['info'] = $_paper->paperInfo();
+				} else {
+					unset($paper['image_path']);
 				}
-				$this->upPaperInfo($_paper);
-				$this->upContentFireStore($paper);
-				foreach ($hidden as $k) {
-					unset($paper[$k]);
-				}
-				$this->addPapersCategory($paper);
-				$this->upFirebaseComments($_paper);
-				$userRef = $this->firebaseDatabase->getReference('/newpaper/papers');
-				$userRef->push($paper);
-				$snapshot = $userRef->getSnapshot();
-				Cache::put('paper_in_firebase', $snapshot->getValue());
-				return [
-					'status' => true,
-					'value' => array_key_last($snapshot->getValue())
-				];
 			}
-		} catch (\Throwable $exception) {
-			// Log::error($exception->getMessage());
+			$this->upPaperInfo($_paper);
+			$this->upContentFireStore($paper);
+			foreach ($hidden as $k) {
+				unset($paper[$k]);
+			}
+			$this->addPapersCategory($paper);
+			$this->upFirebaseComments($_paper);
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/'.$_paper->id);
+			$userRef->push($paper);
+			$snapshot = $userRef->getSnapshot();
+			Cache::put('paper_in_firebase', $snapshot->getValue());
+			return [
+				'status' => true,
+				'value' => array_key_last($snapshot->getValue())
+			];
 		}
+
 		return [
 			'status' => false,
 			'value' => null
@@ -95,7 +106,7 @@ class PaperApi extends BaseApi
 	{
 		try {
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $idInFirebase);
-			$paperData = $userRef->getSnapshot()->getValue();
+			$paperData = $this->formatPaperFirebase($userRef->getSnapshot()->getValue());
 			$paperId = $paperData['id'];
 			$userRef->remove();
 			$this->rmContentFireStore($paperId);
@@ -133,12 +144,20 @@ class PaperApi extends BaseApi
 		// ]);
 
 		// document
-		$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
+		try {
+			$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
 	}
 
 	function upPaperInfo($paper)
 	{
-		$this->fireStore->collection('detailInfo')->document($paper->id)->create($paper->paperInfo());
+		try {
+			$this->fireStore->collection('detailInfo')->document($paper->id)->create($paper->paperInfo());
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
 	}
 
 	function rmContentFireStore($paperId)
