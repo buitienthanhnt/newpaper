@@ -86,7 +86,7 @@ class PaperApi extends BaseApi
 			foreach ($hidden as $k) {
 				unset($paper[$k]);
 			}
-			UpPaperFireBase::dispatch($_paper->id);
+			UpPaperFireBase::dispatch($_paper->id, $firebaseImage ?? null);
 			// $this->upFirebaseComments($_paper);
 			// $this->upPaperInfo($_paper);
 			// $this->addPapersCategory($paper);
@@ -176,12 +176,19 @@ class PaperApi extends BaseApi
 		$this->fireStore->collection('detailContent')->document($paperId)->delete();
 	}
 
-	function addPapersCategory($paper = null)
+	function addPapersCategory($paper = null, $firebaseImage = null)
 	{
 		if (!is_array($paper)) {
-			$paper = $this->getDetail($paper)->toArray();
+			$_paper = $this->getDetail($paper);
+			$paper = $_paper->toArray();
+			if ($firebaseImage) {
+				$paper['image_path'] = $firebaseImage;
+			} else {
+				unset($paper['image_path']);
+			}
 		}
-		if (count($paper['categories'])) {
+		$paper['categories'] = $_paper->listIdCategories();
+		if (($paper['categories']) && count($paper['categories'])) {
 			foreach ($paper['categories'] as $value) {
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' . $value);
 				$userRef->push($paper);
@@ -191,11 +198,11 @@ class PaperApi extends BaseApi
 
 	function upFirebaseComments($paper)
 	{
-		if (is_numeric($paper)) {
+		if (!is_array($paper)) {
 			$paper = $this->getDetail((int) $paper);
 		}
 		$commentTree = $paper->getCommentTree(null, 0, 0);
-		if (count($commentTree)) {
+		if (!empty($commentTree) && count($commentTree)) {
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id)->remove();
 			$userRef->push($commentTree);
 		}

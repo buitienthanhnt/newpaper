@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Thanhnt\Nan\Helper\LogTha;
 
-class ViewCountListen
+class ViewCountListen implements ShouldQueue
 {
     /**
      * @var ViewSource
