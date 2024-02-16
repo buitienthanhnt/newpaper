@@ -16,16 +16,18 @@ class UpPaperFireBase implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $paper_id;
+    protected $firebaseImage;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($paper_id)
+    public function __construct($paper_id, $firebaseImage)
     {
         //
         $this->paper_id = $paper_id;
+        $this->firebaseImage = $firebaseImage;
     }
 
     /**
@@ -35,7 +37,7 @@ class UpPaperFireBase implements ShouldQueue
      */
     public function handle(PaperApi $paperApi)
     {
-        $paperApi->addPapersCategory($this->paper_id);
+        $paperApi->addPapersCategory($this->paper_id, $this->firebaseImage);
         $paperApi->upFirebaseComments($this->paper_id);
         $paperApi->upPaperInfo($this->paper_id);
         $paperApi->upContentFireStore($this->paper_id);
