@@ -91,6 +91,4 @@ Route::prefix('paper')->group(function () {
 
 });
 
-
-
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd

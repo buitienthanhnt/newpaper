@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         'App\Console\Commands\IndexCommand', // add by tha
         'Thanhnt\Nan\Commands\DemoCommand',  // add for class in custom pack
+        'App\Console\Commands\PaperFirebase', // add by tha for sync paper data from firebase
     ];
 
     /**
@@ -25,8 +26,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // chạy: php artisan schedule:run để chạy thủ công
+        // hoặc: 
+        // crontab -e để cài đặt
+        // mở: * * * * * php /var/www/html/laravel1/artisan schedule:run 
+        // để chạy tự động trên ubuntu.
+        
         // $schedule->command('inspire')->hourly();
-        $schedule->command('paper:index')->dailyAt('16:05'); // add by tha
+        $schedule->command('paper:index')->dailyAt('16:05'); // cron job trong laravel: add by tha
+        $schedule->command('paperFirebase:sync')->everySixHours(); // cron job trong laravel: add by tha
     }
 
     /**

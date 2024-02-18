@@ -37,9 +37,11 @@ class UpPaperFireBase implements ShouldQueue
      */
     public function handle(PaperApi $paperApi)
     {
-        $paperApi->addPapersCategory($this->paper_id, $this->firebaseImage);
-        $paperApi->upFirebaseComments($this->paper_id);
-        $paperApi->upPaperInfo($this->paper_id);
-        $paperApi->upContentFireStore($this->paper_id);
+        $_paper = $paperApi->getDetail($this->paper_id);
+
+        $paperApi->addPapersCategory($_paper, $this->firebaseImage);
+        $paperApi->upFirebaseComments($_paper);
+        $paperApi->upPaperInfo($_paper);
+        $paperApi->upContentFireStore($_paper);
     }
 }
