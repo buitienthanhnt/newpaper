@@ -72,7 +72,7 @@ class Category extends Model
         return $this->hasMany(PageCategory::class, "category_id");
     }
 
-    public function get_papers($limit = 4, $offset = 0, $order_by = [])
+    public function get_papers($limit = 4, $offset = 0, $order_by = [], $hidden = [])
     {
         $page_id = array_column($this->to_page_category()->getResults()->toArray(), "page_id");
         $result = null;

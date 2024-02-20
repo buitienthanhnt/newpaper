@@ -169,6 +169,9 @@ class PaperApi extends BaseApi
 			if (is_numeric($paper)) {
 				$paper = $this->getDetail($paper);
 			}
+			if (empty($paper)) {
+				return;
+			}
 			$observer = $this->fireStore->collection('detailInfo')->document($paper->id);
 			if (!$observer->snapshot()->data()) {
 				$observer->create($paper->paperInfo());
@@ -214,6 +217,9 @@ class PaperApi extends BaseApi
 	{
 		if (is_numeric($paper)) {
 			$paper = $this->getDetail($paper);
+		}
+		if (empty($paper)) {
+			return;
 		}
 		$commentTree = $paper->getCommentTree(null, 0, 0);
 		if (!empty($commentTree) && count($commentTree)) {
