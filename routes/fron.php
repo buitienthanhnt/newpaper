@@ -114,4 +114,5 @@ Route::get('verifyPassword', "UserController@verifyPassword");
 // upLoadImage
 Route::get('upLoadImage', "UserController@upLoadImage");
 
+// upload categoryTree to firebase
 Route::get('asyncCategory', "FirebaseController@asyncCategory")->name('firebase_category');

@@ -19,7 +19,6 @@ class FirebaseService
     //    const CONNECT_FIREBASE_PROJECT = 'firebase-cli4';
     //   const FIREBASE_DATABASE_URL = 'https://react-cli4-default-rtdb.firebaseio.com/';
 
-
     const CONNECT_FIREBASE_PROJECT = 'firebase-newpaper';
     const FIREBASE_DATABASE_URL = 'https://newpaper-25148-default-rtdb.firebaseio.com/';
 
@@ -33,6 +32,6 @@ class FirebaseService
     {
         $path = storage_path("app/".self::CONNECT_FIREBASE_PROJECT."/firebaseConfig.json");
         $this->firebase = (new Factory)->withServiceAccount($path)->withDatabaseUri(env('FIREBASE_DATABASE_URL', self::FIREBASE_DATABASE_URL));
-       $this->fireStore = (new Factory)->withServiceAccount($path)->createFirestore()->database();
+        $this->fireStore = (new Factory)->withServiceAccount($path)->createFirestore()->database();
     }
 }

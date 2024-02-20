@@ -34,9 +34,7 @@
                     <div class="row">
                         @foreach ($all_category as $item)
                             <div class="col-md-3 mt-3">
-                                <input type="checkbox" @if (in_array($item->id, $list_current))
-                                checked
-                                @endif >
+                                <input type="checkbox" @if (in_array($item->id, $list_current)) checked @endif>
                                 <span>{{ $item->name }}</span>
                             </div>
                         @endforeach
@@ -79,8 +77,11 @@
                     </div>
 
                     <div class="row">
-                        <div class="offset-md-10 col-md-2">
+                        <div class="offset-md-8 col-md-2">
                             <button type="submit" class="btn btn-info">save for selected</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-warning syncFirebase">async to firebase</button>
                         </div>
                     </div>
                 </form>
@@ -104,5 +105,43 @@
             $(this).append($element);
             $(this).trigger("change");
         });
+
+        const syncUrl = "{{ route('admin_upCategoryTop') }}";
+        $(document).ready(function() {
+            $('.syncFirebase').click(function(event) {
+                event.preventDefault(); // disable action submit of button
+                Swal.fire({
+                    title: 'Please Wait !',
+                    html: 'data uploading', // add html attribute if you want or remove
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading()
+                    },
+                });
+                $.ajax({
+                    url: syncUrl,
+                    type: "GET",
+                    contentType: 'application/json',
+                    success: function(result) {
+                        Swal.fire({
+                            position: 'center',
+                            type: 'success',
+                            title: 'added the topCategory to firebase',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            position: 'center',
+                            type: 'error',
+                            title: 'can`t sync the topCategory to firebase',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                })
+            })
+        })
     </script>
 @endsection

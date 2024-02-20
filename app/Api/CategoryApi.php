@@ -71,9 +71,13 @@ final class CategoryApi extends BaseApi
         }
     }
 
-    function asyncCategory() : void {
+    function asyncCategory(): void
+    {
         $categoryTree = $this->category->getCategoryTree();
         $userRef = $this->firebaseDatabase->getReference('/newpaper/category');
+        if ($userRef->getSnapshot()->getValue()) {
+            $userRef->remove();
+        }
         $userRef->push($categoryTree ?: null);
     }
 }
