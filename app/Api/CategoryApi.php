@@ -9,12 +9,15 @@ use App\Services\FirebaseService;
 
 final class CategoryApi extends BaseApi
 {
+    protected $category;
     protected $helperFunction;
 
     function __construct(
         HelperFunction $helperFunction,
-        FirebaseService $firebaseService
+        FirebaseService $firebaseService,
+        Category $category
     ) {
+        $this->category = $category;
         $this->helperFunction = $helperFunction;
         parent::__construct($firebaseService);
     }
@@ -66,5 +69,15 @@ final class CategoryApi extends BaseApi
                 'value' => null
             ];
         }
+    }
+
+    function asyncCategory(): void
+    {
+        $categoryTree = $this->category->getCategoryTree();
+        $userRef = $this->firebaseDatabase->getReference('/newpaper/category');
+        if ($userRef->getSnapshot()->getValue()) {
+            $userRef->remove();
+        }
+        $userRef->push($categoryTree ?: null);
     }
 }

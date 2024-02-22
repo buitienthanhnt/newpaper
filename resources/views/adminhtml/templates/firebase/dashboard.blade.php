@@ -51,7 +51,8 @@
                             <button type="button" class="btn btn-danger fa-pull-right firebase_action delete_firebase"
                                 data-id="{{ $key }}">del in firebase</button>
 
-                            <a style="min-width: 110px" type="button" href="{{ route('admin_paper_edit', ['paper_id' => $item['id']]) }}"
+                            <a style="min-width: 110px" type="button"
+                                href="{{ route('admin_paper_edit', ['paper_id' => $item['id']]) }}"
                                 class="btn btn-warning fa-pull-right">view</a>
                         </td>
                     </tr>
@@ -71,7 +72,8 @@
                                 data-id="{{ $paper->id }}">up to
                                 firebase</button>
 
-                            <a type="button" style="min-width: 110px" href="{{ route('admin_paper_edit', ['paper_id' => $paper->id]) }}"
+                            <a type="button" style="min-width: 110px"
+                                href="{{ route('admin_paper_edit', ['paper_id' => $paper->id]) }}"
                                 class="btn btn-warning fa-pull-right">view</a>
                         </td>
                     </tr>

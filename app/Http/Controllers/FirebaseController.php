@@ -45,11 +45,6 @@ class FirebaseController extends BaseController
         return view('adminhtml.templates.firebase.dashboard', ['listPaper' => $papersInFirebase, 'papers' => $papers]);
     }
 
-    function upCategoryTop() {
-        $categoryTops = $this->categoryApi->addCategoryTopFirebase();
-        dd($categoryTops);
-    }
-
     function addPaper(Request $request): \Illuminate\Http\Response
     {
         $params = $request->toArray();
@@ -91,7 +86,38 @@ class FirebaseController extends BaseController
         ]));
     }
 
-    function fireStore() {
+    function fireStore()
+    {
         $this->paperApi->removeImageFirebase('https://firebasestorage.googleapis.com/v0/b/newpaper-25148.appspot.com/o/demo%2F1TBJN2EdRj.png?alt=media&token=5af678f4-4110-4a4c-aad6-b718f5c7ec21');
+    }
+
+    function upCategoryTop()
+    {
+        try {
+            $this->categoryApi->addCategoryTopFirebase();
+            return response(json_encode([
+                'code' => 200
+            ]));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return response(json_encode([
+            'code' => 400
+        ]));
+    }
+
+    function asyncCategory(): \Illuminate\Http\Response
+    {
+        try {
+            $this->categoryApi->asyncCategory();
+            return response(json_encode([
+                'code' => 200
+            ]));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return response(json_encode([
+            'code' => 400
+        ]));
     }
 }

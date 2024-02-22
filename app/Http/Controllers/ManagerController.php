@@ -155,13 +155,14 @@ class ManagerController extends Controller
 
     function apiSourcePapers(Request $request)
     {
-        // $papers = Paper::paginate($request->get("limit",  4))->orderBy("updated_at", "DESC");
-        $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(4);
+        // not use ->makeHidden() with paginate
+        $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
         if ($papers->count()) {
             foreach ($papers as &$item) {
                 $item->image_path = $this->helperFunction->replaceImageUrl($item->image_path ?: '');
                 $item->short_conten = $this->cut_str($item->short_conten, 90, "...");
                 // $item["title"] = $this->cut_str($item["title"], 80, "../");
+                unset($item['conten']);
                 $item->info = [
                     'view_count' => $item->viewCount(),
                     'comment_count' => $item->commentCount(),
@@ -203,7 +204,7 @@ class ManagerController extends Controller
     public function getPaperCategory($category_id, Request $request)
     {
         $page = $request->get("page", 1);
-        $limit = $request->get("limit", 4);
+        $limit = $request->get("limit", 12);
         $key = "paper.category.$category_id.$page.$limit";
 
         if (Cache::has($key)) { // nhanh hon ~50% voi du lieu nang.
@@ -213,7 +214,7 @@ class ManagerController extends Controller
              * @var \App\Models\Category $category
              */
             $category = $this->category->find($category_id);
-            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1);
+            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1, ['updated_at', 'desc'], ['conten']);
             foreach ($papers as &$value) {
                 $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
                 $value->info = [
@@ -326,12 +327,14 @@ class ManagerController extends Controller
     }
 
     // {{url}}/api/pullFirebasePaperLike
-    function pullFirebasePaperLike() {
+    function pullFirebasePaperLike()
+    {
         $this->paperApi->pullFirebasePaperLike();
     }
 
     // {{url}}/api/pullFirebaseComLike
-    function pullFirebaseComLike() {
+    function pullFirebaseComLike()
+    {
         $this->paperApi->pullFirebaseComLike();
     }
 }
