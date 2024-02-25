@@ -2,9 +2,11 @@
 
 namespace App\Api;
 
+use App\Helper\HelperFunction;
 use App\Jobs\UpPaperFireBase;
 use App\Models\Comment;
 use App\Models\Paper;
+use App\Models\ViewSource;
 use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -12,9 +14,13 @@ use Thanhnt\Nan\Helper\LogTha;
 
 class PaperApi extends BaseApi
 {
+	protected $helperFunction;
+	
 	function __construct(
-		FirebaseService $firebaseService
+		FirebaseService $firebaseService,
+		HelperFunction $helperFunction
 	) {
+		$this->helperFunction = $helperFunction;
 		parent::__construct($firebaseService);
 	}
 
@@ -296,5 +302,31 @@ class PaperApi extends BaseApi
 	function demoLog(): void
 	{
 		Log::alert('demo 123');
+	}
+
+	function mostPopulator() {
+		$mostView = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
+		$mostPapers = Paper::find(array_column($mostView, "source_id"))->makeHidden(['conten']);
+		foreach ($mostPapers as &$value) {
+			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+			$value->info = $value->paperInfo();
+		}
+		return $mostPapers;
+	}
+
+	function mostRecents() {
+		$mostRecents = Paper::limit(8)->orderBy('created_at', 'DESC')->get()->makeHidden(['conten']);
+		foreach ($mostRecents as &$value) {
+			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		}
+		return $mostRecents;
+	}
+
+	function hit() {
+		$hits = Paper::all()->random(1)->makeHidden(['conten']);
+		foreach ($hits as &$value) {
+			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		}
+		return $hits;
 	}
 }

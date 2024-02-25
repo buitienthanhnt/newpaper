@@ -57,10 +57,19 @@ class ManagerController extends Controller
 
     function info()
     {
+        $paperApi = $this->paperApi;
+        $hit = $paperApi->hit();
+        $mostPopulator = $paperApi->mostPopulator();
+        $mostRecents = $paperApi->mostRecents();
+
         return [
             'data' => [
                 'status' => true,
                 'code' => 200,
+                'hit' =>$hit[0],
+                'mostPopulator' =>$mostPopulator,
+                'mostRecents' => $mostRecents,
+                'search' => ['Laravel', 'Ukraine', 'Nga', 'Việt Nam', 'iPhone', 'truyện Kiều', 'Nguyễn Du', 'covid-19']
             ],
             'success' => true,
             'error' => null
