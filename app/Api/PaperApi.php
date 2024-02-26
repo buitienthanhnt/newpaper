@@ -10,6 +10,7 @@ use App\Models\ViewSource;
 use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Models\PageTag;
 use Thanhnt\Nan\Helper\LogTha;
 
 class PaperApi extends BaseApi
@@ -328,5 +329,28 @@ class PaperApi extends BaseApi
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
 		}
 		return $hits;
+	}
+
+	function listImages() {
+		$listImages = Paper::all()->random(5)->makeHidden(['conten']);
+		foreach ($listImages as &$value) {
+			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		}
+		return $listImages;
+	}
+
+	function timeLine() {
+		$timeLine = Paper::all()->random(6)->sortBy('updated_at')->makeHidden(['conten']);
+		foreach ($timeLine as &$value) {
+			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+			$value->time = date_format($value->updated_at, "d-m H:i");
+			$value->description = $value->title;
+		}
+		return $timeLine;
+	}
+
+	function tags() : array {
+		$tags = PageTag::select('value')->take(8)->get()->toArray();
+		return array_column($tags, 'value');
 	}
 }

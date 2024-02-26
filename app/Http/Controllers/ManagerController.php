@@ -61,6 +61,9 @@ class ManagerController extends Controller
         $hit = $paperApi->hit();
         $mostPopulator = $paperApi->mostPopulator();
         $mostRecents = $paperApi->mostRecents();
+        $listImages = $paperApi->listImages();
+        $timeLine = $paperApi->timeLine();
+        $tags = $paperApi->tags();
 
         return [
             'data' => [
@@ -69,7 +72,9 @@ class ManagerController extends Controller
                 'hit' =>$hit[0],
                 'mostPopulator' =>$mostPopulator,
                 'mostRecents' => $mostRecents,
-                'search' => ['Laravel', 'Ukraine', 'Nga', 'Việt Nam', 'iPhone', 'truyện Kiều', 'Nguyễn Du', 'covid-19']
+                'listImages' => $listImages,
+                'timeLine' => $timeLine,
+                'search' => $tags
             ],
             'success' => true,
             'error' => null
