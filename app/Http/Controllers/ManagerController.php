@@ -99,7 +99,7 @@ class ManagerController extends Controller
         ];
         $video = [
             "videoId" => "iee2TATGMyI",
-            "height" => 200,
+            "height" => 210,
             "title" => "This snippet renders a Youtube video"
         ];
 
