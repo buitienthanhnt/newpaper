@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\PaperApi;
+use App\Api\WriterApi;
 use App\Events\ViewCount;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\Category;
@@ -32,6 +33,7 @@ class ManagerController extends Controller
     protected $likeMost;
     protected $trending;
     protected $paperApi;
+    protected $writerApi;
 
     public function __construct(
         Request $request,
@@ -42,7 +44,8 @@ class ManagerController extends Controller
         MostPopulator $mostPopulator,
         LikeMost $likeMost,
         Trending $trending,
-        PaperApi $paperApi
+        PaperApi $paperApi,
+        WriterApi $writerApi
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -53,6 +56,7 @@ class ManagerController extends Controller
         $this->likeMost = $likeMost;
         $this->trending = $trending;
         $this->paperApi = $paperApi;
+        $this->writerApi = $writerApi;
     }
 
     function info()
@@ -64,17 +68,48 @@ class ManagerController extends Controller
         $listImages = $paperApi->listImages();
         $timeLine = $paperApi->timeLine();
         $tags = $paperApi->tags();
+        $writers = $this->writerApi->allWriter();
+        $lineMap = [
+            "data" => [
+                "labels" => ["Jan", "Feb", "March", "April", "May", "June", 'nan'],
+                "datasets" => [
+                    [
+                        "data" => [
+                            random_int(1, 100),
+                            random_int(1, 100),
+                            random_int(1, 100),
+                            random_int(1, 100),
+                            random_int(1, 100),
+                            random_int(1, 100),
+                            random_int(1, 100)
+                        ]
+                    ]
+                ]
+            ],
+            "yAxisLabel" => "$",
+            "yAxisSuffix" => "đ",
+            "bezier" => true,
+            "yAxisInterval" => 1,
+            "chartConfig" => [
+                "backgroundColor" => "#e26a00",
+                "backgroundGradientFrom" => "#ff7cc0", // 82baff
+                "backgroundGradientTo" => "#82baff",   // ffa726
+                "decimalPlaces" => 1, // số chữ số sau dấu phẩy.
+            ]
+        ];
 
         return [
             'data' => [
                 'status' => true,
                 'code' => 200,
-                'hit' =>$hit[0],
-                'mostPopulator' =>$mostPopulator,
+                'hit' => $hit[0],
+                'mostPopulator' => $mostPopulator,
                 'mostRecents' => $mostRecents,
                 'listImages' => $listImages,
                 'timeLine' => $timeLine,
-                'search' => $tags
+                'search' => $tags,
+                'writers' => $writers,
+                'map' => $lineMap,
             ],
             'success' => true,
             'error' => null
