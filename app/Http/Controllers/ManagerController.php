@@ -97,6 +97,11 @@ class ManagerController extends Controller
                 "decimalPlaces" => 1, // số chữ số sau dấu phẩy.
             ]
         ];
+        $video = [
+            "videoId" => "iee2TATGMyI",
+            "height" => 200,
+            "title" => "This snippet renders a Youtube video"
+        ];
 
         return [
             'data' => [
@@ -110,6 +115,7 @@ class ManagerController extends Controller
                 'search' => $tags,
                 'writers' => $writers,
                 'map' => $lineMap,
+                'video' => $video
             ],
             'success' => true,
             'error' => null
