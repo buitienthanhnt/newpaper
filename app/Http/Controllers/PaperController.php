@@ -35,7 +35,8 @@ class PaperController extends Controller
         Notification $notification,
         HelperFunction $helperFunction,
         LogTha $logTha
-    ) {
+    )
+    {
         $this->request = $request;
         $this->paper = $paper;
         $this->logTha = $logTha;
@@ -77,8 +78,6 @@ class PaperController extends Controller
     {
         $request = $this->request;
         $category_option = $request->__get("category_option");
-        
-        dd(explode(',', $request->get('image_paths')));
 
         try {
             $paper = $this->paper;
@@ -97,6 +96,33 @@ class PaperController extends Controller
             ]);
             $paper->save();
             if ($new_id = $paper->id) {
+
+                /**
+                 * insert paper list image of carousel.
+                 */
+                if ($listImages = explode(',', $request->get('image_paths'))) {
+                    DB::table('paper_carousel')->updateOrInsert(
+                        [
+                            "title" => "",
+                            "description" => "",
+                            "value" => "",
+                            "paper_id" => $new_id
+                        ],
+                        [
+                            "title" => "",
+                            "description" => "",
+                            "value" => "",
+                            "paper_id" => $new_id
+                        ],
+                        [
+                            "title" => "",
+                            "description" => "",
+                            "value" => "",
+                            "paper_id" => $new_id
+                        ]
+                    );
+                }
+
                 /**
                  * save in DB page category
                  */
@@ -231,7 +257,8 @@ class PaperController extends Controller
         return $history->save();
     }
 
-    function getCommentContent($paper_id, $p, Request $request) : string {
+    function getCommentContent($paper_id, $p, Request $request): string
+    {
         $_paper = $this->paper->find($paper_id);
         $comments = $_paper->getComments(null, $p);
         $commentsHtml = view('frontend.templates.paper.component.commentHistory', ['comments' => $comments])->render();
@@ -264,7 +291,8 @@ class PaperController extends Controller
         }
     }
 
-    function replyComment($comment_id, Request $request) {
+    function replyComment($comment_id, Request $request)
+    {
 
         try {
             $comment = new Comment([
@@ -289,32 +317,34 @@ class PaperController extends Controller
         ], 500));
     }
 
-    function addLike($paper_id, Request $request) {
+    function addLike($paper_id, Request $request)
+    {
         $params = $request->toArray();
         $paperSource = ViewSource::where('type', '=', ViewSource::PAPER_TYPE)->where('source_id', '=', $paper_id)->first();
         if ($params['type'] === 'like') {
-            $paperSource->like =  $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1; 
-        }elseif ($params['type'] === 'heart') {
+            $paperSource->like = $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1;
+        } elseif ($params['type'] === 'heart') {
             $paperSource->heart = $params['action'] === 'add' ? $paperSource->heart + 1 : $paperSource->heart - 1;
         }
         $paperSource->save();
         return response('success');
     }
 
-    function like($comment_id, Request $request) {
+    function like($comment_id, Request $request)
+    {
         $type = $request->get("type");
         if ($type == "like") {
             $comment = Comment::find($comment_id);
-            $comment->like = $comment->like+1;
+            $comment->like = $comment->like + 1;
             $comment->save();
             return response(json_encode([
                 "code" => 200,
                 "count" => $comment->like,
                 "message" => ""
             ], 200));
-        }elseif ($type == "dislike") {
+        } elseif ($type == "dislike") {
             $comment = Comment::find($comment_id);
-            $comment->like = $comment->like-1 <= 0 ? 0 : $comment->like-1;
+            $comment->like = $comment->like - 1 <= 0 ? 0 : $comment->like - 1;
             $comment->save();
             return response(json_encode([
                 "code" => 200,

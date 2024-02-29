@@ -3,23 +3,28 @@
 namespace App\ViewBlock;
 
 use App\Models\Category;
-use App\Models\Paper;
 use App\Models\Writer;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Http\Request;
+use Thanhnt\Nan\Helper\RemoteSourceManager;
 
 class PaperCreateForm implements Htmlable
 {
     protected $request;
     protected $category;
+    protected $remoteSourceManager;
 
     function __construct(
         Request $request,
-        Category $category
-    ) {
+        Category $category,
+        RemoteSourceManager $remoteSourceManager
+    )
+    {
         $this->request = $request;
         $this->category = $category;
+        $this->remoteSourceManager = $remoteSourceManager;
     }
+
     function toHtml(): string
     {
         $contenType = $this->request->get('type', "content");
@@ -36,14 +41,17 @@ class PaperCreateForm implements Htmlable
 
     function contenForm()
     {
+        if ($source_request = $this->request->get("source_request")) {
+            $remoteData = $this->remoteSourceManager->source($source_request);
+        }
         return [
             'template' => "adminhtml.templates.papers.forms.contenForm",
-            "params" => [
+            "params" => array_merge($remoteData, [
                 "category_option" => $this->category->category_tree_option(),
                 "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
                 "filemanager_url_base" => url("adminhtml/file/manager"),
                 "writers" => Writer::all()
-            ]
+            ])
         ];
     }
 
