@@ -77,6 +77,9 @@ class PaperController extends Controller
     {
         $request = $this->request;
         $category_option = $request->__get("category_option");
+        
+        dd(explode(',', $request->get('image_paths')));
+
         try {
             $paper = $this->paper;
             $paper->fill([

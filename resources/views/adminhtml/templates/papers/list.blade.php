@@ -13,11 +13,12 @@
 @endsection
 
 @section('after_css')
-<style>
-    .table th, .table td{
-    line-height: inherit
-}
-</style>
+    <style>
+        .table th,
+        .table td {
+            line-height: inherit
+        }
+    </style>
 @endsection
 
 @section('head_js_after')
@@ -25,10 +26,19 @@
 
 @section('body_main_conten')
     <div class="row">
-        <div class="col-md-12">
-            <a href="{{ route('admin_paper_create') }}"><span class="btn btn-info">new paper</span></a>
+        <div class="col-md-12 flex-row">
             <span class="btn btn-primary">setting paper info</span>
-            <a href="{{ route('admin_new_by_url') }}" class="btn btn-info">new by url</a>
+            <div class="dropdown col-md-2 d-inline">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    new paper
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{{ route('admin_paper_create') }}">default conten</a>
+                    <a class="dropdown-item" href="{{ route('admin_paper_create', ['type' => 'carousel']) }}">carousel image</a>
+                    <a class="dropdown-item" href="{{ route('admin_new_by_url') }}">new by url</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -56,7 +66,7 @@
                                     </td>
                                     <td>
                                         @if ($page->writer)
-                                        {{ $page->to_writer()->getResults()->name}}
+                                            {{ $page->to_writer()->getResults()->name }}
                                         @endif
                                     </td>
                                     <td>
