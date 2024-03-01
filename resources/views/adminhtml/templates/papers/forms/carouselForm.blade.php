@@ -3,7 +3,9 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Title:</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" name="page_title" required value="@isset($title){{ $title }}@endisset" required placeholder="page title"/>
+                <input type="text" class="form-control" name="page_title" required
+                    value="@isset($title){{ $title }}@endisset" required
+                    placeholder="page title" />
             </div>
         </div>
     </div>
@@ -13,8 +15,7 @@
             <label for="active" class="col-sm-1">Active:</label>
             <div class="col-sm-1">
                 <input id="active" class="form-check-input" type="checkbox" name="active"
-                    value="@if (isset($active)){{ $active ? 'checked' : '' }} @else checked @endif"
-                >
+                    value="@if (isset($active)) {{ $active ? 'checked' : '' }} @else checked @endif">
             </div>
 
         </div>
@@ -26,7 +27,9 @@
         <div class="form-group row">
             <label for="url-alias" class="col-sm-2">url alias:</label>
             <div class="col-sm-8">
-                <input id="url-alias" class="form-control" type="text" name="alias" placeholder="use page title if this value is null" value="@isset($url_alias){{ $url_alias }}@endisset">
+                <input id="url-alias" class="form-control" type="text" name="alias"
+                    placeholder="use page title if this value is null"
+                    value="@isset($url_alias){{ $url_alias }}@endisset">
             </div>
         </div>
     </div>
@@ -34,7 +37,8 @@
     <div class="col-md-6 row">
         <label for="show" class="col-sm-1">show:</label>
         <div class="col-sm-1">
-            <input id="show" class="form-check-input" type="checkbox" name="show" value="@if (isset($show)) {{ $show ? 'checked' : '' }} @else checked @endif">
+            <input id="show" class="form-check-input" type="checkbox" name="show"
+                value="@if (isset($show)) {{ $show ? 'checked' : '' }} @else checked @endif">
         </div>
     </div>
 </div>
@@ -43,14 +47,20 @@
     <div class="col-md-6">
         <label for="short_conten" class="col-sm-2">short conten:</label>
         <div class="col-sm-10">
-            <textarea id="short_conten" name="short_conten" class="form-control" rows="4" style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset</textarea>
+            <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
+                style="padding: 10px; height: 100%;">
+@isset($short_conten)
+{{ $short_conten }}
+@endisset
+</textarea>
         </div>
     </div>
 
     <div class="col-md-6">
         <div class="form-group">
             <label for="auto_hide">auto hide: </label>
-            <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide" value=" @if (isset($show)){{ $show ? 'checked' : '' }} @else checked @endif">
+            <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide"
+                value=" @if (isset($show)) {{ $show ? 'checked' : '' }} @else checked @endif">
         </div>
     </div>
 </div>
@@ -70,20 +80,131 @@
     </div> --}}
 
     <div class="col-md-6">
-        <div class="form-group row">
-            <label class="col-sm-3 col-form-label">slider image lists:</label>
+        <div class="form-group">
+            <label class="col-sm-6 col-form-label">slider image lists:</label>
             <div class="col-sm-9">
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <a id="lfm" data-input="thumbnail" data-preview="holder"
-                            class="btn btn-primary">
+                <div class="form-group">
+                    {{-- <span class="input-group-btn">
+                        <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
                             <i class="fa fa-picture-o"></i> Choose images
                         </a>
-                    </span>
-                    <input id="thumbnail" class="form-control" type="text" name="image_paths">
+                    </span> --}}
+                    <button type="button" class="btn form-control btn-primary" data-toggle="modal"
+                        data-target="#sliderModal">
+                        add slider item
+                    </button>
+
+
+                    <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="sliderModal"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="sliderModal">Input item content</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="captions_label">captions label</label>
+                                        <input id="captions_label" class="form-control" type="text"
+                                            name="captions_label">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="captions_content">captions content</label>
+                                        <textarea id="captions_content" class="form-control" style="height: auto" name="captions_content" rows="6"></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3" for="caption_image">image</label>
+                                        <div class="col-sm-9">
+                                            <input type="file" class="form-control" id="caption_image"
+                                                name="caption_image" />
+                                            <img src="#"
+                                                style="width: 100%; height: 240px; resize: cover; display: none"
+                                                class="form-control" alt="your image" id="category_preview" />
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{-- <input id="thumbnail" class="form-control" type="text" name="image_paths"> --}}
                 </div>
                 <img id="holder" style="margin-top:15px;max-height:100px;">
             </div>
         </div>
     </div>
+
+    <div class="col-md-12">
+        <div class="bd-example">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div style="width: 100%; height: 220px; background-color: blue"></div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>First slide label</h5>
+                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div style="width: 100%; height: 220px; background-color: blue"></div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Second slide label</h5>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div style="width: 100%; height: 220px; background-color: blue"></div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Third slide label</h5>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('.carousel').carousel({
+            interval: 2000
+        });
+    })
+
+    caption_image.onchange = evt => {
+        const [file] = caption_image.files
+        if (file) {
+            $(category_preview).show();
+            category_preview.src = URL.createObjectURL(file)
+        } else {
+            $(category_preview).hide();
+        }
+    }
+</script>
