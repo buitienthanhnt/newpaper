@@ -30,11 +30,11 @@
             color: #cc18b4
         }
 
-        .fa-arrow-down{
+        .fa-arrow-down {
             color: #13e6ed
         }
 
-        .fa-arrow-down:hover{
+        .fa-arrow-down:hover {
             color: #cc18b4
         }
     </style>
@@ -59,6 +59,49 @@
                                 <h3>{{ $paper->title }}</h3>
                             @endisset
                         </div>
+
+                        @if ($sliderImages = $paper->sliderImages())
+                            <div class="bd-example">
+                                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                                    <ol class="carousel-indicators">
+                                        @for ($i = 0; $i < count($sliderImages); $i++)
+                                            <li data-target="#carouselExampleCaptions" data-slide-to="{{ $i }}"
+                                                class="{{ $i === 0 ? 'active' : ' ' }}"></li>
+                                        @endfor
+                                    </ol>
+
+                                    <div class="carousel-inner">
+                                        @php
+                                            $j = 0;
+                                        @endphp
+                                        @foreach ($sliderImages as $item)
+                                            <div class="carousel-item {{ $j === 0 ? 'active' : ' ' }}">
+                                                <img src="{{ $item->value }}" style="width: 100%; height: 560px;" alt="">
+                                                <div class="carousel-caption d-none d-md-block">
+                                                    <h5>{{ $item->title }}</h5>
+                                                    <p>{{ $item->description }}</p>
+                                                </div>
+                                            </div>
+                                            @php
+                                                $j+=1;
+                                            @endphp
+                                        @endforeach
+
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button"
+                                        data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button"
+                                        data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="col-md-12">
                             @isset($paper->conten)
                                 {!! $paper->conten !!}

@@ -160,13 +160,13 @@ class PaperApi extends BaseApi
 		// document
 		try {
 			if (is_numeric($paper)) {
-				$paper = $this->getDetail($paper)->toArray();
-			}else{
-				$paper = $paper->toArray();
+				$paper = $this->getDetail($paper);
 			}
-			$this->fireStore->collection('detailContent')->document($paper['id'])->create($paper);
+			$_paper = $paper->toArray();
+			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
+			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 		} catch (\Throwable $th) {
-			//throw $th;
+			Log::error($th->getMessage());
 		}
 	}
 

@@ -35,8 +35,7 @@ class PaperController extends Controller
         Notification $notification,
         HelperFunction $helperFunction,
         LogTha $logTha
-    )
-    {
+    ) {
         $this->request = $request;
         $this->paper = $paper;
         $this->logTha = $logTha;
@@ -100,29 +99,16 @@ class PaperController extends Controller
                 /**
                  * insert paper list image of carousel.
                  */
-                if ($listImages = explode(',', $request->get('image_paths'))) {
-                    DB::table('paper_carousel')->updateOrInsert(
-                        [
-                            "title" => "",
-                            "description" => "",
-                            "value" => "",
+                if ($request->get('slider_data') && $listImages = json_decode($request->get('slider_data'))) {
+                    DB::table('paper_carousel')->insert(array_map(function ($item) use($new_id){
+                        return [
+                            "title" => $item->title,
+                            "description" => $item->label,
+                            "value" => $item->image_path,
                             "paper_id" => $new_id
-                        ],
-                        [
-                            "title" => "",
-                            "description" => "",
-                            "value" => "",
-                            "paper_id" => $new_id
-                        ],
-                        [
-                            "title" => "",
-                            "description" => "",
-                            "value" => "",
-                            "paper_id" => $new_id
-                        ]
-                    );
+                        ];
+                    }, $listImages));
                 }
-
                 /**
                  * save in DB page category
                  */
@@ -223,6 +209,10 @@ class PaperController extends Controller
                             $category->forceDelete();
                         }
                     }
+                    /**
+                     * delete paper slider carousel.
+                     */
+                    $this->deleteImageCarousel($paper->id);
                     $paper->delete();
                     return response(json_encode([
                         "code" => "200",
@@ -237,6 +227,15 @@ class PaperController extends Controller
             "code" => 401,
             "value" => "delete error. Please try again!"
         ]), 401);
+    }
+
+    function deleteImageCarousel(int $paper_id) : bool {
+        try {
+            DB::table('paper_carousel')->where('paper_id', $paper_id)->delete();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return false;
     }
 
     public function newByUrl()

@@ -31,6 +31,9 @@
                 line-height: 1;
             }
         }
+        .sliderImages{
+            max-height: 480px !important;
+        }
     </style>
 @endsection
 
