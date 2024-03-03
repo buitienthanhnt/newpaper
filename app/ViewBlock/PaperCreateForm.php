@@ -59,7 +59,9 @@ class PaperCreateForm implements Htmlable
     {
         return [
             'template' => "adminhtml.templates.papers.forms.carouselForm",
-            "params" => []
+            "params" => [
+                "category_option" => $this->category->category_tree_option(),
+            ]
         ];
     }
 }

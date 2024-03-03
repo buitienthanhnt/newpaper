@@ -77,6 +77,10 @@
         $('#lfm').filemanager('file', {
             prefix: url_base
         });
+        // slider_image
+        $('#slider_image').filemanager('file', {
+            prefix: url_base
+        });
 
         $(".paper_tag").select2({
             tags: true,

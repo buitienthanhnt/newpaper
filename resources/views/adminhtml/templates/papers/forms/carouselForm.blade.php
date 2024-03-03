@@ -67,7 +67,7 @@
 
 <div class="row">
 
-    {{-- <div class="col-md-6">
+    <div class="col-md-6">
         <label for="category" class="col-sm-2">category:</label>
         <div class="col-sm-10">
             <div class="form-group">
@@ -77,7 +77,25 @@
                 </select>
             </div>
         </div>
-    </div> --}}
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">image:</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <a id="lfm" data-input="thumbnail" data-preview="holder"
+                            class="btn btn-primary">
+                            <i class="fa fa-picture-o"></i> Choose
+                        </a>
+                    </span>
+                    <input id="thumbnail" class="form-control" type="text" name="image_path">
+                </div>
+                <img id="holder" style="margin-top:15px;max-height:100px;">
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-6">
         <div class="form-group">
@@ -124,13 +142,13 @@
                                             <div class="col-sm-9">
                                                 <div class="input-group">
                                                     <span class="input-group-btn">
-                                                        <a id="lfm" data-input="thumbnail"
+                                                        <a id="slider_image" data-input="slider_images"
                                                             data-preview="holder" class="btn btn-primary">
                                                             <i class="fa fa-picture-o"></i> Choose
                                                         </a>
                                                     </span>
-                                                    <input id="thumbnail" class="form-control" type="text"
-                                                        name="image_path">
+                                                    <input id="slider_images" class="form-control" type="text"
+                                                        name="slider_images">
                                                 </div>
                                                 <img id="holder" style="margin-top:15px;max-height:100px;">
                                             </div>
@@ -148,9 +166,6 @@
                             </div>
                         </div>
                     </div>
-
-
-                    {{-- <input id="thumbnail" class="form-control" type="text" name="image_paths"> --}}
                 </div>
                 <img id="holder" style="margin-top:15px;max-height:100px;">
             </div>
@@ -210,7 +225,7 @@
         $("#saveCarouiselItem").click(function() {
             let title = $("#captions_label").val();
             let content = $("#captions_content").val();
-            let image_path = $("#thumbnail").val();
+            let image_path = $("#slider_images").val();
             slider.push({
                 title: title,
                 label: content,

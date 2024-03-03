@@ -91,7 +91,8 @@ class PaperController extends Controller
                 "show_writer" => $request->__get("show_writer") ? true : false,
                 "show_time" => $request->__get("show_time"),
                 "image_path" => $request->__get("image_path") ?: "",
-                "writer" => $request->get("writer", null)
+                "writer" => $request->get("writer", null),
+                "type" => $request->get('slider_data') ? 'carousel' : 'content'
             ]);
             $paper->save();
             if ($new_id = $paper->id) {

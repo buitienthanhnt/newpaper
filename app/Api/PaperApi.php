@@ -164,6 +164,7 @@ class PaperApi extends BaseApi
 			}
 			$_paper = $paper->toArray();
 			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
+			$_paper['sliderImages'] = $paper->sliderImages()->toArray();
 			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 		} catch (\Throwable $th) {
 			Log::error($th->getMessage());
