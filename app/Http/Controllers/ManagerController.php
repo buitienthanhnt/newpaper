@@ -240,7 +240,10 @@ class ManagerController extends Controller
             $detail = $this->paper->find($paper_id);
             $detail->info = $detail->paperInfo();
             $detail->tags = $detail->to_tag()->getResults();
-            $detail->slider_images = $detail->sliderImages()->toArray();
+            $detail->slider_images = array_map(function($item){
+                $item->value = $this->helperFunction->replaceImageUrl($item->value);
+                return $item;
+            }, $detail->sliderImages()->toArray());
             $detail->url = $this->helperFunction->replaceImageUrl(route('front_page_detail', ['alias' => $detail->url_alias, 'page' => $detail->id]));
             Cache::put("api_detail_$detail->id", $detail);
             event(new ViewCount($detail));
