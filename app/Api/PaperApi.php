@@ -145,6 +145,13 @@ class PaperApi extends BaseApi
 		Cache::put('paper_in_firebase', $this->paperInFirebase());
 	}
 
+	function upSliderImages(array $sliderImages) {
+		foreach ($sliderImages as &$value) {
+			$value['image_path'] = $this->upLoadImageFirebase($value['image_path']);
+		}
+		return $sliderImages;
+	}
+
 	function upContentFireStore(Paper $paper)
 	{
 		// $fireStore = $this->fireStore->collection('newpaper')->document('detailcontent')->snapshot()->data();
@@ -153,7 +160,7 @@ class PaperApi extends BaseApi
 		// 	'12' => '2312312312'
 		// ]);
 
-		// $this->fireStore->collection('detailContent')->newDocument()->create([
+		// $this->fireStore->collection('detailContent')->newDocument()->create([  
 		// 	'121' => '2312312312'
 		// ]);
 
@@ -164,7 +171,7 @@ class PaperApi extends BaseApi
 			}
 			$_paper = $paper->toArray();
 			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
-			$_paper['sliderImages'] = $paper->sliderImages()->toArray();
+			$_paper['sliderImages'] = $this->upSliderImages($paper->sliderImages()->toArray());
 			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 		} catch (\Throwable $th) {
 			Log::error($th->getMessage());
