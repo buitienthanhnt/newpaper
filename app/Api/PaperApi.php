@@ -147,7 +147,8 @@ class PaperApi extends BaseApi
 
 	function upSliderImages(array $sliderImages) {
 		foreach ($sliderImages as &$value) {
-			$value['image_path'] = $this->upLoadImageFirebase($value['image_path']);
+			$value->value = $this->upLoadImageFirebase($value->value);
+			Log::alert($value->value);
 		}
 		return $sliderImages;
 	}
@@ -171,7 +172,7 @@ class PaperApi extends BaseApi
 			}
 			$_paper = $paper->toArray();
 			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
-			$_paper['sliderImages'] = $this->upSliderImages($paper->sliderImages()->toArray());
+			$_paper['slider_images'] = $this->upSliderImages($paper->sliderImages()->toArray());
 			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 		} catch (\Throwable $th) {
 			Log::error($th->getMessage());
