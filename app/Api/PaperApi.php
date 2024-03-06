@@ -11,17 +11,21 @@ use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\PageTag;
+use Illuminate\Http\Request;
 use Thanhnt\Nan\Helper\LogTha;
 
 class PaperApi extends BaseApi
 {
 	protected $helperFunction;
+	protected $request;
 	
 	function __construct(
 		FirebaseService $firebaseService,
-		HelperFunction $helperFunction
+		HelperFunction $helperFunction,
+		Request $request
 	) {
 		$this->helperFunction = $helperFunction;
+		$this->request = $request;
 		parent::__construct($firebaseService);
 	}
 
@@ -361,5 +365,22 @@ class PaperApi extends BaseApi
 	function tags() : array {
 		$tags = PageTag::select('value')->take(8)->get()->toArray();
 		return array_column($tags, 'value');
+	}
+
+	function searchAll() {
+        return $this->search($this->request->get('query'));
+    }
+
+	function search(string $query) {
+		$searchValue = strtolower($query);
+
+        $searchPaper = array_column(Paper::where('title', 'LIKE', "%$searchValue%")
+            ->orWhere('short_conten', 'LIKE', "%$searchValue%")->get('id')->toArray(), 'id') ?: [];
+
+        $searchTags = array_column(PageTag::where('value', 'LIKE', "%$searchValue%")->get('entity_id')->toArray(), 'entity_id') ?: [];
+
+        $allValue = array_unique(array_merge($searchPaper, $searchTags));
+        $papers = Paper::whereIn('id', $allValue)->get();
+		return $papers;
 	}
 }

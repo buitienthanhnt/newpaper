@@ -144,16 +144,12 @@ class ManagerController extends Controller
 
     function search(Request $request)
     {
-        $searchValue = strtolower($request->get('search'));
-
-        $searchPaper = array_column(Paper::where('title', 'LIKE', "%$searchValue%")
-            ->orWhere('short_conten', 'LIKE', "%$searchValue%")->get('id')->toArray(), 'id') ?: [];
-
-        $searchTags = array_column(PageTag::where('value', 'LIKE', "%$searchValue%")->get('entity_id')->toArray(), 'entity_id') ?: [];
-
-        $allValue = array_unique(array_merge($searchPaper, $searchTags));
-        $papers = Paper::whereIn('id', $allValue)->get();
+        $papers = $this->paperApi->searchAll();
         return view('frontend.templates.paper.searchResult', compact('papers'));
+    }
+
+    function searchApi() {
+        return $this->paperApi->searchAll();
     }
 
     public function pageDetail($alias, $page_id)
