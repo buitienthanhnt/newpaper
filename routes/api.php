@@ -63,6 +63,8 @@ Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name
 
 Route::get('search', "ManagerController@searchApi")->name('api_search');
 
+Route::get('byWriter/{id}', "ManagerController@byWriter")->name('api_search_byWriter');
+
 Route::post("testPost", function (Request $request)
 {
     $params = $request->getContent();

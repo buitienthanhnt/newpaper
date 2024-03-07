@@ -152,6 +152,11 @@ class ManagerController extends Controller
         return $this->paperApi->searchAll();
     }
 
+    function byWriter($id) {
+        $writerApi = $this->writerApi->getPapers($id);
+        return $writerApi;
+    }
+
     public function pageDetail($alias, $page_id)
     {
         $key = 'paper_detail' . $page_id;
