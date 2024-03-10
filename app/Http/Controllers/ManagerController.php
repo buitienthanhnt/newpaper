@@ -61,65 +61,12 @@ class ManagerController extends Controller
 
     function info()
     {
-        $paperApi = $this->paperApi;
-        $hit = $paperApi->hit();
-        $mostPopulator = $paperApi->mostPopulator();
-        $mostRecents = $paperApi->mostRecents();
-        $listImages = $paperApi->listImages();
-        $timeLine = $paperApi->timeLine();
-        $tags = $paperApi->tags();
-        $writers = $this->writerApi->allWriter();
-        $lineMap = [
-            "data" => [
-                "labels" => ["Jan", "Feb", "March", "April", "May", "June", 'nan'],
-                "datasets" => [
-                    [
-                        "data" => [
-                            random_int(1, 100),
-                            random_int(1, 100),
-                            random_int(1, 100),
-                            random_int(1, 100),
-                            random_int(1, 100),
-                            random_int(1, 100),
-                            random_int(1, 100)
-                        ]
-                    ]
-                ]
-            ],
-            "yAxisLabel" => "$",
-            "yAxisSuffix" => "đ",
-            "bezier" => true,
-            "yAxisInterval" => 1,
-            "chartConfig" => [
-                "backgroundColor" => "#e26a00",
-                "backgroundGradientFrom" => "#ff7cc0", // 82baff
-                "backgroundGradientTo" => "#82baff",   // ffa726
-                "decimalPlaces" => 1, // số chữ số sau dấu phẩy.
-            ]
-        ];
-        $video = [
-            "videoId" => "_l5V2aWyTfI",
-            "height" => 220,
-            "title" => "This snippet renders a Youtube video"
-        ];
+        return $this->paperApi->homeInfo();
+    }
 
-        return [
-            'data' => [
-                'status' => true,
-                'code' => 200,
-                'hit' => $hit[0],
-                'mostPopulator' => $mostPopulator,
-                'mostRecents' => $mostRecents,
-                'listImages' => $listImages,
-                'timeLine' => $timeLine,
-                'search' => $tags,
-                'writers' => $writers,
-                'map' => $lineMap,
-                'video' => $video
-            ],
-            'success' => true,
-            'error' => null
-        ];
+    function upInfo()
+    {
+        return $this->paperApi->upFirebaseHomeInfo();
     }
 
     public function homePage()
@@ -397,5 +344,9 @@ class ManagerController extends Controller
     function pullFirebaseComLike()
     {
         $this->paperApi->pullFirebaseComLike();
+    }
+
+    function getWriters() {
+        $this->paperApi->upPaperWriter(142);
     }
 }

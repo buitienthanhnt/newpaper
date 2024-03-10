@@ -45,7 +45,7 @@ Route::post("addLike/{paper_id}", "PaperController@addLike")->name("api_addLike"
 
 Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments")->name('upFirebaseComments');
 
-Route::prefix('notification')->group(function(){
+Route::prefix('notification')->group(function () {
     Route::post("registerFcm", "NotificationController@registerFcm")->name('registerFcm');
 
     Route::get('push', "NotificationController@push_notification")->name("notification_push");
@@ -57,7 +57,7 @@ Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name
 
 Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name('pullFirebaseComment');
 
-Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike'); 
+Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
 
 Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name('pullFirebaseComLike');
 
@@ -65,22 +65,28 @@ Route::get('search', "ManagerController@searchApi")->name('api_search');
 
 Route::get('byWriter/{id}', "ManagerController@byWriter")->name('api_search_byWriter');
 
-Route::post("testPost", function (Request $request)
-{
-    $params = $request->getContent();
-    return $params;
-    // throw new Exception("Error Processing Request", 406);
-    // throw new HttpException(500, 'opopop');
+Route::prefix('test')->group(function () {
 
-    return(json_encode([
-        "name" => 'tha',
-        "id" => 2,
-        "title" => "demo for post api",
-        'arr' => [23, 34, 45, 56]
-    ]));
+    Route::get('upFirebase/home', "ManagerController@upInfo");
+    
+    Route::get('getWriters', 'ManagerController@getWriters')->name('api_writers');
+
+    Route::post("testPost", function (Request $request) {
+        $params = $request->getContent();
+        return $params;
+        // throw new Exception("Error Processing Request", 406);
+        // throw new HttpException(500, 'opopop');
+
+        return (json_encode([
+            "name" => 'tha',
+            "id" => 2,
+            "title" => "demo for post api",
+            'arr' => [23, 34, 45, 56]
+        ]));
+    });
 });
 
-Route::prefix('share')->group(function(){
+Route::prefix('share')->group(function () {
     Route::get("mostPopulator", "ManagerController@mostPopulator")->name('mostPopulator');
 
     Route::get("likeMost", "ManagerController@likeMost")->name('likeMost');
@@ -92,7 +98,6 @@ Route::prefix('paper')->group(function () {
     Route::post("like/{comment_id?}", "PaperController@like")->name("api_paper_like");
 
     Route::get("firebase/{paper_id?}", "ManagerController@firebasePaperDetail")->name("api_paper_detail_firebase");
-
 });
 
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd

@@ -43,5 +43,6 @@ class UpPaperFireBase implements ShouldQueue
         $paperApi->upFirebaseComments($_paper);
         $paperApi->upPaperInfo($_paper);
         $paperApi->upContentFireStore($_paper);
+        $paperApi->upPaperWriter($_paper);
     }
 }

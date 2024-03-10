@@ -18,14 +18,20 @@ class PaperApi extends BaseApi
 {
 	protected $helperFunction;
 	protected $request;
-	
+	protected $writerApi;
+	protected $logTha;
+
 	function __construct(
 		FirebaseService $firebaseService,
 		HelperFunction $helperFunction,
-		Request $request
+		Request $request,
+		WriterApi $writerApi,
+		LogTha $logTha
 	) {
 		$this->helperFunction = $helperFunction;
 		$this->request = $request;
+		$this->writerApi = $writerApi;
+		$this->logTha = $logTha;
 		parent::__construct($firebaseService);
 	}
 
@@ -149,7 +155,8 @@ class PaperApi extends BaseApi
 		Cache::put('paper_in_firebase', $this->paperInFirebase());
 	}
 
-	function upSliderImages(array $sliderImages) {
+	function upSliderImages(array $sliderImages)
+	{
 		foreach ($sliderImages as &$value) {
 			$value->value = $this->upLoadImageFirebase($value->value);
 			Log::alert($value->value);
@@ -195,15 +202,34 @@ class PaperApi extends BaseApi
 			$observer = $this->fireStore->collection('detailInfo')->document($paper->id);
 			if (!$observer->snapshot()->data()) {
 				$observer->create($paper->paperInfo());
-			}else {
+			} else {
 				$observer->delete();
 				$observer->create($paper->paperInfo());
 			}
-			
 		} catch (\Throwable $th) {
-			echo($th->getMessage());
+			echo ($th->getMessage());
 			//throw $th;
 		}
+	}
+
+	/**
+	 * @param int|Paper $paper
+	 * @return void
+	 */
+	function upPaperWriter($paper): void {
+		try {
+			if (is_numeric($paper)) {
+				$paper = $this->getDetail($paper);
+			}
+			$_paper = $paper->toArray();
+			unset($_paper['conten']);
+			$writers = $paper->to_writer()->getResults()->toArray();
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/writers/' . $writers['id']."/".$_paper['id']);
+			$userRef->push($_paper);
+		} catch (\Throwable $th) {
+			$this->logTha->logError('warning', $th->getMessage());
+		}
+		
 	}
 
 	function rmContentFireStore($paperId)
@@ -220,6 +246,7 @@ class PaperApi extends BaseApi
 		} else {
 			unset($_paper['image_path']);
 		}
+		unset($_paper['conten']);
 		$paper['categories'] = $paper->listIdCategories();
 		if (($paper['categories']) && count($paper['categories'])) {
 			foreach ($paper['categories'] as $value) {
@@ -268,7 +295,7 @@ class PaperApi extends BaseApi
 		$observer = $this->firebaseDatabase->getReference('/newpaper/addLike/');
 		$snapshot = $observer->getSnapshot()->getValue();
 		if (empty($snapshot)) {
-		return;
+			return;
 		}
 		foreach ($snapshot as $value) {
 			if ($paper = $this->getDetail($value['paper_id'])) {
@@ -318,7 +345,8 @@ class PaperApi extends BaseApi
 		Log::alert('demo 123');
 	}
 
-	function mostPopulator() {
+	function mostPopulator()
+	{
 		$mostView = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
 		$mostPapers = Paper::find(array_column($mostView, "source_id"))->makeHidden(['conten']);
 		foreach ($mostPapers as &$value) {
@@ -328,7 +356,8 @@ class PaperApi extends BaseApi
 		return $mostPapers;
 	}
 
-	function mostRecents() {
+	function mostRecents()
+	{
 		$mostRecents = Paper::limit(8)->orderBy('created_at', 'DESC')->get()->makeHidden(['conten']);
 		foreach ($mostRecents as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -336,7 +365,8 @@ class PaperApi extends BaseApi
 		return $mostRecents;
 	}
 
-	function hit() {
+	function hit()
+	{
 		$hits = Paper::all()->random(1)->makeHidden(['conten']);
 		foreach ($hits as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -344,7 +374,8 @@ class PaperApi extends BaseApi
 		return $hits;
 	}
 
-	function listImages() {
+	function listImages()
+	{
 		$listImages = Paper::all()->random(5)->makeHidden(['conten']);
 		foreach ($listImages as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -352,7 +383,8 @@ class PaperApi extends BaseApi
 		return $listImages;
 	}
 
-	function timeLine() {
+	function timeLine()
+	{
 		$timeLine = Paper::all()->random(6)->sortBy('updated_at')->makeHidden(['conten']);
 		foreach ($timeLine as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -362,25 +394,104 @@ class PaperApi extends BaseApi
 		return $timeLine;
 	}
 
-	function tags() : array {
+	function homeInfo(): array
+	{
+		$hit = $this->hit();
+		$mostPopulator = $this->mostPopulator();
+		$mostRecents = $this->mostRecents();
+		$listImages = $this->listImages();
+		$timeLine = $this->timeLine();
+		$tags = $this->tags();
+		$writers = $this->writerApi->allWriter();
+		$lineMap = [
+			"data" => [
+				"labels" => ["Jan", "Feb", "March", "April", "May", "June", 'nan'],
+				"datasets" => [
+					[
+						"data" => [
+							random_int(1, 100),
+							random_int(1, 100),
+							random_int(1, 100),
+							random_int(1, 100),
+							random_int(1, 100),
+							random_int(1, 100),
+							random_int(1, 100)
+						]
+					]
+				]
+			],
+			"yAxisLabel" => "$",
+			"yAxisSuffix" => "đ",
+			"bezier" => true,
+			"yAxisInterval" => 1,
+			"chartConfig" => [
+				"backgroundColor" => "#e26a00",
+				"backgroundGradientFrom" => "#ff7cc0", // 82baff
+				"backgroundGradientTo" => "#82baff",   // ffa726
+				"decimalPlaces" => 1, // số chữ số sau dấu phẩy.
+			]
+		];
+		$video = [
+			"videoId" => "_l5V2aWyTfI",
+			"height" => 220,
+			"title" => "This snippet renders a Youtube video"
+		];
+
+		return [
+			'data' => [
+				'status' => true,
+				'code' => 200,
+				'hit' => $hit[0],
+				'mostPopulator' => $mostPopulator,
+				'mostRecents' => $mostRecents,
+				'listImages' => $listImages,
+				'timeLine' => $timeLine,
+				'search' => $tags,
+				'writers' => $writers,
+				'map' => $lineMap,
+				'video' => $video
+			],
+			'success' => true,
+			'error' => null
+		];
+	}
+
+	function upFirebaseHomeInfo(): bool
+	{
+		try {
+			$homeInfo = $this->homeInfo();
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/info');
+			$userRef->push($homeInfo);
+			$snapshot = $userRef->getSnapshot();
+			return true;
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
+		return false;
+	}
+
+	function tags(): array
+	{
 		$tags = PageTag::select('value')->take(8)->get()->toArray();
 		return array_column($tags, 'value');
 	}
 
-	function searchAll() {
-        return $this->search($this->request->get('query'));
-    }
+	function searchAll()
+	{
+		return $this->search($this->request->get('query'));
+	}
 
-	function search(string $query) {
+	function search(string $query)
+	{
 		$searchValue = strtolower($query);
 
-        $searchPaper = array_column(Paper::where('title', 'LIKE', "%$searchValue%")
-            ->orWhere('short_conten', 'LIKE', "%$searchValue%")->get('id')->toArray(), 'id') ?: [];
+		$searchPaper = array_column(Paper::where('title', 'LIKE', "%$searchValue%")
+			->orWhere('short_conten', 'LIKE', "%$searchValue%")->get('id')->toArray(), 'id') ?: [];
 
-        $searchTags = array_column(PageTag::where('value', 'LIKE', "%$searchValue%")->get('entity_id')->toArray(), 'entity_id') ?: [];
+		$searchTags = array_column(PageTag::where('value', 'LIKE', "%$searchValue%")->get('entity_id')->toArray(), 'entity_id') ?: [];
 
-        $allValue = array_unique(array_merge($searchPaper, $searchTags));
-        $papers = Paper::whereIn('id', $allValue)->get();
+		$allValue = array_unique(array_merge($searchPaper, $searchTags));
+		$papers = Paper::whereIn('id', $allValue)->get();
 		return $papers;
 	}
 }
