@@ -67,6 +67,8 @@ Route::get('byWriter/{id}', "ManagerController@byWriter")->name('api_search_byWr
 
 Route::prefix('test')->group(function () {
 
+    Route::get('homeInfo', "ManagerController@info");
+
     Route::get('upFirebase/home', "ManagerController@upInfo");
     
     Route::get('getWriters', 'ManagerController@getWriters')->name('api_writers');

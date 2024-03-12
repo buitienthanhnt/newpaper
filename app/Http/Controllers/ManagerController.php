@@ -64,7 +64,7 @@ class ManagerController extends Controller
         return $this->paperApi->homeInfo();
     }
 
-    function upInfo()
+    function upHomeInfo()
     {
         return $this->paperApi->upFirebaseHomeInfo();
     }

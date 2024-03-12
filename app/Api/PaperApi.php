@@ -113,6 +113,8 @@ class PaperApi extends BaseApi
 			$userRef->push($paper);
 			$snapshot = $userRef->getSnapshot();
 
+			$this->logTha->logFirebase('info', "added for paperId: " . $paper['id'] . " to paperList firebase");
+
 			Cache::put('paper_in_firebase', $this->paperInFirebase());
 			return [
 				'status' => true,
@@ -185,6 +187,9 @@ class PaperApi extends BaseApi
 			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
 			$_paper['slider_images'] = $this->upSliderImages($paper->sliderImages()->toArray());
 			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
+			$this->logTha->logFirebase('info', "added for paper detail: " . $paper->id . " to document paper detail firebase", [
+				'paper_id' => $paper->id
+			]);
 		} catch (\Throwable $th) {
 			Log::error($th->getMessage());
 		}
@@ -200,6 +205,7 @@ class PaperApi extends BaseApi
 				return;
 			}
 			$observer = $this->fireStore->collection('detailInfo')->document($paper->id);
+			$this->logTha->logFirebase('info', "added for detail info: " . $paper->id . " to document paper info firebase");
 			if (!$observer->snapshot()->data()) {
 				$observer->create($paper->paperInfo());
 			} else {
@@ -216,7 +222,8 @@ class PaperApi extends BaseApi
 	 * @param int|Paper $paper
 	 * @return void
 	 */
-	function upPaperWriter($paper): void {
+	function upPaperWriter($paper): void
+	{
 		try {
 			if (is_numeric($paper)) {
 				$paper = $this->getDetail($paper);
@@ -224,12 +231,15 @@ class PaperApi extends BaseApi
 			$_paper = $paper->toArray();
 			unset($_paper['conten']);
 			$writers = $paper->to_writer()->getResults()->toArray();
-			$userRef = $this->firebaseDatabase->getReference('/newpaper/writers/' . $writers['id']."/".$_paper['id']);
+			$userRef = $this->firebaseDatabase->getReference('/newpaper/writers/' . $writers['id'] . "/" . $_paper['id']);
 			$userRef->push($_paper);
+			$this->logTha->logFirebase('info', "added for paper writer: " . $paper->id . " to realTime database writer firebase", [
+				'paper_id' => $paper->id,
+				'writer' => $writers['id']
+			]);
 		} catch (\Throwable $th) {
 			$this->logTha->logError('warning', $th->getMessage());
 		}
-		
 	}
 
 	function rmContentFireStore($paperId)
@@ -252,6 +262,10 @@ class PaperApi extends BaseApi
 			foreach ($paper['categories'] as $value) {
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' . $value);
 				$userRef->push($_paper);
+				$this->logTha->logFirebase('info', "added for paperId: " . $_paper['id'] . " to paperCategory firebase", [
+					'paperId' => $_paper['id'],
+					'categoryId' => $value
+				]);
 			}
 		}
 	}
@@ -272,6 +286,9 @@ class PaperApi extends BaseApi
 		if (!empty($commentTree) && count($commentTree)) {
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id)->remove();
 			$userRef->push($commentTree);
+			$this->logTha->logFirebase('info', "added for comment list to comment firebase", [
+				'paper_id' => $paper->id,
+			]);
 		}
 	}
 
