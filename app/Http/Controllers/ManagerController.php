@@ -95,11 +95,13 @@ class ManagerController extends Controller
         return view('frontend.templates.paper.searchResult', compact('papers'));
     }
 
-    function searchApi() {
+    function searchApi()
+    {
         return $this->paperApi->searchAll();
     }
 
-    function byWriter($id) {
+    function byWriter($id)
+    {
         $writerApi = $this->writerApi->getPapers($id);
         return $writerApi;
     }
@@ -188,7 +190,7 @@ class ManagerController extends Controller
             $detail = $this->paper->find($paper_id);
             $detail->info = $detail->paperInfo();
             $detail->tags = $detail->to_tag()->getResults();
-            $detail->slider_images = array_map(function($item){
+            $detail->slider_images = array_map(function ($item) {
                 $item->value = $this->helperFunction->replaceImageUrl($item->value);
                 return $item;
             }, $detail->sliderImages()->toArray());
@@ -344,9 +346,5 @@ class ManagerController extends Controller
     function pullFirebaseComLike()
     {
         $this->paperApi->pullFirebaseComLike();
-    }
-
-    function getWriters() {
-        $this->paperApi->upPaperWriter(142);
     }
 }

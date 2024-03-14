@@ -6,6 +6,7 @@ use App\Helper\HelperFunction;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use App\Services\FirebaseService;
+use Thanhnt\Nan\Helper\LogTha;
 
 final class CategoryApi extends BaseApi
 {
@@ -15,11 +16,12 @@ final class CategoryApi extends BaseApi
     function __construct(
         HelperFunction $helperFunction,
         FirebaseService $firebaseService,
-        Category $category
+        Category $category,
+        LogTha $logTha
     ) {
         $this->category = $category;
         $this->helperFunction = $helperFunction;
-        parent::__construct($firebaseService);
+        parent::__construct($firebaseService, $logTha);
     }
 
     function Topcategories()

@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Api;
 
 use App\Helper\ImageUpload;
 use App\Services\FirebaseService;
 use Google\Cloud\Storage\Connection\Rest;
 use Illuminate\Support\Str;
+use Thanhnt\Nan\Helper\LogTha;
 
 class BaseApi
 {
@@ -15,10 +17,13 @@ class BaseApi
     protected $firebase;
     protected $firebaseDatabase;
     protected $fireStore;
+    protected $logTha;
 
     function __construct(
-        FirebaseService $firebaseService
+        FirebaseService $firebaseService,
+        LogTha $logTha
     ) {
+        $this->logTha = $logTha;
         $this->firebase = $firebaseService->firebase;
         $this->firebaseDatabase = $this->firebase->createDatabase();
         $this->fireStore = $firebaseService->fireStore;
@@ -51,6 +56,11 @@ class BaseApi
         return null;
     }
 
+    /**
+     * remove image in storage of firebase.
+     * @param string $url_path
+     * @return bool
+     */
     function removeImageFirebase(string $url_path)
     {
         try {
@@ -58,11 +68,11 @@ class BaseApi
              * @var \Kreait\Firebase\Contract\Storage $storage
              */
             $storage = $this->firebase->createStorage();
-            $fileName = '/' . self::STORERAGE_BUGKET . explode("/" . self::STORERAGE_BUGKET . "/", parse_url(urldecode($url_path))['path'], 2)[1];
+            $fileName = self::STORERAGE_BUGKET . "/" . explode("/" . self::STORERAGE_BUGKET . "/", parse_url(urldecode($url_path))['path'], 2)[1];
             $storage->getBucket()->object($fileName)->delete();
             return true;
         } catch (\Throwable $th) {
-            //throw $th;
+            $this->logTha->logFirebase('warning', 'can not remove image paper by: ' . $th->getMessage(), ['line' => $th->getLine()]);
         }
         return false;
     }

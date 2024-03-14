@@ -68,16 +68,12 @@ class FirebaseController extends BaseController
     {
         $paperId = $request->get('paper_id');
         if (!empty($paperId)) {
-            try {
-                $response = $this->paperApi->removeInFirebase($paperId);
-                return response(json_encode([
-                    'code' => 200,
-                    'data' => $response['value'],
-                    'error' => null
-                ]));
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
+            $response = $this->paperApi->removeInFirebase($paperId);
+            return response(json_encode([
+                'code' => 200,
+                'data' => $response['value'],
+                'error' => null
+            ]));
         }
         return response(json_encode([
             'code' => 400,

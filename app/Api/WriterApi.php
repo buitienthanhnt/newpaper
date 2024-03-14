@@ -7,6 +7,7 @@ use App\Models\ConfigCategory;
 use App\Models\Writer;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
+use Thanhnt\Nan\Helper\LogTha;
 
 final class WriterApi extends BaseApi
 {
@@ -18,12 +19,13 @@ final class WriterApi extends BaseApi
         HelperFunction $helperFunction,
         FirebaseService $firebaseService,
         Writer $writer,
-        Request $request
+        Request $request,
+        LogTha $logTha
     ) {
         $this->writer = $writer;
         $this->helperFunction = $helperFunction;
         $this->request = $request;
-        parent::__construct($firebaseService);
+        parent::__construct($firebaseService, $logTha);
     }
 
     function allWriter()

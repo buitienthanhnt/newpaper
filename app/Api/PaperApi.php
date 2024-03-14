@@ -19,7 +19,6 @@ class PaperApi extends BaseApi
 	protected $helperFunction;
 	protected $request;
 	protected $writerApi;
-	protected $logTha;
 
 	function __construct(
 		FirebaseService $firebaseService,
@@ -31,8 +30,7 @@ class PaperApi extends BaseApi
 		$this->helperFunction = $helperFunction;
 		$this->request = $request;
 		$this->writerApi = $writerApi;
-		$this->logTha = $logTha;
-		parent::__construct($firebaseService);
+		parent::__construct($firebaseService, $logTha);
 	}
 
 	/**
@@ -103,7 +101,10 @@ class PaperApi extends BaseApi
 			foreach ($hidden as $k) {
 				unset($paper[$k]);
 			}
-			// queue for upload data of paper to firebase
+			/**
+			 * queue for async upload data of paper to firebase
+			 * paper_id & paper image path firebase.
+			 */
 			UpPaperFireBase::dispatch($_paper->id, $firebaseImage ?? null);
 			// $this->upFirebaseComments($_paper);
 			// $this->upPaperInfo($_paper);
@@ -113,7 +114,7 @@ class PaperApi extends BaseApi
 			$userRef->push($paper);
 			$snapshot = $userRef->getSnapshot();
 
-			$this->logTha->logFirebase('info', "added for paperId: " . $paper['id'] . " to paperList firebase");
+			$this->logTha->logFirebase('info', " -> Added for paperId: " . $paper['id'] . " to paperList firebase");
 
 			Cache::put('paper_in_firebase', $this->paperInFirebase());
 			return [
@@ -128,26 +129,117 @@ class PaperApi extends BaseApi
 		];
 	}
 
-	function removeInFirebase($idInFirebase)
+	/**
+	 * remove paper in list of realtime database.
+	 * @param int|string $idInFirebase
+	 * @return array
+	 */
+	public function removePaperInList($idInFirebase)
 	{
 		try {
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $idInFirebase);
 			$paperData = $this->formatPaperFirebase($userRef->getSnapshot()->getValue());
-			$paperId = $paperData['id'];
 			$userRef->remove();
-			$this->rmContentFireStore($paperId);
-			if (isset($paperData['image_path'])) {
-				$this->removeImageFirebase($paperData['image_path']);
-			}
-			$this->updatePaperCache();
-			return [
-				'status' => true,
-				'value' => $paperId
-			];
+			$this->logTha->logFirebase('info', 'removed paper data in papers firebase database', [
+				'paper' => $idInFirebase
+			]);
+			return $paperData;
 		} catch (\Throwable $th) {
-			//throw $th;
+			$this->logTha->logFirebase('warning', 'can not remove paper in papers lists firebase: ' . $th->getMessage(), ['line' => $th->getLine()]);
 		}
-		return false;
+		return null;
+	}
+
+	function removePaperCategory($paperData): void
+	{
+		if ($categories = $paperData['categories']) {
+			foreach ($categories as $value) {
+				try {
+					$userRef = $this->firebaseDatabase->getReference("/newpaper/papersCategory/$value/{$paperData['id']}");
+					$userRef->remove();
+					$this->logTha->logFirebase('info', 'removed paper data in categories firebase database', [
+						'paper' => $paperData['id'],
+						'category' => $value
+					]);
+				} catch (\Throwable $th) {
+					$this->logTha->logFirebase('warning', 'can not remove paper in categories firebase: ' . $th->getMessage(), ['line' => $th->getLine()]);
+				}
+			}
+		}
+	}
+
+	function removePaperComment($idInFirebase)
+	{
+		try {
+			$userRef = $this->firebaseDatabase->getReference("/newpaper/comments/$idInFirebase");
+			$userRef->remove();
+			$this->logTha->logFirebase('info', 'removed paper comments in firebase database', [
+				'paper' => $idInFirebase,
+			]);
+		} catch (\Throwable $th) {
+			$this->logTha->logFirebase('warning', 'can not remove paper comments: ' . $th->getMessage(), ['line' => $th->getLine()]);
+		}
+	}
+
+	function removePaperInfo($idInFirebase): void
+	{
+		try {
+			$observer = $this->fireStore->collection('detailInfo')->document($idInFirebase);
+			$observer->delete();
+			$this->logTha->logFirebase('info', 'removed paper info in firestore', [
+				'paper' => $idInFirebase,
+			]);
+		} catch (\Throwable $th) {
+			$this->logTha->logFirebase('warning', 'can not remove paper info in firestore: ' . $th->getMessage(), ['line' => $th->getLine()]);
+		}
+	}
+
+	function removePaperWriter($paperData)
+	{
+		try {
+			$observer = $this->firebaseDatabase->getReference("/newpaper/writers/{$paperData['writer']}/{$paperData['id']}");
+			$observer->remove();
+			$this->logTha->logFirebase('info', 'removed paper info in writer', [
+				'paper' => $paperData['id'],
+				'writer' => $paperData['writer']
+			]);
+		} catch (\Throwable $th) {
+			$this->logTha->logFirebase('warning', 'can not remove paper in writers: ' . $th->getMessage(), ['line' => $th->getLine()]);
+		}
+	}
+
+	/**
+	 * remove all value of paper in firebase
+	 * @param int|string $idInFirebase
+	 * @return array
+	 */
+	function removeInFirebase($idInFirebase)
+	{
+		$this->logTha->logFirebase('info', '<<------- start remove paper in firebase');
+		$paperData = $this->removePaperInList($idInFirebase);
+		if (empty($paperData)) {
+			return [
+				'status' => false,
+				'value' => null
+			];
+		}
+		$this->removePaperCategory($paperData);
+		$this->rmContentFireStore($idInFirebase);
+		$this->removePaperComment($idInFirebase);
+		$this->removePaperInfo($idInFirebase);
+		$this->removePaperWriter($paperData);
+		if (isset($paperData['image_path'])) {
+			/**
+			 * remove image papaper in storage firebase.
+			 */
+			$this->removeImageFirebase($paperData['image_path']);
+		}
+		$this->logTha->logFirebase('info', 'end remove paper in firebase ------->>');
+		$this->updatePaperCache();
+		return [
+			'status' => true,
+			'value' => $idInFirebase
+		];
 	}
 
 	function updatePaperCache()
@@ -159,13 +251,20 @@ class PaperApi extends BaseApi
 
 	function upSliderImages(array $sliderImages)
 	{
-		foreach ($sliderImages as &$value) {
-			$value->value = $this->upLoadImageFirebase($value->value);
-			Log::alert($value->value);
+		try {
+			foreach ($sliderImages as &$value) {
+				$value->value = $this->upLoadImageFirebase($value->value);
+			}
+			return $sliderImages;
+		} catch (\Throwable $th) {
+			$this->logTha->logFirebase('warning', 'upSliderImages error: ' . $th->getMessage(), ['line' => $th->getLine()]);
 		}
-		return $sliderImages;
 	}
 
+	/**
+	 * @param int|Paper $paper
+	 * @return void
+	 */
 	function upContentFireStore(Paper $paper)
 	{
 		// $fireStore = $this->fireStore->collection('newpaper')->document('detailcontent')->snapshot()->data();
@@ -191,10 +290,14 @@ class PaperApi extends BaseApi
 				'paper_id' => $paper->id
 			]);
 		} catch (\Throwable $th) {
-			Log::error($th->getMessage());
+			$this->logTha->logFirebase('warning', 'add paper detail to firestore error: ' . $th->getMessage(), ['line' => $th->getLine()]);
 		}
 	}
 
+	/**
+	 * @param int|Paper $paper
+	 * @return void
+	 */
 	function upPaperInfo(Paper $paper)
 	{
 		try {
@@ -205,24 +308,24 @@ class PaperApi extends BaseApi
 				return;
 			}
 			$observer = $this->fireStore->collection('detailInfo')->document($paper->id);
-			$this->logTha->logFirebase('info', "added for detail info: " . $paper->id . " to document paper info firebase");
 			if (!$observer->snapshot()->data()) {
 				$observer->create($paper->paperInfo());
 			} else {
 				$observer->delete();
 				$observer->create($paper->paperInfo());
 			}
+			$this->logTha->logFirebase('info', "added for detail info: " . $paper->id . " to document paper info firebase", ['paper' => $paper->id]);
 		} catch (\Throwable $th) {
-			echo ($th->getMessage());
-			//throw $th;
+			$this->logTha->logFirebase('warning', 'add paper info firebase error: ' . $th->getMessage(), ['line' => $th->getLine()]);
 		}
 	}
 
 	/**
 	 * @param int|Paper $paper
+	 * @param string|null $image_path
 	 * @return void
 	 */
-	function upPaperWriter($paper): void
+	function upPaperWriter($paper, $image_path = null): void
 	{
 		try {
 			if (is_numeric($paper)) {
@@ -230,15 +333,16 @@ class PaperApi extends BaseApi
 			}
 			$_paper = $paper->toArray();
 			unset($_paper['conten']);
+			$_paper['image_path'] = $image_path;
 			$writers = $paper->to_writer()->getResults()->toArray();
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/writers/' . $writers['id'] . "/" . $_paper['id']);
 			$userRef->push($_paper);
-			$this->logTha->logFirebase('info', "added for paper writer: " . $paper->id . " to realTime database writer firebase", [
+			$this->logTha->logFirebase('info', "added for paper to writer: " . $paper->id . " to realTime database writer firebase", [
 				'paper_id' => $paper->id,
 				'writer' => $writers['id']
 			]);
 		} catch (\Throwable $th) {
-			$this->logTha->logError('warning', $th->getMessage());
+			$this->logTha->logFirebase('warning', 'add paper to writer firebase realtime error: ' . $th->getMessage(), ['line' => $th->getLine()]);
 		}
 	}
 
@@ -248,6 +352,11 @@ class PaperApi extends BaseApi
 	}
 
 
+	/**
+	 * @param int|Paper $paper
+	 * @param string|null $firebaseImage
+	 * @return void
+	 */
 	public function addPapersCategory(Paper $paper, $firebaseImage = null)
 	{
 		$_paper = $paper->toArray();
@@ -260,12 +369,16 @@ class PaperApi extends BaseApi
 		$paper['categories'] = $paper->listIdCategories();
 		if (($paper['categories']) && count($paper['categories'])) {
 			foreach ($paper['categories'] as $value) {
-				$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' . $value);
-				$userRef->push($_paper);
-				$this->logTha->logFirebase('info', "added for paperId: " . $_paper['id'] . " to paperCategory firebase", [
-					'paperId' => $_paper['id'],
-					'categoryId' => $value
-				]);
+				try {
+					$userRef = $this->firebaseDatabase->getReference('/newpaper/papersCategory/' . $value . "/{$_paper['id']}");
+					$userRef->push($_paper);
+					$this->logTha->logFirebase('info', "added for paperId: " . $_paper['id'] . " to paperCategory firebase", [
+						'paperId' => $_paper['id'],
+						'categoryId' => $value
+					]);
+				} catch (\Throwable $th) {
+					$this->logTha->logFirebase('warning', 'add paper category firebase error: ' . $th->getMessage(), ['line' => $th->getLine()]);
+				}
 			}
 		}
 	}
@@ -284,11 +397,15 @@ class PaperApi extends BaseApi
 		}
 		$commentTree = $paper->getCommentTree(null, 0, 0);
 		if (!empty($commentTree) && count($commentTree)) {
-			$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id)->remove();
-			$userRef->push($commentTree);
-			$this->logTha->logFirebase('info', "added for comment list to comment firebase", [
-				'paper_id' => $paper->id,
-			]);
+			try {
+				$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id)->remove();
+				$userRef->push($commentTree);
+				$this->logTha->logFirebase('info', "added comment to comment list firebase", [
+					'paper_id' => $paper->id,
+				]);
+			} catch (\Throwable $th) {
+				$this->logTha->logFirebase('warning', 'up paper comment to comment list firebase error: ' . $th->getMessage(), ['line' => $th->getLine()]);
+			}
 		}
 	}
 
@@ -355,11 +472,6 @@ class PaperApi extends BaseApi
 				$this->upFirebaseComments($paper);
 			}
 		}
-	}
-
-	function demoLog(): void
-	{
-		Log::alert('demo 123');
 	}
 
 	function mostPopulator()
