@@ -69,7 +69,7 @@ Route::prefix('test')->group(function () {
 
     Route::get('homeInfo', "ManagerController@info");
 
-    Route::get('upFirebase/home', "ManagerController@upInfo");
+    Route::get('upFirebase/home', "ManagerController@upHomeInfo");
     
     Route::get('getWriters', 'ManagerController@getWriters')->name('api_writers');
 
