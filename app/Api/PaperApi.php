@@ -607,7 +607,7 @@ class PaperApi extends BaseApi
 
 	function searchAll()
 	{
-		return $this->search($this->request->get('search'));
+		return $this->search($this->request->get('search', $this->request->get('query')));
 	}
 
 	function search(string $query)
