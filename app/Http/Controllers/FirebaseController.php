@@ -41,7 +41,10 @@ class FirebaseController extends BaseController
             Cache::put('paper_in_firebase', $papersInFirebase);
         }
         $uploadedIds = array_column($papersInFirebase, 'id');
-        $papers = Paper::where('show', '=', 0)->whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
+        // $papers = Paper::where('show', '=', 1)->whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
+        
+        // tạm thời lấy hết
+        $papers = Paper::whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
         return view('adminhtml.templates.firebase.dashboard', ['listPaper' => $papersInFirebase, 'papers' => $papers]);
     }
 
