@@ -1,29 +1,29 @@
-let allField = [
-    {
-        title: "Lần đầu công bố video tăng Leopard bị phá hủy",
-        id: 18,
-        url_alias: "lan-dau-cong-bo-video-tang-leopard-bi-pha-huy",
-        short_conten: "Bộ Quốc phòng Nga vừa lần đầu công bố đoạn video ghi lại hình ảnh xe tăng hạng nặng Leopard của Ukraine bị phá hủy.",
-        active: 1,
-        show: 1,
-        show_time: null,
-        image_path: "http://192.168.100.156/laravel1/public/storage/files/shares/images up/suc-manh-hai-mau-truc-thang-vu-trang-nga-duoc-san-don-nhat-Hinh-8.jpg",
-        tag: null,
-        auto_hide: 0,
-        writer: "1",
-        show_writer: 0,
-        deleted_at: null,
-        created_at: "2023-06-08T06:50:26.000000Z",
-        updated_at: "2023-06-08T06:50:26.000000Z",
-        type: "content",
-        info: {
-           view_count: "41",
-           comment_count: 3,
-           like: "3",
-           heart: "1"
-        }
-     }
-];
+// let allField = [
+//     {
+//         title: "Lần đầu công bố video tăng Leopard bị phá hủy",
+//         id: 18,
+//         url_alias: "lan-dau-cong-bo-video-tang-leopard-bi-pha-huy",
+//         short_conten: "Bộ Quốc phòng Nga vừa lần đầu công bố đoạn video ghi lại hình ảnh xe tăng hạng nặng Leopard của Ukraine bị phá hủy.",
+//         active: 1,
+//         show: 1,
+//         show_time: null,
+//         image_path: "http://192.168.100.156/laravel1/public/storage/files/shares/images up/suc-manh-hai-mau-truc-thang-vu-trang-nga-duoc-san-don-nhat-Hinh-8.jpg",
+//         tag: null,
+//         auto_hide: 0,
+//         writer: "1",
+//         show_writer: 0,
+//         deleted_at: null,
+//         created_at: "2023-06-08T06:50:26.000000Z",
+//         updated_at: "2023-06-08T06:50:26.000000Z",
+//         type: "content",
+//         info: {
+//            view_count: "41",
+//            comment_count: 3,
+//            like: "3",
+//            heart: "1"
+//         }
+//      }
+// ];
 
 // radio active = 2
 // khi chuyển sang 1:
@@ -42,6 +42,24 @@ let allField = [
 // lúc này active key chưa có key mới.
 // b-4-2 lấy tất cả các file trong active cùng với các field có depend value = 1 từ all để tạo new active
 
+
+
+const array1 = [1,2,3,4];
+
+function demo(){
+   let x = [];
+   for (const element of array1) {
+      if (element == 2) {
+         console.log(123123);
+         continue;
+      }
+      console.log(element);
+   }
+   return x;
+}
+
+let ad = demo();
+console.log(ad);
 
 
 

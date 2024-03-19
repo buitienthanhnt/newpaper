@@ -503,6 +503,14 @@ class PaperApi extends BaseApi
 		return $hits;
 	}
 
+	function forward() {
+		$forward = Paper::all()->random(1)->makeHidden(['conten']);
+		foreach ($forward as &$value) {
+			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		}
+		return $forward;
+	}
+
 	function listImages()
 	{
 		$listImages = Paper::all()->random(5)->makeHidden(['conten']);
@@ -526,6 +534,7 @@ class PaperApi extends BaseApi
 	function homeInfo(): array
 	{
 		$hit = $this->hit();
+		$forward = $this->forward();
 		$mostPopulator = $this->mostPopulator();
 		$mostRecents = $this->mostRecents();
 		$listImages = $this->listImages();
@@ -571,6 +580,7 @@ class PaperApi extends BaseApi
 				'status' => true,
 				'code' => 200,
 				'hit' => $hit[0],
+				'forward' => $forward[0],
 				'mostPopulator' => $mostPopulator,
 				'mostRecents' => $mostRecents,
 				'listImages' => $listImages,
