@@ -511,11 +511,13 @@ class PaperApi extends BaseApi
 		 * get writer
 		 */
 		$writer = $forward->to_writer()->getResults();
-		$writer->image_path = $this->helperFunction->replaceImageUrl($writer->image_path);
-		/**
-		 * set writer for data
-		 */
-		$forward->writer = $writer;
+		if ($writer) {
+			$writer->image_path = $this->helperFunction->replaceImageUrl($writer->image_path);
+			/**
+			 * set writer for data
+			 */
+			$forward->writer = $writer;
+		}
 		return $forward;
 	}
 
