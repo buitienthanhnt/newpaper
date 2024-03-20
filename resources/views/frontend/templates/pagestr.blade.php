@@ -27,6 +27,10 @@
             <div class="trending-main">
                 <div class="row">
 
+                    <div class="col-lg-12">
+                        @yield('full_content')
+                    </div>
+
                     <!-- Trending Top -->
                     <div class="col-lg-8">
                         @yield('trending_left')

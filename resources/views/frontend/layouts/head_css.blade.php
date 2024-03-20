@@ -1,4 +1,5 @@
  <!-- CSS here src=asset(' -->
+ @yield('css_before')
  <link rel="stylesheet" href={{asset('assets/frontend/css/bootstrap.min.css')}}>
  <link rel="stylesheet" href={{asset('assets/frontend/css/owl.carousel.min.css')}}>
  <link rel="stylesheet" href={{asset('assets/frontend/css/ticker-style.css')}}>

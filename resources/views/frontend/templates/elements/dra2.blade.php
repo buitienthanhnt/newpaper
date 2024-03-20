@@ -1,51 +1,27 @@
-<!doctype html>
+@extends('frontend.templates.pagestr')
 
-<head>
-    <meta charset='utf-8'>
-    <link rel="shortcut icon" href="favicon.ico">
+@section('css_before')
     <link href="{{ asset('assets/frontend/css/dragula/dragula.css') }}" rel='stylesheet' type='text/css' />
     <link href="{{ asset('assets/frontend/css/dragula/example.css') }}" rel='stylesheet' type='text/css' />
     <title>dragula</title>
-</head>
+@endsection
 
-<body>
-    <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
+@section('page_title')
+    login
+@endsection
 
-    <h1><a href='https://github.com/bevacqua/dragula'><img
-                src="{{ asset('assets/frontend/img/dragula/resources/logo.svg')}}" alt='dragula' /></a></h1>
-    <h3 class='tagline'><span class='tagline-text'>Drag and drop so simple it hurts</span>
-        <span class='slack-join'>
-            <a href='https://dragula.slack.com' target='_blank'>Join us on Slack</a>
-            <a href='https://github.com/bevacqua/dragula/issues/248' target='_blank'>(get invite)</a>
-        </span>
-    </h3>
-    <a href='https://github.com/bevacqua/dragula'>
-        <img class='gh-fork'
-            src='https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67'
-            alt='Fork me on GitHub'
-            data-canonical-src='https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png' />
-    </a>
+@section('full_content')
+<script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
 
-    <div class='examples'>
-
+<div class="row">
+    <div class="col-md-12">
         <div class='parent'>
-            <label for='hy'>Move stuff between these two containers. Note how the stuff gets inserted near the mouse
+            <label for='hy'>Move stuff between these two containers. Note how the stuff gets inserted near the
+                mouse
                 pointer? Great stuff.</label>
 
             <div class='wrapper'>
                 <div id='left-defaults' class='container'>
-
-                    <div class="media VCSortableInPreviewMode"> 
-                        <img fetchpriority="high"
-                            src="https://sohanews.sohacdn.com/thumb_w/660/160588918557773824/2023/12/21/dai-su-viet-nam-tai-my-17031509881981036724789-0-0-799-1278-crop-1703150992723665964579.jpg"
-                            alt="Đại sứ Việt Nam tại Mỹ Nguyễn Quốc Dũng. Ảnh: Báo điện tử Chính phủ."
-                            title="Đại sứ Việt Nam tại Mỹ Nguyễn Quốc Dũng. Ảnh: Báo điện tử Chính phủ."
-                            data-role="avatar" width="100%" height="auto">
-                        <div class="PhotoCMS_Caption PhotoCMS_Author">
-                            <p data-placeholder="nhập chú thích" style="text-align: center;"> Đại sứ Việt Nam tại Mỹ
-                                Nguyễn Quốc Dũng. Ảnh: Báo điện tử Chính phủ.</p>
-                        </div>
-                    </div>
                     <p>Trả lời bên lề Hội nghị Ngoại giao lần thứ 32 về hợp tác trong lĩnh vực bán dẫn giữa Việt Nam
                         và Mỹ, Đại sứ Việt Nam tại Mỹ Nguyễn Quốc Dũng cho biết, để nâng cấp quan hệ Việt Nam-Mỹ lên
                         Đối tác Chiến lược toàn diện (ĐTCLTD) thì cần có những lĩnh vực có ưu tiên, có trọng tâm.
@@ -135,17 +111,17 @@
                     <p><br></p>
                     <!--Thu Dec 21 2023 17:16:52 GMT+0700 (Indochina Time) -- Thu Dec 21 2023 17:16:52 GMT+0700 (Indochina Time) -- Thu Dec 21 2023 17:24:52 GMT+0700 (Indochina Time)-->
                     <!--Thu Dec 21 2023 18:30:00 GMT+0700 (Indochina Time) -- Thu Dec 21 2023 18:30:00 GMT+0700 (Indochina Time) -- Thu Dec 21 2023 17:27:36 GMT+0700 (Indochina Time)-->
-                  
+
                     {{--
                 </div> --}}
+                </div>
+
+                <div id='right-defaults' class='container'>
+
+                </div>
             </div>
 
-            <div id='right-defaults' class='container'>
-
-            </div>
-        </div>
-
-        <pre>
+            <pre>
                 <code>
                     dragula([
                         document.getElementById('left-defaults'), 
@@ -153,11 +129,12 @@
                     ]);
                 </code>
             </pre>
+        </div>
+        <script>
+            dragula([document.getElementById('left-defaults'), document.getElementById('right-defaults')]);
+        </script>
     </div>
-    <script>
-        dragula([document.getElementById('left-defaults'), document.getElementById('right-defaults')]);
-    </script>
-</body>
+</div>
+@endsection
 
-</html>
 {{-- https://github.com/bevacqua/dragula#drakeon-events --}}

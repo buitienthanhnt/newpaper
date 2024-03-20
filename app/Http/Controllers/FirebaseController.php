@@ -42,10 +42,32 @@ class FirebaseController extends BaseController
         }
         $uploadedIds = array_column($papersInFirebase, 'id');
         // $papers = Paper::where('show', '=', 1)->whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
-        
+
         // tạm thời lấy hết
         $papers = Paper::whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
         return view('adminhtml.templates.firebase.dashboard', ['listPaper' => $papersInFirebase, 'papers' => $papers]);
+    }
+
+    function setupHome(): \Illuminate\Contracts\View\View
+    {
+        return view("adminhtml.templates.firebase.setupHome");
+    }
+
+    function info()
+    {
+        return $this->paperApi->homeInfo();
+    }
+
+    function upHomeInfo()
+    {
+        if ($this->paperApi->upFirebaseHomeInfo()) {
+            return response(json_encode([
+                'code' => 200
+            ]));
+        }
+        return response(json_encode([
+            'code' => 400
+        ]));
     }
 
     function addPaper(Request $request): \Illuminate\Http\Response

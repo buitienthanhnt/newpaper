@@ -503,7 +503,8 @@ class PaperApi extends BaseApi
 		return $hits;
 	}
 
-	function forward() {
+	function forward()
+	{
 		$forward = Paper::all()->random(1)->makeHidden(['conten']);
 		foreach ($forward as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -600,8 +601,15 @@ class PaperApi extends BaseApi
 		try {
 			$homeInfo = $this->homeInfo();
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/info');
-			$userRef->push($homeInfo);
 			$snapshot = $userRef->getSnapshot();
+			/**
+			 * check infoHome data in firebase
+			 *  if exist remove.
+			 */
+			if ($snapshot->getValue()) {
+				$userRef->remove();
+			}
+			$userRef->push($homeInfo);
 			return true;
 		} catch (\Throwable $th) {
 			//throw $th;

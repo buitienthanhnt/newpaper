@@ -64,11 +64,6 @@ class ManagerController extends Controller
         return $this->paperApi->homeInfo();
     }
 
-    function upHomeInfo()
-    {
-        return $this->paperApi->upFirebaseHomeInfo();
-    }
-
     public function homePage()
     {
         $list_center = [];

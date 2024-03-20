@@ -147,6 +147,12 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get('fireStore', "FirebaseController@fireStore")->name($admin."_firebase_fireStore");
 
         Route::get('topCategory', "FirebaseController@upCategoryTop")->name($admin."_upCategoryTop");
+
+        Route::get('homeInfo', "FirebaseController@info")->name($admin."_firebase_homeInfo");
+
+        Route::get('setupHome', "FirebaseController@setupHome")->name($admin."_firebase_setupHome");
+
+        Route::post('upFirebase/home', "FirebaseController@upHomeInfo")->name($admin."_firebase_upDefaultHome");
     });
 
     Route::get("default", "AdminController@default")->name($admin . "_default");

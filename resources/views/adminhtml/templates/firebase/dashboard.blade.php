@@ -25,6 +25,11 @@
 @endsection
 
 @section('body_main_conten')
+    <div class="row">
+        <div class="colo-md-2">
+            <a href="{{ route('admin_firebase_setupHome') }}" class="btn btn-info" style="align-self: flex-start">setup home info</a>
+        </div>
+    </div>
     <table class="table table-striped table-inverse table-responsive">
         <thead class="thead-inverse">
             <tr>

@@ -52,7 +52,7 @@
                                 $(most_view_detail).append(`
                                     <div class="most-recent mb-40">
                                         <div class="most-recent-img">
-                                            <img src="${element.image_path}" alt="">
+                                            <img src="${element.image_path}" alt="" style="background-image: 'https://firebasestorage.googleapis.com/v0/b/newpaper-25148.appspot.com/o/demo%2FgBYNm4ke2I.png?alt=media&token=24057320-9c26-46cc-b1be-711c7296cc6b'>
                                             <div class="most-recent-cap">
                                                 <span class="bgbeg">Vogue</span>
                                                 <h4><a href="${element.url}">${element.title}</a></h4>
