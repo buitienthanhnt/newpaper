@@ -505,10 +505,17 @@ class PaperApi extends BaseApi
 
 	function forward()
 	{
-		$forward = Paper::all()->random(1)->makeHidden(['conten']);
-		foreach ($forward as &$value) {
-			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
-		}
+		$forward = Paper::all()->random(1)->makeHidden(['conten'])->first();
+		$forward->image_path = $this->helperFunction->replaceImageUrl($forward['image_path']);
+		/**
+		 * get writer
+		 */
+		$writer = $forward->to_writer()->getResults();
+		$writer->image_path = $this->helperFunction->replaceImageUrl($writer->image_path);
+		/**
+		 * set writer for data
+		 */
+		$forward->writer = $writer;
 		return $forward;
 	}
 
@@ -581,7 +588,7 @@ class PaperApi extends BaseApi
 				'status' => true,
 				'code' => 200,
 				'hit' => $hit[0],
-				'forward' => $forward[0],
+				'forward' => $forward,
 				'mostPopulator' => $mostPopulator,
 				'mostRecents' => $mostRecents,
 				'listImages' => $listImages,
