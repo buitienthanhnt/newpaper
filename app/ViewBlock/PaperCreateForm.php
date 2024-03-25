@@ -48,6 +48,7 @@ class PaperCreateForm implements Htmlable
             'template' => "adminhtml.templates.papers.forms.contenForm",
             "params" => array_merge($remoteData ?? [], [
                 "category_option" => $this->category->category_tree_option(),
+                "time_line_option" => $this->category->time_line_option(),
                 "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
                 "filemanager_url_base" => url("adminhtml/file/manager"),
                 "writers" => Writer::all()
@@ -61,6 +62,7 @@ class PaperCreateForm implements Htmlable
             'template' => "adminhtml.templates.papers.forms.carouselForm",
             "params" => [
                 "category_option" => $this->category->category_tree_option(),
+                "time_line_option" => $this->category->time_line_option(),
                 "writers" => Writer::all()
             ]
         ];

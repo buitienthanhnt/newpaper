@@ -29,7 +29,7 @@
                             </button>
                         </a>
 
-                        <a href={{ route('category_admin_create') }}>
+                        <a href={{ route('category_admin_create', ['type' => 'time_line']) }}>
                             <button class="btn btn-info">
                                 Create Timeline
                             </button>

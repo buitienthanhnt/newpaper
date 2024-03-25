@@ -21,8 +21,7 @@ class CategoryController extends Controller
         Category $category,
         ConfigCategory $configCategory,
         Store $session
-    )
-    {
+    ) {
         $this->request = $request;
         $this->category = $category;
         $this->configCategory = $configCategory;
@@ -44,7 +43,7 @@ class CategoryController extends Controller
         // }
         if ($this->session->exists("success")) {
             Alert::info($this->session->get("success"), 'Message')->autoClose(2000);
-        }elseif ($this->session->exists("error")) {
+        } elseif ($this->session->exists("error")) {
             Alert::error($this->session->get("error"), 'Message')->autoClose(2000);
         }
 
@@ -58,11 +57,10 @@ class CategoryController extends Controller
         $list_catergory = $this->category->all()->where("parent_id", "=", 0);
         if ($list_catergory->count()) {
             if ($category) {
-                $parent_category.= $this->category_tree($list_catergory, "", $category->parent_id);
-            }else {
-                $parent_category.= $this->category_tree($list_catergory);
+                $parent_category .= $this->category_tree($list_catergory, "", $category->parent_id);
+            } else {
+                $parent_category .= $this->category_tree($list_catergory);
             }
-
         }
         return $parent_category;
     }
@@ -71,14 +69,14 @@ class CategoryController extends Controller
     {
         $html = "";
         foreach ($catergory as $cate) {
-            $html.='<option value="'.$cate->id.'" '.($selected === $cate->id ? "selected" : "").'>'.$begin.$cate->name.'</option>';
+            $html .= '<option value="' . $cate->id . '" ' . ($selected === $cate->id ? "selected" : "") . '>' . $begin . $cate->name . '</option>';
             if ($list_catergory = $this->category->all()->where("parent_id", "=", $cate->id)) {
                 if ($list_catergory->count()) {
                     $_be = $begin;
-                    $begin.="___";
-                    $html.=$this->category_tree($list_catergory, $begin, $selected);
+                    $begin .= "___";
+                    $html .= $this->category_tree($list_catergory, $begin, $selected);
                     $begin = $_be;
-                }else {
+                } else {
                     continue;
                 }
             }
@@ -94,12 +92,13 @@ class CategoryController extends Controller
         $category->description = $params["description"];
         $category->active = $params["active"];
         $category->parent_id = $this->request->__get("parent_id");
-        $category->url_alias = $params["url_alias"] ?: str_replace(" ",'-', strtolower($params['name']));
+        $category->url_alias = $params["url_alias"] ?: str_replace(" ", '-', strtolower($params['name']));
+        $category->type = $this->request->get("type");
         $category->save();
 
         if ($category) {
-            event(new CacheClear(['top_category','top_menu_view'])); // gọi vào event: CacheClear
-           return back()->with("success", "created new category: $category->name");
+            event(new CacheClear(['top_category', 'top_menu_view'])); // gọi vào event: CacheClear
+            return back()->with("success", "created new category: $category->name");
         }
     }
 

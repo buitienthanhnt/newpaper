@@ -12,9 +12,14 @@
     <div class="col-12 grid-margin">
         <div class="">
             <div class="card-body">
-                <h4 class="card-title col-form-label">Create new category</h4>
+                <h4 class="card-title col-form-label">Create @if (request()->get('type'))
+                        new TimeLine
+                    @else
+                        new Category
+                    @endif
+                </h4>
                 <form class="form-sample" method="POST" enctype="multipart/form-data"
-                    action={{ route('category_admin_insert') }}>
+                    action={{ route('category_admin_insert', ['type' => request()->get('type')]) }}>
                     @csrf
                     @if (session('success'))
                         <div class="alert alert-success" id="category_insert_success" role="alert">
@@ -24,7 +29,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Category Name:</label>
+                                <label class="col-sm-3 col-form-label">
+                                    @if (request()->get('type'))
+                                        TimeLine
+                                    @else
+                                        Category
+                                    @endif Name:
+                                </label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="name" required />
                                 </div>
@@ -100,7 +111,14 @@
 
                     <div class="row">
                         <div class="offset-md-10 col-md-2">
-                            <button type="submit" class="btn btn-info">Save category</button>
+                            <button type="submit" class="btn btn-info">
+                                Save
+                                @if (request()->get('type'))
+                                    TimeLine
+                                @else
+                                    Category
+                                @endif
+                            </button>
                         </div>
                     </div>
                 </form>

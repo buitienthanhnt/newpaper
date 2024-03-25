@@ -8,10 +8,12 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Paper;
+use App\Models\PaperTimeLine;
 use App\Models\RemoteSourceHistory;
 use App\Models\ViewSource;
 use App\Models\Writer;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\LogTha;
 
@@ -25,6 +27,7 @@ class PaperController extends Controller
     protected $notification;
     protected $helperFunction;
     protected $logTha;
+    protected $paper_timeline;
 
     const PAGE_TYPE = 1;
 
@@ -32,6 +35,7 @@ class PaperController extends Controller
         Request $request,
         Paper $paper,
         Category $category,
+        PaperTimeLine $paper_timeline,
         Notification $notification,
         HelperFunction $helperFunction,
         LogTha $logTha
@@ -42,6 +46,7 @@ class PaperController extends Controller
         $this->category = $category;
         $this->notification = $notification;
         $this->helperFunction = $helperFunction;
+        $this->paper_timeline = $paper_timeline;
     }
 
     public function listPaper()
@@ -77,7 +82,6 @@ class PaperController extends Controller
     {
         $request = $this->request;
         $category_option = $request->__get("category_option");
-
         try {
             $paper = $this->paper;
             $paper->fill([
@@ -86,9 +90,9 @@ class PaperController extends Controller
                 "short_conten" => $request->__get("short_conten"),
                 "conten" => $request->__get("conten"),
                 "active" => $request->__get("active") ? true : false,
-                "show" => $request->get("show", false),
-                "auto_hide" => $request->__get("auto_hide") ? true : false,
-                "show_writer" => $request->__get("show_writer") ? true : false,
+                "show" => $request->get("show", false) === 'on',
+                "auto_hide" => $request->__get("auto_hide") === 'on',
+                "show_writer" => $request->__get("show_writer") === 'on',
                 "show_time" => $request->__get("show_time"),
                 "image_path" => $request->__get("image_path") ?: "",
                 "writer" => $request->get("writer", null),
@@ -101,7 +105,7 @@ class PaperController extends Controller
                  * insert paper list image of carousel.
                  */
                 if ($request->get('slider_data') && $listImages = json_decode($request->get('slider_data'))) {
-                    DB::table('paper_carousel')->insert(array_map(function ($item) use($new_id){
+                    DB::table('paper_carousel')->insert(array_map(function ($item) use ($new_id) {
                         return [
                             "title" => $item->title,
                             "description" => $item->label,
@@ -114,6 +118,12 @@ class PaperController extends Controller
                  * save in DB page category
                  */
                 $this->insert_page_category($new_id, $category_option);
+
+                /**
+                 * insert for paper to timeline
+                 */
+                $this->insert_paper_timeline($new_id, $this->request->get('time_line_type'), $this->request->get('time_line_value'));
+
                 /**
                  * save in DB page tags
                  */
@@ -143,6 +153,16 @@ class PaperController extends Controller
             throw new \Exception($e->getMessage(), 1);
         }
         return redirect()->back()->with("error", "add error");
+    }
+
+    function insert_paper_timeline($paper_id, $timeline_id, $value)
+    {
+        $paper_timeline = $this->paper_timeline;
+        $paper_timeline->fill([
+            'paper_id' => $paper_id,
+            'timeline_id' => $timeline_id,
+            'timeline_value' => Carbon::createFromFormat('Y-m-d H:i:s', $value)
+        ])->save();
     }
 
     public function editPaper($paper_id)
@@ -230,7 +250,8 @@ class PaperController extends Controller
         ]), 401);
     }
 
-    function deleteImageCarousel(int $paper_id) : bool {
+    function deleteImageCarousel(int $paper_id): bool
+    {
         try {
             DB::table('paper_carousel')->where('paper_id', $paper_id)->delete();
         } catch (\Throwable $th) {

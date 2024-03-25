@@ -62,7 +62,7 @@
         <div class="form-group row">
             <label for="url-alias" class="col-sm-2">Timeline:</label>
             <div class="cs-form col-sm-8">
-                <input name="timeLineValue" id="timelineInput" />
+                <input name="time_line_value" id="timelineInput" />
                 <script type="text/javascript">
                     // https://gijgo.com/datetimepicker
                     $("#timelineInput").datetimepicker({

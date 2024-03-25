@@ -3,10 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class UpdatePaperType extends Migration
+class UpdateCategoryType extends Migration
 {
-    const CONTEN_TYPE = "content";
-    const CAROUSEL_TYPE = "carousel";
+    const DEFAULT = 'default';
+    const TIME_LINE = 'time_line';
 
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class UpdatePaperType extends Migration
      */
     public function up()
     {
-        Schema::table('papers', function($table) {
-            $table->string('type')->default(self::CONTEN_TYPE);
+        Schema::table('categories', function ($table) {
+            $table->string('type')->default(self::DEFAULT);
         });
     }
 
@@ -27,7 +27,7 @@ class UpdatePaperType extends Migration
      */
     public function down()
     {
-        Schema::table('papers', function($table) {
+        Schema::table('categories', function ($table) {
             $table->dropColumn('type');
         });
     }

@@ -91,6 +91,11 @@
             tokenSeparators: [',']
         });
 
+        $("#time_line_type").select2({
+            placeholder: 'Select an value',
+            maximumSelectionLength: 1
+        });
+
         $("#category_option").select2({
             placeholder: 'Select an option',
             tags: true,

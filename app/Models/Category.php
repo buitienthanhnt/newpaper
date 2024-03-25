@@ -17,15 +17,17 @@ class Category extends Model
     use SoftDeletes;
     protected $_selected = array();
     protected $select_key = "*";
+    protected $current_type = "default";
 
-    function getChildrent() {
+    function getChildrent()
+    {
         return $this->hasMany($this, 'parent_id')->getResults();
     }
 
     public function category_tree_option($category = null)
     {
         $parent_category = '<option value="0">Root category</option>';
-        $list_catergory = $this->all()->where("parent_id", "=", 0);
+        $list_catergory = $this->all()->where("parent_id", "=", 0)->where('type', '=', $this->current_type);
         if ($list_catergory->count()) {
             if ($category) {
                 $parent_category .= $this->category_tree($list_catergory, "", $category->parent_id);
@@ -41,7 +43,7 @@ class Category extends Model
         $html = "";
         foreach ($catergory as $cate) {
             $html .= '<option value="' . $cate->id . '" ' . ($this->_selected ? (in_array($cate->id, $this->_selected) ? "selected " : "") : ($selected === $cate->id ? "selected " : "")) . '>' . $begin . $cate->name . '</option>';
-            if ($list_catergory = $this->all()->where("parent_id", "=", $cate->id)) {
+            if ($list_catergory = $this->all()->where("parent_id", "=", $cate->id)->where('type', '=', $this->current_type)) {
                 if ($list_catergory->count()) {
                     $_be = $begin;
                     $begin .= "___";
@@ -51,6 +53,16 @@ class Category extends Model
                     continue;
                 }
             }
+        }
+        return $html;
+    }
+
+    function time_line_option()
+    {
+        $time_lines = $this->all()->where('type', '=', 'time_line');
+        $html = '';
+        foreach ($time_lines as $value) {
+            $html .= '<option value="' . $value->id . '">' . $value->name . '</option>';
         }
         return $html;
     }
@@ -78,7 +90,7 @@ class Category extends Model
         $result = null;
         if ($order_by) {
             $result =  Paper::whereIn("id", $page_id)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
-        }else {
+        } else {
             $result =  Paper::whereIn("id", $page_id)->take($limit)->offset($offset * $limit)->select($this->select_key);
         }
         return $result->get();
@@ -89,11 +101,11 @@ class Category extends Model
         if ($root) {
             $cat["name"] = "";
             $cat["id"] = 0;
-        }else{
+        } else {
             $cat["name"] = $this->name;
             $cat["id"] = $this->id;
         }
-        $childrens = $this->all()->where("parent_id", "=", $root ? 0 :$this->id);
+        $childrens = $this->all()->where("parent_id", "=", $root ? 0 : $this->id);
         $values = null;
         if (count($childrens)) {
             $items = null;
@@ -109,5 +121,15 @@ class Category extends Model
             $cat["items"] = null;
         }
         return $cat;
+    }
+
+    /**
+     * @param string $type
+     * @return $this
+     */
+    function setCurrentType(string $type = 'default')
+    {
+        $this->current_type = $type;
+        return $this;
     }
 }
