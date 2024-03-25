@@ -155,5 +155,5 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post('upFirebase/home', "FirebaseController@upHomeInfo")->name($admin."_firebase_upDefaultHome");
     });
 
-    Route::get("default", "AdminController@default")->name($admin . "_default");
+    Route::get("default", "AdminController@default")->name($admin."_default");
 });

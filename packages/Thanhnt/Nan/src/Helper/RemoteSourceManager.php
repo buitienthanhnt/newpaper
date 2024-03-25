@@ -36,7 +36,8 @@ class RemoteSourceManager
         "freetuts.net"      => "get_freetuts_net",
         "thanhnien.vn"      => "get_thanhnien_vn",
         "laodong.vn"        => "get_laodong_vn",
-        "vnexpress.net"     => "get_vnexpress_net"
+        "vnexpress.net"     => "get_vnexpress_net",
+        "www.w3schools.com" => "get_www_w3schools_com"
     ];
 
     protected $request;
@@ -262,6 +263,10 @@ class RemoteSourceManager
     // get_vnexpress_net
     function get_vnexpress_net($doc) : array {
         return call_user_func(fn () => $this->getValueByClassName($doc, "fck_detail", "title-detail"));
+    }
+
+    function get_www_w3schools_com($doc) : array {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "l10", ""));
     }
 
     // ===================================================================//

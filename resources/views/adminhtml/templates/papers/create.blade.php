@@ -16,9 +16,11 @@
     <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
 @endsection
 
 @section('after_css')
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .select2-selection--multiple {
             .select2-selection__choice {
@@ -31,7 +33,8 @@
                 line-height: 1;
             }
         }
-        .sliderImages{
+
+        .sliderImages {
             max-height: 480px !important;
         }
     </style>
@@ -45,7 +48,8 @@
                 <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
                     @csrf
 
-                    <input class="form-control" type="text" name="request_url" value="{{ isset($request_url) ? $request_url : "" }}" hidden>
+                    <input class="form-control" type="text" name="request_url"
+                        value="{{ isset($request_url) ? $request_url : '' }}" hidden>
 
                     @if ($message = session('success'))
                         <?php alert()->success('server message', $message); ?>
@@ -72,7 +76,7 @@
 @endsection
 
 @section('before_bottom_js')
-    <script>
+    <script type="text/javascript">
         var url_base = '{!! $filemanager_url_base !!}';
         $('#lfm').filemanager('file', {
             prefix: url_base
@@ -96,7 +100,7 @@
 @endsection
 
 @section('after_js')
-    <script>
+    <script type="text/javascript">
         encodeURI('\uD800\uDFFF');
         tinymce.init({
             convert_urls: false,

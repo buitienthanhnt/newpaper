@@ -12,17 +12,15 @@
     <div class="col-12 grid-margin">
         <div class="">
             <div class="card-body">
-                <h4 class="card-title">Create new category</h4>
-                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('category_admin_insert') }}>
+                <h4 class="card-title col-form-label">Create new category</h4>
+                <form class="form-sample" method="POST" enctype="multipart/form-data"
+                    action={{ route('category_admin_insert') }}>
                     @csrf
                     @if (session('success'))
                         <div class="alert alert-success" id="category_insert_success" role="alert">
                             {{ session('success') }}
                         </div>
                     @endif
-                    <p class="card-description">
-                        category info
-                    </p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
@@ -45,7 +43,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Parent Category</label>
+                                <label class="col-sm-3 col-form-label">Parent Category: </label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="parent_id">
                                         <?= $parent_category ?>
@@ -55,7 +53,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">active</label>
+                                <label class="col-sm-3 col-form-label">Active: </label>
                                 <div class="col-sm-4">
                                     <div class="form-check">
                                         <label class="form-check-label">
@@ -77,14 +75,11 @@
                             </div>
                         </div>
                     </div>
-                    <p class="card-description">
-                        Infomation:
-                    </p>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">url rewrite:</label>
+                                <label class="col-sm-3 col-form-label">Url rewrite:</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="url_alias" />
                                 </div>
@@ -92,7 +87,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">image:</label>
+                                <label class="col-sm-3 col-form-label">Image:</label>
                                 <div class="col-sm-9">
                                     <input type="file" class="form-control pb-10" id="category_image"
                                         name="category_image" />
@@ -105,7 +100,7 @@
 
                     <div class="row">
                         <div class="offset-md-10 col-md-2">
-                            <button type="submit" class="btn btn-info">save category</button>
+                            <button type="submit" class="btn btn-info">Save category</button>
                         </div>
                     </div>
                 </form>
@@ -119,7 +114,7 @@
             if (file) {
                 $(category_preview).show();
                 category_preview.src = URL.createObjectURL(file)
-            }else{
+            } else {
                 $(category_preview).hide();
             }
         }
