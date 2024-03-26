@@ -74,7 +74,9 @@ class RemoteSourceManager
             $type = $this->check_type($request_url);
             if ($type) {
                 $html = $this->file_get_contents_source($request_url);
-                if (!$html) {return [];}
+                if (!$html) {
+                    return [];
+                }
                 $doc = $this->loadDom($html);  // for load html text to dom
                 if (method_exists($this, str_replace(".", "_", $type))) { // kiểm tra xem class có tồn tại function có tên như biến $type không.
                     $value = $this->{$type}($doc);                       // gọi vào hàm có trong class thông qua tên là 1 biến số.
@@ -92,7 +94,8 @@ class RemoteSourceManager
         return $value;
     }
 
-    function file_get_contents_source($url) {
+    function file_get_contents_source($url)
+    {
         $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
             "ssl" => array(
                 // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
@@ -256,16 +259,19 @@ class RemoteSourceManager
         return call_user_func(fn () => $this->getValueByClassName($doc, "detail-cmain", "detail-title"));
     }
 
-    function get_laodong_vn($doc) : array {
+    function get_laodong_vn($doc): array
+    {
         return call_user_func(fn () => $this->getValueByClassName($doc, "wrapper", "title"));
     }
 
     // get_vnexpress_net
-    function get_vnexpress_net($doc) : array {
+    function get_vnexpress_net($doc): array
+    {
         return call_user_func(fn () => $this->getValueByClassName($doc, "fck_detail", "title-detail"));
     }
 
-    function get_www_w3schools_com($doc) : array {
+    function get_www_w3schools_com($doc): array
+    {
         return call_user_func(fn () => $this->getValueByClassName($doc, "l10", ""));
     }
 
@@ -323,12 +329,12 @@ class RemoteSourceManager
             "url_alias" => $url_alias,
             "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
             "conten" => $conten,
-            "active" => $request->__get("active") ? true : false,
-            "show" => $request->get("show", false),
-            "auto_hide" => $request->__get("auto_hide") ? true : false,
-            "show_writer" => $request->__get("show_writer") ? true : false,
-            "show_time" => $request->__get("show_time"),
-            "image_path" => $request->__get("image_path") ?: "",
+            "active" => $request->__get("active", true),
+            "show" => $request->get("show", true),
+            "auto_hide" => $request->__get("auto_hide", true),
+            "show_writer" => $request->__get("show_writer", true),
+            "show_time" => $request->__get("show_time", true),
+            "image_path" => $request->__get("image_path", ""),
             "writer" => $request->get("writer", null)
         ];
     }

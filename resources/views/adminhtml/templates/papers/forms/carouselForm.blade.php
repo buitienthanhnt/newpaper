@@ -52,7 +52,7 @@
     <div class="col-md-6">
         <label for="auto_hide" class="col-sm-2">Auto hide: </label>
         <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide"
-            @if (isset($show)) {{ $show ? 'checked' : '' }} @else checked @endif>
+            @if (isset($auto_hide)) {{ $auto_hide ? 'checked' : '' }} @else checked @endif>
     </div>
 </div>
 

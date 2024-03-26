@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 // use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -93,6 +95,11 @@ class Paper extends Model
             //throw $th;
         }
         return 1;
+    }
+
+    function getTimeline() {
+        $timeline = $this->hasOne(PaperTimeLine::class, "paper_id");
+        return new Carbon($timeline->getResults()->timeline_value) ?: '';
     }
 
     /**

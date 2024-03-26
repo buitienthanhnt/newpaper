@@ -122,8 +122,9 @@ class PaperController extends Controller
                 /**
                  * insert for paper to timeline
                  */
-                $this->insert_paper_timeline($new_id, $this->request->get('time_line_type'), $this->request->get('time_line_value'));
-
+                if ($time_line_type = $this->request->get('time_line_type') && $time_line_value = $this->request->get('time_line_value')) {
+                    $this->insert_paper_timeline($new_id, $time_line_type, $time_line_value);
+                }
                 /**
                  * save in DB page tags
                  */

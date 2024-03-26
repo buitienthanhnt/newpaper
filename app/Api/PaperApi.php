@@ -11,6 +11,8 @@ use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\PageTag;
+use App\Models\PaperTimeLine;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Thanhnt\Nan\Helper\LogTha;
 
@@ -19,17 +21,20 @@ class PaperApi extends BaseApi
 	protected $helperFunction;
 	protected $request;
 	protected $writerApi;
+	protected $paperTimeLine;
 
 	function __construct(
 		FirebaseService $firebaseService,
 		HelperFunction $helperFunction,
 		Request $request,
 		WriterApi $writerApi,
-		LogTha $logTha
+		LogTha $logTha,
+		PaperTimeLine $paperTimeLine
 	) {
 		$this->helperFunction = $helperFunction;
 		$this->request = $request;
 		$this->writerApi = $writerApi;
+		$this->paperTimeLine = $paperTimeLine;
 		parent::__construct($firebaseService, $logTha);
 	}
 
@@ -476,7 +481,7 @@ class PaperApi extends BaseApi
 
 	function mostPopulator()
 	{
-		$mostView = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
+		$mostView = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'DESC')->limit(8)->get(['source_id'])->toArray();
 		$mostPapers = Paper::find(array_column($mostView, "source_id"))->makeHidden(['conten']);
 		foreach ($mostPapers as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -532,23 +537,36 @@ class PaperApi extends BaseApi
 
 	function timeLine()
 	{
-		$timeLine = Paper::all()->random(6)->sortBy('updated_at')->makeHidden(['conten']);
-		foreach ($timeLine as &$value) {
+		// $timeLine = Paper::all()->random(6)->sortBy('updated_at')->makeHidden(['conten']);
+		// foreach ($timeLine as &$value) {
+		// 	$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		// 	$value->time = date_format($value->updated_at, "d-m H:i");
+		// 	$value->description = $value->title;
+		// }
+		// return $timeLine;
+
+		$paperTimeLine = $this->paperTimeLine;
+		$dt = Carbon::now('Asia/Ho_Chi_Minh');
+		$timeLine = $paperTimeLine->where('timeline_value', ">=", $dt->toDateTimeString())->orderBy('timeline_value', 'ASC')->take(8)->get('paper_id');
+		$papers = Paper::find(array_column($timeLine->toArray(), 'paper_id'))->makeHidden(['conten']);
+		foreach ($papers as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
-			$value->time = date_format($value->updated_at, "d-m H:i");
+			$value->time = date_format($value->getTimeline(), "d-m-Y H:i");
 			$value->description = $value->title;
 		}
-		return $timeLine;
+		return array_reverse($papers->toArray());
 	}
 
 	function homeInfo(): array
 	{
+		$timeLine = $this->timeLine();
+
 		$hit = $this->hit();
 		$forward = $this->forward();
 		$mostPopulator = $this->mostPopulator();
 		$mostRecents = $this->mostRecents();
 		$listImages = $this->listImages();
-		$timeLine = $this->timeLine();
+
 		$tags = $this->tags();
 		$writers = $this->writerApi->allWriter();
 		$lineMap = [
