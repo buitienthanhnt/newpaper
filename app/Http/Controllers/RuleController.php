@@ -4,28 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Rule;
 use Illuminate\Http\Request;
-// use Illuminate\Routing\Route;
-// use Illuminate\Routing\Router;
 
 class RuleController extends Controller
 {
     protected $rule;
-    protected $route;
     protected $router;
 
     function __construct(
         Rule $rule,
-        \Illuminate\Routing\Route $route,
         \Illuminate\Routing\Router $router
     ) {
         $this->rule = $rule;
-        $this->route = $route;
         $this->router = $router;
     }
 
-    function allRules() {
+    function allRules()
+    {
         $allOfRoute = $this->router->getRoutes();
-        $actions = collect($allOfRoute)->map(function($item){
+        $actions = collect($allOfRoute)->map(function ($item) {
             $action =  $item->getAction();
             if (strpos($action["prefix"], "adminhtml") !== false) {
                 return $action;
@@ -33,10 +29,11 @@ class RuleController extends Controller
         })->filter();
         $prefixGroup = $this->actionByController($actions->toArray());
         dd($prefixGroup);
-        return ;
+        return;
     }
 
-    function actionByController($actions = []) : array {
+    function actionByController($actions = []): array
+    {
         if ($actions) {
             $controllerGroups = [];
             $prefixGroups = [];
@@ -72,8 +69,8 @@ class RuleController extends Controller
      */
     protected function getRoutes($router)
     {
-        $routes = collect($router->getRoutes())->map(function ($route) {
-            return $this->getRouteInformation($route);
+        $routes = collect($router->getRoutes())->map(function ($router) {
+            return $this->getRouteInformation($router);
         })->filter()->all();
 
         if (($sort = $this->option('sort')) !== 'precedence') {
@@ -160,11 +157,11 @@ class RuleController extends Controller
                 $parent = Rule::find($parent_id);
                 return view("adminhtml/templates/rule/addChildren", ["parent" => $parent]);
             }
-        }else if ($request->method() == "POST") {
+        } else if ($request->method() == "POST") {
             $save_status = $this->save_rule($request);
             if ($save_status) {
                 return redirect()->back()->with("success", "add children rule: ");
-            }else {
+            } else {
                 return redirect()->back()->with("error", "error for add new children!");
             }
         }
@@ -176,7 +173,8 @@ class RuleController extends Controller
      * save new rule
      * @return bool
      */
-    protected function save_rule(Request $request) {
+    protected function save_rule(Request $request)
+    {
         try {
             $rule = new Rule($request->toArray() + ["parent_id" => $request->get("parent_id", 0)]);
             $save_status = $rule->save();
