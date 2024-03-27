@@ -4,9 +4,13 @@ namespace App\Api;
 
 use App\Helper\ImageUpload;
 use App\Services\FirebaseService;
+use Carbon\Carbon;
 use Google\Cloud\Storage\Connection\Rest;
 use Illuminate\Support\Str;
+use Kreait\Firebase\Exception\MessagingException;
 use Thanhnt\Nan\Helper\LogTha;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 class BaseApi
 {
@@ -17,6 +21,7 @@ class BaseApi
     protected $firebase;
     protected $firebaseDatabase;
     protected $fireStore;
+    protected $cloudMessage;
     protected $logTha;
 
     function __construct(
@@ -27,6 +32,7 @@ class BaseApi
         $this->firebase = $firebaseService->firebase;
         $this->firebaseDatabase = $this->firebase->createDatabase();
         $this->fireStore = $firebaseService->fireStore;
+        $this->cloudMessage = $firebaseService->cloudMessage;
     }
 
     function upLoadImageFirebase(string $image_link)
@@ -75,5 +81,27 @@ class BaseApi
             $this->logTha->logFirebase('warning', 'can not remove image paper by: ' . $th->getMessage(), ['line' => $th->getLine()]);
         }
         return false;
+    }
+
+    function pushMessage() // https://magecomp.com/blog/push-notifications-in-laravel-with-firebase/
+    {
+        // D:\xampp\htdocs\laravel1\vendor\kreait\firebase-php\src\Firebase\Messaging\CloudMessage.php
+
+        try {
+            $message = CloudMessage::fromArray([ 
+                // 'topic' => 'all',
+                'notification' => [
+                    'body' => 'Xin chào đây là thông báo đầu tiên',
+                    'title' => 'Thông báo đầu tiên'
+                ],
+                'time' => Carbon::now()->timestamp
+            ]);
+    
+            $res = $this->cloudMessage->send($message);
+        }catch (MessagingException $e) {
+            dd($e->getMessage());
+        }
+
+        return response()->json(['message' => 'Push notification sent', 'data' => $res]);
     }
 }

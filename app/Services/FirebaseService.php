@@ -27,11 +27,13 @@ class FirebaseService
      */
     public $firebase;
     public $fireStore;
+    public $cloudMessage;
 
     public function __construct()
     {
         $path = storage_path("app/".self::CONNECT_FIREBASE_PROJECT."/firebaseConfig.json");
         $this->firebase = (new Factory)->withServiceAccount($path)->withDatabaseUri(env('FIREBASE_DATABASE_URL', self::FIREBASE_DATABASE_URL));
         $this->fireStore = (new Factory)->withServiceAccount($path)->createFirestore()->database();
+        $this->cloudMessage = (new Factory)->withServiceAccount($path)->createMessaging();
     }
 }

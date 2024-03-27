@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Api\CategoryApi;
 use App\Api\PaperApi;
+use App\Helper\HelperFunction;
 use App\Models\Paper;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,13 +23,17 @@ class FirebaseController extends BaseController
      */
     protected $categoryApi;
 
+    protected $helperFunction;
+
     function __construct(
         \App\Services\FirebaseService $firebaseService,
         PaperApi $paperApi,
-        CategoryApi $categoryApi
+        CategoryApi $categoryApi,
+        HelperFunction $helperFunction
     ) {
         $this->paperApi = $paperApi;
         $this->categoryApi = $categoryApi;
+        $this->helperFunction = $helperFunction;
         parent::__construct($firebaseService);
     }
 
@@ -68,6 +73,10 @@ class FirebaseController extends BaseController
         return response(json_encode([
             'code' => 400
         ]));
+    }
+
+    function pushCloudMessage() {
+        return $this->paperApi->pushMessage();
     }
 
     function addPaper(Request $request): \Illuminate\Http\Response

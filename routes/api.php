@@ -69,6 +69,8 @@ Route::prefix('test')->group(function () {
 
     Route::get('homeInfo', "FirebaseController@info");
 
+    Route::get('pushCloudMessge', "FirebaseController@pushCloudMessage");
+
     Route::get('getWriters', 'ManagerController@getWriters')->name('api_writers');
 
     Route::post("testPost", function (Request $request) {
