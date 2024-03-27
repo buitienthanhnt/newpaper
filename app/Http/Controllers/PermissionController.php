@@ -51,7 +51,7 @@ class PermissionController extends Controller
             }
             
         })->filter();
-        return $prefixGroup = $this->actionByController($actions->toArray());
+        return $this->actionByController($actions->toArray());
     }
 
     function actionByController($actions = []) : array {
