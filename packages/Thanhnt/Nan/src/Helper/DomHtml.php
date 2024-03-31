@@ -78,7 +78,7 @@ trait DomHtml
     public function getTitle($doc)
     {
         if (count($doc->getElementsByTagName('title'))) {
-            return $doc->getElementsByTagName('title')[0]->textContent;
+            return trim($doc->getElementsByTagName('title')[0]->textContent);
         }
         return "";
     }

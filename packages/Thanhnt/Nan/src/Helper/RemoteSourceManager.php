@@ -313,7 +313,7 @@ class RemoteSourceManager
         try {
             $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
             if (count($short_conten)) {
-                $short_conten_value = $short_conten[0]->textContent;
+                $short_conten_value = trim($short_conten[0]->textContent);
             }
         } catch (\Exception $e) {
         }
