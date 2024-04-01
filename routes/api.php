@@ -1,5 +1,6 @@
 <?php
 
+use Berkayk\OneSignal\OneSignalFacade; // https://github.com/berkayk/laravel-onesignal
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
@@ -66,6 +67,14 @@ Route::get('search', "ManagerController@searchApi")->name('api_search');
 Route::get('byWriter/{id}', "ManagerController@byWriter")->name('api_search_byWriter');
 
 Route::prefix('test')->group(function () {
+
+    Route::get('onesign', function () {
+        OneSignalFacade::sendNotificationToAll( // đã chạy: https://github.com/berkayk/laravel-onesignal
+            "Some Message", 
+            'http://localhost/laravel1/public/', 
+        );
+        return 123;
+    });
 
     Route::get('homeInfo', "FirebaseController@info");
 
