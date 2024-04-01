@@ -51,7 +51,7 @@
                         <div class="about-img">
                             @if (isset($paper->image_path))
                                 <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
-                                    style="height: 400px;">
+                                    style="max-height: 600px; object-fit: cover">
                             @endif
                         </div>
                         <div class="heading-news mb-30 pt-30">

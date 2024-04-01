@@ -4,7 +4,7 @@
 			<div class="single-slider">
 				<div class="trending-top mb-30">
 					<div class="trend-top-img">
-						<img src="{{ $tren->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
+						<img style="max-height: 465px; object-fit: cover" src="{{ $tren->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
 						<div class="trend-top-cap">
 							@if ($first_category = $tren->to_category()->first())
 								<a href="">

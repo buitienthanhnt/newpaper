@@ -104,7 +104,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::post("update/{category_id}", "CategoryController@updateCategory")->name("category_admin_update");
 
-        Route::any("delete/{category_id}", "CategoryController@deleteCategory")->name("category_admin_delete");
+        Route::post("delete/{category_id}", "CategoryController@deleteCategory")->name("category_admin_delete");
 
         Route::get("setup", "CategoryController@setupCategory")->name("category_top_setup");
 
