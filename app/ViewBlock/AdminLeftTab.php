@@ -4,13 +4,15 @@ namespace App\ViewBlock;
 
 use Illuminate\Routing\Router;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Cache;
 
 class AdminLeftTab implements Htmlable
 {
 	protected $template = "adminhtml.templates.share.leftTab";
 	protected $router;
+	const ROUTE_LEFT = 'admin_get_routes';
 
-	public function __construct(Router $router,)
+	public function __construct(Router $router)
 	{
 		$this->router = $router;
 	}
@@ -18,7 +20,6 @@ class AdminLeftTab implements Htmlable
 	protected function actionByController($actions = []): array
 	{
 		if ($actions) {
-			$controllerGroups = [];
 			$prefixGroups = [];
 			foreach ($actions as $action) {
 				if (strpos($action['as'], 'edit') !== false || strpos($action['as'], 'detail') !== false) {
@@ -35,7 +36,7 @@ class AdminLeftTab implements Htmlable
 			$rulesTree = [];
 			foreach ($prefixGroups as $key => $value) {
 				$rulesTree[] = [
-					"Name"      => str_replace("/", " ", $key),
+					"Name"      => str_replace(["/", "adminhtml"], [" ", "admin"], $key),
 					"Number"    => $key,
 					"Children"  => $value,
 				];
@@ -51,6 +52,9 @@ class AdminLeftTab implements Htmlable
 
 	protected function routeListOfGet()
 	{
+		if (Cache::has(self::ROUTE_LEFT)) {
+			return Cache::get(self::ROUTE_LEFT);
+		}
 		$allOfRoute = $this->router->getRoutes();
 		$actions = collect($allOfRoute->get('GET'))->map(function ($item) {
 			try {
@@ -62,7 +66,9 @@ class AdminLeftTab implements Htmlable
 				//throw $th;
 			}
 		})->filter();
-		return ($this->actionByController($actions)['Children']);
+		$values = $this->actionByController($actions)['Children'];
+		Cache::put(self::ROUTE_LEFT, $values);
+		return ($values);
 	}
 
 	function toHtml(): string
