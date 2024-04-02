@@ -4,25 +4,43 @@ namespace App\ViewBlock;
 
 use Illuminate\Routing\Router;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class AdminLeftTab implements Htmlable
 {
 	protected $template = "adminhtml.templates.share.leftTab";
 	protected $router;
+	protected $request;
 	const ROUTE_LEFT = 'admin_get_routes';
+	const EXCLUDE_ROUTES = ['edit', 'detail'];
 
-	public function __construct(Router $router)
-	{
+	public function __construct(
+		Router $router,
+		Request $request
+	) {
 		$this->router = $router;
+		$this->request = $request;
+	}
+
+	protected function checkExclude(string $value): bool
+	{
+		if (self::EXCLUDE_ROUTES) {
+			foreach (self::EXCLUDE_ROUTES as $val) {
+				if (strpos($value, $val) !== false) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected function actionByController($actions = []): array
 	{
 		if ($actions) {
 			$prefixGroups = [];
-			foreach ($actions as $action) {
-				if (strpos($action['as'], 'edit') !== false || strpos($action['as'], 'detail') !== false) {
+			foreach ($actions as $k => $action) {
+				if ($this->checkExclude($k) || strpos($k, '{') !== false) { // adminhtml/permission/edit/{permission_id}
 					continue;
 				}
 				$prefixGroups[$action["prefix"]][] = [

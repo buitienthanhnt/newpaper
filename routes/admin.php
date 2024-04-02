@@ -15,55 +15,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get("extension", "ExtensionController@source")->name($admin . "_source");
 
-    Route::prefix('rule')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get('/', "RuleController@list")->name($admin . "_rule_list");
-
-        Route::get("all", "RuleController@allRules")->name($admin . "_rule_all");
-
-        Route::get('/create', "RuleController@create")->name($admin . "_rule_create");
-
-        Route::post('/insert', "RuleController@insert")->name($admin . "_rule_insert");
-
-        Route::get("edit", "RuleController@edit")->name($admin . "_rule_edit");
-
-        Route::delete("delete", "RuleController@delete")->name($admin . "_rule_delete");
-
-        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin . "_rule_add_children");
-    });
-
-    Route::prefix('permission')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get('/', "PermissionController@list")->name($admin . "_permission_list");
-
-        Route::get("create", "PermissionController@create")->name($admin . "_permission_create");
-
-        Route::post("insert", "PermissionController@insert")->name($admin . "_permission_insert");
-
-        Route::get("edit/{permission_id}", "PermissionController@edit")->name($admin . "_permission_edit");
-
-        Route::post("update", "PermissionController@update")->name($admin . "_permission_update");
-
-        Route::delete("delete", "PermissionController@delete")->name($admin . "_permission_delete");
-
-        Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin . "_permission_detail");
-    });
-
-    Route::prefix('paper')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-
-        Route::get("/", "PaperController@listPaper")->name($admin . "_paper_list");
-
-        Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
-
-        Route::get("newbyurl", "PaperController@newByUrl")->name($admin . "_new_by_url");
-
-        Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
-
-        Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin . "_paper_edit");
-
-        Route::post("update/{paper_id}", "PaperController@updatePaper")->name($admin . "_paper_update");
-
-        Route::delete("delete", "PaperController@deletePaper")->name($admin . "_paper_delete");
-    });
-
+    
     Route::prefix('writer')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         Route::get("/", "WriterController@listOfWriter")->name($admin . "_writer_list");
 
@@ -76,21 +28,6 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post("update/{writer_id}", "WriterController@updateWriter")->name($admin . "_writer_update");
 
         Route::delete("delete", "WriterController@deleteWriter")->name($admin . "_writer_delete");
-    });
-
-    Route::prefix('file')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-
-        Route::group(['prefix' => 'manager'], function () {
-            \UniSharp\LaravelFilemanager\Lfm::routes();
-        });
-
-        Route::get("/", "ImageController@listFile")->name($admin . "_file_list");
-
-        Route::get("add", "ImageController@addFile")->name($admin . "_file_add");
-
-        Route::post("save", "ImageController@saveFile")->name($admin . "_file_save");
-
-        Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
     Route::prefix('category')->middleware(["adminLogin", "AdminPermission"])->group(function () {
@@ -111,6 +48,55 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
     });
 
+    Route::prefix('paper')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+
+        Route::get("/", "PaperController@listPaper")->name($admin . "_paper_list");
+
+        Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
+
+        Route::get("newbyurl", "PaperController@newByUrl")->name($admin . "_new_by_url");
+
+        Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
+
+        Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin . "_paper_edit");
+
+        Route::post("update/{paper_id}", "PaperController@updatePaper")->name($admin . "_paper_update");
+
+        Route::delete("delete", "PaperController@deletePaper")->name($admin . "_paper_delete");
+    });
+
+    Route::prefix('permission')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        Route::get('/', "PermissionController@list")->name($admin . "_permission_list");
+
+        Route::get("create", "PermissionController@create")->name($admin . "_permission_create");
+
+        Route::post("insert", "PermissionController@insert")->name($admin . "_permission_insert");
+
+        Route::get("edit/{permission_id}", "PermissionController@edit")->name($admin . "_permission_edit");
+
+        Route::post("update", "PermissionController@update")->name($admin . "_permission_update");
+
+        Route::delete("delete", "PermissionController@delete")->name($admin . "_permission_delete");
+
+        Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin . "_permission_detail");
+    });
+
+    Route::prefix('rule')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        Route::get('/', "RuleController@list")->name($admin . "_rule_list");
+
+        Route::get("all", "RuleController@allRules")->name($admin . "_rule_all");
+
+        Route::get('/create', "RuleController@create")->name($admin . "_rule_create");
+
+        Route::post('/insert', "RuleController@insert")->name($admin . "_rule_insert");
+
+        Route::get("edit", "RuleController@edit")->name($admin . "_rule_edit");
+
+        Route::delete("delete", "RuleController@delete")->name($admin . "_rule_delete");
+
+        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin . "_rule_add_children");
+    });
+
     Route::prefix('user')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         Route::get("listUser", "AdminUserController@listUser")->name($admin . "_user_list");
 
@@ -123,6 +109,21 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post("insetUser", "AdminUserController@insertUser")->name($admin . "_insert_user");
 
         Route::delete("deleteUser", "AdminUserController@deleteUser")->name($admin . "_user_delete");
+    });
+
+    Route::prefix('file')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+
+        Route::group(['prefix' => 'manager'], function () {
+            \UniSharp\LaravelFilemanager\Lfm::routes();
+        });
+
+        Route::get("/", "ImageController@listFile")->name($admin . "_file_list");
+
+        Route::get("add", "ImageController@addFile")->name($admin . "_file_add");
+
+        Route::post("save", "ImageController@saveFile")->name($admin . "_file_save");
+
+        Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
     Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use($admin) {

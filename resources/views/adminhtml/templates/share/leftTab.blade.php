@@ -11,20 +11,21 @@
             @foreach ($formatRoutes as $item)
                 {{-- <li class="nav-item nav-category">UI Elements</li> --}}
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse"
-                        href={{ asset('#' . str_replace('/', '-', $item['Number'])) }} aria-expanded="false"
-                        aria-controls="{{ str_replace('/', '-', $item['Number']) }}">
+                    <a class="nav-link" data-toggle="collapse" data-target="#{{ str_replace('/', '-', $item['Number']) }}"
+                        aria-controls="{{ str_replace('/', '-', $item['Number']) }}"
+                        aria-expanded="{{ str_replace('/', '-', request()->route()->getAction('prefix')) == str_replace('/', '-', $item['Number']) ? 'true' : 'false' }}">
                         <i class="menu-icon mdi mdi-floor-plan"></i>
                         <span class="menu-title">{{ $item['Name'] }}</span>
                         <i class="menu-arrow"></i>
                     </a>
                     @if (count($item['Children']))
-                        <div class="collapse" id="{{ str_replace('/', '-', $item['Number']) }}">
+                        <div class="collapse {{ str_replace('/', '-', request()->route()->getAction('prefix')) == str_replace('/', '-', $item['Number']) ? 'show' : '' }}"
+                            id="{{ str_replace('/', '-', $item['Number']) }}">
                             <ul class="nav flex-column sub-menu">
                                 @foreach ($item['Children'] as $chil)
-                                    <li class="nav-item"> 
+                                    <li class="nav-item">
                                         <a class="nav-link"
-                                            href={{ route($chil['as']) }}>{{ $chil['Name'] }}</a>
+                                            href={{ route($chil['as']) . '#' . str_replace('/', '-', $item['Number']) }}>{{ $chil['Name'] }}</a>
                                     </li>
                                 @endforeach
                             </ul>
