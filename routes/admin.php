@@ -13,9 +13,6 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get('logout', "AdminController@logout")->name($admin . "_logout");
 
-    Route::get("extension", "ExtensionController@source")->name($admin . "_source");
-
-    
     Route::prefix('writer')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         Route::get("/", "WriterController@listOfWriter")->name($admin . "_writer_list");
 
@@ -55,6 +52,8 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
 
         Route::get("newbyurl", "PaperController@newByUrl")->name($admin . "_new_by_url");
+
+        Route::get("extension", "ExtensionController@source")->name($admin . "_source");
 
         Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
 
