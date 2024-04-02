@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = "admin";
 
-    Route::get("/dashboard", "AdminController@home")->name($admin)->middleware("adminLogin");
+    Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
 
     Route::get("login", "AdminController@adminLogin")->name($admin . "_login");
 
