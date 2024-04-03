@@ -294,6 +294,7 @@ class ManagerController extends Controller
         $papers = Paper::take($request->get('size', 15))->orderBy("updated_at", "ASC")->get(['id', 'title', 'image_path', 'updated_at', 'url_alias']);
         foreach ($papers as &$value) {
             $value->url = route('front_page_detail', ['alias' => $value->url_alias, 'page' => $value->id]);
+            $value->image_path = $value->getImagePath();
         }
         return $papers;
     }
