@@ -12,10 +12,12 @@ use App\Models\PageTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use App\Helper\HelperFunction;
+use App\Models\User;
 use App\ViewBlock\LikeMost;
 use App\ViewBlock\MostPopulator;
 use App\ViewBlock\Trending;
 use Illuminate\Support\Facades\Cache;
+use Thanhnt\Nan\Helper\TokenManager;
 
 class ManagerController extends Controller
 {
@@ -34,6 +36,8 @@ class ManagerController extends Controller
     protected $trending;
     protected $paperApi;
     protected $writerApi;
+    protected $tokenManager;
+    protected $user;
 
     public function __construct(
         Request $request,
@@ -45,7 +49,9 @@ class ManagerController extends Controller
         LikeMost $likeMost,
         Trending $trending,
         PaperApi $paperApi,
-        WriterApi $writerApi
+        WriterApi $writerApi,
+        TokenManager $tokenManager,
+        User $user
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -57,6 +63,8 @@ class ManagerController extends Controller
         $this->trending = $trending;
         $this->paperApi = $paperApi;
         $this->writerApi = $writerApi;
+        $this->tokenManager = $tokenManager;
+        $this->user = $user;
     }
 
     function info()
@@ -342,5 +350,20 @@ class ManagerController extends Controller
     function pullFirebaseComLike()
     {
         $this->paperApi->pullFirebaseComLike();
+    }
+
+    function getToken(): array
+    {
+        $user = $this->user;
+        return $this->tokenManager->getToken([
+            'name' => $user->name,
+            'id' => $user->id,
+            'email' => $user->email
+        ]);
+    }
+
+    function getTokenData(): array
+    {
+        return $this->tokenManager->getTokenData($this->request->get('token'));
     }
 }

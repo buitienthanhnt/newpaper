@@ -21,9 +21,9 @@ final class TokenManager
 	}
 
 	/**
-	 * 
+	 * @return array
 	 */
-	function getToken(array $data = [], int $iat = 0, int $nbf = 0, int $exp = 0, $type = 'HS256'): array
+	function getToken(array $data = null, int $iat = 0, int $nbf = 0, int $exp = 0, $type = 'HS256'): array
 	{
 		$iat = $iat ?: time();
 		$exp = $exp ?: $iat + $this->exp_time;
