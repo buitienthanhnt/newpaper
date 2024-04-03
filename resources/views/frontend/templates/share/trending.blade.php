@@ -5,7 +5,7 @@
                 <!-- Single -->
                 <div class="single-recent">
                     <div class="what-img">
-                        <img src="{{ $trending->image_path }}" alt="">
+                        <img src="{{ $trending->getImagePath() }}" alt="">
                     </div>
                     <div class="what-cap">
                         <h4>

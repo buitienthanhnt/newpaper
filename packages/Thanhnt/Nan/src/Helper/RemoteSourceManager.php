@@ -37,7 +37,8 @@ class RemoteSourceManager
         "thanhnien.vn"      => "get_thanhnien_vn",
         "laodong.vn"        => "get_laodong_vn",
         "vnexpress.net"     => "get_vnexpress_net",
-        "www.w3schools.com" => "get_www_w3schools_com"
+        "www.w3schools.com" => "get_www_w3schools_com",
+        "laracoding.com"    => "get_laracoding_com"
     ];
 
     protected $request;
@@ -275,6 +276,11 @@ class RemoteSourceManager
         return call_user_func(fn () => $this->getValueByClassName($doc, "l10", ""));
     }
 
+    function get_laracoding_com($doc): array
+    {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "entry-content"));
+    }
+
     // ===================================================================//
 
     /**
@@ -303,7 +309,7 @@ class RemoteSourceManager
      * @param string $class_short_conten // for short conten
      * @return array
      */
-    protected function getValueByClassName($doc, $class_conten, $class_short_conten)
+    protected function getValueByClassName($doc, $class_conten, $class_short_conten = '')
     {
         $request = $this->request;
         $title = $this->getTitle($doc);

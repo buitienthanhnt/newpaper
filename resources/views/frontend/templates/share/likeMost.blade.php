@@ -3,7 +3,7 @@
         @foreach ($weekly3_contens as $weekly3_conten)
             <div class="weekly3-single">
                 <div class="weekly3-img">
-                    <img src="{{ $weekly3_conten->image_path }}" alt="">
+                    <img src="{{ $weekly3_conten->getImagePath() }}" alt="">
                 </div>
                 <div class="weekly3-caption">
                     <h4><a

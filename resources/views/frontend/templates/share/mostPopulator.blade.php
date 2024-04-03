@@ -16,7 +16,7 @@
                     @foreach ($most_popular as $popular_item)
                         <div class="weekly2-single">
                             <div class="weekly2-img">
-                                <img src="{{ $popular_item->image_path }}" alt="">
+                                <img src="{{ $popular_item->getImagePath() }}" alt="">
                             </div>
                             <div class="weekly2-caption">
                                 <h4><a

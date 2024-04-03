@@ -141,4 +141,9 @@ class FirebaseController extends BaseController
             'code' => 400
         ]));
     }
+
+    function remoteConfig() : string {
+        $this->paperApi->getDefaultImagePath();
+        return '';
+    }
 }

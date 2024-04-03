@@ -3,7 +3,7 @@
         <div class="row">
             <div class="whats-right-single mb-10">
                 <div class="col-md-6">
-                    <img src="{{ $paper->image_path }}" class="whates-img" style="width: 100%; height: auto;"
+                    <img src="{{ $paper->getImagePath() }}" class="whates-img" style="width: 100%; height: auto;"
                         alt="">
                 </div>
                 <div class="col-md-6 whats-right-cap">

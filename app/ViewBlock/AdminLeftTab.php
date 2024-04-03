@@ -13,7 +13,12 @@ class AdminLeftTab implements Htmlable
 	protected $router;
 	protected $request;
 	const ROUTE_LEFT = 'admin_get_routes';
-	const EXCLUDE_ROUTES = ['edit', 'detail'];
+	const EXCLUDE_ROUTES = [
+		'edit', 'detail', 'file/manager/upload', 'file/manager/move', 'file/manager/domove', 
+		'file/manager/crop', 'file/manager/cropimage', 'file/manager/cropnewimage',
+		'file/manager/rename', 'file/manager/resize', 'file/manager/doresize',
+		'file/manager/delete'
+	];
 
 	public function __construct(
 		Router $router,
