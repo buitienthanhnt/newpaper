@@ -25,7 +25,7 @@
                                 @foreach ($item['Children'] as $chil)
                                     <li class="nav-item">
                                         <a class="nav-link"
-                                            href={{ route($chil['as']) . '#' . str_replace('/', '-', $item['Number']) }}>{{ $chil['Name'] }}</a>
+                                            href={{ route($chil['as']) }}>{{ $chil['Name'] }}</a>
                                     </li>
                                 @endforeach
                             </ul>
