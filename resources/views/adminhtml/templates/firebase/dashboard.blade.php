@@ -68,7 +68,7 @@
                         <td scope="row">{{ $paper->id }}</td>
                         <td>{{ $paper->title }}</td>
                         <td>
-                            <img src="{{ $page->getImagePath() }}"
+                            <img src="{{ $paper->getImagePath() }}"
                                 class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle}"
                                 alt="">
                         </td>
