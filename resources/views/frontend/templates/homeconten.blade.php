@@ -72,7 +72,7 @@
                                             <div class="col-xl-6">
                                                 <div class="whats-news-single mb-40">
                                                     <div class="whates-img">
-                                                        <img src="{{ $paper_first->image_path }}" alt="">
+                                                        <img src="{{ $paper_first->getImagePath() }}" alt="">
                                                     </div>
                                                     <div class="whates-caption">
                                                         <h4><a href="#">{{ $paper_first->title }}</a></h4>
@@ -99,7 +99,7 @@
                                                         <div class="col-xl-12 col-lg-6 col-md-6 col-sm-10">
                                                             <div class="whats-right-single mb-20">
                                                                 <div class="whats-right-img">
-                                                                    <img src="{{ $paper->image_path }}"
+                                                                    <img src="{{ $paper->getImagePath() }}"
                                                                         style="width: 124px; height: 104px;" alt="">
                                                                 </div>
                                                                 <div class="whats-right-cap">

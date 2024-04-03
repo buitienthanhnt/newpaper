@@ -13,7 +13,7 @@
     <div class="single-slider">
         <div class="trending-top mb-30">
             <div class="trend-top-img">
-                <img src="{{ $tren->image_path }}" alt="">
+                <img src="{{ $tren->getImagePath() }}" alt="">
                 <div class="trend-top-cap">
                     @if ($first_category = $tren->to_category()->first())
                     <a href="">
@@ -45,7 +45,7 @@
 <div class="col-lg-12 col-md-6 col-sm-6">
     <div class="trending-top mb-30">
         <div class="trend-top-img">
-            <img src="{{ $tren_r->image_path }}" alt="">
+            <img src="{{ $tren_r->getImagePath() }}" alt="">
             <div class="trend-top-cap trend-top-cap2">
                 <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
                 <h2><a href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{
@@ -99,7 +99,7 @@
                                 <div class="row">
                                     <div class="whats-right-single mb-10">
                                         <div class="col-md-6">
-                                            <img src="{{ $paper->image_path }}" class="whates-img"
+                                            <img src="{{ $paper->getImagePath() }}" class="whates-img"
                                                 style="width: 100%; height: auto;" alt="">
                                         </div>
                                         <div class="col-md-6 whats-right-cap">

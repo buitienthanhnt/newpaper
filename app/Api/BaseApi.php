@@ -5,8 +5,11 @@ namespace App\Api;
 use App\Helper\ImageUpload;
 use App\Services\FirebaseService;
 use Google\Cloud\Storage\Connection\Rest;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Thanhnt\Nan\Helper\LogTha;
+use Kreait\Firebase\Factory;
 
 class BaseApi
 {
@@ -17,9 +20,10 @@ class BaseApi
     protected $firebase;
     protected $firebaseDatabase;
     protected $fireStore;
+    protected $remoteConfig;
     protected $logTha;
 
-    function __construct(
+    public function __construct(
         FirebaseService $firebaseService,
         LogTha $logTha
     ) {
@@ -27,9 +31,10 @@ class BaseApi
         $this->firebase = $firebaseService->firebase;
         $this->firebaseDatabase = $this->firebase->createDatabase();
         $this->fireStore = $firebaseService->fireStore;
+        $this->remoteConfig = $firebaseService->remoteConfig;
     }
 
-    function upLoadImageFirebase(string $image_link)
+    public function upLoadImageFirebase(string $image_link)
     {
         $firebaseFolder = self::STORERAGE_BUGKET . '/';
         $real_path = $this->url_to_real($image_link);
@@ -61,7 +66,7 @@ class BaseApi
      * @param string $url_path
      * @return bool
      */
-    function removeImageFirebase(string $url_path)
+    public function removeImageFirebase(string $url_path)
     {
         try {
             /**
@@ -75,5 +80,29 @@ class BaseApi
             $this->logTha->logFirebase('warning', 'can not remove image paper by: ' . $th->getMessage(), ['line' => $th->getLine()]);
         }
         return false;
+    }
+
+    /**
+     * get default image of firebase remote config(sync with firebase)
+     * @return string
+     */
+    public static function getDefaultImagePath(): string
+    {
+        if (Cache::has('default_image')) {
+            return Cache::get('default_image');
+        }
+        try {
+            $default_image = '';
+            try {
+                $config_path = storage_path("app/" . FirebaseService::CONNECT_FIREBASE_PROJECT . "/firebaseConfig.json");
+                $default_image = (new Factory)->withServiceAccount($config_path)->createRemoteConfig()->get()->parameters()['default_image']->toArray()['defaultValue']['value'];
+            } catch (\Throwable $th) {
+                $default_image = DB::table('core_config')->where('name', 'default_image')->get()->first()->value;
+            }
+            Cache::put("default_image", $default_image);
+            return $default_image;
+        } catch (\Throwable $th) {
+        }
+        return '';
     }
 }

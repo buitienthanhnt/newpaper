@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
+use App\Api\BaseApi;
+use App\Helper\ImageUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +18,8 @@ class Paper extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use ImageUpload;
+
     const PAGE_TAG = "page_tag";
     protected $guarded;
     protected $viewSource = null;
@@ -151,5 +153,15 @@ class Paper extends Model
             'like' => $this->paperLike(),
             'heart' => $this->paperHeart(),
         ];
+    }
+
+    public function getImagePath() : string {
+        if ($image_path = $this->image_path) {
+            $real_path = $this->url_to_real($image_path);
+            if (file_exists($real_path)) {
+                return $image_path;
+            }
+        }
+        return BaseApi::getDefaultImagePath();
     }
 }

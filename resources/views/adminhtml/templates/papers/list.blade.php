@@ -62,7 +62,7 @@
                                     <td>{{ $page->title }}</td>
                                     <td>{{ $page->active && $page->show ? 'yes' : 'no' }}</td>
                                     <td>
-                                        <img src="{{ $page->image_path }}" alt="" style="width: 100px; height: 100px;">
+                                        <img src="{{ $page->getImagePath() }}" alt="" style="width: 100px; height: 100px;">
                                     </td>
                                     <td>
                                         @if ($page->writer)
@@ -124,6 +124,14 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.value) {
+                    Swal.fire({
+                            title: 'Please Wait !',
+                            html: 'data uploading', // add html attribute if you want or remove
+                            allowOutsideClick: false,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        });
                     $.ajax({
                         url: url,
                         type: 'DELETE',

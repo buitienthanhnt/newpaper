@@ -23,7 +23,7 @@ class RuleController extends Controller
         $allOfRoute = $this->router->getRoutes();
         $actions = collect($allOfRoute)->map(function ($item) {
             $action =  $item->getAction();
-            if (strpos($action["prefix"], "adminhtml") !== false) {
+            if (isset($action["prefix"]) && strpos($action["prefix"], "adminhtml") !== false) {
                 return $action;
             }
         })->filter();

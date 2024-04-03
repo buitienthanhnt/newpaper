@@ -7,7 +7,7 @@
     @if ($most_recent && ($first_recent = $most_recent->first()))
         <div class="most-recent mb-40">
             <div class="most-recent-img">
-                <img src="{{ $first_recent->image_path ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
+                <img src="{{ $first_recent->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                 <div class="most-recent-cap">
                     <span class="bgbeg">Vogue</span>
                     <h4><a
@@ -23,7 +23,7 @@
             @foreach ($af_recents as $af_recent)
                 <div class="most-recent-single">
                     <div class="most-recent-images">
-                        <img src="{{ $af_recent->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
+                        <img src="{{ $af_recent->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}"
                             style="width: 85px; height: 79px;" alt="">
                     </div>
                     <div class="most-recent-capt">
