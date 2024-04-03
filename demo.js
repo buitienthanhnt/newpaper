@@ -44,22 +44,23 @@
 
 
 
-const array1 = [1,2,3,4];
+// const array1 = [1,2,3,4];
 
-function demo(){
-   let x = [];
-   for (const element of array1) {
-      if (element == 2) {
-         console.log(123123);
-         continue;
-      }
-      console.log(element);
-   }
-   return x;
-}
+// function demo(){
+//    let x = [];
+//    for (const element of array1) {
+//       if (element == 2) {
+//          console.log(123123);
+//          continue;
+//       }
+//       console.log(element);
+//    }
+//    return x;
+// }
 
-let ad = demo();
-console.log(ad);
+// let ad = demo();
+let ad = {a: 123};
+console.log(!!ad?.b);
 
 
 
