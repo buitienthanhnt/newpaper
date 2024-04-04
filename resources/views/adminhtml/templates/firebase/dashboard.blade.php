@@ -43,7 +43,7 @@
             @isset($listPaper)
                 @foreach ($listPaper as $key => $item)
                     <tr>
-                        <td scope="row">{{ $key }}</td>
+                        <td scope="row">{{ $item['id'] }}</td>
                         <td>{{ $item['title'] }}</td>
                         <td>
                             <img @isset($item['image_path'])

@@ -152,4 +152,10 @@ class ExtensionController extends Controller
             'code' => 500
         ];
     }
+
+    function obser(Request $request) {
+        $template = $request->get('type', 'observObj');
+
+        return view("frontend.templates.test.knockout.$template");
+    }
 }

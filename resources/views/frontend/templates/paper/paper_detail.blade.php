@@ -76,14 +76,15 @@
                                         @endphp
                                         @foreach ($sliderImages as $item)
                                             <div class="carousel-item {{ $j === 0 ? 'active' : ' ' }}">
-                                                <img src="{{ $item->value }}" style="width: 100%; height: 560px;" alt="">
+                                                <img src="{{ $item->value }}" style="width: 100%; height: 560px;"
+                                                    alt="">
                                                 <div class="carousel-caption d-none d-md-block">
                                                     <h5>{{ $item->title }}</h5>
                                                     <p>{{ $item->description }}</p>
                                                 </div>
                                             </div>
                                             @php
-                                                $j+=1;
+                                                $j += 1;
                                             @endphp
                                         @endforeach
 
@@ -118,9 +119,11 @@
                         <div class="panel" id="commentHistory" data-p="0">
                             {{-- {!! view('frontend.templates.paper.component.commentHistory', ['comments' => $paper->getComments()])->render() !!} --}}
                         </div>
-                        <center id="comment-load">
-                            <i class="fa fa-arrow-down"></i>
-                        </center>
+                        @if ($paper->commentCount())
+                            <center id="comment-load">
+                                <i class="fa fa-arrow-down"></i>
+                            </center>
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -141,144 +144,79 @@
 @endsection
 
 @section('morning_post')
-    <div class="about-area2 gray-bg pt-60 pb-60">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <!-- Nav Card -->
-                    <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane active" id="{{ 'nav-' . 'after-detail' }}" role="tabpanel"
-                            aria-labelledby="{{ 'nav-' . 'after-detail' . '-tab' }}">
-                            <div class="row">
-                                <!-- Left Details Caption -->
-                                @if ($top_paper)
-                                    @foreach ($top_paper as $paper_first)
-                                        <div class="col-xl-6">
-                                            <div class="whats-news-single mb-20">
-                                                <div class="whates-img">
-                                                    <img src="{{ $paper_first->getImagePath() }}">
-                                                </div>
-                                                <div class="whates-caption">
-                                                    <h4><a
-                                                            href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
-                                                    </h4>
-                                                    <p>{{ $paper_first->short_conten }}</p>
-                                                    <span>by
-                                                        {{ $paper_first->writerName() }}
-                                                        -
-                                                        {{ date('M d, Y', strtotime($paper_first->updated_at)) }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                                <!-- Right single caption -->
-                                <div class="col-xl-12 col-lg-12">
-                                    <div class="whats-news-single mb-20" id="whats-right-single">
-                                        @if ($top_paper && $papers)
-                                            @foreach ($papers as $_paper)
-                                                <div class="row">
-                                                    <div class="whats-right-single mb-10">
-                                                        <div class="col-md-6">
-                                                            <img src="{{ $_paper->getImagePath() }}" class="whates-img"
-                                                                style="width: 100%; height: auto;">
-                                                        </div>
-                                                        <div class="col-md-6 whats-right-cap">
-                                                            <h4>
-                                                                <a
-                                                                    href="{{ route('front_page_detail', ['alias' => $_paper->url_alias, 'page' => $_paper->id]) }}">
-                                                                    <h4>{{ $_paper->title }}</h4>
-                                                                    {{ $_paper->short_conten }}
-                                                                </a>
-                                                            </h4>
-                                                            <span class="colorb">{{ $_paper->writerName() }}</span>
-                                                            <p>{{ date('M d, Y', strtotime($_paper->updated_at)) }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <center>
-                                <button id="load_more" data-page="1" class="btn btn-info" onclick="load_more()">show
-                                    more</button>
-                            </center>
-                        </div>
-                    </div>
-                    <!-- End Nav Card -->
-                </div>
-            </div>
-        </div>
-    </div>
+    {!! view('frontend.templates.share.populatorContainer') !!}
+@endsection
 
-    <script>
-        var baseUrl = '{{ route('/') }}';
-        var reply_comment_url = '{{ route('paper_reply_comment') }}';
-        var like_url = '{{ route('paper_like') }}';
-        var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
-        var token = "{{ csrf_token() }}";
-        var paper_value = "{{ $paper->id }}";
-        $(document).ready(function() {
-            $('.paper_action').click(function() {
-                let type = $(this).hasClass('like') ? 'like' : 'heart';
-                if ($(this).hasClass('checked')) {
-                    $.ajax({
-                        url: addLike_url,
-                        type: "POST",
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            _token: token,
-                            action: 'sub',
-                            type: type
-                        }),
-                        success: function(result) {
-                            console.log(result);
-                            $(this).html(' ' + (Number($(this).html()) - 1));
-                            $(this).removeClass('checked');
-                        }.bind(this),
-                    });
-                    return;
-                }
+<script>
+    var token = "{{ csrf_token() }}";
+    var baseUrl = '{{ route('/') }}';
+    var reply_comment_url = '{{ route('paper_reply_comment') }}';
+    var like_url = '{{ route('paper_like') }}';
+    var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
+    var paper_value = "{{ $paper->id }}";
+    var mostPopulatorUrl = "{{ route('mostPopulator') }}";
+    var likeMost = "{{ route('likeMost') }}";
+    var trending = "{{ route('trending') }}";
+    $(document).ready(function() {
+        $('.paper_action').click(function() {
+            let type = $(this).hasClass('like') ? 'like' : 'heart';
+            if ($(this).hasClass('checked')) {
                 $.ajax({
                     url: addLike_url,
                     type: "POST",
                     contentType: 'application/json',
                     data: JSON.stringify({
                         _token: token,
-                        action: 'add',
+                        action: 'sub',
                         type: type
                     }),
                     success: function(result) {
                         console.log(result);
-                        $(this).html(' ' + (Number($(this).html()) + 1));
-                        $(this).addClass('checked');
-                    }.bind(this)
+                        $(this).html(' ' + (Number($(this).html()) - 1));
+                        $(this).removeClass('checked');
+                    }.bind(this),
                 });
-            })
-
-            $("#comment-load").click(function() {
-                let p = Number($("#commentHistory").attr('data-p')) + 1;
-                $.ajax({
-                    url: baseUrl + '/paper/commentContent/' + paper_value + '/' + p,
-                    type: "GET",
-                    success: function(result) {
-                        $("#commentHistory").append(result).attr('data-p', p + 1);
-                    },
-                });
-            })
-
+                return;
+            }
             $.ajax({
-                url: baseUrl + '/paper/commentContent/' + paper_value +
-                    `/${$("#commentHistory").attr('data-p')}`,
+                url: addLike_url,
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    _token: token,
+                    action: 'add',
+                    type: type
+                }),
+                success: function(result) {
+                    console.log(result);
+                    $(this).html(' ' + (Number($(this).html()) + 1));
+                    $(this).addClass('checked');
+                }.bind(this)
+            });
+        })
+
+        $("#comment-load").click(function() {
+            let p = Number($("#commentHistory").attr('data-p')) + 1;
+            $.ajax({
+                url: baseUrl + '/paper/commentContent/' + paper_value + '/' + p,
                 type: "GET",
                 success: function(result) {
-                    $("#commentHistory").html(result);
+                    $("#commentHistory").append(result).attr('data-p', p + 1);
                 },
             });
         })
-    </script>
+
+        $.ajax({
+            url: baseUrl + '/paper/commentContent/' + paper_value +
+                `/${$("#commentHistory").attr('data-p')}`,
+            type: "GET",
+            success: function(result) {
+                $("#commentHistory").html(result);
+            },
+        });
+    })
+</script>
+
+@section('js_after')
+    <script src={{ asset('assets/frontend/js/mostPopulator.js') }}></script>
 @endsection

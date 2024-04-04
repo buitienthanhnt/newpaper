@@ -1,5 +1,4 @@
 <div class="slider-wrapper">
-    <!-- section Tittle -->
     <div class="row">
         <div class="col-lg-12">
             <div class="small-tittle mb-30">
@@ -7,7 +6,6 @@
             </div>
         </div>
     </div>
-    <!-- Slider -->
     <div class="row">
         <div class="col-lg-12">
             <div class="weekly2-news-active d-flex">
@@ -15,8 +13,9 @@
                 @if ($most_popular)
                     @foreach ($most_popular as $popular_item)
                         <div class="weekly2-single">
-                            <div class="weekly2-img">
-                                <img src="{{ $popular_item->getImagePath() }}" alt="">
+                            <div class="weekly2-img" style="max-height: 275px">
+                                <img style="max-height: 240px; object-fit: cover"
+                                    src="{{ $popular_item->getImagePath() }}" alt="">
                             </div>
                             <div class="weekly2-caption">
                                 <h4><a

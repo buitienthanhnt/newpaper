@@ -106,6 +106,10 @@ Route::prefix('cache')->group(function () {
     });
 });
 
+Route::prefix('test')->group(function () : void {
+    Route::get("obser", "ExtensionController@obser");
+});
+
 Route::get("sendmail", "ExtensionController@sendMail");
 
 Route::get('firebase', "UserController@addFireBaseData");

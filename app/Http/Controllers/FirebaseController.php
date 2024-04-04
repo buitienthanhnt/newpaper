@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Api\CategoryApi;
 use App\Api\PaperApi;
 use App\Models\Paper;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -22,13 +21,20 @@ class FirebaseController extends BaseController
      */
     protected $categoryApi;
 
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    protected $request;
+
     function __construct(
         \App\Services\FirebaseService $firebaseService,
         PaperApi $paperApi,
-        CategoryApi $categoryApi
+        CategoryApi $categoryApi,
+        Request $request
     ) {
         $this->paperApi = $paperApi;
         $this->categoryApi = $categoryApi;
+        $this->request = $request;
         parent::__construct($firebaseService);
     }
 
@@ -45,7 +51,7 @@ class FirebaseController extends BaseController
 
         // tạm thời lấy hết
         $papers = Paper::whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
-        return view('adminhtml.templates.firebase.dashboard', ['listPaper' => $papersInFirebase, 'papers' => $papers]);
+        return view('adminhtml.templates.firebase.dashboard', ['listPaper' => array_slice($papersInFirebase, $this->request->get('page', 0) * 8, 8), 'papers' => $papers]);
     }
 
     function setupHome(): \Illuminate\Contracts\View\View
@@ -142,7 +148,8 @@ class FirebaseController extends BaseController
         ]));
     }
 
-    function remoteConfig() : string {
+    function remoteConfig(): string
+    {
         $this->paperApi->getDefaultImagePath();
         return '';
     }

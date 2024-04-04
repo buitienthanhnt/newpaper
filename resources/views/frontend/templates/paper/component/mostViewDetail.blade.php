@@ -39,7 +39,7 @@
             let most_height = 172; // height of element
             // console.log(url + `/?page=${data_page}`);
             $.ajax({
-                url: url + `/?page=${data_page}`,
+                url: url + `?page=${data_page}`,
                 type: 'GET',
                 success: function(result) {
                     if (result) {
