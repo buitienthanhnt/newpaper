@@ -10,6 +10,6 @@
  <link rel="stylesheet" href={{asset('assets/frontend/css/fontawesome-all.min.css')}}>
  <link rel="stylesheet" href={{asset('assets/frontend/css/themify-icons.css')}}>
  <link rel="stylesheet" href={{asset('assets/frontend/css/slick.css')}}>
- <link rel="stylesheet" href={{asset('assets/frontend/css/nice-select.css')}}>
+ {{-- <link rel="stylesheet" href={{asset('assets/frontend/css/nice-select.css')}}> --}}
  <link rel="stylesheet" href={{asset('assets/frontend/css/style.css')}}>
  @yield('css_after')

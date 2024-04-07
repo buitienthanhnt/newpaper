@@ -1,4 +1,4 @@
-<div class="recent-articles pt-80 pb-80">
+<div class="recent-articles pt-20 pb-20 gray-bg">
     <div class="container">
         <div class="recent-wrapper">
 
@@ -9,7 +9,7 @@
             <!-- section Tittle -->
 
             {{-- Trending articles_conten --}}
-            <div class="row" id="most-trending">
+            <div class="col-md-12 pt-20" id="most-trending" style="background-color: #fff;">
                 @yield('articles_conten')
             </div>
             {{-- articles_conten --}}

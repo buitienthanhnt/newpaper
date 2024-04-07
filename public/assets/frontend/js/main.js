@@ -33,6 +33,7 @@
         var $animatingElements = $('.single-slider[data-slick-index="' + nextSlide + '"]').find('[data-animation]');
         doAnimations($animatingElements);
       });
+      
       BasicSlider.slick({
         autoplay: true,
         autoplaySpeed: 3500,
@@ -305,11 +306,11 @@
     }
 
 
-/* 6. Nice Selectorp  */
-  var nice_Select = $('select');
-    if(nice_Select.length){
-      nice_Select.niceSelect();
-    }
+/* 6. Nice Selectorp tha-nan bo cai nay vi anh huong knockout  */ 
+  // var nice_Select = $('select');
+  //   if(nice_Select.length){
+  //     nice_Select.niceSelect();
+  //   }
 
 /* 7.  Custom Sticky Menu  */
     $(window).on('scroll', function () {

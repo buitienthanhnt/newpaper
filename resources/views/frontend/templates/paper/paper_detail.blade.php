@@ -147,76 +147,76 @@
     {!! view('frontend.templates.share.populatorContainer') !!}
 @endsection
 
-<script>
-    var token = "{{ csrf_token() }}";
-    var baseUrl = '{{ route('/') }}';
-    var reply_comment_url = '{{ route('paper_reply_comment') }}';
-    var like_url = '{{ route('paper_like') }}';
-    var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
-    var paper_value = "{{ $paper->id }}";
-    var mostPopulatorUrl = "{{ route('mostPopulator') }}";
-    var likeMost = "{{ route('likeMost') }}";
-    var trending = "{{ route('trending') }}";
-    $(document).ready(function() {
-        $('.paper_action').click(function() {
-            let type = $(this).hasClass('like') ? 'like' : 'heart';
-            if ($(this).hasClass('checked')) {
+@section('js_after')
+    <script>
+        var token = "{{ csrf_token() }}";
+        var baseUrl = '{{ route('/') }}';
+        var reply_comment_url = '{{ route('paper_reply_comment') }}';
+        var like_url = '{{ route('paper_like') }}';
+        var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
+        var paper_value = "{{ $paper->id }}";
+        var mostPopulatorUrl = "{{ route('mostPopulator') }}";
+        var likeMost = "{{ route('likeMost') }}";
+        var trending = "{{ route('trending') }}";
+        $(document).ready(function() {
+            $('.paper_action').click(function() {
+                let type = $(this).hasClass('like') ? 'like' : 'heart';
+                if ($(this).hasClass('checked')) {
+                    $.ajax({
+                        url: addLike_url,
+                        type: "POST",
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            _token: token,
+                            action: 'sub',
+                            type: type
+                        }),
+                        success: function(result) {
+                            console.log(result);
+                            $(this).html(' ' + (Number($(this).html()) - 1));
+                            $(this).removeClass('checked');
+                        }.bind(this),
+                    });
+                    return;
+                }
                 $.ajax({
                     url: addLike_url,
                     type: "POST",
                     contentType: 'application/json',
                     data: JSON.stringify({
                         _token: token,
-                        action: 'sub',
+                        action: 'add',
                         type: type
                     }),
                     success: function(result) {
                         console.log(result);
-                        $(this).html(' ' + (Number($(this).html()) - 1));
-                        $(this).removeClass('checked');
-                    }.bind(this),
+                        $(this).html(' ' + (Number($(this).html()) + 1));
+                        $(this).addClass('checked');
+                    }.bind(this)
                 });
-                return;
-            }
-            $.ajax({
-                url: addLike_url,
-                type: "POST",
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    _token: token,
-                    action: 'add',
-                    type: type
-                }),
-                success: function(result) {
-                    console.log(result);
-                    $(this).html(' ' + (Number($(this).html()) + 1));
-                    $(this).addClass('checked');
-                }.bind(this)
-            });
-        })
+            })
 
-        $("#comment-load").click(function() {
-            let p = Number($("#commentHistory").attr('data-p')) + 1;
+            $("#comment-load").click(function() {
+                let p = Number($("#commentHistory").attr('data-p')) + 1;
+                $.ajax({
+                    url: baseUrl + '/paper/commentContent/' + paper_value + '/' + p,
+                    type: "GET",
+                    success: function(result) {
+                        $("#commentHistory").append(result).attr('data-p', p + 1);
+                    },
+                });
+            })
+
             $.ajax({
-                url: baseUrl + '/paper/commentContent/' + paper_value + '/' + p,
+                url: baseUrl + '/paper/commentContent/' + paper_value +
+                    `/${$("#commentHistory").attr('data-p')}`,
                 type: "GET",
                 success: function(result) {
-                    $("#commentHistory").append(result).attr('data-p', p + 1);
+                    $("#commentHistory").html(result);
                 },
             });
         })
+    </script>
 
-        $.ajax({
-            url: baseUrl + '/paper/commentContent/' + paper_value +
-                `/${$("#commentHistory").attr('data-p')}`,
-            type: "GET",
-            success: function(result) {
-                $("#commentHistory").html(result);
-            },
-        });
-    })
-</script>
-
-@section('js_after')
     <script src={{ asset('assets/frontend/js/mostPopulator.js') }}></script>
 @endsection
