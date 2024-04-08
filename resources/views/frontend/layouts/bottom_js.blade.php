@@ -13,20 +13,8 @@
 <!-- One Page, Animated-HeadLin -->
 <script src={{asset('assets/frontend/js/wow.min.js')}}></script>
 <script src={{asset('assets/frontend/js/animated.headline.js')}}></script>
-<script src={{asset('assets/frontend/js/jquery.magnific-popup.js')}}></script>
-
-<!-- Scrollup, nice-select, sticky -->
-<script src={{asset('assets/frontend/js/jquery.scrollUp.min.js')}}></script>
-{{-- <script src={{asset('assets/frontend/js/jquery.nice-select.min.js')}}></script> --}}
-<script src={{asset('assets/frontend/js/jquery.sticky.js')}}></script>
-
-<!-- contact js -->
-<script src={{asset('assets/frontend/js/contact.js')}}></script>
-<script src={{asset('assets/frontend/js/jquery.form.js')}}></script>
-<script src={{asset('assets/frontend/js/jquery.validate.min.js')}}></script>
 <script src={{asset('assets/frontend/js/mail-script.js')}}></script>
-<script src={{asset('assets/frontend/js/jquery.ajaxchimp.min.js')}}></script>
-
+<script src={{asset('assets/frontend/js/contact.js')}}></script>
 <!-- Jquery Plugins, main Jquery -->
 <script src={{asset('assets/frontend/js/plugins.js')}}></script>
 <script src={{asset('assets/frontend/js/main.js')}}></script>

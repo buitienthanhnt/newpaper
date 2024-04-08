@@ -1,23 +1,36 @@
 @extends('frontend.templates.test.knockout.baseTemplate')
 
-@section('content_page')
-    {{-- <ul data-bind="foreach: products">
-        <li class="product">
-            <strong data-bind="text: name"></strong>
-            <like-or-dislike params="value: userRating"></like-or-dislike>
-        </li>
-    </ul> --}}
-
-    {{-- <button data-bind="click: addProduct">Add a product</button> --}}
-
+@section('js_after')
     <script type="text/javascript">
-        // ko.components.register('like-or-dislike', {
-        //     viewModel: {
-        //         require: 'model/component'
-        //     },
-        //     template: {
-        //         require: 'text!templates/component.html'
-        //     }
-        // });
+        requirejs(['app/maink'], function(maink) {
+            console.log(maink.show());;
+        });
+    </script>
+@endsection
+
+@section('head_after_js')
+@endsection
+
+@section('content_page')
+    <script type="text/javascript">
+        define('ex1demo', function(require) {
+            console.log('ex1 demo');
+            return {
+                a: 123,
+                name: 'tha nan'
+            }
+        });
+
+        define('ex2demo', function(require) {
+            var self = this;
+           this.name = 'tha demo';
+           this.age = 12;
+        });
+
+        requirejs(['ex1demo', 'ex2demo'], function(ex1demo, ex2demo){
+            let a1 = ex1demo;
+            let a2 = ex2demo;
+            console.log(a1, ex2demo);
+        })
     </script>
 @endsection
