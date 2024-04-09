@@ -10,6 +10,8 @@
 <script src={{ asset('assets/frontend/js/jquery.ajaxchimp.min.js') }}></script>
 <script src={{ asset('assets/frontend/js/jquery.slicknav.min.js') }}></script>
 
+<script src={{ asset('assets/all/requireJs/data/underscore.js') }}></script>
+
 <script src={{ asset('assets/frontend/js/slick.min.js') }}></script>
 
 <script src={{ asset('assets/frontend/js/popper.min.js') }}></script>
@@ -30,5 +32,7 @@
 @else
     <script src={{ asset('assets/all/requireJs/data/requireMainWindown.js') }}></script>
 @endif
+
+{{-- <script src={{ asset('assets/all/requireJs/data/text.js') }}></script> --}}
 
 @yield('head_after_js')

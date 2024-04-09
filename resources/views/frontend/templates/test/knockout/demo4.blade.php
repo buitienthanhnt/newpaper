@@ -9,7 +9,20 @@
     </div>
 
     <div id="demo-comp2">
-        age by knock <p data-bind="text: age"></p>
+        <p>
+            age by knock <!--ko text: age--><!--/ko-->
+        </p>
+        <span>fullName: <!--ko text: fullName--><!--/ko--></span>
+        <div style="display: grid; grid-gap: 20px">
+            <div>
+                <span>name: </span>
+                <input type="text" data-bind="value: name">
+            </div>
+            <div>
+                <span>age: </span>
+                <input type="text" data-bind="value: age">
+            </div>
+        </div>
     </div>
 
     <div id="demo-comp3">
@@ -39,19 +52,20 @@
         // ko.applyBindings(viewmodel2, $("#demo-comp2")[0]);
         // ko.applyBindings(viewmodel3, $("#demo-comp3")[0]);
 
-        requirejs(['knockout', 'viewModal/component-like-widget', 'app/Component', 'viewModal/demo1'], function(ko, likeW,
-            Component) {
+        requirejs(['knockout', 'viewModal/component-like-widget', 'app/Component', 'viewModal/demo1'],
+            function(ko, likeW, Component) {
 
-            // ko.applyBindings(new likeW({name: 'tha nan'}), $("#demo-comp3")[0]);
+                // ko.applyBindings(new likeW({name: 'tha nan'}), $("#demo-comp3")[0]);
 
-            Component({
-                viewModel: 'viewModal/demo1',
-                initData: {
-                    age: 23
-                },
-                element: $("#demo-comp2")[0]
-            })
-        });
+                Component({
+                    viewModel: 'viewModal/demo1',
+                    initData: {
+                        age: 23,
+                        name: 'test@gmail'
+                    },
+                    element: $("#demo-comp2")[0]
+                })
+            });
     </script>
 @endsection
 
