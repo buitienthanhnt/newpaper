@@ -9,9 +9,16 @@ define(['knockout'], function (ko) {
             return self.name() + " " + self.age();
         });
 
-        self.onPress = function(){
+        self.people = ko.observableArray(params.people);
+
+        self.onPress = function () {
             self.age(24);
             self.name('after onClick');
+            self.people.push(
+                {
+                    name: 'tha nan add'
+                }
+            )
         }
     }
 

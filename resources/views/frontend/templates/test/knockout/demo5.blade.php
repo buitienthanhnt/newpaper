@@ -9,13 +9,23 @@
     <div id="demo-comp4"></div>
 
     <script type="text/javascript">
-
         requirejs(['components/Component5'],
             function(Component5) {
                 Component5({
                     initData: {
                         age: 23,
-                        name: 'test@gmail'
+                        name: 'test@gmail',
+                        people: [{
+                                name: 'Bert'
+                            },
+                            {
+                                name: 'Charles'
+                            },
+                            {
+                                name: 'Denise'
+                            }
+                        ]
+
                     },
                     element: $("#demo-comp5")[0]
                 })

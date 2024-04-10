@@ -4,3 +4,11 @@
 <button data-bind="click: onPress">onPress add</button>
 
 <p>name: <!--ko text: fullName--><!--/ko--></p>
+
+<ul data-bind="foreach: people">
+    <li>
+        Name at position <span data-bind="text: $index"> </span>:
+        <span data-bind="text: name"> </span>
+        <!-- <a href="#" data-bind="click: $parent.removePerson">Remove</a> -->
+    </li>
+</ul>
