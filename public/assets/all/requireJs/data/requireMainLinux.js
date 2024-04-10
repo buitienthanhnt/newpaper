@@ -5,7 +5,6 @@ requirejs.config({
         app: 'app',
         viewModal: 'viewModal',
         templates: 'templates',
-        text: 'external/text',
     },
     shim: {
         'underscore': {
@@ -14,16 +13,5 @@ requirejs.config({
         'jquery': {
             exports: '$'
         },
-        // 'backbone': {
-        //     deps: ['underscore', 'jquery'],
-        //     exports: 'Backbone'
-        // },
-        // 'chaijquery': ['jquery', 'chai']
     },
-    config: {
-        text: {
-            //Valid values are 'node', 'xhr', or 'rhino'
-            env: 'rhino'
-        }
-    }
 });

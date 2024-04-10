@@ -3,6 +3,16 @@ requirejs.config({
     // baseUrl: '/assets/all/requireJs/data',              //: ubuntu
     paths: {
         app: 'app',
-        viewModal: 'viewModal'
-    }
+        viewModal: 'viewModal',
+        templates: 'templates',
+        components: 'components'
+    },
+    shim: {
+        'underscore': {
+            exports: '_'
+        },
+        'jquery': {
+            exports: '$'
+        },
+    },
 });

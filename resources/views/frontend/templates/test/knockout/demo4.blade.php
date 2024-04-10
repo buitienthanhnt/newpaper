@@ -9,7 +9,7 @@
     </div>
 
     <div id="demo-comp2">
-        <p>
+        {{-- <p>
             age by knock <!--ko text: age--><!--/ko-->
         </p>
         <span>fullName: <!--ko text: fullName--><!--/ko--></span>
@@ -22,7 +22,7 @@
                 <span>age: </span>
                 <input type="text" data-bind="value: age">
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <div id="demo-comp3">
@@ -52,13 +52,12 @@
         // ko.applyBindings(viewmodel2, $("#demo-comp2")[0]);
         // ko.applyBindings(viewmodel3, $("#demo-comp3")[0]);
 
-        requirejs(['knockout', 'viewModal/component-like-widget', 'app/Component', 'viewModal/demo1'],
-            function(ko, likeW, Component) {
-
+        requirejs(['knockout', 'viewModal/component-like-widget', 'app/Component', 'viewModal/demo1', 'text!templates/demo4.html'],
+            function(ko, likeW, Component, demo1, html4) {
                 // ko.applyBindings(new likeW({name: 'tha nan'}), $("#demo-comp3")[0]);
-
                 Component({
                     viewModel: 'viewModal/demo1',
+                    template: html4,
                     initData: {
                         age: 23,
                         name: 'test@gmail'
