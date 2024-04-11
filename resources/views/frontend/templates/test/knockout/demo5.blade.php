@@ -13,30 +13,13 @@
             function(Component5) {
                 Component5({
                     initData: {
-                        age: 23,
-                        name: 'test@gmail',
-                        people: [{
-                                name: 'Bert'
-                            },
-                            {
-                                name: 'Charles'
-                            },
-                            {
-                                name: 'Denise'
-                            }
-                        ]
+                        age: null,
+                        name: null,
+                        people: []
 
                     },
                     element: $("#demo-comp5")[0]
                 })
-
-                // Component5({
-                //     initData: {
-                //         age: 23,
-                //         name: 'tha nan@gmail'
-                //     },
-                //     element: $("#demo-comp4")[0]
-                // })
             });
     </script>
 @endsection

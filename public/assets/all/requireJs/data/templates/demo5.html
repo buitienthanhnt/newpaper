@@ -1,14 +1,24 @@
 <p>noi dung trong tempalte demo5.html</p>
 <p>name: <!--ko text: name--><!--/ko--></p>
 
-<button data-bind="click: onPress">onPress add</button>
+<form action="">
+    <p>name: <!--ko text: fullName--><!--/ko--></p>
+    <div>
+        <span style="width: 200px !important; display: flex;">name: </span><input type="text" data-bind="value: name">
+    </div>
+    <div>
+        <span style="width: 200px; display: flex;">age: </span><input type="text" data-bind="value: age">
+    </div>
+</form>
 
-<p>name: <!--ko text: fullName--><!--/ko--></p>
+<div>
+    <span data-bind="visible: !!message(), text: message, style: {color: messageType}"></span>
+</div>
 
-<ul data-bind="foreach: people">
-    <li>
-        Name at position <span data-bind="text: $index"> </span>:
-        <span data-bind="text: name"> </span>
-        <!-- <a href="#" data-bind="click: $parent.removePerson">Remove</a> -->
-    </li>
+<div style="margin-top: 10px;">
+    <button data-bind="click: onPress, style:{color: 'blue'}">onPress add</button>
+</div>
+
+<ul data-bind="foreach: { data: people, as: 'person' }">
+    <message-editor params="value: {...person, index: $index, parent: $parent, onDelete: $parent.onDelete}"></message-editor>
 </ul>
