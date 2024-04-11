@@ -5,6 +5,7 @@ requirejs.config({
         app: 'app',
         viewModal: 'viewModal',
         templates: 'templates',
+        components: 'components'
     },
     shim: {
         'underscore': {
