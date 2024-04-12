@@ -14,7 +14,7 @@ define(['text!templates/demo5.html', 'viewModal/demo5', 'knockout', 'text!templa
 
     ko.components.register('message-editor', {
         viewModel: function (params) {
-            return params.value;
+            return params.model;
         },
         template: item
     });

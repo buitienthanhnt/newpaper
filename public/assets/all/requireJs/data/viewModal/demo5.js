@@ -13,6 +13,7 @@ define(['knockout'], function (ko) {
 
         })
         self.messageType = ko.observable('');
+        self.id = null;
         self.age = ko.observable(params.age);
         self.name = ko.observable(params.name);
         self.fullName = ko.computed(function () { // gán thuộc tính phụ thuộc
@@ -31,7 +32,8 @@ define(['knockout'], function (ko) {
                 self.people.push(
                     {
                         name: self.name(),
-                        age: self.age()
+                        age: self.age(),
+                        id: self.people().length + 1
                     }
                 )
                 self.message('added for new people!')

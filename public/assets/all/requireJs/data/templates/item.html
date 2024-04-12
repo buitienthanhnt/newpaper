@@ -1,10 +1,11 @@
-<li>
-    <p>
-        index: <!--ko text: $index--><!--/ko-->
-        name: <!--ko text: person.name--><!--/ko-->
-        age: <!--ko text: person.age--><!--/ko-->
-        <span style="color: brown;" data-bind="click: function(){
-            parent.onDelete(person)
-        }">delete</span>
-    </p>
-</li>
+<ul data-bind="foreach: { data: people, as: 'person' }">
+    <li>
+        <p>
+            index: <!--ko text: $index--><!--/ko-->
+            id: <!--ko text: id--><!--/ko-->
+            name: <!--ko text: person.name--><!--/ko-->
+            age: <!--ko text: person.age--><!--/ko-->
+            <span style="color: brown;" data-bind="click: $parent.onDelete">delete</span>
+        </p>
+    </li>
+</ul>
