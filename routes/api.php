@@ -70,15 +70,33 @@ Route::prefix('test')->group(function () {
 
     Route::get('onesign', function () {
         OneSignalFacade::sendNotificationToAll( // đã chạy: https://github.com/berkayk/laravel-onesignal
-            "Some Message", 
-            'http://localhost/laravel1/public/', 
+            "Some Message",
+            'http://localhost/laravel1/public/',
         );
         return 123;
     });
 
     Route::get('homeInfo', "FirebaseController@info");
 
-    Route::get('getWriters', 'ManagerController@getWriters')->name('api_writers');
+    Route::get('getWriters', function () {
+        return [
+            [
+                'id' => 1,
+                'name' => 'tha',
+                'age' => 12
+            ],
+            [
+                'id' => 2,
+                'name' => 'demo',
+                'age' => 22
+            ],
+            [
+                'id' => 3,
+                'name' => 'ppp',
+                'age' => 23
+            ]
+        ];
+    })->name('api_writers');
 
     Route::post("testPost", function (Request $request) {
         $params = $request->getContent();

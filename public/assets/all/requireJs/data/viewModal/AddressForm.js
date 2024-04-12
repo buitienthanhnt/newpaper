@@ -23,7 +23,6 @@ define(['knockout'], function (ko) {
                     self.message(null)
                 }, 2000)
             }
-
         });
 
         self.onPress = function () {
@@ -43,6 +42,10 @@ define(['knockout'], function (ko) {
                 self.message('add fail, please update value!')
                 self.messageType('red')
             }
+        }
+
+        self.getData = function () {
+            params.model.getData();
         }
     }
     return AddressForm

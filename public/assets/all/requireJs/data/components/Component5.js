@@ -7,8 +7,17 @@ define([
     'components/ListPerson'
 ], function (template, demo5, ko) {
     function Component(params = {}) {
+        var viewModel = new demo5(params.initData);
+        /**
+         * first for fecth data.
+         */
+        viewModel.getData();
         $(params.element).html(template);
-        return ko.applyBindings(new demo5(params.initData), params.element);
+        /**
+         * apply viewmodel to element target
+         */
+        return ko.applyBindings(viewModel, params.element);
     }
     return Component;
+
 });
