@@ -20,5 +20,5 @@
 </div>
 
 <ul data-bind="foreach: { data: people, as: 'person' }">
-    <message-editor params="value: {...person, index: $index, parent: $parent, onDelete: $parent.onDelete}"></message-editor>
+    <message-editor params="value: {parent: $parent}"></message-editor>
 </ul>

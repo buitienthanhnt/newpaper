@@ -1,8 +1,10 @@
 <li>
     <p>
         index: <!--ko text: $index--><!--/ko-->
-        name: <!--ko text: name--><!--/ko-->
-        age: <!--ko text: age--><!--/ko-->
-        <span style="color: brown;" data-bind="click: $data.onDelete">delete</span>
+        name: <!--ko text: person.name--><!--/ko-->
+        age: <!--ko text: person.age--><!--/ko-->
+        <span style="color: brown;" data-bind="click: function(){
+            parent.onDelete(person)
+        }">delete</span>
     </p>
 </li>
