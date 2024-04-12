@@ -1,0 +1,17 @@
+<form action="">
+    <p>name: <!--ko text: fullName--><!--/ko--></p>
+    <div>
+        <span style="width: 200px !important; display: flex;">name: </span><input type="text" data-bind="value: name">
+    </div>
+    <div>
+        <span style="width: 200px; display: flex;">age: </span><input type="text" data-bind="value: age">
+    </div>
+
+    <div>
+        <span data-bind="visible: !!message(), text: message, style: {color: messageType}"></span>
+    </div>
+
+    <div style="margin-top: 10px;">
+        <button data-bind="click: onPress, style:{color: 'blue'}">onPress add</button>
+    </div>
+</form>
