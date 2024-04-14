@@ -26,7 +26,7 @@ define(['knockout'], function (ko) {
          */
         self.getData = function () {
             $.ajax({
-                url: `http://localhost/laravel1/public/api/test/getWriters?p=${self.p()}`,
+                url: `http://laravel1.com/api/test/getWriters?p=${self.p()}`,
                 type: 'GET',
                 success: function (result) {
                     console.log(result);

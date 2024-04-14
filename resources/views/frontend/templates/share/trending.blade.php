@@ -7,7 +7,7 @@
                     <div class="what-img">
                         <img src="{{ $trending->getImagePath() }}" alt="">
                     </div>
-                    <div class="what-cap">
+                    <div class="what-cap" style="background-color: transparent">
                         <h4>
 							<a
                                 href="">

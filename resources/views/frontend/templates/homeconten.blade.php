@@ -188,7 +188,7 @@
 {{-- row --}}
 @section('articles_title')
     <div class="col-lg-12">
-        <div class="section-tittle mb-30">
+        <div class="section-tittle mb-30 mt-20 ml-15">
             <h3>Trending News</h3>
         </div>
     </div>

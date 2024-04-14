@@ -6,7 +6,7 @@
     <!-- Details -->
     @if ($most_recent && ($first_recent = $most_recent->first()))
         <div class="most-recent mb-40">
-            <div class="most-recent-img">
+            <div class="most-recent-img" style="max-height: 400px; object-fit: cover">
                 <img src="{{ $first_recent->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                 <div class="most-recent-cap">
                     <span class="bgbeg">Vogue</span>

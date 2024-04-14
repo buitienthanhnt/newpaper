@@ -38,7 +38,8 @@ class RemoteSourceManager
         "laodong.vn"        => "get_laodong_vn",
         "vnexpress.net"     => "get_vnexpress_net",
         "www.w3schools.com" => "get_www_w3schools_com",
-        "laracoding.com"    => "get_laracoding_com"
+        "laracoding.com"    => "get_laracoding_com",
+        "vtcnews.vn"        => "get_vtcnews_vn"
     ];
 
     protected $request;
@@ -279,6 +280,12 @@ class RemoteSourceManager
     function get_laracoding_com($doc): array
     {
         return call_user_func(fn () => $this->getValueByClassName($doc, "entry-content"));
+    }
+
+    // get_vtcnews_vn
+    function get_vtcnews_vn($doc): array
+    {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "content-wrapper"));
     }
 
     // ===================================================================//
