@@ -501,11 +501,9 @@ class PaperApi extends BaseApi
 
 	function hit()
 	{
-		$hits = Paper::all()->random(1)->makeHidden(['conten']);
-		foreach ($hits as &$value) {
-			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
-		}
-		return $hits;
+		$hit = Paper::all()->last()->makeHidden(['conten']);
+		$hit->image_path = $this->helperFunction->replaceImageUrl($hit['image_path']);
+		return $hit;
 	}
 
 	function forward()
@@ -607,7 +605,7 @@ class PaperApi extends BaseApi
 			'data' => [
 				'status' => true,
 				'code' => 200,
-				'hit' => $hit[0],
+				'hit' => $hit,
 				'forward' => $forward,
 				'mostPopulator' => $mostPopulator,
 				'mostRecents' => $mostRecents,
