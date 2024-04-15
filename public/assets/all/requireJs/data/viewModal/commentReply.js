@@ -11,7 +11,7 @@ define([
 		let reply_email = $("#reply-email-" + comment_id).val();
 
 		$.ajax({
-			url: BuildUrl.getUrl('commentReply' + "/" + comment_id),
+			url: BuildUrl.getUrl('paper/commentReply' + "/" + comment_id),
 			type: 'POST',
 			contentType: 'application/json',
 			data: JSON.stringify({

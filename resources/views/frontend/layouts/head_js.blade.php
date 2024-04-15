@@ -1,6 +1,8 @@
 <!-- Jquery, Popper, Bootstrap -->
 {{-- asset function in:  vendor\laravel\framework\src\Illuminate\Foundation\helpers.php --}}
 
+@yield('head_before_js')
+
 <script src={{ asset('assets/all/requireJs/data/jquery.js') }}></script>
 <script src={{ asset('assets/frontend/js/jquery.magnific-popup.js') }}></script>
 <script src={{ asset('assets/frontend/js/jquery.scrollUp.min.js') }}></script>

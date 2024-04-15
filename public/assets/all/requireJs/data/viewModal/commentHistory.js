@@ -5,7 +5,7 @@ define([
 	'use strict';
 	function like(element, commment_id, type = "like") {
 		$.ajax({
-			url: BuildUrl.getUrl('like'`/${commment_id}`),
+			url: BuildUrl.getUrl('paper/like'`/${commment_id}`),
 			type: 'POST',
 			contentType: 'application/json',
 			data: JSON.stringify({
