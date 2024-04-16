@@ -3,7 +3,7 @@ define([
 	'viewModal/BuildUrl'
 ], function (require, BuildUrl) {
 	'use strict';
-	function like(element, commment_id, type = "like") {
+	  var like = function(element, commment_id, type = "like") {
 		$.ajax({
 			url: BuildUrl.getUrl('paper/like'`/${commment_id}`),
 			type: 'POST',

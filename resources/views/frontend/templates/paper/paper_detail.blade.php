@@ -42,8 +42,8 @@
 
 @section('head_before_js')
     <script type="text/javascript">
-        var baseUrl = "<?=route('/')?>"
-        var flashToken = "<?=csrf_token()?>"
+        var baseUrl = "<?= route('/') ?>"
+        var flashToken = "<?= csrf_token() ?>"
     </script>
 @endsection
 
@@ -164,15 +164,15 @@
             'viewModal/commentHistory',
             'viewModal/commentReply',
             'viewModal/mostPopulator'
-        ], function(require, buildUrl) {
+        ], function(require, buildUrl, commentHistory) {
             'use strict';
-
+            
             $(document).ready(function() {
                 $('.paper_action').click(function() {
                     let type = $(this).hasClass('like') ? 'like' : 'heart';
                     if ($(this).hasClass('checked')) {
                         $.ajax({
-                            url: buildUrl.getUrl('addLike'+ `/${paper_value}`),
+                            url: buildUrl.getUrl('addLike' + `/${paper_value}`),
                             type: "POST",
                             contentType: 'application/json',
                             data: JSON.stringify({
