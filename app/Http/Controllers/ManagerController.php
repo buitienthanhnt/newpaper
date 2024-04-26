@@ -117,6 +117,7 @@ class ManagerController extends Controller
         $category = Cache::remember('category.alias.like', 15, function () {
             return Category::where("url_alias", "like", "today")->get()->first();
         });
+        
         $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
         $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
         $top_paper = $papers->take(2);

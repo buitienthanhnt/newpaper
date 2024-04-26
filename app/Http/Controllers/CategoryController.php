@@ -89,11 +89,11 @@ class CategoryController extends Controller
         $params = $this->request->toArray();
         $category = $this->category;
         $category->name = $params["name"];
-        $category->description = $params["description"];
+        $category->description = $params["description"] ?: '';
         $category->active = $params["active"];
         $category->parent_id = $this->request->__get("parent_id");
         $category->url_alias = $params["url_alias"] ?: str_replace(" ", '-', strtolower($params['name']));
-        $category->type = $this->request->get("type");
+        $category->type = $this->request->get("type", 'default');
         $category->save();
 
         if ($category) {
