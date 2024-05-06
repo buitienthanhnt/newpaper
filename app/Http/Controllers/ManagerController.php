@@ -357,9 +357,9 @@ class ManagerController extends Controller
     {
         $user = $this->user;
         return $this->tokenManager->getToken([
-            'name' => $user->name,
-            'id' => $user->id,
-            'email' => $user->email
+            'name' => $user->name ?? 'demo',
+            'id' => $user->id ?? 010,
+            'email' => $user->email ?? 'demo@gmail.com'
         ]);
     }
 
