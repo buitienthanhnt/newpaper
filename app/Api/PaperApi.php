@@ -405,7 +405,7 @@ class PaperApi extends BaseApi
 			try {
 				$userRef = $this->firebaseDatabase->getReference('/newpaper/comments/' . $paper->id)->remove();
 				$userRef->push($commentTree);
-				$this->logTha->logFirebase('info', "added comment to comment list firebase", [
+				$this->logTha->logFirebase('info', "added for comment to list comment firebase", [
 					'paper_id' => $paper->id,
 				]);
 			} catch (\Throwable $th) {

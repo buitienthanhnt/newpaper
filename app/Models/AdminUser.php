@@ -121,18 +121,16 @@ class AdminUser extends Model
     function getPermissionRules()
     {
         $rules = [];
-        // $userPermissions =  collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
-        // foreach ($userPermissions->all() as $userPermission) {
-        //     $data_rules = $userPermission->hasMany(PermissionRules::class, "permission_id", "permission_id")->getResults()->map(fn($item)=> $item->rule_value)->all();
-        //     $rules = [...$rules, ...$data_rules];
-        // }
-
         $userPermissions =  array_column($this->hasMany(AdminUserPermission::class, "user_id")->getResults()->toArray(), 'permission_id');
-        $permission = Permission::where('label', '=', 'root')->first()->id;
+        $permission = Permission::where('label', '=', 'root')->first()->id ?? null;
         if (in_array($permission, $userPermissions)) {
             return ['rootAdmin'];
         } else {
-            # code...
+            $userPermissions =  collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
+            foreach ($userPermissions->all() as $userPermission) {
+                $data_rules = $userPermission->hasMany(PermissionRules::class, "permission_id", "permission_id")->getResults()->map(fn ($item) => $item->rule_value)->all();
+                $rules = [...$rules, ...$data_rules];
+            }
         }
         return $rules;
     }
