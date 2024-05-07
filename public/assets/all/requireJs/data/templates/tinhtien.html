@@ -6,23 +6,29 @@
 </div>
 
 <div style="margin-bottom: 10px;">
-    ghi chú: <input  type="text" data-bind="value: note"></input>
+    ghi chú: <input type="text" data-bind="value: note"></input>
 </div>
 
 <p data-bind="visible: error, text: error, style: {color: 'red'}"></p>
 <button data-bind="click: onAdd, style: {color: 'red'}">thêm vào</button>
 
+<p>-------------------------------------------------------------</p>
 <ul data-bind="foreach: { data: list, as: 'item' }">
     <li>
         <p>
             <!--ko text: $data.value--><!--/ko--> |
-            số tiền: <!--ko text: $parent.formatTien($data.value) --><!--/ko-->
-            (<!--ko text:$data.note--><!--/ko-->) |
+            bằng chữ: <!--ko text: $parent.formatTien($data.value) --><!--/ko-->
+
+            <!-- ko if: $data.note -->
+            (<!--ko text:$data.note--><!--/ko-->)
+            <!-- /ko -->
+            |
             <span style="color: brown;" data-bind="click: $parent.xoa">xóa</span>
         </p>
     </li>
 </ul>
 
+<p>-------------------------------------------------------------</p>
 
 <p>
     tổng tiền: <!--ko text: formatTien(tong())--><!--/ko-->
