@@ -20,7 +20,9 @@
             bằng chữ: <!--ko text: $parent.formatTien($data.value) --><!--/ko-->
 
             <!-- ko if: $data.note -->
-            (<!--ko text:$data.note--><!--/ko-->)
+            <span data-bind="style:{color: $data.value > 0 ? 'green' : 'red'}">
+                (<!--ko text:$data.note--><!--/ko-->)
+            </span>
             <!-- /ko -->
             |
             <span style="color: brown;" data-bind="click: $parent.xoa">xóa</span>
