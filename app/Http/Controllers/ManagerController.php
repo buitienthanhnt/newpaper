@@ -115,9 +115,10 @@ class ManagerController extends Controller
         $paper = Cache::remember($key, 15, fn () => $this->paper->find($page_id));
 
         $category = Cache::remember('category.alias.like', 15, function () {
-            return Category::where("url_alias", "like", "today")->get()->first();
+            return Category::all()->random(1)->first();
+            // return Category::where("url_alias", "like", "today")->get()->first();
         });
-        
+
         $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
         $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
         $top_paper = $papers->take(2);
@@ -363,8 +364,21 @@ class ManagerController extends Controller
         ]);
     }
 
-    function getTokenData(): array
+    function getTokenData()
     {
-        return $this->tokenManager->getTokenData($this->request->get('token'));
+        // get qury from header
+        return response()->json([
+            'message' => 'Page Not Found. If error persists, contact info@website.com'
+        ], 404);
+
+        return abort(500, 'Could not create office or assign it to administrator');
+
+        return response("123123123", 200)->setStatusCode(500);
+
+        return $this->tokenManager->getTokenData($this->request->header('Authorization'));
+
+        return [
+            "value" => $this->tokenManager->getTokenData($this->request->header('Authorization'))
+        ];
     }
 }

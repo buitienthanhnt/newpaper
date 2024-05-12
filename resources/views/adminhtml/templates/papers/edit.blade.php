@@ -131,7 +131,7 @@
                                                 <i class="fa fa-picture-o"></i> Choose
                                             </a>
                                         </span>
-                                        <input id="thumbnail" class="form-control" type="text" name="image_path" value="{{ $page->getImagePath() }}">
+                                        <input id="thumbnail" class="form-control" type="text" name="image_path" value="{{ $paper->getImagePath() }}">
                                     </div>
                                     <img id="holder" style="margin-top:15px;max-height:100px;">
                                 </div>

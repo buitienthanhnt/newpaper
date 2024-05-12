@@ -40,7 +40,8 @@ class RemoteSourceManager
         "www.w3schools.com" => "get_www_w3schools_com",
         "laracoding.com"    => "get_laracoding_com",
         "vtcnews.vn"        => "get_vtcnews_vn",
-        "doanhnghiepvn.vn"  => "get_doanhnghiepvn_vn"
+        "doanhnghiepvn.vn"  => "get_doanhnghiepvn_vn",
+        "codestus.com"      => "get_codestus_com"
     ];
 
     protected $request;
@@ -293,6 +294,12 @@ class RemoteSourceManager
     function get_doanhnghiepvn_vn($doc): array
     {
         return call_user_func(fn () => $this->getValueByClassName($doc, "single-entry-summary"));
+    }
+
+    // get_codestus_com
+    function get_codestus_com($doc): array
+    {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "prose"));
     }
 
     // ===================================================================//
