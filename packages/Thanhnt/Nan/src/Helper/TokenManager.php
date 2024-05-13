@@ -20,9 +20,14 @@ final class TokenManager
 		$this->request = $request;
 	}
 
-	/**
-	 * @return array
-	 */
+    /**
+     * @param array|null $data
+     * @param int $iat
+     * @param int $nbf
+     * @param int $exp
+     * @param string $type
+     * @return array
+     */
 	function getToken(array $data = null, int $iat = 0, int $nbf = 0, int $exp = 0, $type = 'HS256'): array
 	{
 		$iat = $iat ?: time();
@@ -51,9 +56,11 @@ final class TokenManager
 		];
 	}
 
-	/**
-	 * 
-	 */
+    /**
+     * @param string $token
+     * @param string $type
+     * @return array
+     */
 	function getTokenData(string $token = '', $type = 'HS256') : array
 	{
 		$token = $token ?: $request_token = $this->request->header('token');
@@ -71,7 +78,7 @@ final class TokenManager
 	}
 
 	/**
-	 * 
+	 * @return string
 	 */
 	private function get_serect_key(): string
 	{

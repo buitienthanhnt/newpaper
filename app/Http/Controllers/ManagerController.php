@@ -366,19 +366,34 @@ class ManagerController extends Controller
 
     function getTokenData()
     {
-        // get qury from header
+        if ($value = $this->tokenManager->getTokenData($this->request->header('Authorization'))) {
+            return [
+                "value" => $value
+            ];
+        }
+
         return response()->json([
-            'message' => 'Page Not Found. If error persists, contact info@website.com'
-        ], 404);
+            'message' => 'token expire. Please refresh token and try again!'
+        ], 401);
+    }
 
-        return abort(500, 'Could not create office or assign it to administrator');
+    function refreshUserToken(Request $request): \Illuminate\Http\Response
+    {
+        $refreshToken = $request->get('refresh_token', true);
+        if ($refreshToken) {
+            $user = $this->user;
+            return response([
+                'message' => 'success for refreshToken',
+                'token' => $this->tokenManager->getToken([
+                    'name' => $user->name ?? 'demo',
+                    'id' => $user->id ?? 010,
+                    'email' => $user->email ?? 'demo@gmail.com'
+                ])
+            ], 200);
+        }
 
-        return response("123123123", 200)->setStatusCode(500);
-
-        return $this->tokenManager->getTokenData($this->request->header('Authorization'));
-
-        return [
-            "value" => $this->tokenManager->getTokenData($this->request->header('Authorization'))
-        ];
+        return response([
+            'message' => 'refresh token fail!'
+        ], 400);
     }
 }
