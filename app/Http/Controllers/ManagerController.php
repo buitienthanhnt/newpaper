@@ -379,7 +379,7 @@ class ManagerController extends Controller
 
     function refreshUserToken(Request $request): \Illuminate\Http\Response
     {
-        $refreshToken = $request->get('refresh_token', true);
+        $refreshToken = $request->get('refresh_token', false);
         if ($refreshToken) {
             $user = $this->user;
             return response([

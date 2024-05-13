@@ -19,7 +19,7 @@ class CoreConfig extends Migration
             $table->string("name");
             $table->string("value")->nullable();
             $table->text("description")->nullable(true);
-            $table->text("type");
+            $table->text("type")->default('text');
             $table->timestamps();
             $table->softDeletes();
         });
