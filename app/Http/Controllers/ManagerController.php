@@ -357,7 +357,7 @@ class ManagerController extends Controller
 
     function getToken(Request $request): \Illuminate\Http\Response
     {
-        if ($$request->get('api_key', null) !== $this->tokenManager->get_serect_key()) {
+        if ($request->get('api_key', null) !== $this->tokenManager->get_serect_key()) {
             return response([
                 'message' => "api key not found"
             ], 400);
