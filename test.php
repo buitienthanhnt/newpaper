@@ -2,6 +2,9 @@
     // $a = ['id' => 123];
     // echo("asd/{$a['id']}");
 
+    echo(date("Y-m-d H:i:s",1716965369));
+    exit;
+
     class test {
         protected $a = '123';
 

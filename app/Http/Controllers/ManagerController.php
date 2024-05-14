@@ -418,9 +418,9 @@ class ManagerController extends Controller
     function getTokenData()
     {
         if ($value = $this->tokenManager->getTokenData($this->request->header('Authorization'))) {
-            return [
-                "value" => $value
-            ];
+            $value['iat'] = date("Y-m-d H:i:s", $value['iat']);
+            $value['exp'] = date("Y-m-d H:i:s", $value['exp']);
+            return ["value" => $value];
         }
 
         return response()->json([
