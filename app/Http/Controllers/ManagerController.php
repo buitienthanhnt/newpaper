@@ -17,6 +17,7 @@ use App\ViewBlock\LikeMost;
 use App\ViewBlock\MostPopulator;
 use App\ViewBlock\Trending;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use Thanhnt\Nan\Helper\TokenManager;
 
 class ManagerController extends Controller
@@ -354,14 +355,64 @@ class ManagerController extends Controller
         $this->paperApi->pullFirebaseComLike();
     }
 
-    function getToken(): array
+    function getToken(Request $request): \Illuminate\Http\Response
     {
+        if ($$request->get('api_key', null) !== $this->tokenManager->get_serect_key()) {
+            return response([
+                'message' => "api key not found"
+            ], 400);
+        }
+
         $user = $this->user;
-        return $this->tokenManager->getToken([
-            'name' => $user->name ?? 'demo',
-            'id' => $user->id ?? 010,
-            'email' => $user->email ?? 'demo@gmail.com'
+        return response([
+            'message' => 'success',
+            'token' => $this->tokenManager->getToken([
+                'name' => $user->name ?? 'demo',
+                'id' => $user->id ?? 1,
+                'email' => $user->email ?? 'demo@gmail.com',
+                'sid' => Session::getId()
+            ]),
+            'refresh_token' => $this->tokenManager->getRefreshToken([
+                'name' => $user->name ?? 'demo',
+                'id' => $user->id ?? 1,
+                'email' => $user->email ?? 'demo@gmail.com',
+                'sid' => Session::getId()
+            ])
         ]);
+    }
+
+    function refreshUserToken(Request $request): \Illuminate\Http\Response
+    {
+        $refreshToken = $request->get('refresh_token', false);
+        if ($refreshToken) {
+            $refreshTokenData = $this->tokenManager->getTokenData($refreshToken);
+            if (empty($refreshTokenData) || !isset($refreshTokenData['iss'])) {
+                return response([
+                    'message' => 'refresh token fail!'
+                ], 400);
+            }
+
+            $dataValue = (array) $refreshTokenData['iss'];
+            return response([
+                'message' => 'success for refreshToken',
+                'token' => $this->tokenManager->getToken([
+                    'name' => $dataValue['name'],
+                    'id' => $dataValue['id'],
+                    'email' => $dataValue['email'],
+                    'sid' => $dataValue['sid']
+                ]),
+                'refresh_token' => $this->tokenManager->getRefreshToken([
+                    'name' => $dataValue['name'],
+                    'id' => $dataValue['id'],
+                    'email' => $dataValue['email'],
+                    'sid' => $dataValue['sid']
+                ])
+            ], 200);
+        }
+
+        return response([
+            'message' => 'refresh token fail!'
+        ], 400);
     }
 
     function getTokenData()
@@ -375,25 +426,5 @@ class ManagerController extends Controller
         return response()->json([
             'message' => 'token expire. Please refresh token and try again!'
         ], 401);
-    }
-
-    function refreshUserToken(Request $request): \Illuminate\Http\Response
-    {
-        $refreshToken = $request->get('refresh_token', false);
-        if ($refreshToken) {
-            $user = $this->user;
-            return response([
-                'message' => 'success for refreshToken',
-                'token' => $this->tokenManager->getToken([
-                    'name' => $user->name ?? 'demo',
-                    'id' => $user->id ?? 010,
-                    'email' => $user->email ?? 'demo@gmail.com'
-                ])
-            ], 200);
-        }
-
-        return response([
-            'message' => 'refresh token fail!'
-        ], 400);
     }
 }
