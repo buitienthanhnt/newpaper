@@ -9,14 +9,14 @@
                 <div class="col-md-6 whats-right-cap">
                     <h4>
                         <a href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
-                            <h4>
+                            <h4 class="text-info">
                                 {{ $paper->title }}
                             </h4>
                             {{ $paper->short_conten }}
                         </a>
                     </h4>
                     <span
-                        class="colorb">{{ $paper->writerName() }}
+                        class="colorb" style="color: #ff2143">{{ $paper->writerName() }}
                     </span>
                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
                         <a href="" class="text text-info" style="float: right;"><i class="fa fa-eye"></i>

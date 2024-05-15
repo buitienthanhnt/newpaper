@@ -68,7 +68,7 @@
                                                 style="max-height: 210px; object-fit: cover" alt="">
                                         </div>
                                         <div class="whates-caption">
-                                            <h4><a
+                                            <h4><a class="text-info"
                                                     href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
                                             </h4>
                                             <h6>{{ $paper_first->short_conten }}</h6>
@@ -98,7 +98,7 @@
                                                         </a>
                                                     </h4>
                                                     <h6>{{ $paper->short_conten }}</h6>
-                                                    <span class="colorb">
+                                                    <span class="colorb" style="color: #ff2143">
                                                         {{ $paper->writerName() }}
                                                     </span>
                                                     <p>{{ date('M d, Y', strtotime($paper->updated_at)) }}
