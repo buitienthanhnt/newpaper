@@ -389,7 +389,7 @@ class ManagerController extends Controller
             if (empty($refreshTokenData) || !isset($refreshTokenData['iss'])) {
                 return response([
                     'message' => 'refresh token fail!'
-                ], 400);
+                ], 402);
             }
 
             $dataValue = (array) $refreshTokenData['iss'];
@@ -412,7 +412,7 @@ class ManagerController extends Controller
 
         return response([
             'message' => 'refresh token fail!'
-        ], 400);
+        ], 402);
     }
 
     function getTokenData()
