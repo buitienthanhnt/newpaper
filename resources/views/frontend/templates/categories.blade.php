@@ -64,7 +64,8 @@
                                 <div class="col-xl-6">
                                     <div class="whats-news-single mb-20">
                                         <div class="whates-img">
-                                            <img src="{{ $paper_first->getImagePath() }}" alt="">
+                                            <img src="{{ $paper_first->getImagePath() }}"
+                                                style="max-height: 210px; object-fit: cover" alt="">
                                         </div>
                                         <div class="whates-caption">
                                             <h4><a
@@ -87,13 +88,13 @@
                                             <div class="whats-right-single mb-10">
                                                 <div class="col-md-6">
                                                     <img src="{{ $paper->getImagePath() }}" class="whates-img"
-                                                        style="width: 100%; height: auto;" alt="">
+                                                        style="width: 100%; height: auto; min-height: 160px" alt="">
                                                 </div>
                                                 <div class="col-md-6 whats-right-cap" style="padding-left: 15px">
                                                     <h4>
                                                         <a
                                                             href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
-                                                            <h4>{{ $paper->title }}</h4>
+                                                            <h4 class="text-info">{{ $paper->title }}</h4>
                                                         </a>
                                                     </h4>
                                                     <h6>{{ $paper->short_conten }}</h6>
@@ -114,8 +115,11 @@
                     </div>
                     <div>
                         <center>
-                            <button id="load_more" data-page="1" class="btn btn-info" onclick="load_more()">show
-                                more</button>
+                            {{-- https://www.w3schools.com/icons/fontawesome5_icons_spinners.asp --}}
+                            <button id="load_more" data-page="1" class="btn btn-info" style="border-radius: 5px"
+                                onclick="load_more()">
+                                Load more
+                            </button>
                         </center>
 
                     </div>
@@ -176,23 +180,29 @@
         function load_more() {
             var button = $("#load_more");
             let page = button.attr("data-page");
+            button.html('<i class="fas fa-spinner fa-spin"></i>').attr('disabled', true);
             if (page) {
                 $.ajax({
                     url: url + "?page=" + page + "&type=" + type,
                     type: "GET",
                     success: function(result) {
                         result = JSON.parse(result);
+                        let button = $("#load_more");
                         if (result.data) {
                             let data = result.data;
                             let conten = $("#whats-right-single");
                             // conten.after(data);
                             conten.append(data);
+                            button.html('Load more').attr('disabled', false).attr("data-page", Number(button
+                                .attr("data-page")) + 1);
+                        } else {
                             let button = $("#load_more");
-                            button.attr("data-page", Number(button.attr("data-page")) + 1);
+                            button.html('end conten').attr('disabled', true)
                         }
                     },
                     error: function(error) {
-
+                        let button = $("#load_more");
+                        button.html('load more').attr('disabled', false)
                     }
                 });
             }
