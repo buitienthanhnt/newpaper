@@ -417,7 +417,14 @@ class ManagerController extends Controller
 
     function getTokenData()
     {
-        if ($value = $this->tokenManager->getTokenData($this->request->header('Authorization'))) {
+        $token = $this->request->header('authorization', apache_request_headers()['Authorization'] ?? apache_request_headers()['authorization'] ?? null);
+
+        if (empty($token)) {
+            return response()->json([
+                'message' => 'token Authorization is missing. Please set token and try again!'
+            ], 403);
+        }
+        if ($value = $this->tokenManager->getTokenData($token)) {
             $value['iat'] = date("Y-m-d H:i:s", $value['iat']);
             $value['exp'] = date("Y-m-d H:i:s", $value['exp']);
             return ["value" => $value];
