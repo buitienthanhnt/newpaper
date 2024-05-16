@@ -29,8 +29,8 @@ class AdminController extends Controller
 
     public function loginPost(Request $request)
     {
-        if ($ad = $this->get_user_admin()) {
-            dd($ad->toArray());
+        if ($this->get_user_admin()) {
+            return redirect()->route("admin");
         }
         if ($request->get("admin_user") && $request->get("admin_password")) {
             $adminUser = $this->adminUser->where("name", "=", $request->get("admin_user"))->get()->first();

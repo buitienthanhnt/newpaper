@@ -417,8 +417,7 @@ class ManagerController extends Controller
 
     function getTokenData()
     {
-        $token = $this->request->header('authorization', apache_request_headers()['Authorization'] ?? apache_request_headers()['authorization'] ?? null);
-
+        $token = $this->tokenManager->getTokenAuthor();
         if (empty($token)) {
             return response()->json([
                 'message' => 'token Authorization is missing. Please set token and try again!'

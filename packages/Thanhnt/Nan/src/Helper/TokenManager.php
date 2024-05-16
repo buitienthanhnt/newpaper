@@ -94,7 +94,7 @@ final class TokenManager
 	 */
 	function getTokenData(string $token = null, $type = self::DEFAULT_TYPE): array
 	{
-		$token = $token ?: $this->request->header('token');
+		$token = $token ?: $this->getTokenAuthor();
 		if ($token) {
 			try {
 				$decode = JWT::decode($token, new Key($this->get_serect_key(), $type));
@@ -103,7 +103,6 @@ final class TokenManager
 					// return (array) $data;
 				}
 			} catch (\Throwable $th) {
-				// return [];
 			}
 		}
 		return [];
@@ -115,5 +114,12 @@ final class TokenManager
 	public function get_serect_key(): string
 	{
 		return $this->serect_key;
+	}
+
+	public function getTokenAuthor(): string
+	{
+		$headerData = apache_request_headers();
+		$defaultAuth = $headerData['Authorization'] ?? $headerData['authorization'] ?? null;
+		return $this->request->header('authorization', $defaultAuth);
 	}
 }
