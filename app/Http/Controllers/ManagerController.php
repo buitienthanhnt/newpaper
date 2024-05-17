@@ -106,6 +106,10 @@ class ManagerController extends Controller
 
     function byWriter($id)
     {
+        // return response([
+        //     'message' => "can't not get paper data by writer"
+        // ], 501);
+        
         $writerApi = $this->writerApi->getPapers($id);
         return $writerApi;
     }
