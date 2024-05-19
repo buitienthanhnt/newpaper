@@ -602,7 +602,7 @@ class PaperApi extends BaseApi
 		];
 
 		return [
-			'data' => [
+				'message' => 'get home info success',
 				'status' => true,
 				'code' => 200,
 				'hit' => $hit,
@@ -615,9 +615,6 @@ class PaperApi extends BaseApi
 				'writers' => $writers,
 				'map' => $lineMap,
 				'video' => $video
-			],
-			'success' => true,
-			'error' => null
 		];
 	}
 
