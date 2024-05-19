@@ -16,6 +16,8 @@ use App\Models\User;
 use App\ViewBlock\LikeMost;
 use App\ViewBlock\MostPopulator;
 use App\ViewBlock\Trending;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Thanhnt\Nan\Helper\TokenManager;
@@ -39,6 +41,7 @@ class ManagerController extends Controller
     protected $writerApi;
     protected $tokenManager;
     protected $user;
+    protected $auth;
 
     public function __construct(
         Request $request,
@@ -52,7 +55,8 @@ class ManagerController extends Controller
         PaperApi $paperApi,
         WriterApi $writerApi,
         TokenManager $tokenManager,
-        User $user
+        User $user,
+        Auth $auth
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -66,6 +70,7 @@ class ManagerController extends Controller
         $this->writerApi = $writerApi;
         $this->tokenManager = $tokenManager;
         $this->user = $user;
+        $this->auth = $auth;
     }
 
     function info()
@@ -109,7 +114,7 @@ class ManagerController extends Controller
         // return response([
         //     'message' => "can't not get paper data by writer"
         // ], 501);
-        
+
         $writerApi = $this->writerApi->getPapers($id);
         return $writerApi;
     }
@@ -367,19 +372,12 @@ class ManagerController extends Controller
             ], 400);
         }
 
-        $user = $this->user;
         return response([
             'message' => 'success',
             'token' => $this->tokenManager->getToken([
-                'name' => $user->name ?? 'demo',
-                'id' => $user->id ?? 1,
-                'email' => $user->email ?? 'demo@gmail.com',
                 'sid' => Session::getId()
             ]),
             'refresh_token' => $this->tokenManager->getRefreshToken([
-                'name' => $user->name ?? 'demo',
-                'id' => $user->id ?? 1,
-                'email' => $user->email ?? 'demo@gmail.com',
                 'sid' => Session::getId()
             ])
         ]);
@@ -387,7 +385,7 @@ class ManagerController extends Controller
 
     function refreshUserToken(Request $request): \Illuminate\Http\Response
     {
-        $refreshToken = $request->get('refresh_token', false);
+        $refreshToken = $request->get('refresh_token', null);
         if ($refreshToken) {
             $refreshTokenData = $this->tokenManager->getTokenData($refreshToken);
             if (empty($refreshTokenData) || !isset($refreshTokenData['iss'])) {
@@ -399,18 +397,12 @@ class ManagerController extends Controller
             $dataValue = (array) $refreshTokenData['iss'];
             return response([
                 'message' => 'success for refreshToken',
-                'token' => $this->tokenManager->getToken([
-                    'name' => $dataValue['name'],
-                    'id' => $dataValue['id'],
-                    'email' => $dataValue['email'],
-                    'sid' => $dataValue['sid']
-                ]),
-                'refresh_token' => $this->tokenManager->getRefreshToken([
-                    'name' => $dataValue['name'],
-                    'id' => $dataValue['id'],
-                    'email' => $dataValue['email'],
-                    'sid' => $dataValue['sid']
-                ])
+                'token' => $this->tokenManager->getToken(
+                    $dataValue
+                ),
+                'refresh_token' => $this->tokenManager->getRefreshToken(
+                    $dataValue
+                )
             ], 200);
         }
 
@@ -436,5 +428,61 @@ class ManagerController extends Controller
         return response()->json([
             'message' => 'token expire. Please refresh token and try again!'
         ], 401);
+    }
+
+    function loginApi(Request $request): Response
+    {
+        $email = $request->get('email');
+        $password = $request->get('password');
+        if (!($email && $password)) {
+            return response([
+                "message" => "invalid email or password"
+            ], 400);
+        }
+        if (Auth::check()) {
+            return response([
+                "message" => "người dùng đã đăng nhập, không thể thực hiện thêm!"
+            ], 403);
+        }
+
+        if (Auth::attempt([
+            'email' => $email,
+            "password" => $password
+        ])) {
+            $user = $this->user->where("email", $email)->first();
+            Auth::login($user);
+            $userData = $user->toArray();
+            $userData["sid"] = Session::getId();
+
+            $token = $this->tokenManager->getToken($userData);
+            $refreshToken = $this->tokenManager->getRefreshToken($userData);
+            return response([
+                "message" => "login success!!!",
+                "userData" => $user,
+                "token" => $token,
+                "refresh_token" => $refreshToken
+            ], 200);
+        }
+        return response([
+            'message' => "login fail, error email or password",
+        ], 400);
+    }
+
+    function getUserInfo(): Response
+    {
+        $token = $this->tokenManager->getToken();
+        $tokenData = (array) $this->tokenManager->getTokenData()['iss'];
+        $sid = $tokenData['sid'];
+        if (isset($tokenData['id']) && $userId = $tokenData['id']) {
+            $user = Auth::setUser($this->user->find($userId));
+            return response([
+                'message' => null,
+                'userData' => Auth::user()
+            ], 200);
+        }
+        return response([
+            'message' => null,
+            'userData' => null
+        ], 200);
     }
 }

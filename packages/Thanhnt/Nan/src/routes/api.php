@@ -6,6 +6,6 @@ Route::get('routeList', "App\Http\Controllers\PermissionController@methodGetRout
 
 Route::get('getUserToken', "App\Http\Controllers\ManagerController@getToken")->name('getToken');
 
-Route::get('refreshUserToken', "App\Http\Controllers\ManagerController@refreshUserToken")->name('refreshUserToken');
+Route::post('refreshUserToken', "App\Http\Controllers\ManagerController@refreshUserToken")->name('refreshUserToken');
 
 Route::get('getUserTokenData', "App\Http\Controllers\ManagerController@getTokenData")->name('getTokenData');

@@ -127,4 +127,8 @@ Route::prefix('paper')->group(function () {
     Route::get("firebase/{paper_id?}", "ManagerController@firebasePaperDetail")->name("api_paper_detail_firebase");
 });
 
+Route::post('login', "ManagerController@loginApi")->name('api_login');
+
+Route::get('userInfo', "ManagerController@getUserInfo")->name('api_user_info');
+
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd

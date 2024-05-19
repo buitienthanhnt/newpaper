@@ -119,7 +119,7 @@ final class TokenManager
 	public function getTokenAuthor(): string
 	{
 		$headerData = apache_request_headers();
-		$defaultAuth = $headerData['Authorization'] ?? $headerData['authorization'] ?? null;
+		$defaultAuth = $headerData['Authorization'] ?? $headerData['authorization'] ?? '';
 		return $this->request->header('authorization', $defaultAuth);
 	}
 }
