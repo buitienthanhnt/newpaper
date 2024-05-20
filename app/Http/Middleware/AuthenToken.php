@@ -31,18 +31,18 @@ class AuthenToken
      */
     public function handle(Request $request, Closure $next)
     {
-        // $tokenData = (array) $this->tokenManager->getTokenData();
-        // if (empty($tokenData)) {
-        //     return response([
-        //         'message' => 'token expire!'
-        //     ], 401);
-        // }
+        $tokenData = (array) $this->tokenManager->getTokenData();
+        if (empty($tokenData)) {
+            return response([
+                'message' => 'token expire!'
+            ], 401);
+        }
 
-        // $tokenData = (array) $tokenData['iss'];
-        // if (isset($tokenData['id']) && $id = $tokenData['id']) {
-        //     $user = $this->user->find($id);
-        //     Auth::setUser($user);
-        // }
+        $tokenData = (array) $tokenData['iss'];
+        if (isset($tokenData['id']) && $id = $tokenData['id']) {
+            $user = $this->user->find($id);
+            Auth::setUser($user);
+        }
         return $next($request);
     }
 }
