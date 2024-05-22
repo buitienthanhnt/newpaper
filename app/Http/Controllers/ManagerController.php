@@ -474,7 +474,6 @@ class ManagerController extends Controller
         $tokenData = (array) $this->tokenManager->getTokenData()['iss'];
         $sid = $tokenData['sid'];
         if (isset($tokenData['id']) && $userId = $tokenData['id']) {
-            $user = Auth::setUser($this->user->find($userId));
             return response([
                 'message' => null,
                 'userData' => Auth::user()

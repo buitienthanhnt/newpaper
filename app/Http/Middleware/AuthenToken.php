@@ -14,6 +14,10 @@ class AuthenToken
 
     protected $tokenManager;
 
+    private $passUrl = [
+        'api/getcategorytop'
+    ];
+
     function __construct(
         User $user,
         TokenManager $tokenManager
@@ -31,17 +35,18 @@ class AuthenToken
      */
     public function handle(Request $request, Closure $next)
     {
-        $tokenData = (array) $this->tokenManager->getTokenData();
-        if (empty($tokenData)) {
-            return response([
-                'message' => 'token expire!'
-            ], 401);
-        }
-
-        $tokenData = (array) $tokenData['iss'];
-        if (isset($tokenData['id']) && $id = $tokenData['id']) {
-            $user = $this->user->find($id);
-            Auth::setUser($user);
+        $path = $request->getPathInfo();
+        if (!in_array(trim($path, '/'), $this->passUrl)) {
+            $tokenData = (array) $this->tokenManager->getTokenData();
+            if (empty($tokenData)) {
+                return response([
+                    'message' => 'token expire!'
+                ], 401);
+            }
+            $tokenData = (array) $tokenData['iss'];
+            if (isset($tokenData['id'])) {
+                Auth::setUser($this->user->find($tokenData['id']) ?? null);
+            }
         }
         return $next($request);
     }
