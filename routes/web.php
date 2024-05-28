@@ -21,4 +21,9 @@ Route::get("home", function(){
     return view("frontend/home");
 });
 
+Route::get('runJs', function () {
+    $list = shell_exec("node testjs.js '2023-04-06 15:33:41' vi-VN");
+    echo($list);
+});
+
 ?>

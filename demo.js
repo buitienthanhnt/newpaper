@@ -59,8 +59,10 @@
 // }
 
 // let ad = demo();
-let ad = {a: 123};
-console.log(!!ad?.b);
+// let ad = {a: 123};
+// console.log(!!ad?.b);
 
+
+console.log('day la noi dung nam trong log cua file js');
 
 

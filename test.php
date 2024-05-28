@@ -1,8 +1,12 @@
 <?php
-    // $a = ['id' => 123];
+    $a = ['id' => 123];
     // echo("asd/{$a['id']}");
 
-    echo(date("Y-m-d H:i:s",1716965369));
+    // echo(date("Y-m-d H:i:s",1716965369));
+
+    // test run js in file php
+    $js_log = shell_exec('node demo.js');
+    echo($js_log."\n");
     exit;
 
     class test {
