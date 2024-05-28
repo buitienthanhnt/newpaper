@@ -195,6 +195,13 @@ class ManagerController extends Controller
         return $papers;
     }
 
+    function formatSug($data) {
+        return array_map(function($item){
+            $item['image_path'] = $this->helperFunction->replaceImageUrl($item['image_path']);
+            return $item;
+        }, $data);
+    }
+
     public function getPaperDetail($paper_id)
     {
         if (Cache::has("api_detail_$paper_id")) {
@@ -203,6 +210,7 @@ class ManagerController extends Controller
             return $paper;
         } else {
             $detail = $this->paper->find($paper_id);
+            $detail->suggest = $this->formatSug(Paper::all()->random(2)->makeHidden('conten')->toArray());
             $detail->info = $detail->paperInfo();
             $detail->tags = $detail->to_tag()->getResults();
             $detail->slider_images = array_map(function ($item) {

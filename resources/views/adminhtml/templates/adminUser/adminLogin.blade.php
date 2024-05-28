@@ -51,7 +51,9 @@
                 </div>
 
                 <div class="form-group clear">
-                    <center><button type="submit" class="btn btn-info btn-sm">login into</button></center>
+                    <center>
+                        <button type="submit" class="btn btn-info btn-sm" style="width: 50%">login into</button>
+                    </center>
                 </div>
             </form>
         </div>
