@@ -195,11 +195,12 @@ class ManagerController extends Controller
         return $papers;
     }
 
-    function formatSug($data) {
-        return array_map(function($item){
+    function formatSug($data)
+    {
+        return array_chunk(array_map(function ($item) {
             $item['image_path'] = $this->helperFunction->replaceImageUrl($item['image_path']);
             return $item;
-        }, $data);
+        }, $data), 2);
     }
 
     public function getPaperDetail($paper_id)
@@ -210,7 +211,7 @@ class ManagerController extends Controller
             return $paper;
         } else {
             $detail = $this->paper->find($paper_id);
-            $detail->suggest = $this->formatSug(Paper::all()->random(2)->makeHidden('conten')->toArray());
+            $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
             $detail->info = $detail->paperInfo();
             $detail->tags = $detail->to_tag()->getResults();
             $detail->slider_images = array_map(function ($item) {
