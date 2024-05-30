@@ -34,9 +34,9 @@ class BaseApi
         $this->remoteConfig = $firebaseService->remoteConfig;
     }
 
-    public function upLoadImageFirebase(string $image_link)
+    public function upLoadImageFirebase(string $image_link, $folder = null)
     {
-        $firebaseFolder = self::STORERAGE_BUGKET . '/';
+        $firebaseFolder = $folder ? $folder . '/' : self::STORERAGE_BUGKET . '/';
         $real_path = $this->url_to_real($image_link);
         if (empty($real_path)) {
             return null;

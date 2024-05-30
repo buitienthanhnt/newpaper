@@ -14,7 +14,7 @@
                     <a class="nav-link" data-toggle="collapse" data-target="#{{ str_replace('/', '-', $item['Number']) }}"
                         aria-controls="{{ str_replace('/', '-', $item['Number']) }}"
                         aria-expanded="{{ str_replace('/', '-', request()->route()->getAction('prefix')) == str_replace('/', '-', $item['Number']) ? 'true' : 'false' }}">
-                        <i class="menu-icon mdi mdi-floor-plan"></i>
+                        <i class="menu-icon mdi {{ $item['icon'] }}"></i>
                         <span class="menu-title">{{ $item['Name'] }}</span>
                         <i class="menu-arrow"></i>
                     </a>

@@ -14,7 +14,7 @@ class AdminLeftTab implements Htmlable
 	protected $request;
 	const ROUTE_LEFT = 'admin_get_routes';
 	const EXCLUDE_ROUTES = [
-		'edit', 'detail', 'file/manager/upload', 'file/manager/move', 'file/manager/domove', 
+		'edit', 'detail', 'file/manager/upload', 'file/manager/move', 'file/manager/domove',
 		'file/manager/crop', 'file/manager/cropimage', 'file/manager/cropnewimage',
 		'file/manager/rename', 'file/manager/resize', 'file/manager/doresize',
 		'file/manager/delete'
@@ -40,6 +40,36 @@ class AdminLeftTab implements Htmlable
 		return false;
 	}
 
+	protected function format_icon($key = ''): string
+	{
+		// https://pictogrammers.github.io/@mdi/font/2.0.46/
+		switch ($key) {
+			case '/adminhtml':
+				return 'mdi-home-automation';
+			case 'adminhtml/category':
+				return 'mdi-card-text-outline';
+			case 'adminhtml/paper':
+				return 'mdi-chart-line';
+			case 'adminhtml/permission':
+				return 'mdi-table';
+			case 'adminhtml/writer':
+				return 'mdi-layers-outline';
+			case 'adminhtml/rule':
+				return 'mdi-account-circle-outline';
+			case 'adminhtml/user':
+				return 'mdi-file-document';
+			case 'adminhtml/file/manager':
+				return 'mdi-attachment';
+			case 'adminhtml/config':
+				return 'mdi-attachment';
+			case 'adminhtml/firebase':
+				return 'mdi-atom';
+				// default:
+				// 	return 'mdi-sitemap';
+		}
+		return 'mdi-floor-plan';
+	}
+
 	protected function actionByController($actions = []): array
 	{
 		if ($actions) {
@@ -62,6 +92,7 @@ class AdminLeftTab implements Htmlable
 					"Name"      => str_replace(["/", "adminhtml"], [" ", "admin"], $key),
 					"Number"    => $key,
 					"Children"  => $value,
+					"icon" => $this->format_icon($key)
 				];
 			}
 			return [

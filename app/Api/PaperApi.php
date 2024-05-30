@@ -79,6 +79,19 @@ class PaperApi extends BaseApi
 		return $values;
 	}
 
+	function paperInHome(): array
+	{
+		$userRef = $this->firebaseDatabase->getReference('/newpaper/home');
+		$snapshot = $userRef->getSnapshot();
+		$values = $snapshot->getValue() ?: [];
+		if ($values) {
+			foreach ($values as $key => &$val) {
+				$val = $this->formatPaperFirebase($val);
+			}
+		}
+		return $values;
+	}
+
 	public function formatPaperFirebase($paperData)
 	{
 		if (isset($paperData['id'])) {
@@ -95,7 +108,7 @@ class PaperApi extends BaseApi
 		if (!empty($paper)) {
 			if (isset($paper['image_path']) && !empty($paper['image_path'])) {
 				// upload image of paper to fireStorage
-				$firebaseImage = $this->upLoadImageFirebase($paper['image_path']);
+				$firebaseImage = $this->upLoadImageFirebase($paper['image_path'], $this->request->get('type', null));
 				if ($firebaseImage) {
 					$paper['image_path'] = $firebaseImage;
 					$paper['info'] = $_paper->paperInfo();
@@ -103,25 +116,35 @@ class PaperApi extends BaseApi
 					unset($paper['image_path']);
 				}
 			}
-			foreach ($hidden as $k) {
-				unset($paper[$k]);
+
+			if (!$this->request->get('type')) {
+				foreach ($hidden as $k) {
+					unset($paper[$k]);
+				}
 			}
 			/**
 			 * queue for async upload data of paper to firebase
 			 * paper_id & paper image path firebase.
 			 */
-			UpPaperFireBase::dispatch($_paper->id, $firebaseImage ?? null);
+			if (!$this->request->get('type', null)) {
+				UpPaperFireBase::dispatch($_paper->id, $firebaseImage ?? null);
+			}
+
 			// $this->upFirebaseComments($_paper);
 			// $this->upPaperInfo($_paper);
 			// $this->addPapersCategory($_paper, $firebaseImage);
 			// $this->upContentFireStore($_paper);
-			$userRef = $this->firebaseDatabase->getReference('/newpaper/papers/' . $_paper->id);
+			$userRef = $this->firebaseDatabase->getReference("/newpaper/{$this->request->get('type', 'papers')}/" . $_paper->id);
 			$userRef->push($paper);
 			$snapshot = $userRef->getSnapshot();
 
 			$this->logTha->logFirebase('info', " -> Added for paperId: " . $paper['id'] . " to paperList firebase");
 
-			Cache::put('paper_in_firebase', $this->paperInFirebase());
+			if (!$this->request->get('type', null)) {
+				Cache::put('paper_in_firebase', $this->paperInFirebase());
+			} else {
+				Cache::put('paper_in_home', $this->paperInHome());
+			}
 			return [
 				'status' => true,
 				'value' => $this->formatPaperFirebase($snapshot->getValue())['id']
@@ -602,19 +625,19 @@ class PaperApi extends BaseApi
 		];
 
 		return [
-				'message' => 'get home info success',
-				'status' => true,
-				'code' => 200,
-				'hit' => $hit,
-				'forward' => $forward,
-				'mostPopulator' => $mostPopulator,
-				'mostRecents' => $mostRecents,
-				'listImages' => $listImages,
-				'timeLine' => $timeLine,
-				'search' => $tags,
-				'writers' => $writers,
-				'map' => $lineMap,
-				'video' => $video
+			'message' => 'get home info success',
+			'status' => true,
+			'code' => 200,
+			'hit' => $hit,
+			'forward' => $forward,
+			'mostPopulator' => $mostPopulator,
+			'mostRecents' => $mostRecents,
+			'listImages' => $listImages,
+			'timeLine' => $timeLine,
+			'search' => $tags,
+			'writers' => $writers,
+			'map' => $lineMap,
+			'video' => $video
 		];
 	}
 

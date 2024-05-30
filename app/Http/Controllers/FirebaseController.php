@@ -50,7 +50,7 @@ class FirebaseController extends BaseController
         // $papers = Paper::where('show', '=', 1)->whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
 
         // tạm thời lấy hết
-        $papers = Paper::whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
+        $papers = Paper::whereNotIn('id', $uploadedIds)->where('active', '=', 1)->orderBy('id', 'DESC')->paginate(8);
         return view('adminhtml.templates.firebase.dashboard', ['listPaper' => array_slice($papersInFirebase, $this->request->get('page', 0) * 8, 8), 'papers' => $papers]);
     }
 
@@ -152,5 +152,22 @@ class FirebaseController extends BaseController
     {
         $this->paperApi->getDefaultImagePath();
         return '';
+    }
+
+    function nhaDashboard()
+    {
+        $papersInFirebase = $this->paperApi->paperInHome();
+        $uploadedIds = array_column($papersInFirebase, 'id');
+        // $papers = Paper::where('show', '=', 1)->whereNotIn('id', $uploadedIds)->orderBy('id', 'DESC')->paginate(8);
+
+        // tạm thời lấy hết
+        $papers = Paper::whereNotIn('id', $uploadedIds)->where('active', '=', 0)->orderBy('id', 'DESC')->paginate(8);
+        return view(
+            'adminhtml.templates.firebase.nhaDashboard',
+            [
+                'listPaper' => array_slice($papersInFirebase, $this->request->get('page', 0) * 8, 8),
+                'papers' => $papers
+            ]
+        );
     }
 }

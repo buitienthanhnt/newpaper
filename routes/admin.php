@@ -153,6 +153,10 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get('setupHome', "FirebaseController@setupHome")->name($admin."_firebase_setupHome");
 
         Route::post('upFirebase/home', "FirebaseController@upHomeInfo")->name($admin."_firebase_upDefaultHome");
+
+        Route::get('nhaDashboard', "FirebaseController@nhaDashboard")->name($admin."_firebase_nhaDashboard");
+
+        Route::post('nhaUp', "FirebaseController@nhaUp")->name($admin."_firebase_nhaUp");
     });
 
     Route::get("default", "AdminController@default")->name($admin."_default");

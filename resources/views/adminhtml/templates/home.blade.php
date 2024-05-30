@@ -9,30 +9,31 @@
 @endsection
 
 @section('body_main_conten')
-    @if (session('not_page'))
-        <?php Alert::error('not page', 'Message')->autoClose(2000); ?>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-success" id="error-message" role="alert">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="alert alert-success" id="error-message" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="content-wrapper">
         <div class="row">
+            <div class="col-md-12">
+                @if (session('not_page'))
+                    <?php Alert::error('not page', 'Message')->autoClose(2000); ?>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-success" id="error-message" role="alert">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="alert alert-success" id="error-message" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
+            </div>
             <div class="col-lg-8 d-flex flex-column">
                 <div class="row flex-grow">
                     <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
                         <div class="card card-rounded">
                             <div class="card-body">
-                                <div
-                                    class="d-sm-flex justify-content-between align-items-start">
+                                <div class="d-sm-flex justify-content-between align-items-start">
                                     <div>
                                         <h4 class="card-title card-title-dash">Performance
                                             Line Chart</h4>
@@ -76,11 +77,9 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-2 mb-sm-0">
+                                        <div class="d-flex justify-content-between align-items-center mb-2 mb-sm-0">
                                             <div class="circle-progress-width">
-                                                <div id="totalVisitors"
-                                                    class="progressbar-js-circle pr-2">
+                                                <div id="totalVisitors" class="progressbar-js-circle pr-2">
                                                 </div>
                                             </div>
                                             <div>
@@ -91,11 +90,9 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <div class="circle-progress-width">
-                                                <div id="visitperday"
-                                                    class="progressbar-js-circle pr-2">
+                                                <div id="visitperday" class="progressbar-js-circle pr-2">
                                                 </div>
                                             </div>
                                             <div>
@@ -118,8 +115,7 @@
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card card-rounded">
                             <div class="card-body">
-                                <div
-                                    class="d-sm-flex justify-content-between align-items-start">
+                                <div class="d-sm-flex justify-content-between align-items-start">
                                     <div>
                                         <h4 class="card-title card-title-dash">Market
                                             Overview</h4>
@@ -129,35 +125,25 @@
                                     </div>
                                     <div>
                                         <div class="dropdown">
-                                            <button
-                                                class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0"
-                                                type="button" id="dropdownMenuButton2"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"> This month </button>
-                                            <div class="dropdown-menu"
-                                                aria-labelledby="dropdownMenuButton2">
+                                            <button class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0"
+                                                type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false"> This month </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                                                 <h6 class="dropdown-header">Settings</h6>
-                                                <a class="dropdown-item"
-                                                    href={{ asset('assets/adminhtml/#') }}>Action</a>
-                                                <a class="dropdown-item"
-                                                    href={{ asset('assets/adminhtml/#') }}>Another
+                                                <a class="dropdown-item" href={{ asset('assets/adminhtml/#') }}>Action</a>
+                                                <a class="dropdown-item" href={{ asset('assets/adminhtml/#') }}>Another
                                                     action</a>
-                                                <a class="dropdown-item"
-                                                    href={{ asset('assets/adminhtml/#') }}>Something
+                                                <a class="dropdown-item" href={{ asset('assets/adminhtml/#') }}>Something
                                                     else here</a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item"
-                                                    href={{ asset('assets/adminhtml/#') }}>Separated
+                                                <a class="dropdown-item" href={{ asset('assets/adminhtml/#') }}>Separated
                                                     link</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    class="d-sm-flex align-items-center mt-1 justify-content-between">
-                                    <div
-                                        class="d-sm-flex align-items-center mt-4 justify-content-between">
+                                <div class="d-sm-flex align-items-center mt-1 justify-content-between">
+                                    <div class="d-sm-flex align-items-center mt-4 justify-content-between">
                                         <h2 class="me-2 fw-bold">$36,2531.00</h2>
                                         <h4 class="me-2">USD</h4>
                                         <h4 class="text-success">(+1.37%)</h4>
@@ -182,8 +168,7 @@
                                         Enhance your <span class="fw-bold">Campaign</span>
                                         for better outreach
                                     </h3>
-                                    <a href={{ asset('assets/adminhtml/#') }}
-                                        class="btn btn-info upgrade-btn">Upgrade
+                                    <a href={{ asset('assets/adminhtml/#') }} class="btn btn-info upgrade-btn">Upgrade
                                         Account!</a>
                                 </div>
                             </div>
@@ -194,8 +179,7 @@
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card card-rounded">
                             <div class="card-body">
-                                <div
-                                    class="d-sm-flex justify-content-between align-items-start">
+                                <div class="d-sm-flex justify-content-between align-items-start">
                                     <div>
                                         <h4 class="card-title card-title-dash">Pending
                                             Requests</h4>
@@ -203,9 +187,7 @@
                                             have 50+ new requests</p>
                                     </div>
                                     <div>
-                                        <button
-                                            class="btn btn-primary btn-lg text-white mb-0 me-0"
-                                            type="button"><i
+                                        <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i
                                                 class="mdi mdi-account-plus"></i>Add new
                                             member</button>
                                     </div>
@@ -215,13 +197,10 @@
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    <div
-                                                        class="form-check form-check-flat mt-0">
+                                                    <div class="form-check form-check-flat mt-0">
                                                         <label class="form-check-label">
-                                                            <input type="checkbox"
-                                                                class="form-check-input"
-                                                                aria-checked="false"><i
-                                                                class="input-helper"></i></label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                aria-checked="false"><i class="input-helper"></i></label>
                                                     </div>
                                                 </th>
                                                 <th>Customer</th>
@@ -233,13 +212,10 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <div
-                                                        class="form-check form-check-flat mt-0">
+                                                    <div class="form-check form-check-flat mt-0">
                                                         <label class="form-check-label">
-                                                            <input type="checkbox"
-                                                                class="form-check-input"
-                                                                aria-checked="false"><i
-                                                                class="input-helper"></i></label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                aria-checked="false"><i class="input-helper"></i></label>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -264,30 +240,23 @@
                                                             <p>85/162</p>
                                                         </div>
                                                         <div class="progress progress-md">
-                                                            <div class="progress-bar bg-success"
-                                                                role="progressbar"
-                                                                style="width: 85%"
-                                                                aria-valuenow="25"
-                                                                aria-valuemin="0"
+                                                            <div class="progress-bar bg-success" role="progressbar"
+                                                                style="width: 85%" aria-valuenow="25" aria-valuemin="0"
                                                                 aria-valuemax="100"></div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div
-                                                        class="badge badge-opacity-warning">
+                                                    <div class="badge badge-opacity-warning">
                                                         In progress</div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div
-                                                        class="form-check form-check-flat mt-0">
+                                                    <div class="form-check form-check-flat mt-0">
                                                         <label class="form-check-label">
-                                                            <input type="checkbox"
-                                                                class="form-check-input"
-                                                                aria-checked="false"><i
-                                                                class="input-helper"></i></label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                aria-checked="false"><i class="input-helper"></i></label>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -312,30 +281,23 @@
                                                             <p>85/162</p>
                                                         </div>
                                                         <div class="progress progress-md">
-                                                            <div class="progress-bar bg-success"
-                                                                role="progressbar"
-                                                                style="width: 65%"
-                                                                aria-valuenow="65"
-                                                                aria-valuemin="0"
+                                                            <div class="progress-bar bg-success" role="progressbar"
+                                                                style="width: 65%" aria-valuenow="65" aria-valuemin="0"
                                                                 aria-valuemax="100"></div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div
-                                                        class="badge badge-opacity-warning">
+                                                    <div class="badge badge-opacity-warning">
                                                         In progress</div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div
-                                                        class="form-check form-check-flat mt-0">
+                                                    <div class="form-check form-check-flat mt-0">
                                                         <label class="form-check-label">
-                                                            <input type="checkbox"
-                                                                class="form-check-input"
-                                                                aria-checked="false"><i
-                                                                class="input-helper"></i></label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                aria-checked="false"><i class="input-helper"></i></label>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -360,30 +322,23 @@
                                                             <p>85/162</p>
                                                         </div>
                                                         <div class="progress progress-md">
-                                                            <div class="progress-bar bg-warning"
-                                                                role="progressbar"
-                                                                style="width: 38%"
-                                                                aria-valuenow="38"
-                                                                aria-valuemin="0"
+                                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                                style="width: 38%" aria-valuenow="38" aria-valuemin="0"
                                                                 aria-valuemax="100"></div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div
-                                                        class="badge badge-opacity-warning">
+                                                    <div class="badge badge-opacity-warning">
                                                         In progress</div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div
-                                                        class="form-check form-check-flat mt-0">
+                                                    <div class="form-check form-check-flat mt-0">
                                                         <label class="form-check-label">
-                                                            <input type="checkbox"
-                                                                class="form-check-input"
-                                                                aria-checked="false"><i
-                                                                class="input-helper"></i></label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                aria-checked="false"><i class="input-helper"></i></label>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -408,30 +363,23 @@
                                                             <p>85/162</p>
                                                         </div>
                                                         <div class="progress progress-md">
-                                                            <div class="progress-bar bg-danger"
-                                                                role="progressbar"
-                                                                style="width: 15%"
-                                                                aria-valuenow="15"
-                                                                aria-valuemin="0"
+                                                            <div class="progress-bar bg-danger" role="progressbar"
+                                                                style="width: 15%" aria-valuenow="15" aria-valuemin="0"
                                                                 aria-valuemax="100"></div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div
-                                                        class="badge badge-opacity-danger">
+                                                    <div class="badge badge-opacity-danger">
                                                         Pending</div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div
-                                                        class="form-check form-check-flat mt-0">
+                                                    <div class="form-check form-check-flat mt-0">
                                                         <label class="form-check-label">
-                                                            <input type="checkbox"
-                                                                class="form-check-input"
-                                                                aria-checked="false"><i
-                                                                class="input-helper"></i></label>
+                                                            <input type="checkbox" class="form-check-input"
+                                                                aria-checked="false"><i class="input-helper"></i></label>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -456,18 +404,14 @@
                                                             <p>85/162</p>
                                                         </div>
                                                         <div class="progress progress-md">
-                                                            <div class="progress-bar bg-success"
-                                                                role="progressbar"
-                                                                style="width: 65%"
-                                                                aria-valuenow="65"
-                                                                aria-valuemin="0"
+                                                            <div class="progress-bar bg-success" role="progressbar"
+                                                                style="width: 65%" aria-valuenow="65" aria-valuemin="0"
                                                                 aria-valuemax="100"></div>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div
-                                                        class="badge badge-opacity-success">
+                                                    <div class="badge badge-opacity-success">
                                                         Completed</div>
                                                 </td>
                                             </tr>
@@ -488,11 +432,9 @@
                                         <p class="mb-2 font-weight-medium">
                                             Change in Directors
                                         </p>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <i
-                                                    class="mdi mdi-calendar text-muted me-1"></i>
+                                                <i class="mdi mdi-calendar text-muted me-1"></i>
                                                 <p class="mb-0 text-small text-muted">Mar
                                                     14, 2019</p>
                                             </div>
@@ -504,11 +446,9 @@
                                         <p class="mb-2 font-weight-medium">
                                             Other Events
                                         </p>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <i
-                                                    class="mdi mdi-calendar text-muted me-1"></i>
+                                                <i class="mdi mdi-calendar text-muted me-1"></i>
                                                 <p class="mb-0 text-small text-muted">Mar
                                                     14, 2019</p>
                                             </div>
@@ -520,11 +460,9 @@
                                         <p class="mb-2 font-weight-medium">
                                             Quarterly Report
                                         </p>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <i
-                                                    class="mdi mdi-calendar text-muted me-1"></i>
+                                                <i class="mdi mdi-calendar text-muted me-1"></i>
                                                 <p class="mb-0 text-small text-muted">Mar
                                                     14, 2019</p>
                                             </div>
@@ -536,24 +474,21 @@
                                         <p class="mb-2 font-weight-medium">
                                             Change in Directors
                                         </p>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <i
-                                                    class="mdi mdi-calendar text-muted me-1"></i>
+                                                <i class="mdi mdi-calendar text-muted me-1"></i>
                                                 <p class="mb-0 text-small text-muted">Mar
                                                     14, 2019</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-        
+
                                 <div class="list align-items-center pt-3">
                                     <div class="wrapper w-100">
                                         <p class="mb-0">
-                                            <a href={{ asset('assets/adminhtml/#') }}
-                                                class="fw-bold text-primary">Show all <i
-                                                    class="mdi mdi-arrow-right ms-2"></i></a>
+                                            <a href={{ asset('assets/adminhtml/#') }} class="fw-bold text-primary">Show
+                                                all <i class="mdi mdi-arrow-right ms-2"></i></a>
                                         </p>
                                     </div>
                                 </div>
@@ -563,8 +498,7 @@
                     <div class="col-md-6 col-lg-6 grid-margin stretch-card">
                         <div class="card card-rounded">
                             <div class="card-body">
-                                <div
-                                    class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
                                     <h4 class="card-title card-title-dash">Activities</h4>
                                     <p class="mb-0">20 finished, 5 remaining</p>
                                 </div>
@@ -622,9 +556,8 @@
                                 <div class="list align-items-center pt-3">
                                     <div class="wrapper w-100">
                                         <p class="mb-0">
-                                            <a href={{ asset('assets/adminhtml/#') }}
-                                                class="fw-bold text-primary">Show all <i
-                                                    class="mdi mdi-arrow-right ms-2"></i></a>
+                                            <a href={{ asset('assets/adminhtml/#') }} class="fw-bold text-primary">Show
+                                                all <i class="mdi mdi-arrow-right ms-2"></i></a>
                                         </p>
                                     </div>
                                 </div>
@@ -640,8 +573,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <h4 class="card-title card-title-dash">Todo
                                                 list</h4>
                                             <div class="add-items d-flex mb-0">
@@ -656,39 +588,30 @@
                                                 <li class="d-block">
                                                     <div class="form-check w-100">
                                                         <label class="form-check-label">
-                                                            <input class="checkbox"
-                                                                type="checkbox"> Lorem
+                                                            <input class="checkbox" type="checkbox"> Lorem
                                                             Ipsum is simply dummy text of
-                                                            the printing <i
-                                                                class="input-helper rounded"></i>
+                                                            the printing <i class="input-helper rounded"></i>
                                                         </label>
                                                         <div class="d-flex mt-2">
-                                                            <div
-                                                                class="ps-4 text-small me-3">
+                                                            <div class="ps-4 text-small me-3">
                                                                 24 June 2020</div>
-                                                            <div
-                                                                class="badge badge-opacity-warning me-3">
+                                                            <div class="badge badge-opacity-warning me-3">
                                                                 Due tomorrow</div>
-                                                            <i
-                                                                class="mdi mdi-flag ms-2 flag-color"></i>
+                                                            <i class="mdi mdi-flag ms-2 flag-color"></i>
                                                         </div>
                                                     </div>
                                                 </li>
                                                 <li class="d-block">
                                                     <div class="form-check w-100">
                                                         <label class="form-check-label">
-                                                            <input class="checkbox"
-                                                                type="checkbox"> Lorem
+                                                            <input class="checkbox" type="checkbox"> Lorem
                                                             Ipsum is simply dummy text of
-                                                            the printing <i
-                                                                class="input-helper rounded"></i>
+                                                            the printing <i class="input-helper rounded"></i>
                                                         </label>
                                                         <div class="d-flex mt-2">
-                                                            <div
-                                                                class="ps-4 text-small me-3">
+                                                            <div class="ps-4 text-small me-3">
                                                                 23 June 2020</div>
-                                                            <div
-                                                                class="badge badge-opacity-success me-3">
+                                                            <div class="badge badge-opacity-success me-3">
                                                                 Done</div>
                                                         </div>
                                                     </div>
@@ -696,18 +619,14 @@
                                                 <li>
                                                     <div class="form-check w-100">
                                                         <label class="form-check-label">
-                                                            <input class="checkbox"
-                                                                type="checkbox"> Lorem
+                                                            <input class="checkbox" type="checkbox"> Lorem
                                                             Ipsum is simply dummy text of
-                                                            the printing <i
-                                                                class="input-helper rounded"></i>
+                                                            the printing <i class="input-helper rounded"></i>
                                                         </label>
                                                         <div class="d-flex mt-2">
-                                                            <div
-                                                                class="ps-4 text-small me-3">
+                                                            <div class="ps-4 text-small me-3">
                                                                 24 June 2020</div>
-                                                            <div
-                                                                class="badge badge-opacity-success me-3">
+                                                            <div class="badge badge-opacity-success me-3">
                                                                 Done</div>
                                                         </div>
                                                     </div>
@@ -715,18 +634,14 @@
                                                 <li class="border-bottom-0">
                                                     <div class="form-check w-100">
                                                         <label class="form-check-label">
-                                                            <input class="checkbox"
-                                                                type="checkbox"> Lorem
+                                                            <input class="checkbox" type="checkbox"> Lorem
                                                             Ipsum is simply dummy text of
-                                                            the printing <i
-                                                                class="input-helper rounded"></i>
+                                                            the printing <i class="input-helper rounded"></i>
                                                         </label>
                                                         <div class="d-flex mt-2">
-                                                            <div
-                                                                class="ps-4 text-small me-3">
+                                                            <div class="ps-4 text-small me-3">
                                                                 24 June 2020</div>
-                                                            <div
-                                                                class="badge badge-opacity-danger me-3">
+                                                            <div class="badge badge-opacity-danger me-3">
                                                                 Expired</div>
                                                         </div>
                                                     </div>
@@ -745,15 +660,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h4 class="card-title card-title-dash">Type By
                                                 Amount</h4>
                                         </div>
-                                        <canvas class="my-auto" id="doughnutChart"
-                                            height="200"></canvas>
-                                        <div id="doughnut-chart-legend"
-                                            class="mt-5 text-center"></div>
+                                        <canvas class="my-auto" id="doughnutChart" height="200"></canvas>
+                                        <div id="doughnut-chart-legend" class="mt-5 text-center"></div>
                                     </div>
                                 </div>
                             </div>
@@ -766,8 +678,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div>
                                                 <h4 class="card-title card-title-dash">
                                                     Leave Report</h4>
@@ -776,14 +687,10 @@
                                                 <div class="dropdown">
                                                     <button
                                                         class="btn btn-secondary dropdown-toggle toggle-dark btn-lg mb-0 me-0"
-                                                        type="button"
-                                                        id="dropdownMenuButton3"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-haspopup="true"
-                                                        aria-expanded="false"> Month Wise
+                                                        type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false"> Month Wise
                                                     </button>
-                                                    <div class="dropdown-menu"
-                                                        aria-labelledby="dropdownMenuButton3">
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
                                                         <h6 class="dropdown-header">week
                                                             Wise</h6>
                                                         <a class="dropdown-item"
@@ -808,8 +715,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div>
                                                 <h4 class="card-title card-title-dash">Top
                                                     Performer</h4>
@@ -825,8 +731,7 @@
                                                     <div class="wrapper ms-3">
                                                         <p class="ms-1 mb-1 fw-bold">
                                                             Brandon Washington</p>
-                                                        <small
-                                                            class="text-muted mb-0">162543</small>
+                                                        <small class="text-muted mb-0">162543</small>
                                                     </div>
                                                 </div>
                                                 <div class="text-muted text-small">
@@ -842,8 +747,7 @@
                                                     <div class="wrapper ms-3">
                                                         <p class="ms-1 mb-1 fw-bold">Wayne
                                                             Murphy</p>
-                                                        <small
-                                                            class="text-muted mb-0">162543</small>
+                                                        <small class="text-muted mb-0">162543</small>
                                                     </div>
                                                 </div>
                                                 <div class="text-muted text-small">
@@ -859,8 +763,7 @@
                                                     <div class="wrapper ms-3">
                                                         <p class="ms-1 mb-1 fw-bold">
                                                             Katherine Butler</p>
-                                                        <small
-                                                            class="text-muted mb-0">162543</small>
+                                                        <small class="text-muted mb-0">162543</small>
                                                     </div>
                                                 </div>
                                                 <div class="text-muted text-small">
@@ -876,16 +779,14 @@
                                                     <div class="wrapper ms-3">
                                                         <p class="ms-1 mb-1 fw-bold">
                                                             Matthew Bailey</p>
-                                                        <small
-                                                            class="text-muted mb-0">162543</small>
+                                                        <small class="text-muted mb-0">162543</small>
                                                     </div>
                                                 </div>
                                                 <div class="text-muted text-small">
                                                     1h ago
                                                 </div>
                                             </div>
-                                            <div
-                                                class="wrapper d-flex align-items-center justify-content-between pt-2">
+                                            <div class="wrapper d-flex align-items-center justify-content-between pt-2">
                                                 <div class="d-flex">
                                                     <img class="img-sm rounded-10"
                                                         src={{ asset('assets/adminhtml/images/faces/face5.jpg') }}
@@ -893,8 +794,7 @@
                                                     <div class="wrapper ms-3">
                                                         <p class="ms-1 mb-1 fw-bold">Rafell
                                                             John</p>
-                                                        <small
-                                                            class="text-muted mb-0">Alaska,
+                                                        <small class="text-muted mb-0">Alaska,
                                                             USA</small>
                                                     </div>
                                                 </div>
@@ -911,7 +811,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     <!-- content-wrapper ends -->
     <!-- partial:partials/_footer.html -->
