@@ -14,6 +14,7 @@ use App\Models\ViewSource;
 use App\Models\Writer;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\LogTha;
 
@@ -293,8 +294,8 @@ class PaperController extends Controller
         try {
             $comment = new Comment([
                 "paper_id" => $page_id,
-                "email" => $request->get("email"),
-                "name" => $request->get("name"),
+                "email" => $request->get("email", Auth::user()->email),
+                "name" => $request->get("name", Auth::user()->name),
                 "subject" => $request->get("subject"),
                 "content" => $request->get("message", $request->get("content")),
                 "parent_id" => $request->get("parent_id", null)
