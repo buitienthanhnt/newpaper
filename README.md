@@ -1,5 +1,7 @@
 # newpaper
 # from m6800
+# https://laravel.com/api/8.x/index.html  <--------- doc class of laravel.
+
 # https://viblo.asia/p/create-a-custom-artisan-command-laravel-55-6J3Zg2QAKmB
 # https://viblo.asia/p/laravel-tinker-AoDKYNQDzvg
 # https://viblo.asia/p/17-laravel-packages-tot-nhat-nam-2019-E375zkRdKGW

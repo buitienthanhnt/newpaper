@@ -41,7 +41,8 @@ class RemoteSourceManager
         "laracoding.com"    => "get_laracoding_com",
         "vtcnews.vn"        => "get_vtcnews_vn",
         "doanhnghiepvn.vn"  => "get_doanhnghiepvn_vn",
-        "codestus.com"      => "get_codestus_com"
+        "codestus.com"      => "get_codestus_com",
+        "quantrimang.com"   => "get_quantrimang_com"
     ];
 
     protected $request;
