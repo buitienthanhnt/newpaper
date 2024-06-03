@@ -42,7 +42,8 @@ class RemoteSourceManager
         "vtcnews.vn"        => "get_vtcnews_vn",
         "doanhnghiepvn.vn"  => "get_doanhnghiepvn_vn",
         "codestus.com"      => "get_codestus_com",
-        "quantrimang.com"   => "get_quantrimang_com"
+        "quantrimang.com"   => "get_quantrimang_com",
+        "jaredchu.com"      => "get_jaredchu_com"
     ];
 
     protected $request;
@@ -301,6 +302,12 @@ class RemoteSourceManager
     function get_codestus_com($doc): array
     {
         return call_user_func(fn () => $this->getValueByClassName($doc, "prose"));
+    }
+
+    // get_jaredchu_com
+    function get_jaredchu_com($doc): array
+    {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "post-content"));
     }
 
     // ===================================================================//

@@ -2,6 +2,7 @@
 
 namespace App\ViewBlock;
 
+use App\Models\Paper;
 use App\Models\User;
 use App\Models\ViewSource;
 use Illuminate\Contracts\Support\Htmlable;
@@ -12,8 +13,10 @@ final class AdminTopTab implements Htmlable
 {
     protected $template = 'adminhtml.templates.share.topTab';
 
-    function __construct()
-    {
+    function __construct(){}
+
+    function pageAll() {
+        return Paper::all();
     }
 
     function paperList(): \Illuminate\Database\Eloquent\Builder
@@ -24,6 +27,10 @@ final class AdminTopTab implements Htmlable
 
     function paperViewCount() : int {
         return $this->paperList()->sum('value');
+    }
+
+    function activePage() {
+        return $this->pageAll()->where("active", "=", 1);
     }
 
     function userList() : int {
@@ -41,6 +48,8 @@ final class AdminTopTab implements Htmlable
     function toHtml(): string
     {
         $list_data = [
+            "all_page" => $this->pageAll()->count(),
+            "active_page" => $this->activePage()->count(),
             "page_count" => $this->paperList()->count(),
             "paper_view_count" => $this->paperViewCount(),
             "user_count" => $this->userList(),
