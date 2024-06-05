@@ -15,7 +15,9 @@ class AuthenToken
     protected $tokenManager;
 
     private $passUrl = [
-        'api/getcategorytop'
+        'api/getcategorytop',
+        'api/mostviewdetail',
+        'api/share/mostPopulator'
     ];
 
     function __construct(
