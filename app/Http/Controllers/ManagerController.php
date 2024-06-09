@@ -213,6 +213,7 @@ class ManagerController extends Controller
             $detail = $this->paper->find($paper_id);
             $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
             $detail->info = $detail->paperInfo();
+            $detail->price = $detail->paperPrice();
             $detail->tags = $detail->to_tag()->getResults();
             $detail->slider_images = array_map(function ($item) {
                 $item->value = $this->helperFunction->replaceImageUrl($item->value);

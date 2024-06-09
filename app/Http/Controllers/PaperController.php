@@ -12,6 +12,7 @@ use App\Models\PaperTimeLine;
 use App\Models\RemoteSourceHistory;
 use App\Models\ViewSource;
 use App\Models\Writer;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ class PaperController extends Controller
     protected $helperFunction;
     protected $logTha;
     protected $paper_timeline;
+    protected $cartService;
 
     const PAGE_TYPE = 1;
 
@@ -39,7 +41,8 @@ class PaperController extends Controller
         PaperTimeLine $paper_timeline,
         Notification $notification,
         HelperFunction $helperFunction,
-        LogTha $logTha
+        LogTha $logTha,
+        CartService $cartService
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -48,6 +51,7 @@ class PaperController extends Controller
         $this->notification = $notification;
         $this->helperFunction = $helperFunction;
         $this->paper_timeline = $paper_timeline;
+        $this->cartService = $cartService;
     }
 
     public function listPaper()
@@ -79,6 +83,18 @@ class PaperController extends Controller
         ]);
     }
 
+    function pageType(): string
+    {
+        $request = $this->request;
+        if ($request->get('slider_data')) {
+            return 'carousel';
+        }
+        if (!empty($request->get('price'))) {
+            return 'product';
+        }
+        return 'content';
+    }
+
     public function insertPaper()
     {
         $request = $this->request;
@@ -97,7 +113,7 @@ class PaperController extends Controller
                 "show_time" => $request->__get("show_time"),
                 "image_path" => $request->__get("image_path") ?: "",
                 "writer" => $request->get("writer", null),
-                "type" => $request->get('slider_data') ? 'carousel' : 'content'
+                "type" => $this->pageType()
             ]);
             $paper->save();
             if ($new_id = $paper->id) {
@@ -130,6 +146,11 @@ class PaperController extends Controller
                  * save in DB page tags
                  */
                 $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAGE_TAG);
+
+                /**
+                 * save price for paper
+                 */
+                $this->insert_paper_price($request->__get("price"), $new_id);
 
                 /**
                  * save for history
@@ -380,5 +401,12 @@ class PaperController extends Controller
             "count" => 123,
             "message" => ""
         ], 500));
+    }
+
+    function addCart($paper_id, Request $request)
+    {
+        $cart = $this->cartService->addCart($paper_id);
+        dd($cart);
+        return redirect()->back()->with("success", "add success");
     }
 }

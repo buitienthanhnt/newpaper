@@ -35,6 +35,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="{{ route('admin_paper_create') }}">default conten</a>
+                    <a class="dropdown-item" href="{{ route('admin_paper_create', ['type' => 'product']) }}">product page</a>
                     <a class="dropdown-item" href="{{ route('admin_paper_create', ['type' => 'carousel']) }}">carousel image</a>
                     <a class="dropdown-item" href="{{ route('admin_new_by_url') }}">new by url</a>
                 </div>

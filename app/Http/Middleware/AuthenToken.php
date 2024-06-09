@@ -17,7 +17,9 @@ class AuthenToken
     private $passUrl = [
         'api/getcategorytop',
         'api/mostviewdetail',
-        'api/share/mostPopulator'
+        'api/share/mostPopulator',
+        'api/share/trending',
+        'api/share/likeMost'
     ];
 
     function __construct(

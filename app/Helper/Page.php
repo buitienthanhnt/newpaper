@@ -96,6 +96,20 @@ trait Page
         return false;
     }
 
+    function insert_paper_price($value, $paper_id)
+    {
+        if ($value) {
+            try {
+                DB::table($this->pagePriceTable())->updateOrInsert(array("value" => $value, "paper_id" => $paper_id));
+                DB::commit();
+                return true;
+            } catch (\Throwable $th) {
+                //throw $th;
+                DB::rollBack();
+            }
+        }
+    }
+
     /**
      * @return array
      */

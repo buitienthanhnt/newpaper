@@ -18,8 +18,7 @@ class PaperCreateForm implements Htmlable
         Request $request,
         Category $category,
         RemoteSourceManager $remoteSourceManager
-    )
-    {
+    ) {
         $this->request = $request;
         $this->category = $category;
         $this->remoteSourceManager = $remoteSourceManager;
@@ -32,6 +31,9 @@ class PaperCreateForm implements Htmlable
         switch ($contenType) {
             case 'carousel':
                 $data = $this->carouselForm();
+                break;
+            case 'product':
+                $data = $this->productForm();
                 break;
             default:
                 $data = $this->contenForm();
@@ -65,6 +67,23 @@ class PaperCreateForm implements Htmlable
                 "time_line_option" => $this->category->time_line_option(),
                 "writers" => Writer::all()
             ]
+        ];
+    }
+
+    function productForm(): array
+    {
+        if ($source_request = $this->request->get("source_request")) {
+            $remoteData = $this->remoteSourceManager->source($source_request);
+        }
+        return [
+            'template' => "adminhtml.templates.papers.forms.productForm",
+            "params" => array_merge($remoteData ?? [], [
+                "category_option" => $this->category->category_tree_option(),
+                "time_line_option" => $this->category->time_line_option(),
+                "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
+                "filemanager_url_base" => url("adminhtml/file/manager"),
+                "writers" => Writer::all()
+            ])
         ];
     }
 }

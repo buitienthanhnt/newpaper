@@ -55,15 +55,21 @@
                 <div class="col-lg-9">
                     <!-- Trending Tittle -->
                     <div id="detail_main_conten" class="about-right mb-90">
-                        <div class="about-img">
-                            @if (isset($paper->image_path))
-                                <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
-                                    style="max-height: 600px; object-fit: cover">
-                            @endif
-                        </div>
+                        @if (!$paper->paperPrice())
+                            <div class="about-img">
+                                @if (isset($paper->image_path))
+                                    <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
+                                        style="max-height: 600px; object-fit: cover">
+                                @endif
+                            </div>
+                        @endif
+
                         <div class="heading-news mb-30 pt-30">
                             @isset($paper->title)
                                 <h3>{{ $paper->title }}</h3>
+                            @endisset
+                            @isset($paper->short_conten)
+                                <h4>{{ $paper->short_conten }}</h4>
                             @endisset
                         </div>
 
@@ -111,6 +117,21 @@
                         @endif
 
                         <div class="col-md-12">
+                            <form action="{{ route('paper_addCart', ['paper_id'=>$paper->id]) }}" method="post">
+                                @csrf
+                                <div class="form-group container row">
+                                    <div class="form-group col-sm-10 row">
+                                        <label class="col-form-label" for="price">Giá:
+                                            {{ $paper->paperPrice() }}
+                                            vnđ</label>
+                                        <div class="col-sm-2">
+                                            <input type="number" name="price" class="form-control" id="price" min="1"
+                                                value="1">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu giỏ hàng</button>
+                                </div>
+                            </form>
                             @isset($paper->conten)
                                 {!! $paper->conten !!}
                             @endisset
@@ -166,7 +187,7 @@
             'viewModal/mostPopulator'
         ], function(require, buildUrl, commentHistory) {
             'use strict';
-            
+
             $(document).ready(function() {
                 $('.paper_action').click(function() {
                     let type = $(this).hasClass('like') ? 'like' : 'heart';

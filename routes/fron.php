@@ -6,19 +6,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/", "ManagerController@homePage")->name("/");
 
-Route::get("basepage", function(){
+Route::get("basepage", function () {
     return view("frontend/templates/elements/dragula");
 });
 
-Route::get("dra", function(){
+Route::get("dra", function () {
     return view("frontend/templates/elements/dra2");
 });
 
-Route::get("page_str", function(){
+Route::get("page_str", function () {
     return view("frontend/templates/pagestr");
 });
 
-Route::get("home", function (){
+Route::get("home", function () {
     // $views = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
     // dd(array_column($views, "source_id"));
     // $papers = Paper::find(array_column($views, "source_id"));
@@ -27,7 +27,7 @@ Route::get("home", function (){
     dd($trendingLeft);
 });
 
-Route::get("playSound", function(){
+Route::get("playSound", function () {
     $sound = <<<SOUND
         <!DOCTYPE html>
         <html lang="en">
@@ -43,12 +43,12 @@ Route::get("playSound", function(){
         </body>
         </html>
     SOUND;
-    return($sound);
+    return ($sound);
 });
 
 Route::get("download/file", "ExtensionController@download")->name('download');
 
-Route::prefix("user")->group(function(){
+Route::prefix("user")->group(function () {
 
     Route::get("create", "UserController@createAccount")->name("account_create");
 
@@ -87,11 +87,13 @@ Route::prefix('paper')->group(function () {
     Route::post("like/{comment_id?}", "PaperController@like")->name("paper_like");
 
     Route::post("addLike/{paper_id}", "PaperController@addLike")->name("paper_addLike");
+
+    Route::post("addCart/{paper_id}", "PaperController@addCart")->name('paper_addCart');
 });
 
 // php artisan cache:table
 // php artisan migrate
-Route::prefix('cache')->group(function () { 
+Route::prefix('cache')->group(function () {
     Route::get('create', function () {
         $status = Cache::put('tha', [
             'a' => 123,
@@ -106,7 +108,7 @@ Route::prefix('cache')->group(function () {
     });
 });
 
-Route::prefix('test')->group(function () : void {
+Route::prefix('test')->group(function (): void {
     Route::get("obser", "ExtensionController@obser");
 });
 

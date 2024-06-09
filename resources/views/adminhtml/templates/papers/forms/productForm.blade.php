@@ -30,10 +30,17 @@
     </div>
 
     <div class="col-md-6">
-        <label for="show" class="col-sm-2">Show: </label>
-        <input id="show" class="form-check-input" type="checkbox" name="show"
-            @if (isset($show)) {{ $show ? 'checked' : '' }} @else checked @endif>
+        <div class="form-group row">
+            <label for="price"  class="col-sm-2">Price:</label>
+            <div class="col-sm-8">
+                <input type="number" name="price" id="price" class="form-control" min="0"
+                    value="@isset($price)
+			{{ $price }}
+		   @endisset">
+            </div>
+        </div>
     </div>
+
 </div>
 
 <div class="row">
@@ -42,10 +49,10 @@
         <div class="col-sm-10">
             <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
                 style="padding: 10px; height: 100%;">
-@isset($short_conten)
+                @isset($short_conten)
 {{ $short_conten }}
 @endisset
-</textarea>
+            </textarea>
         </div>
     </div>
 
@@ -57,18 +64,9 @@
 </div>
 
 <div class="row">
+    <div class="col-md-6"></div>
     <div class="col-md-6">
-        <label for="time_line_type" class="col-sm-2 col-form-label">TimeLine:</label>
-        <div class="col-sm-10">
-            <div class="form-group">
-                <select id="time_line_type" class="form-control" name="time_line_type" multiple="multiple">
-                    {!! $time_line_option !!}
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6" style="align-content: center">
-        <div class="form-group row" style="margin-bottom: 0px">
+        <div class="form-group row">
             <label for="url-alias" class="col-sm-2">Timeline:</label>
             <div class="cs-form col-sm-8">
                 <input name="time_line_value" id="timelineInput" />
@@ -84,7 +82,7 @@
                         modal: true,
                         header: true,
                         value: '',
-                        format: 'yyyy-mm-dd HH:MM:ss',
+                        format: 'yyyy-dd-mm HH:MM:ss',
                     });
                 </script>
             </div>
@@ -105,7 +103,6 @@
     </div>
 
     <div class="col-md-6">
-        {{-- <div class="form-group row"> --}}
         <label class="col-sm-2 col-form-label">Image: </label>
         <div class="col-sm-9">
             <div class="input-group">
@@ -117,22 +114,6 @@
                 <input id="thumbnail" class="form-control" type="text" name="image_path">
             </div>
             <img id="holder" style="margin-top:15px;max-height:100px;">
-        </div>
-        {{-- </div> --}}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-10">
-        <div class="form-group">
-            <label for="conten" class="col-sm-2 col-form-label">Page content: </label>
-            <textarea style="height: 1000px" id="conten" name="conten" class="form-control">
-@if (isset($conten))
-{!! $conten !!}
-@else
-{!! old('content', '') !!}
-@endif
-</textarea>
         </div>
     </div>
 </div>
@@ -159,3 +140,60 @@
         </div>
     </div>
 </div>
+
+<script>
+    var slider = [];
+
+    function renderCarousel(data) {
+        let beginIndicator = '<ol class="carousel-indicators">';
+        let content = ' <div class="carousel-inner">';
+        let change =
+            '<a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">' +
+            '<span class="carousel-control-prev-icon" aria-hidden="true"></span>' +
+            '<span class="sr-only">Previous</span>' +
+            '</a>' +
+            '<a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">' +
+            '<span class="carousel-control-next-icon" aria-hidden="true"></span>' +
+            '<span class="sr-only">Next</span>' +
+            '</a>';
+        for (let i = 0; i < slider.length; i++) {
+            beginIndicator += '<li data-target="#carouselExampleCaptions" data-slide-to="' + i + '" class="' + (
+                i == 0 ? 'active' : ' ') + '"></li>';
+
+            content += '<div class="carousel-item ' + (i == 0 ? 'active' : '') + '">' +
+                '<img class="d-block w-100 sliderImages" src="' + (slider[i].image_path) + '" >' +
+                '<div class="carousel-caption d-none d-md-block">' +
+                '<h5>' + (slider[i].title) + '</h5>' +
+                '<p>' + (slider[i].label) + '</p>' +
+                '</div>' +
+                '</div>';
+        }
+        beginIndicator += '</ol>';
+        content += ' </div>';
+        return beginIndicator + content + change;
+    }
+    $(document).ready(function() {
+        $("#carouselExampleCaptions").html(renderCarousel(slider));
+
+        $("#addSlider").click(function() {
+            $("#sliderModal").modal('show');
+        });
+        $("#closeSliderImages").click(function() {
+            $("#sliderModal").modal('hide');
+        })
+
+        $("#saveCarouiselItem").click(function() {
+            let title = $("#captions_label").val();
+            let content = $("#captions_content").val();
+            let image_path = $("#slider_images").val();
+            slider.push({
+                title: title,
+                label: content,
+                image_path: image_path
+            });
+            $("#carouselExampleCaptions").html(renderCarousel(slider));
+            $("#sliderDataConten").val(JSON.stringify(slider));
+            $("#sliderModal").modal('hide');
+        });
+    })
+</script>

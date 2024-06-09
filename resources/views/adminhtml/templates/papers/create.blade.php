@@ -44,7 +44,7 @@
     <div class="col-12 grid-margin">
         <div>
             <div class="card-body">
-                <h4 class="card-title">add new source</h4>
+                <h4 class="card-title">Add new source:</h4>
                 <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
                     @csrf
 

@@ -36,6 +36,10 @@ trait Nan
     {
         return "page_tag";
     }
+    public function pagePriceTable()
+    {
+        return "price";
+    }
 
     // public function permissionRulesTable()
     // {
@@ -47,15 +51,18 @@ trait Nan
         return "permission_rules";
     }
 
-    public function userPermissionTable() : string {
+    public function userPermissionTable(): string
+    {
         return "admin_user_permissions";
     }
 
-    function coreConfigTable() : string {
+    function coreConfigTable(): string
+    {
         return "core_config";
     }
 
-    function viewSourceTable() : string {
+    function viewSourceTable(): string
+    {
         return 'view_sources';
     }
 }
