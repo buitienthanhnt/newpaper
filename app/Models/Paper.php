@@ -99,7 +99,8 @@ class Paper extends Model
         return 1;
     }
 
-    function getTimeline() {
+    function getTimeline()
+    {
         $timeline = $this->hasOne(PaperTimeLine::class, "paper_id");
         return new Carbon($timeline->getResults()->timeline_value) ?: '';
     }
@@ -123,7 +124,8 @@ class Paper extends Model
         return new ViewSource();
     }
 
-    function sliderImages() {
+    function sliderImages()
+    {
         return DB::table('paper_carousel')->where('paper_id', $this->id)->get();
     }
 
@@ -163,5 +165,11 @@ class Paper extends Model
             }
         }
         return BaseApi::getDefaultImagePath();
+    }
+
+    function paperPrice()
+    {
+        $val = DB::table('price')->where('paper_id', $this->id)->get()->first();
+        return $val && $val->value ? number_format($val->value*1000) : null;
     }
 }
