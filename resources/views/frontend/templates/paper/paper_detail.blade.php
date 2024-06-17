@@ -115,23 +115,26 @@
                                 </div>
                             </div>
                         @endif
-
                         <div class="col-md-12">
-                            <form action="{{ route('paper_addCart', ['paper_id'=>$paper->id]) }}" method="post">
-                                @csrf
-                                <div class="form-group container row">
-                                    <div class="form-group col-sm-10 row">
-                                        <label class="col-form-label" for="price">Giá:
-                                            {{ $paper->paperPrice() }}
-                                            vnđ</label>
-                                        <div class="col-sm-2">
-                                            <input type="number" name="price" class="form-control" id="price" min="1"
-                                                value="1">
+                            @if ($paper->paperPrice())
+                                <form action="{{ route('paper_addCart') }}" method="post">
+                                    @csrf
+                                    <div class="form-group container row">
+                                        <div class="form-group col-sm-10 row">
+                                            <label class="col-form-label" for="price">Giá:
+                                                {{ $paper->paperPrice() }}
+                                                vnđ</label>
+                                            <div class="col-sm-3">
+                                                <input type="number" name="price" class="form-control" id="price"
+                                                    min="1" value="1">
+                                                <input type="hidden" name="id" value="{{ $paper->id }}">
+                                            </div>
                                         </div>
+                                        <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu giỏ hàng</button>
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu giỏ hàng</button>
-                                </div>
-                            </form>
+                                </form>
+                            @endif
+
                             @isset($paper->conten)
                                 {!! $paper->conten !!}
                             @endisset

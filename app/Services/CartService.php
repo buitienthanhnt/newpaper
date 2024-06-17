@@ -3,12 +3,18 @@
 namespace App\Services;
 
 use App\Models\Paper;
+use Google\Cloud\Storage\Connection\Rest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class CartService implements CartServiceInterface
 {
-	function __construct()
-	{
+	protected $request;
+
+	function __construct(
+		Request $request
+	) {
+		$this->request = $request;
 		$this->session_begin();
 	}
 
@@ -16,6 +22,10 @@ class CartService implements CartServiceInterface
 	{
 		$current_cart = $this->getCart() ?: [];
 		$paper = Paper::find($paper_id)->makeHidden('conten')->toArray();
+		$current_item = array_filter($this->getCart(), function ($item) use ($paper_id) {
+			return $item['id'] == $paper_id;
+		});
+		$paper['qty'] = $this->request->get('qty');
 		Session::put(self::KEY, [$paper, ...$current_cart]);
 		return $this->getCart();
 	}
@@ -29,7 +39,8 @@ class CartService implements CartServiceInterface
 		return $paper_cart;
 	}
 
-	function clearCart() {
+	function clearCart()
+	{
 		Session::forget(self::KEY);
 	}
 

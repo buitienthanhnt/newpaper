@@ -403,9 +403,9 @@ class PaperController extends Controller
         ], 500));
     }
 
-    function addCart($paper_id, Request $request)
+    function addCart(Request $request)
     {
-        $cart = $this->cartService->addCart($paper_id);
+        $cart = $this->cartService->addCart($request->get('id'));
         dd($cart);
         return redirect()->back()->with("success", "add success");
     }
