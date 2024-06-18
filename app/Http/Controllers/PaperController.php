@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Thanhnt\Nan\Helper\LogTha;
 
 class PaperController extends Controller
@@ -405,8 +406,18 @@ class PaperController extends Controller
 
     function addCart(Request $request)
     {
-        $cart = $this->cartService->addCart($request->get('id'));
-        dd($cart);
+        $this->cartService->addCart($request->get('id'));
         return redirect()->back()->with("success", "add success");
+    }
+
+    function cart(): View
+    {
+        return view('frontend.templates.cart.index', ['cart' => $this->cartService->getCart()]);
+    }
+
+    function clearCart()
+    {
+        $this->cartService->clearCart();
+        return redirect()->back()->with("success", "clear cart success");
     }
 }

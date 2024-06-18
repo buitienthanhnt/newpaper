@@ -21,12 +21,21 @@ class CartService implements CartServiceInterface
 	function addCart($paper_id, $attribute = [])
 	{
 		$current_cart = $this->getCart() ?: [];
-		$paper = Paper::find($paper_id)->makeHidden('conten')->toArray();
-		$current_item = array_filter($this->getCart(), function ($item) use ($paper_id) {
-			return $item['id'] == $paper_id;
-		});
+		$paperObj = Paper::find($paper_id)->makeHidden('conten');
+		$paper = $paperObj->toArray();
+		$paper['price'] = $paperObj->paperPrice();
+		// $current_item = array_filter($this->getCart(), function ($item) use ($paper_id) {
+		// 	return $item['id'] == $paper_id;
+		// });
 		$paper['qty'] = $this->request->get('qty');
-		Session::put(self::KEY, [$paper, ...$current_cart]);
+		if (is_array($current_cart)) {
+			array_push($current_cart, $paper);
+			Session::put(self::KEY, $current_cart);
+			Session::save();
+		}else {
+			Session::forget(self::KEY);
+			Session::save();
+		}
 		return $this->getCart();
 	}
 
@@ -35,13 +44,15 @@ class CartService implements CartServiceInterface
 	 */
 	function getCart()
 	{
-		$paper_cart = Session::get(self::KEY);
+		$paper_cart = Session::get(self::KEY) ?: [];
 		return $paper_cart;
 	}
 
 	function clearCart()
 	{
 		Session::forget(self::KEY);
+		Session::save();
+		return $this->getCart();
 	}
 
 	public function session_begin(): void

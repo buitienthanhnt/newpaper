@@ -51,6 +51,11 @@
     <!-- About US Start -->
     <div class="about-area2 gray-bg pt-60 pb-60">
         <div class="container">
+            @if (session('success'))
+                <div class="alert alert-success" id="success-message" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="row">
                 <div class="col-lg-9">
                     <!-- Trending Tittle -->
@@ -121,11 +126,11 @@
                                     @csrf
                                     <div class="form-group container row">
                                         <div class="form-group col-sm-10 row">
-                                            <label class="col-form-label" for="price">Giá:
+                                            <label class="col-form-label" for="qty">Giá:
                                                 {{ $paper->paperPrice() }}
                                                 vnđ</label>
                                             <div class="col-sm-3">
-                                                <input type="number" name="price" class="form-control" id="price"
+                                                <input type="number" name="qty" class="form-control" id="qty"
                                                     min="1" value="1">
                                                 <input type="hidden" name="id" value="{{ $paper->id }}">
                                             </div>
@@ -180,6 +185,13 @@
 
 @section('js_after')
     <script>
+        setInterval(() => {
+            var success_message = $("#success-message");
+            if (esuccess_message.length) {
+                $(success_message).remove()
+            }
+        }, 3000);
+
         var paper_value = "{{ $paper->id }}";
         var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
         requirejs([
