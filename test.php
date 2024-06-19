@@ -1,4 +1,15 @@
 <?php
+$cart = [
+    ['price' => 123, "qty" => 1],
+    ['price' => 22, "qty" => 1],
+];
+$a = array_sum(
+    array_map(fn($i) => $i['price'] * $i['qty'], $cart),
+);
+
+echo($a);
+
+exit();
     $a = ['id' => 123];
     // echo("asd/{$a['id']}");
 

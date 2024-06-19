@@ -420,4 +420,9 @@ class PaperController extends Controller
         $this->cartService->clearCart();
         return redirect()->back()->with("success", "clear cart success");
     }
+
+    function xoaItem($id) {
+        $this->cartService->xoaItem($id);
+        return redirect()->back()->with('success', "removed the item");
+    }
 }

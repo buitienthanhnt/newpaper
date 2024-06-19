@@ -168,6 +168,6 @@ class Paper extends Model
     function paperPrice()
     {
         $val = DB::table('price')->where('paper_id', $this->id)->get()->first();
-        return $val && $val->value ? number_format($val->value*1000) : null;
+        return $val && $val->value ? ($val->value*1000) : null;
     }
 }

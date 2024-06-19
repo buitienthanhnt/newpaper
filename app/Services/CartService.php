@@ -32,7 +32,7 @@ class CartService implements CartServiceInterface
 			array_push($current_cart, $paper);
 			Session::put(self::KEY, $current_cart);
 			Session::save();
-		}else {
+		} else {
 			Session::forget(self::KEY);
 			Session::save();
 		}
@@ -48,6 +48,13 @@ class CartService implements CartServiceInterface
 		return $paper_cart;
 	}
 
+	function xoaItem($id)
+	{
+		$cart = $this->getCart();
+		unset($cart[$id]);
+		$this->saveCart($cart);
+	}
+
 	function clearCart()
 	{
 		Session::forget(self::KEY);
@@ -60,5 +67,11 @@ class CartService implements CartServiceInterface
 		if (!Session::isStarted()) {
 			Session::start();
 		}
+	}
+
+	function saveCart($cart)
+	{
+		Session::put(self::KEY, $cart);
+		Session::save();
 	}
 }
