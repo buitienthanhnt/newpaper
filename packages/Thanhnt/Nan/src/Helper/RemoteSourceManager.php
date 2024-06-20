@@ -322,6 +322,12 @@ class RemoteSourceManager
         return call_user_func(fn () => $this->getValueByClassName($doc, "dt-content"));
     }
 
+    // get_venews_biz
+    function get_venews_biz($doc): array
+    {
+        return call_user_func(fn () => $this->getValueByClassName($doc, "td-post-content", "entry-title"));
+    }
+
     function get_seongon_com($doc): array{
         return call_user_func(fn () => $this->getValueByClassName($doc, "elementor-element"));
     }
