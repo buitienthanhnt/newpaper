@@ -191,7 +191,7 @@ class PaperApi extends BaseApi
                 $data[] = $this->paperRepository->convertPaperItem($item);
             }
         }
-    
+
         return $this->apiResponse->setResponse($data);
     }
 }
