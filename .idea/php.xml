@@ -140,7 +140,6 @@
       <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
       <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
       <path value="$PROJECT_DIR$/vendor/bensontrent/firestore-php" />
-      <path value="$PROJECT_DIR$/vendor/grpc/grpc" />
       <path value="$PROJECT_DIR$/vendor/google/cloud-firestore" />
       <path value="$PROJECT_DIR$/vendor/google/longrunning" />
       <path value="$PROJECT_DIR$/vendor/google/protobuf" />

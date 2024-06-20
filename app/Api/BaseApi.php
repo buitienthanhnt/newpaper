@@ -19,7 +19,7 @@ class BaseApi
 
     protected $firebase;
     protected $firebaseDatabase;
-    protected $fireStore;
+    // protected $fireStore;
     protected $remoteConfig;
     protected $logTha;
 
@@ -30,7 +30,7 @@ class BaseApi
         $this->logTha = $logTha;
         $this->firebase = $firebaseService->firebase;
         $this->firebaseDatabase = $this->firebase->createDatabase();
-        $this->fireStore = $firebaseService->fireStore;
+        // $this->fireStore = $firebaseService->fireStore;
         $this->remoteConfig = $firebaseService->remoteConfig;
     }
 
