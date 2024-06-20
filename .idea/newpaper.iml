@@ -135,7 +135,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/lcobucci/clock" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/carbonphp/carbon-doctrine-types" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/grpc/grpc" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/google/cloud-firestore" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/google/longrunning" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/google/protobuf" />

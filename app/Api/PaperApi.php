@@ -211,15 +211,15 @@ class PaperApi extends BaseApi
 
 	function removePaperInfo($idInFirebase): void
 	{
-		try {
-			$observer = $this->fireStore->collection('detailInfo')->document($idInFirebase);
-			$observer->delete();
-			$this->logTha->logFirebase('info', 'removed paper info in firestore', [
-				'paper' => $idInFirebase,
-			]);
-		} catch (\Throwable $th) {
-			$this->logTha->logFirebase('warning', 'can not remove paper info in firestore: ' . $th->getMessage(), ['line' => $th->getLine()]);
-		}
+		// try {
+		// 	$observer = $this->fireStore->collection('detailInfo')->document($idInFirebase);
+		// 	$observer->delete();
+		// 	$this->logTha->logFirebase('info', 'removed paper info in firestore', [
+		// 		'paper' => $idInFirebase,
+		// 	]);
+		// } catch (\Throwable $th) {
+		// 	$this->logTha->logFirebase('warning', 'can not remove paper info in firestore: ' . $th->getMessage(), ['line' => $th->getLine()]);
+		// }
 	}
 
 	function removePaperWriter($paperData)
@@ -313,7 +313,7 @@ class PaperApi extends BaseApi
 			$_paper = $paper->toArray();
 			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
 			$_paper['slider_images'] = $this->upSliderImages($paper->sliderImages()->toArray());
-			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
+			// $this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 			$this->logTha->logFirebase('info', "added for paper detail: " . $paper->id . " to document paper detail firebase", [
 				'paper_id' => $paper->id
 			]);
@@ -329,20 +329,20 @@ class PaperApi extends BaseApi
 	function upPaperInfo(Paper $paper)
 	{
 		try {
-			if (is_numeric($paper)) {
-				$paper = $this->getDetail($paper);
-			}
-			if (empty($paper)) {
-				return;
-			}
-			$observer = $this->fireStore->collection('detailInfo')->document($paper->id);
-			if (!$observer->snapshot()->data()) {
-				$observer->create($paper->paperInfo());
-			} else {
-				$observer->delete();
-				$observer->create($paper->paperInfo());
-			}
-			$this->logTha->logFirebase('info', "added for detail info: " . $paper->id . " to document paper info firebase", ['paper' => $paper->id]);
+			// if (is_numeric($paper)) {
+			// 	$paper = $this->getDetail($paper);
+			// }
+			// if (empty($paper)) {
+			// 	return;
+			// }
+			// $observer = $this->fireStore->collection('detailInfo')->document($paper->id);
+			// if (!$observer->snapshot()->data()) {
+			// 	$observer->create($paper->paperInfo());
+			// } else {
+			// 	$observer->delete();
+			// 	$observer->create($paper->paperInfo());
+			// }
+			// $this->logTha->logFirebase('info', "added for detail info: " . $paper->id . " to document paper info firebase", ['paper' => $paper->id]);
 		} catch (\Throwable $th) {
 			$this->logTha->logFirebase('warning', 'add paper info firebase error: ' . $th->getMessage(), ['line' => $th->getLine()]);
 		}
@@ -376,7 +376,7 @@ class PaperApi extends BaseApi
 
 	function rmContentFireStore($paperId)
 	{
-		$this->fireStore->collection('detailContent')->document($paperId)->delete();
+		// $this->fireStore->collection('detailContent')->document($paperId)->delete();
 	}
 
 
