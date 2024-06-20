@@ -448,7 +448,7 @@ class RemoteSourceManager
                         }
                     }else {
                         continue;
-                    }  
+                    }
                 }
             }
         } catch (\Exception $e) {
