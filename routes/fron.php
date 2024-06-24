@@ -95,6 +95,10 @@ Route::prefix('paper')->group(function () {
     Route::any("clearCart", "PaperController@clearCart")->name('paper_clearCart');
 
     Route::any("xoaItem/{id}", "PaperController@xoaItem")->name('paper_xoaItem');
+
+    Route::get('byType/{type}', "PaperController@byType")->name("paper_byType");
+
+    Route::get('more_type/{type}', "PaperController@moreByType")->name("more_type");
 });
 
 // php artisan cache:table

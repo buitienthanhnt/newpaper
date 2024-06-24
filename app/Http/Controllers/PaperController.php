@@ -15,9 +15,10 @@ use App\Models\Writer;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 use Thanhnt\Nan\Helper\LogTha;
 
 class PaperController extends Controller
@@ -421,8 +422,28 @@ class PaperController extends Controller
         return redirect()->back()->with("success", "clear cart success");
     }
 
-    function xoaItem($id) {
+    function xoaItem($id)
+    {
         $this->cartService->xoaItem($id);
         return redirect()->back()->with('success', "removed the item");
+    }
+
+    function byType($type, Request $request): View
+    {
+        $limit = $request->get('limit', 4);
+        $papers = Paper::all()->where("type", "=", $type)->slice($request->get('p', 0) * $limit, $limit);
+        return view('frontend.templates.paper.product', ['papers' => $papers, "type" => $type]);
+    }
+
+    function moreByType($type, Request $request): Response
+    {
+        $limit = $request->get('limit', 4);
+        $papers = Paper::all()->where("type", "=", $type)->slice($request->get('p', 0) * $limit, $limit);
+        $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
+
+        return response(json_encode([
+            "code" => 200,
+            "data" => $data
+        ]));
     }
 }

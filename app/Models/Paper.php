@@ -24,6 +24,10 @@ class Paper extends Model
     protected $guarded;
     protected $viewSource = null;
 
+    const PRODUCT_TYPE = "carousel";
+    const CAROUSEL_TYPE = "product";
+    const CONTENT_TYPE = "content";
+
     public function to_category(): HasMany
     {
         return $this->hasMany("\App\Models\pageCategory", "page_id");
@@ -99,7 +103,8 @@ class Paper extends Model
         return 1;
     }
 
-    function getTimeline() {
+    function getTimeline()
+    {
         $timeline = $this->hasOne(PaperTimeLine::class, "paper_id");
         return new Carbon($timeline->getResults()->timeline_value) ?: '';
     }
@@ -123,7 +128,8 @@ class Paper extends Model
         return new ViewSource();
     }
 
-    function sliderImages() {
+    function sliderImages()
+    {
         return DB::table('paper_carousel')->where('paper_id', $this->id)->get();
     }
 
@@ -155,7 +161,8 @@ class Paper extends Model
         ];
     }
 
-    public function getImagePath() : string {
+    public function getImagePath(): string
+    {
         if ($image_path = $this->image_path) {
             $real_path = $this->url_to_real($image_path);
             if (file_exists($real_path)) {
@@ -168,6 +175,6 @@ class Paper extends Model
     function paperPrice()
     {
         $val = DB::table('price')->where('paper_id', $this->id)->get()->first();
-        return $val && $val->value ? ($val->value*1000) : null;
+        return $val && $val->value ? ($val->value * 1000) : null;
     }
 }
