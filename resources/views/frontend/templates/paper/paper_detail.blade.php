@@ -187,7 +187,7 @@
     <script>
         setInterval(() => {
             var success_message = $("#success-message");
-            if (esuccess_message.length) {
+            if (success_message.length) {
                 $(success_message).remove()
             }
         }, 3000);

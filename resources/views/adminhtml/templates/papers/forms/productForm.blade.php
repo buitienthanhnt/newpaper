@@ -31,7 +31,7 @@
 
     <div class="col-md-6">
         <div class="form-group row">
-            <label for="price"  class="col-sm-2">Price:</label>
+            <label for="price" class="col-sm-2">Price:</label>
             <div class="col-sm-8">
                 <input type="number" name="price" id="price" class="form-control" min="0"
                     value="@isset($price)
@@ -114,6 +114,21 @@
                 <input id="thumbnail" class="form-control" type="text" name="image_path">
             </div>
             <img id="holder" style="margin-top:15px;max-height:100px;">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="form-group">
+            <label for="conten" class="col-sm-2 col-form-label">Page content: </label>
+            <textarea style="height: 560px" id="conten" name="conten" class="form-control">
+                @if (isset($conten))
+                    {!! $conten !!}
+                @else
+                    {!! old('content', '') !!}
+                @endif
+            </textarea>
         </div>
     </div>
 </div>
