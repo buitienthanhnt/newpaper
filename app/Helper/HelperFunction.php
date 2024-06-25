@@ -100,7 +100,7 @@ class HelperFunction
         try {
             DB::beginTransaction();
             // https://magento23x.jmango360.dev/pub/laravel1/
-            $target_domain = DB::table($this->coreConfigTable())->where("name", "=", "target_domain")->select()->first()->value;
+            $target_domain = DB::table($this->coreConfigTable())->where("name", "=", "target_domain")->select()->first()?->value;
             if ($target_domain) {
                 $ex_image_path = (explode('public/storage', $imageUrl));
                 return $target_domain.'public/storage'.$ex_image_path[1];
