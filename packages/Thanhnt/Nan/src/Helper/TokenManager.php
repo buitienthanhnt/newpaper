@@ -118,8 +118,24 @@ final class TokenManager
 
 	public function getTokenAuthor(): string
 	{
+		return $this->request->header('authorization', $this->defaultAuth());
+	}
+
+	function defaultAuth(): string
+	{
 		$headerData = apache_request_headers();
-		$defaultAuth = $headerData['Authorization'] ?? $headerData['authorization'] ?? '';
-		return $this->request->header('authorization', $defaultAuth);
+		if (isset($headerData['Authorization']) && !empty($headerData['Authorization'])) {
+			return $headerData['Authorization'];
+		}
+
+		if (isset($headerData['authorization']) && !empty($headerData['authorization'])) {
+			return $headerData['authorization'];
+		}
+
+		if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+			return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+		}
+
+		return '';
 	}
 }
