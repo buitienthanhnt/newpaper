@@ -81,5 +81,8 @@
 # b2: nếu cần thì copy file extension(so) vào thư mục extension của php version. 
 # b5: sudo service apache2 restart
 # nếu lỗi thì xóa bỏ php version rồi cài lại các bước trên.
+# ======================
+# grpc cho win: https://cloud.google.com/php/grpc#windows_1
+# trên windown thì thêm file: php_grpc.dll vào thư mục ext và thêm dòng: extension=php_grpc.dll vào file php.ini
 # =========================================================================
 
