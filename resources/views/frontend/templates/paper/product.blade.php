@@ -82,7 +82,7 @@
                         <div class="col-xl-12 col-lg-12">
                             <div class="whats-news-single mb-20" id="whats-right-single">
                                 <!-- single -->
-                                @if ($papers)
+                                @if ($papers && count($papers) > 3)
                                     @foreach ($papers->take(-2) as $paper)
                                         <div class="row">
                                             <div class="whats-right-single mb-10">

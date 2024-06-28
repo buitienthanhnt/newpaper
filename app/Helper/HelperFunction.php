@@ -42,7 +42,7 @@ class HelperFunction
             $saveStatus = DB::table($this->coreConfigTable())->updateOrInsert(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
             if ($saveStatus) {
                 $configValue = $this->getConfigData($name);
-            }else {
+            } else {
                 throw new Exception();
             }
             DB::commit();
@@ -100,12 +100,13 @@ class HelperFunction
         try {
             DB::beginTransaction();
             // https://magento23x.jmango360.dev/pub/laravel1/
-            $target_domain = DB::table($this->coreConfigTable())->where("name", "=", "target_domain")->select()->first()?->value;
-            if ($target_domain) {
-                $ex_image_path = (explode('public/storage', $imageUrl));
-                return $target_domain.'public/storage'.$ex_image_path[1];
+            if ($target_domain = DB::table($this->coreConfigTable())->where("name", "=", "target_domain")->select()->first()) {
+                $target_domain_val = $target_domain->value;
+                if ($target_domain_val) {
+                    $ex_image_path = (explode('public/storage', $imageUrl));
+                    return $target_domain_val . 'public/storage' . $ex_image_path[1];
+                }
             }
-
             $domain = DB::table($this->coreConfigTable())->where("name", "=", "domain")->select()->first()->value;
             $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->select()->first()->value;
             $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->select()->first()->value;
@@ -116,7 +117,8 @@ class HelperFunction
         // support for windown platform
         try {
             $is_windown = (bool) DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->select()->first()->value;
-        } catch (\Throwable $th) {}
+        } catch (\Throwable $th) {
+        }
         $img = $is_windown ? str_replace($domain, $ip, $imageUrl) : str_replace($domain, $ip . "/" . $main . "/public", $imageUrl);
         return $img;
     }

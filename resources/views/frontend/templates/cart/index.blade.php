@@ -22,6 +22,7 @@
         <div class="row py-2">
             @if (count($cart))
                 <div class="col-md-12">
+                    <a class="text-primary"href="{{ route('paper_byType', ['type' => "product"]) }}">Danh sách sản phẩm</a>
                     <table class="table table-light">
                         <tbody>
                             <tr>

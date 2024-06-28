@@ -59,7 +59,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">select Category:</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" id="category_top_use" name="setup_category[]"
+                                    <select class="form-control" required id="category_top_use" name="setup_category[]"
                                         multiple="multiple">
                                         <?= $parent_category ?>
                                     </select>
@@ -70,7 +70,15 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="setup_type">setup type: </label>
                                 <div class="col-sm-10">
-                                    <input id="setup_type" class="form-control" type="text" name="setup_type">
+                                    @foreach ($setup_type as $item)
+                                        <div class="form-check">
+                                            <input class="form-check-input" required type="radio" name="setup_type"
+                                                id="{{ $item }}" value="{{ $item }}">
+                                            <label class="form-check-label" for="{{ $item }}">
+                                                {{ $item }}
+                                            </label>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
