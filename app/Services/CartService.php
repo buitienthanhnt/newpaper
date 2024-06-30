@@ -21,6 +21,9 @@ class CartService implements CartServiceInterface
 	function addCart($paper_id, $attribute = [])
 	{
 		$current_cart = $this->getCart() ?: [];
+        /**
+         * @var Paper $paperObj
+         */
 		$paperObj = Paper::find($paper_id)->makeHidden('conten');
 		$paper = $paperObj->toArray();
 		$paper['price'] = $paperObj->paperPrice();
@@ -40,7 +43,7 @@ class CartService implements CartServiceInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	function getCart()
 	{

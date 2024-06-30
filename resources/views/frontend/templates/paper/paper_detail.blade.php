@@ -60,6 +60,7 @@
                 <div class="col-lg-9">
                     <!-- Trending Tittle -->
                     <div id="detail_main_conten" class="about-right mb-90">
+                        <?php /** @var \App\Models\Paper $paper */ ?>
                         @if (!$paper->paperPrice())
                             <div class="about-img">
                                 @if (isset($paper->image_path))
@@ -127,7 +128,7 @@
                                     <div class="form-group container row">
                                         <div class="form-group col-sm-10 row">
                                             <label class="col-form-label" for="qty">Giá:
-                                                {{ $paper->paperPrice() }}
+                                                {{ $paper->paperPrice(true) }}
                                                 vnđ</label>
                                             <div class="col-sm-3">
                                                 <input type="number" name="qty" class="form-control" id="qty"
