@@ -32,6 +32,9 @@ class PaperController extends Controller
     protected $helperFunction;
     protected $logTha;
     protected $paper_timeline;
+    /**
+     * @var CartService $cartService
+     */
     protected $cartService;
 
     const PAGE_TYPE = 1;
@@ -420,6 +423,17 @@ class PaperController extends Controller
     {
         $this->cartService->clearCart();
         return redirect()->back()->with("success", "clear cart success");
+    }
+
+    function checkout(): View
+    {
+        return view("frontend.templates.cart.checkout", ['cart' => $this->cartService->getCart()]);
+    }
+
+    function checkoutPro(Request $request) {
+        dd($request->toArray());
+        $cartData = $this->cartService->getCart();
+        dd($cartData);
     }
 
     function xoaItem($id)

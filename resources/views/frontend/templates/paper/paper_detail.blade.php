@@ -127,7 +127,7 @@
                                     <div class="form-group container row">
                                         <div class="form-group col-sm-10 row">
                                             <label class="col-form-label" for="qty">Giá:
-                                                {{ $paper->paperPrice() }}
+                                                {{ number_format($paper->paperPrice()) }}
                                                 vnđ</label>
                                             <div class="col-sm-3">
                                                 <input type="number" name="qty" class="form-control" id="qty"
