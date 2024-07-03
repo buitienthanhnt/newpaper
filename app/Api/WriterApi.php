@@ -32,7 +32,7 @@ final class WriterApi extends BaseApi
     {
         $writers = Writer::all();
         foreach ($writers as &$value) {
-            $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path);
+            $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
         }
         return $writers;
     }

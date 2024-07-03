@@ -19,7 +19,8 @@ class AuthenToken
         'api/mostviewdetail',
         'api/share/mostPopulator',
         'api/share/trending',
-        'api/share/likeMost'
+        'api/share/likeMost',
+        'api/test/submit'
     ];
 
     function __construct(

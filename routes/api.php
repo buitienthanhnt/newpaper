@@ -111,6 +111,14 @@ Route::prefix('test')->group(function () {
             'arr' => [23, 34, 45, 56]
         ]));
     });
+
+    Route::post('submit', function (Request $request) {
+        $data = $request->toArray();
+        dd($data);
+        return [
+            'message' => 'success'
+        ];
+    });
 });
 
 Route::prefix('share')->group(function () {

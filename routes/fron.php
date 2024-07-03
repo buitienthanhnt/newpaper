@@ -94,6 +94,10 @@ Route::prefix('paper')->group(function () {
 
     Route::any("clearCart", "PaperController@clearCart")->name('paper_clearCart');
 
+    Route::get('checkout', "PaperController@checkout")->name("paper_checkout");
+
+    Route::Post('checkoutPro', "PaperController@checkoutPro")->name("paper_checkoutPro");
+
     Route::any("xoaItem/{id}", "PaperController@xoaItem")->name('paper_xoaItem');
 
     Route::get('byType/{type}', "PaperController@byType")->name("paper_byType");

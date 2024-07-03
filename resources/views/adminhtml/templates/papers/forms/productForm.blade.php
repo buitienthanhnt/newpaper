@@ -33,8 +33,8 @@
         <div class="form-group row">
             <label for="price" class="col-sm-2">Price:</label>
             <div class="col-sm-8">
-                <input type="number" name="price" id="price" class="form-control" min="0"
-                    value="@isset($price)
+                <input type="number" name="price" id="price" placeholder="nghìn vnđ" class="form-control"
+                    min="0" value="@isset($price)
 			{{ $price }}
 		   @endisset">
             </div>
@@ -124,10 +124,10 @@
             <label for="conten" class="col-sm-2 col-form-label">Page content: </label>
             <textarea style="height: 560px" id="conten" name="conten" class="form-control">
                 @if (isset($conten))
-                    {!! $conten !!}
-                @else
-                    {!! old('content', '') !!}
-                @endif
+{!! $conten !!}
+@else
+{!! old('content', '') !!}
+@endif
             </textarea>
         </div>
     </div>

@@ -53,8 +53,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 d-flex justify-content-between">
                     <a class="btn float-right" href="{{ route('paper_clearCart') }}">clear cart</a>
+                    <a class="btn float-right" href="{{ route('paper_checkout') }}">checkout</a>
                 </div>
             @else
                 <p class="">Bạn chưa có sản phẩm nào trong giỏ hàng!!
