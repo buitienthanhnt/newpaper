@@ -177,7 +177,7 @@ class Paper extends Model
     {
         try {
             $val = DB::table('price')->where('paper_id', $this->id)->get()->first();
-            return $val && $val->value ? number_format($val->value * 1000) : null;
+            return $val && $val->value ? $format ? number_format($val->value * 1000) : $val->value*1000 : null;
         } catch (\Throwable $th) {
             //throw $th;
         }

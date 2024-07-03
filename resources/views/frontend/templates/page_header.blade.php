@@ -3,7 +3,7 @@
 <header>
     <style>
         @media only screen and (min-width: 720px) {
-            li:hover>ul.chilMenu {
+            li:hover > ul.chilMenu {
                 top: 0% !important;
                 visibility: visible;
                 opacity: 1;
@@ -49,8 +49,8 @@
                                 <a href="{{ route('/') }}">
                                     <img src={{ $DomHtml->getConfig('home_image') ?:
                                     asset('assets/frontend/img/logo/logo.png') }}
-                                    width={{ $DomHtml->getConfig('home_image_width', 136)}}
-                                    height={{ $DomHtml->getConfig('home_image_height', 55)}} />
+                                        width={{ $DomHtml->getConfig('home_image_width', 136)}}
+                                        height={{ $DomHtml->getConfig('home_image_height', 55)}} />
                                 </a>
                             </div>
                         </div>
@@ -58,8 +58,8 @@
                             <div class="header-banner f-right ">
                                 <img src={{ $DomHtml->getConfig('home_image_right',) ?:
                                 asset('assets/frontend/img/gallery/header_card.png') }}
-                                width={{$DomHtml->getConfig('image_right_width', 750)}}
-                                height={{ $DomHtml->getConfig('image_right_height', 92)}} sty alt="" />
+                                    width={{$DomHtml->getConfig('image_right_width', 750)}}
+                                    height={{ $DomHtml->getConfig('image_right_height', 92)}} sty alt=""/>
                             </div>
                         </div>
                     </div>
@@ -84,14 +84,15 @@
                                 <ul class="header-social">
                                     <li><a href="https://www.fb.com/sai4ull"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="{{ route('paper_cart') }}"><i class="fa fa-shopping-cart"></i></a></li>
+                                    <li><a href="{{ route('paper_cart') }}"><i
+                                                class="fa fa-shopping-cart text-black"></i> {{$cart_count}}</a></li>
                                     @if (Auth::check())
-                                    <li> <a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
-                                    </li>
+                                        <li><a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
+                                        </li>
                                     @else
-                                    {{-- D:\xampp\htdocs\newpaper\public\assets\frontend\css\fontawesome-all.min.css
-                                    --}}
-                                    <li> <a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
+                                        {{-- D:\xampp\htdocs\newpaper\public\assets\frontend\css\fontawesome-all.min.css
+                                        --}}
+                                        <li><a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
                                     @endif
 
                                 </ul>

@@ -431,9 +431,8 @@ class PaperController extends Controller
     }
 
     function checkoutPro(Request $request) {
-        dd($request->toArray());
-        $cartData = $this->cartService->getCart();
-        dd($cartData);
+        $order_data = $this->cartService->submitOrder();
+        return redirect()->back()->with("order_id", $order_data['order_id']);
     }
 
     function xoaItem($id)

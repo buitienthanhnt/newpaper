@@ -6,7 +6,7 @@
 
 @section('page_header')
     <!-- Preloader Start -->
-    @include('frontend.templates.page_header')
+    @render(\App\ViewBlock\TopBar::class)
 @endsection
 
 @section('page_footer')

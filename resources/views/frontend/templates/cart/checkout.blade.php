@@ -6,7 +6,7 @@
 
 @section('page_header')
     <!-- Preloader Start -->
-    @include('frontend.templates.page_header')
+    @render(\App\ViewBlock\TopBar::class)
 @endsection
 
 @section('page_footer')
@@ -60,7 +60,7 @@
                                 <input class="form-check-input addressCheck" type="checkbox" name="addressNhc"
                                     id="defaultCheck2">
                                 <label class="form-check-label" for="defaultCheck2">
-                                    Giao ngoài giờ hành chính
+                                    Giao ngoài giờ hành chính:
                                 </label>
                                 <div class="form-address" style="display: none">
                                     <input type="address2" class="form-control" name="shipNhc" id="address2"
@@ -90,7 +90,7 @@
                     <table class="table table-light">
                         <tbody>
                             <tr>
-                                <td>san pham</td>
+                                <td>sản phẩm</td>
                                 <td>giá tiền</td>
                             </tr>
                             @foreach ($cart as $k => $item)
@@ -101,7 +101,7 @@
                             @endforeach
                             @if ($cart)
                                 <tr>
-                                    <td>tổng hợp</td>
+                                    <td>tổng tiền</td>
                                     <td>
                                         {{ number_format(array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))) }}
                                         vnđ
