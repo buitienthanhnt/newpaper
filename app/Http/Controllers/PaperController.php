@@ -432,7 +432,7 @@ class PaperController extends Controller
 
     function checkoutPro(Request $request) {
         $order_data = $this->cartService->submitOrder();
-        return redirect()->back()->with("order_id", $order_data['order_id']);
+        return redirect()->back()->with($order_data['status'] ? "success" : 'error', $order_data);
     }
 
     function xoaItem($id)

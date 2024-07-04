@@ -22,8 +22,7 @@ class CartService implements CartServiceInterface
         Order $order,
         OrderItem $orderItem,
         OrderAddress $orderAddress
-    )
-    {
+    ) {
         $this->request = $request;
         $this->order = $order;
         $this->orderItem = $orderItem;
@@ -68,13 +67,34 @@ class CartService implements CartServiceInterface
     {
         $cart = $this->getCart();
         if (count($cart)) {
+            $ship_store = $this->request->get('ship_store');
+            if (!$ship_store) {
+                $ship_hc = $this->request->get("ship_hc");
+                $ship_nhc = $this->request->get("ship_nhc");
+                if (!$ship_hc && !$ship_nhc) {
+                    return [
+                        "status" => false,
+                        "message" => '',
+                        "order_id" => null
+                    ];
+                }
+                $address_hc = $this->request->get("address_hc");
+                $address_nhc = $this->request->get("address_nhc");
+                if (!$address_hc && !$address_nhc) {
+                    return [
+                        "status" => false,
+                        "message" => '',
+                        "order_id" => null
+                    ];
+                }
+            }
             try {
                 $this->order->fill([
                     'status' => "waiting",
                     "email" => $this->request->get('email'),
                     "name" => $this->request->get("name"),
                     "phone" => $this->request->get("phone"),
-                    "total" => "22222"
+                    "total" => array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))
                 ])->save();
                 if ($order_id = $this->order->id) {
                     // save order address
@@ -84,7 +104,7 @@ class CartService implements CartServiceInterface
                         "address_hc" => $this->request->get("address_hc"),
                         "ship_nhc" => boolval($this->request->get("ship_nhc")),
                         "address_nhc" => $this->request->get("address_nhc"),
-                        "ship_store" => $this->request->get("ship_store")
+                        "ship_store" => boolval($this->request->get("ship_store"))
                     ])->save();
 
                     // save for order items
@@ -107,8 +127,7 @@ class CartService implements CartServiceInterface
                     "message" => 'created new order',
                     "order_id" => $order_id
                 ];
-            } catch
-            (\Exception $exception) {
+            } catch (\Exception $exception) {
                 dd($exception);
             }
         }
@@ -119,31 +138,31 @@ class CartService implements CartServiceInterface
         ];
     }
 
-        function xoaItem($id)
-        {
-            $cart = $this->getCart();
-            unset($cart[$id]);
-            $this->saveCart($cart);
-        }
+    function xoaItem($id)
+    {
+        $cart = $this->getCart();
+        unset($cart[$id]);
+        $this->saveCart($cart);
+    }
 
-        function clearCart()
-        {
-            Session::forget(self::KEY);
-            Session::save();
-            return $this->getCart();
-        }
+    function clearCart()
+    {
+        Session::forget(self::KEY);
+        Session::save();
+        return $this->getCart();
+    }
 
-        public
-        function session_begin(): void
-        {
-            if (!Session::isStarted()) {
-                Session::start();
-            }
-        }
-
-        function saveCart($cart)
-        {
-            Session::put(self::KEY, $cart);
-            Session::save();
+    public
+    function session_begin(): void
+    {
+        if (!Session::isStarted()) {
+            Session::start();
         }
     }
+
+    function saveCart($cart)
+    {
+        Session::put(self::KEY, $cart);
+        Session::save();
+    }
+}

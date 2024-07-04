@@ -125,39 +125,45 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
-    Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use($admin) {
-        Route::get("/", "ConfigController@list")->name($admin."_config_list");
+    Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        Route::get("/", "ConfigController@list")->name($admin . "_config_list");
 
-        Route::get("create", "ConfigController@create")->name($admin."_config_create");
+        Route::get("create", "ConfigController@create")->name($admin . "_config_create");
 
-        Route::post("insert", "ConfigController@insert")->name($admin."_config_insert");
+        Route::post("insert", "ConfigController@insert")->name($admin . "_config_insert");
 
-        Route::post("update", "ConfigController@update")->name($admin."_config_update");
+        Route::post("update", "ConfigController@update")->name($admin . "_config_update");
 
-        Route::delete("delete", "ConfigController@delete")->name($admin."_config_delete");
+        Route::delete("delete", "ConfigController@delete")->name($admin . "_config_delete");
     });
 
-    Route::prefix('firebase')->middleware(["adminLogin", 'AdminPermission'])->group(function() use($admin){
-        Route::get('/', "FirebaseController@dashboard")->name($admin."_firebase");
+    Route::prefix('firebase')->middleware(["adminLogin", 'AdminPermission'])->group(function () use ($admin) {
+        Route::get('/', "FirebaseController@dashboard")->name($admin . "_firebase");
 
-        Route::post('addPaper', "FirebaseController@addPaper")->name($admin."_firebase_addPaper");
+        Route::post('addPaper', "FirebaseController@addPaper")->name($admin . "_firebase_addPaper");
 
-        Route::delete('deletePaper', "FirebaseController@deletePaper")->name($admin."_firebase_deletePaper");
+        Route::delete('deletePaper', "FirebaseController@deletePaper")->name($admin . "_firebase_deletePaper");
 
-        Route::get('fireStore', "FirebaseController@fireStore")->name($admin."_firebase_fireStore");
+        Route::get('fireStore', "FirebaseController@fireStore")->name($admin . "_firebase_fireStore");
 
-        Route::get('topCategory', "FirebaseController@upCategoryTop")->name($admin."_upCategoryTop");
+        Route::get('topCategory', "FirebaseController@upCategoryTop")->name($admin . "_upCategoryTop");
 
-        Route::get('homeInfo', "FirebaseController@info")->name($admin."_firebase_homeInfo");
+        Route::get('homeInfo', "FirebaseController@info")->name($admin . "_firebase_homeInfo");
 
-        Route::get('setupHome', "FirebaseController@setupHome")->name($admin."_firebase_setupHome");
+        Route::get('setupHome', "FirebaseController@setupHome")->name($admin . "_firebase_setupHome");
 
-        Route::post('upFirebase/home', "FirebaseController@upHomeInfo")->name($admin."_firebase_upDefaultHome");
+        Route::post('upFirebase/home', "FirebaseController@upHomeInfo")->name($admin . "_firebase_upDefaultHome");
 
-        Route::get('nhaDashboard', "FirebaseController@nhaDashboard")->name($admin."_firebase_nhaDashboard");
+        Route::get('nhaDashboard', "FirebaseController@nhaDashboard")->name($admin . "_firebase_nhaDashboard");
 
-        Route::post('nhaUp', "FirebaseController@nhaUp")->name($admin."_firebase_nhaUp");
+        Route::post('nhaUp', "FirebaseController@nhaUp")->name($admin . "_firebase_nhaUp");
     });
 
-    Route::get("default", "AdminController@default")->name($admin."_default");
+    Route::prefix("orders")->group(function () use ($admin) {
+        Route::get("/", "OrderController@lists")->name($admin . "_orders_list");
+
+        Route::get("info/{order_id}", "OrderController@info")->name($admin."_order_info");
+    });
+
+    Route::get("default", "AdminController@default")->name($admin . "_default");
 });
