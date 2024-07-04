@@ -80,9 +80,9 @@ class CartService implements CartServiceInterface
                     // save order address
                     $this->orderAddress->fill([
                         "order_id" => $order_id,
-                        "ship_hc" => $this->request->get("ship_hc"),
+                        "ship_hc" => boolval($this->request->get("ship_hc")),
                         "address_hc" => $this->request->get("address_hc"),
-                        "ship_nhc" => $this->request->get("ship_nhc"),
+                        "ship_nhc" => boolval($this->request->get("ship_nhc")),
                         "address_nhc" => $this->request->get("address_nhc"),
                         "ship_store" => $this->request->get("ship_store")
                     ])->save();
@@ -109,6 +109,7 @@ class CartService implements CartServiceInterface
                 ];
             } catch
             (\Exception $exception) {
+                dd($exception);
             }
         }
         return [

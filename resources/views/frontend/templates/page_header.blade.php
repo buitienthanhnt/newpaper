@@ -85,7 +85,7 @@
                                     <li><a href="https://www.fb.com/sai4ull"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="#"><i class="fab fa-twitter"></i></a></li>
                                     <li><a href="{{ route('paper_cart') }}"><i
-                                                class="fa fa-shopping-cart text-black"></i> {{$cart_count}}</a></li>
+                                                class="fa fa-shopping-cart text-black"></i> {{$cart_count ?: ''}}</a></li>
                                     @if (Auth::check())
                                         <li><a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
                                         </li>

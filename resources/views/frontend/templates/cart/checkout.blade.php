@@ -25,57 +25,55 @@
                     <form method="POST" enctype="multipart/form-data" action="{{ route('paper_checkoutPro') }}">
                         @csrf
                         <div class="form-group">
-                            <label for="exampleFormControlInput2">Người mua:</label>
-                            <input type="text" class="form-control" required name="name" id="exampleFormControlInput2"
+                            <label for="name_order">Người mua:</label>
+                            <input type="text" class="form-control" required name="name" id="name_order"
                                 placeholder="lee thanh tu">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleFormControlInput1">Email:</label>
-                            <input type="email" class="form-control" required name="email" id="exampleFormControlInput1"
-                                placeholder="name@example.com">
+                            <label for="email_order">Email:</label>
+                            <input type="email" class="form-control" required name="email" id="email_order"
+                                placeholder="abc@example.com">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleFormControlInput3">sđt liên hệ:</label>
-                            <input type="tel" class="form-control" required name="phone" id="exampleFormControlInput3"
+                            <label for="phone_order">sđt liên hệ:</label>
+                            <input type="tel" class="form-control" required name="phone" id="phone_order"
                                 placeholder="0702032201">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleFormControlInput4">Lựa chọn giao hàng:</label>
+                            <label>Lựa chọn giao hàng:</label>
+
                             <div class="form-check">
-                                <input class="form-check-input addressCheck" type="checkbox" name="addressHc"
-                                    id="defaultCheck1">
-                                <label class="form-check-label" for="defaultCheck1">
+                                <input class="form-check-input addressCheck" type="checkbox" name="ship_hc">
+                                <label class="form-check-label">
                                     Giao giờ hành chính:
                                 </label>
                                 <div class="form-address" style="display: none">
-                                    <input type="address1" class="form-control" name="shipHc" id="address1"
+                                    <input type="address1" class="form-control" name="address_hc"
                                         placeholder="địa chỉ nhận giờ hành chính">
                                 </div>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input addressCheck" type="checkbox" name="addressNhc"
-                                    id="defaultCheck2">
-                                <label class="form-check-label" for="defaultCheck2">
+                                <input class="form-check-input addressCheck" type="checkbox" name="ship_nhc">
+                                <label class="form-check-label">
                                     Giao ngoài giờ hành chính:
                                 </label>
                                 <div class="form-address" style="display: none">
-                                    <input type="address2" class="form-control" name="shipNhc" id="address2"
+                                    <input type="text" class="form-control" name="address_nhc"
                                         placeholder="địa chỉ nhận ngoài giờ hành chính">
                                 </div>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input addressCheck" type="checkbox" name="addressStore"
-                                    id="defaultCheck3">
-                                <label class="form-check-label" for="defaultCheck1">
+                                <input class="form-check-input addressCheck" type="checkbox" name="ship_store">
+                                <label class="form-check-label">
                                     Nhận tại cửa hàng:
                                 </label>
                                 <div class="form-address" style="display: none">
-                                    <input disabled type="address1" class="form-control" name="shipStore" id="address3"
+                                    <input disabled type="text" class="form-control" name="shipStore"
                                         value="nam tân, trực nội">
                                 </div>
                             </div>
