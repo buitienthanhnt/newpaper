@@ -82,8 +82,8 @@
                             <div class="header-right f-right d-none d-lg-block">
                                 <!-- Heder social -->
                                 <ul class="header-social">
-                                    <li><a href="https://www.fb.com/sai4ull"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="https://www.fb.com/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="tel:0702032201"><i class="fa fa-phone"></i></a></li>
                                     <li><a href="{{ route('paper_cart') }}"><i
                                                 class="fa fa-shopping-cart text-black"></i> {{$cart_count ?: ''}}</a></li>
                                     @if (Auth::check())
