@@ -19,8 +19,10 @@ class CreateOrdersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->softDeletes();
             $table->string('total');
+            $table->string('thanh_toan')->default('offline');
+            $table->string('omx')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

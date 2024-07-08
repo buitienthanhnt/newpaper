@@ -430,9 +430,9 @@ class PaperController extends Controller
         return view("frontend.templates.cart.checkout", ['cart' => $this->cartService->getCart()]);
     }
 
-    function checkoutPro(Request $request) {
+    function checkoutPro() {
         $order_data = $this->cartService->submitOrder();
-        return redirect()->back()->with($order_data['status'] ? "success" : 'error', $order_data);
+        return redirect()->back()->with($order_data['status'] ? "success" : 'error', $order_data['message']);
     }
 
     function xoaItem($id)

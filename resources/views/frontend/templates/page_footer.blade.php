@@ -20,7 +20,7 @@
                                     <div class="footer-pera">
                                         <p class="info1">{{ $DomHtml->getConfig('foot_content') }}</p>
                                         <p class="info2">{{ $DomHtml->getConfig('contact_address') }}</p>
-                                        <p class="info2">Phone: {{ $DomHtml->getConfig('contact_phone')}} <br> Cell: {{
+                                        <p class="info2">Phone: <a href="tel:{{ $DomHtml->getConfig('contact_phone')}}">{{ $DomHtml->getConfig('contact_phone')}}</a> <br> Cell: {{
                                             $DomHtml->getConfig('contact_phone') }}</p>
                                     </div>
                                 </div>

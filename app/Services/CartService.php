@@ -74,7 +74,7 @@ class CartService implements CartServiceInterface
                 if (!$ship_hc && !$ship_nhc) {
                     return [
                         "status" => false,
-                        "message" => '',
+                        "message" => 'shipping type not define',
                         "order_id" => null
                     ];
                 }
@@ -83,7 +83,7 @@ class CartService implements CartServiceInterface
                 if (!$address_hc && !$address_nhc) {
                     return [
                         "status" => false,
-                        "message" => '',
+                        "message" => 'shipping address not define',
                         "order_id" => null
                     ];
                 }
@@ -94,6 +94,8 @@ class CartService implements CartServiceInterface
                     "email" => $this->request->get('email'),
                     "name" => $this->request->get("name"),
                     "phone" => $this->request->get("phone"),
+                    "thanh_toan" => $this->request->get("thanhtoan"),
+                    "omx" => $this->request->get("omx", '0000000'),
                     "total" => array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))
                 ])->save();
                 if ($order_id = $this->order->id) {
@@ -133,7 +135,7 @@ class CartService implements CartServiceInterface
         }
         return [
             "status" => false,
-            "message" => '',
+            "message" => 'order can not register, please try again!',
             "order_id" => null
         ];
     }

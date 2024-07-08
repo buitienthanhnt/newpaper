@@ -20,6 +20,18 @@
 @section('main_conten')
     <div class="container">
         <div class="row py-2">
+            @if (session('success'))
+                <div class="alert alert-success col-md-12" id="success-message" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger col-md-12" id="error-message" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @if (count($cart))
                 <div class="col-md-6">
                     <form method="POST" enctype="multipart/form-data" action="{{ route('paper_checkoutPro') }}">
@@ -28,6 +40,7 @@
                             <label for="name_order">Người mua:</label>
                             <input type="text" class="form-control" required name="name" id="name_order"
                                 placeholder="lee thanh tu">
+                            <input type="hidden" name="omx" value="AB12345">
                         </div>
 
                         <div class="form-group">
@@ -40,6 +53,39 @@
                             <label for="phone_order">sđt liên hệ:</label>
                             <input type="tel" class="form-control" required name="phone" id="phone_order"
                                 placeholder="0702032201">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Lựa chọn thanh toan:</label>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="thanhtoan" required
+                                    id="flexRadioDefault1" value="online">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    chuyển khoản ngân hàng
+                                </label>
+                                <div class="collapse" id="collapseExample">
+                                    <div class="card card-body">
+                                        Quý khách chuyển tiền qua stk: 1017748102 <br />
+                                        Số tiền:
+                                        {{ number_format(array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))) }}<br />
+                                        Nội dung: AB12345 <br />
+                                        <image src="http://localhost/laravel1/public/storage/files/nha/bttqr.jpg"></image>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="thanhtoan" value="offline" required
+                                    id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    thanh toán khi nhận hàng
+                                </label>
+                                <div class="collapse" id="collapseExample2">
+                                    <div class="card card-body">
+                                        quý khách sẽ chuyển tiền cho đơn vị vận chuyển khi nhận hàng.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -120,7 +166,27 @@
     </div>
 
     <script type="text/javascript">
+        setInterval(() => {
+            var success_message = $("#success-message");
+            var error_message = $("#error-message");
+            if (success_message.length || error_message) {
+                $(success_message).remove();
+                $(error_message).remove();
+            }
+        }, 3000);
+
+
         $(document).ready(function() {
+            $("#flexRadioDefault1").click(function() {
+                $("#collapseExample2").collapse('hide');
+                $("#collapseExample").collapse('show');
+            });
+
+            $("#flexRadioDefault2").click(function() {
+                $("#collapseExample").collapse('hide');
+                $("#collapseExample2").collapse('show');
+            });
+
             $(".addressCheck").click(function(event) {
                 let checkInbox = $(this).prop('checked');
                 if (checkInbox) {
