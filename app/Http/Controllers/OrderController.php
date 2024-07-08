@@ -27,7 +27,10 @@ class OrderController extends Controller
     }
 
     function info($order_id) : View {
-        dd($order_id);
-        return view("", []);
+        /**
+         * @var Order $order
+         */
+        $order = $this->order->find($order_id);
+        return view("adminhtml.templates.orders.detail", ['order' => $order]);
     }
 }
