@@ -54,6 +54,12 @@
 # https://stackoverflow.com/questions/34513072/running-laravel-queues-automatically
 # https://laravel.com/docs/7.x/queues#supervisor-configuration
 
+# =========================html=======================================
+# https://www.w3schools.com/html/html5_draganddrop.asp
+
+# =========================html=======================================
+
+
 # install supervisor:
 #       sudo apt-get install supervisor
 

@@ -114,8 +114,7 @@
                                                                             {{ $paper->viewCount() }}
                                                                         </a>
                                                                     </p>
-                                                                    <span
-                                                                        class="colorb mb-10">{{ $paper->writerName() }}
+                                                                    <span class="colorb mb-10">{{ $paper->writerName() }}
                                                                     </span>
                                                                 </div>
                                                             </div>
@@ -213,10 +212,11 @@
                 @if ($video_contens)
                     @foreach ($video_contens as $video)
                         <div class="video-items text-center">
-                            <video controls>
+                            <iframe class="w-100" style="height: 520px" src="{{ $video['url'] }}"></iframe>
+                            {{-- <video controls>
                                 <source src={{ asset('assets/frontend/video/news2.mp4') }} type="video/mp4">
                                 Your browser does not support the video tag.
-                            </video>
+                            </video> --}}
                         </div>
                     @endforeach
                 @endif
@@ -230,13 +230,14 @@
                 <div class="testmonial-nav text-center">
                     @if ($video_contens)
                         @foreach ($video_contens as $video)
-                            <div class="single-video">
-                                <video controls>
+                            <div class="single-video" style="padding-top: 10px;">
+                                <iframe class="w-100" src="{{ $video['url'] }}"></iframe>
+                                {{-- <video controls>
                                     <source src={{ asset('assets/frontend/video/news2.mp4') }} type="video/mp4">
                                     Your browser does not support the video tag.
-                                </video>
+                                </video> --}}
                                 <div class="video-intro">
-                                    <h4>{{ $video->title }}</h4>
+                                    <h4>{{ $video['title'] }}</h4>
                                 </div>
                             </div>
                         @endforeach
