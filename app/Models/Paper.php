@@ -161,6 +161,11 @@ class Paper extends Model
 
     public function getImagePath() : string {
         if ($image_path = $this->image_path) {
+
+            if (file_exists($image_path)) {
+                return $image_path;
+            }
+
             $real_path = $this->url_to_real($image_path);
             if (file_exists($real_path)) {
                 return $image_path;
