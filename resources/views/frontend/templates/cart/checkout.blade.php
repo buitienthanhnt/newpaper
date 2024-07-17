@@ -70,7 +70,7 @@
                                         Số tiền:
                                         {{ number_format(array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))) }}<br />
                                         Nội dung: AB12345 <br />
-                                        <image src="{{asset('assets/pub_image/defaul.PNG')}}"></image>
+                                        <image src="{{asset('assets/pub_image/btt_vcb_qr.jpg')}}"></image>
                                     </div>
                                 </div>
                             </div>
