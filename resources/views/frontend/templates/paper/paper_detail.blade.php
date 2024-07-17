@@ -1,13 +1,10 @@
 @extends('frontend.layouts.pagestruct')
 
-@section('page_top_head')
-    @include('frontend.templates.page_top_head')
-    {{-- <script src="{{ asset('assets/frontend/js/commentReply.js') }}"></script>
-    <script src="{{ asset('assets/frontend/js/commentHistory.js') }}"></script> --}}
+@section('meta_title')
+    <meta name="title" content="{{$paper->title}}">
 @endsection
 
 @section('page_header')
-    <!-- Preloader Start -->
     @render(\App\ViewBlock\TopBar::class)
 @endsection
 
@@ -15,9 +12,7 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-@section('title')
-    detail page
-@endsection
+@section('page_title') detail page @endsection
 
 @section('css_after')
     <link rel="stylesheet" href={{ asset('assets/frontend/css/paper/detail.css') }}>

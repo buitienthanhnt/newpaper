@@ -44,7 +44,8 @@ class RemoteSourceManager
         "codestus.com"      => "get_codestus_com",
         "quantrimang.com"   => "get_quantrimang_com",
         "jaredchu.com"      => "get_jaredchu_com",
-        "danviet.vn"        => "get_danviet_vn"
+        "danviet.vn"        => "get_danviet_vn",
+        "seongon.com"       => "get_seongon_com"
     ];
 
     protected $request;
@@ -316,7 +317,11 @@ class RemoteSourceManager
     {
         return call_user_func(fn () => $this->getValueByClassName($doc, "dt-content"));
     }
-    
+
+    function get_seongon_com($doc): array{
+        return call_user_func(fn () => $this->getValueByClassName($doc, "elementor-element"));
+    }
+
 
     // ===================================================================//
 
