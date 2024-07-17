@@ -70,7 +70,7 @@
                                         Số tiền:
                                         {{ number_format(array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))) }}<br />
                                         Nội dung: AB12345 <br />
-                                        <image src="http://localhost/laravel1/public/storage/files/nha/bttqr.jpg"></image>
+                                        <image src="{{asset('assets/pub_image/defaul.PNG')}}"></image>
                                     </div>
                                 </div>
                             </div>
