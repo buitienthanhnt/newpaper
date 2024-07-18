@@ -1,42 +1,14 @@
 <?php
 
-use App\Jobs\PaperJob;
 use App\Jobs\UpPaperFireBase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Thanhnt\Nan\Helper\TokenManager;
-use App\ViewBlock\TopCategory;
 
-Route::get('/test', function () {
-    $top = new TopCategory();
-    echo($top->setTemplate('')->toHtml());
-    // return asset('public/assets/pub_image/defaul.PNG');
-    // return "Test package google webhook calendar";
-    return view('welcome');
-});
-
-Route::get('testview', function () {
-    return view('nan::testpack');   // trả về view theo module: moduleName::path/viewName
-});
-
-Route::any('token/{demo}', function ($demo) {
-    return view('nan::token.demo', ['html' => $demo]);
-});
-
-Route::get('getToken', function (Request $request) {
-    $token = new TokenManager($request);
-    // $token_value = $token->getToken(['id' => 1, 'name' => 'nan', 'street' => '21b natial']);
-    $token_value = $token->getToken([]);
-    return $token_value;
-});
-
-Route::get('getTokenData', function (Request $request) {
-    $token = new TokenManager($request);
-    $tokenString = '';
-    $token_value = $token->getTokenData($tokenString);
-    return ($token_value);
-});
+//Route::get('testview', function () {
+//    return view('nan::testpack');   // trả về view theo module: moduleName::path/viewName
+//});
 
 Route::get('log', function (Request $request) {
     // ghi lỗi: Log file
@@ -53,13 +25,4 @@ Route::get('log', function (Request $request) {
     Log::stack([$channel])->info('Something happened in custom log file!');
 
     return 'demo log';
-});
-
-Route::get('dispath', function(){
-    // test email:
-    // $email = 'sa1@gmail.com';
-    // PaperJob::dispatch($email, "tha nan demo add param for queue");
-
-    UpPaperFireBase::dispatch(122);
-    return 123;
 });

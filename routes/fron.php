@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Paper;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", "ManagerController@homePage")->name("/");
@@ -12,19 +10,6 @@ Route::get("basepage", function () {
 
 Route::get("dra", function () {
     return view("frontend/templates/elements/dra2");
-});
-
-Route::get("page_str", function () {
-    return view("frontend/templates/pagestr");
-});
-
-Route::get("home", function () {
-    // $views = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
-    // dd(array_column($views, "source_id"));
-    // $papers = Paper::find(array_column($views, "source_id"));
-    // $papers = Paper::limit(3)->orderBy('created_at', 'DESC')->get();
-    $trendingLeft = Paper::take(3)->orderBy('created_at', "DESC")->get();
-    dd($trendingLeft);
 });
 
 Route::get("playSound", function () {
@@ -105,33 +90,15 @@ Route::prefix('paper')->group(function () {
     Route::get('more_type/{type}', "PaperController@moreByType")->name("more_type");
 });
 
-// php artisan cache:table
-// php artisan migrate
-Route::prefix('cache')->group(function () {
-    Route::get('create', function () {
-        $status = Cache::put('tha', [
-            'a' => 123,
-            'b' => 'demo data'
-        ]);
-        return $status;
-    });
-
-    Route::get('get', function () {
-        $value = Cache::get('tha', 123123123);
-        return $value;
-    });
-});
-
 Route::prefix('test')->group(function (): void {
     Route::get("obser", "ExtensionController@obser");
 });
 
 Route::get("sendmail", "ExtensionController@sendMail");
 
-Route::get('firebase', "UserController@addFireBaseData");
 
 Route::get('verifyPassword', "UserController@verifyPassword");
-// upLoadImage
+
 Route::get('upLoadImage', "UserController@upLoadImage");
 
 // upload categoryTree to firebase

@@ -75,50 +75,6 @@ Route::prefix('test')->group(function () {
         );
         return 123;
     });
-
-    Route::get('homeInfo', "FirebaseController@info");
-
-    Route::get('getWriters', function () {
-        return [
-            [
-                'id' => 1,
-                'name' => 'tha',
-                'age' => 12
-            ],
-            [
-                'id' => 2,
-                'name' => 'demo',
-                'age' => 22
-            ],
-            [
-                'id' => 3,
-                'name' => 'ppp',
-                'age' => 23
-            ]
-        ];
-    })->name('api_writers');
-
-    Route::post("testPost", function (Request $request) {
-        $params = $request->getContent();
-        return $params;
-        // throw new Exception("Error Processing Request", 406);
-        // throw new HttpException(500, 'opopop');
-
-        return (json_encode([
-            "name" => 'tha',
-            "id" => 2,
-            "title" => "demo for post api",
-            'arr' => [23, 34, 45, 56]
-        ]));
-    });
-
-    Route::post('submit', function (Request $request) {
-        $data = $request->toArray();
-        dd($data);
-        return [
-            'message' => 'success'
-        ];
-    });
 });
 
 Route::prefix('share')->group(function () {
