@@ -95,14 +95,14 @@ class ManagerController extends Controller
             }
         }
         // $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
-        $video_contens = [
-            ['url' => "https://www.youtube.com/embed/lhYztX6cdg8", "title" => "demo 1"],
-            ['url' => "https://www.youtube.com/embed/o7o60G-jN54", "title" => "demo 2"],
-            ['url' => "https://www.youtube.com/embed/EJi1k_Yunco", "title" => "demo 3"],
-            ['url' => "https://www.youtube.com/embed/9GaIAYhGTE0", "title" => "demo 4"],
-            ['url' => "https://www.youtube.com/embed/sKdpqk7o5ac", "title" => "demo 5"],
-            ['url' => "https://www.youtube.com/embed/lovblkkDVDU", "title" => "demo 6"],
-        ];
+        // $video_contens = [
+        //     ['url' => "https://www.youtube.com/embed/lhYztX6cdg8", "title" => "demo 1"],
+        //     ['url' => "https://www.youtube.com/embed/o7o60G-jN54", "title" => "demo 2"],
+        //     ['url' => "https://www.youtube.com/embed/EJi1k_Yunco", "title" => "demo 3"],
+        //     ['url' => "https://www.youtube.com/embed/9GaIAYhGTE0", "title" => "demo 4"],
+        //     ['url' => "https://www.youtube.com/embed/sKdpqk7o5ac", "title" => "demo 5"],
+        //     ['url' => "https://www.youtube.com/embed/lovblkkDVDU", "title" => "demo 6"],
+        // ];
         return view("frontend/templates/homeconten", compact("list_center", "video_contens"));
     }
 

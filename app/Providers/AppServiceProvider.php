@@ -2,14 +2,17 @@
 
 namespace App\Providers;
 
+use App\Helper\Nan;
 use App\Models\Category;
 use App\Models\ConfigCategory;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    use Nan;
     /**
      * Register any application services.
      *
@@ -39,10 +42,14 @@ class AppServiceProvider extends ServiceProvider
             $topcategory = ConfigCategory::where("path", ConfigCategory::TOP_CATEGORY)->firstOr(function(){
                 return null;
             });
-
             if ($topcategory) {
                 $list_category = Category::find(explode("&", $topcategory->value));
                 View::share("topcategory", $list_category);
+            }
+
+            $custom_css = DB::table($this->coreConfigTable())->where("name", "=", "custom_css")->first('value')->value;
+            if ($custom_css) {
+                View::share("custom_css", $custom_css);
             }
         }catch (\Exception $e){
 
