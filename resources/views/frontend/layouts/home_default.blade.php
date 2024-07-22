@@ -15,9 +15,7 @@
 
 {{-- ========base============ --}}
 
-@section('page_title')
-    home page
-@endsection
+@section('page_title') Trang chủ @endsection
 
 @section('morning_post')
     @include('frontend/layouts/paperComponent/morning_post')
