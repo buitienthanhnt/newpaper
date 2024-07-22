@@ -31,7 +31,7 @@ class RemoteSourceManager
         "kienthuc.net.vn"   => "get_kienthuc_net_vn",
         "www.thivien.net"   => "get_www_thivien_net",
         "dantri.com.vn"     => "get_dantri_value", // host => function
-        "topdev.vn"         => "get_topdev_vn", // host => function
+        "topdev.vn"         => "get_topdev_vn",    // host => function
         "toidicode.com"     => "get_toidicode_com",
         "freetuts.net"      => "get_freetuts_net",
         "thanhnien.vn"      => "get_thanhnien_vn",
@@ -45,7 +45,9 @@ class RemoteSourceManager
         "quantrimang.com"   => "get_quantrimang_com",
         "jaredchu.com"      => "get_jaredchu_com",
         "danviet.vn"        => "get_danviet_vn",
-        "seongon.com"       => "get_seongon_com"
+        "seongon.com"       => "get_seongon_com",
+        "www.24h.com.vn"    => "get_www_24h_com_vn",
+        "s.cafef.vn"        => "get_s_cafef_vn"
     ];
 
     protected $request;
@@ -322,6 +324,15 @@ class RemoteSourceManager
         return call_user_func(fn () => $this->getValueByClassName($doc, "elementor-element"));
     }
 
+    // get_www_24h_com_vn
+    function get_www_24h_com_vn($doc): array{
+        return call_user_func(fn () => $this->getValueByClassName($doc, "cate-24h-foot-arti-deta-info", "cate-24h-foot-arti-deta-title"));
+    }
+
+    // get_s_cafef_vn
+    function get_s_cafef_vn($doc): array{
+        return call_user_func(fn () => $this->getValueById($doc, "newscontent", "intro"));
+    }
 
     // ===================================================================//
 
@@ -385,6 +396,34 @@ class RemoteSourceManager
             "image_path" => $request->__get("image_path", ""),
             "writer" => $request->get("writer", null)
         ];
+    }
+
+    function getValueById($doc, $id_content, $class_short_content = '') : array {
+        $request = $this->request;
+        $title = $this->getTitle($doc);
+        $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " ", "|", "/", "\\"], "", $this->vn_to_str($title, 1));
+        $short_conten_value = "";
+        try {
+            $short_conten = $this->findByXpath($doc, "class", $class_short_content);
+            if (count($short_conten)) {
+                $short_conten_value = trim($short_conten[0]->textContent);
+            }
+        } catch (\Exception $e) {}
+
+        return [
+            "title" => $title,
+            "url_alias" => $url_alias,
+            "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
+            "conten" => $this->getNodeHtml($this->geElementById($doc, $id_content)),
+            "active" => $request->__get("active", true),
+            "show" => $request->get("show", true),
+            "auto_hide" => $request->__get("auto_hide", true),
+            "show_writer" => $request->__get("show_writer", true),
+            "show_time" => $request->__get("show_time", true),
+            "image_path" => $request->__get("image_path", ""),
+            "writer" => $request->get("writer", null)
+        ];
+        return [];
     }
 
     /**

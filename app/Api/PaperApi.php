@@ -558,24 +558,18 @@ class PaperApi extends BaseApi
 
 	function timeLine()
 	{
-		// $timeLine = Paper::all()->random(6)->sortBy('updated_at')->makeHidden(['conten']);
-		// foreach ($timeLine as &$value) {
-		// 	$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
-		// 	$value->time = date_format($value->updated_at, "d-m H:i");
-		// 	$value->description = $value->title;
-		// }
-		// return $timeLine;
-
 		$paperTimeLine = $this->paperTimeLine;
 		$dt = Carbon::now('Asia/Ho_Chi_Minh');
 		$timeLine = $paperTimeLine->where('timeline_value', ">=", $dt->toDateTimeString())->orderBy('timeline_value', 'ASC')->take(8)->get('paper_id');
-		$papers = Paper::find(array_column($timeLine->toArray(), 'paper_id'))->makeHidden(['conten']);
-		foreach ($papers as &$value) {
+		$papers = [];
+		foreach ($timeLine as $time) {
+			$value = Paper::find($time)->first()->makeHidden(['conten']);
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
 			$value->time = date_format($value->getTimeline(), "d-m-Y H:i");
 			$value->description = $value->title;
+			$papers[] = $value;
 		}
-		return array_reverse($papers->toArray());
+		return $papers;
 	}
 
 	function homeInfo(): array

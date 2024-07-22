@@ -43,6 +43,14 @@ trait DomHtml
     }
 
     /**
+     * @param [type] $doc 
+     * @param string $id
+     */
+    public function geElementById($doc, $id = '') {
+        return $doc->getElementById($id);
+    }
+
+    /**
      * get all html element conten
      *
      * @param [type] $node

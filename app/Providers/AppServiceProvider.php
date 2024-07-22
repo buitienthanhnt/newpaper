@@ -47,12 +47,11 @@ class AppServiceProvider extends ServiceProvider
                 View::share("topcategory", $list_category);
             }
 
-            $custom_css = DB::table($this->coreConfigTable())->where("name", "=", "custom_css")->first('value')->value;
-            if ($custom_css) {
-                View::share("custom_css", $custom_css);
-            }
+            $custom_css = DB::table($this->coreConfigTable())->where("name", "=", "custom_css")->first('value');
+            View::share("custom_css", $custom_css->value ?? '');
         }catch (\Exception $e){
-
+            dd($e);
         }
+
     }
 }
