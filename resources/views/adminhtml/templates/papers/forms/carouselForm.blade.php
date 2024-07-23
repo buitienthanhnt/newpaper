@@ -40,12 +40,9 @@
     <div class="col-md-6">
         <label for="short_conten" class="col-sm-4 col-form-label">Short conten:</label>
         <div class="col-sm-10">
-            <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                style="padding: 10px; height: 100%;">
-                @isset($short_conten)
-{{ $short_conten }}
-@endisset
-            </textarea>
+            <textarea id="short_conten" name="short_conten" 
+                class="form-control" rows="4"
+                style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset</textarea>
         </div>
     </div>
 

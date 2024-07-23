@@ -88,7 +88,8 @@
 
         $(".paper_tag").select2({
             tags: true,
-            tokenSeparators: [',']
+            tokenSeparators: [','],
+            placeholder: 'liên kết'
         });
 
         $("#time_line_type").select2({
@@ -99,7 +100,8 @@
         $("#category_option").select2({
             placeholder: 'Select an option',
             tags: true,
-            tokenSeparators: [',', ' ']
+            tokenSeparators: [',', ' '],
+            placeholder: 'danh mục bài viết'
         });
     </script>
 @endsection

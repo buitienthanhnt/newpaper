@@ -78,12 +78,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin_paper_edit', ['paper_id' => $page->id]) }}">
-                                            <button class="btn btn-info">edit</button>
+                                        <a class="btn btn-info" href="{{ route('admin_paper_edit', ['paper_id' => $page->id]) }}">
+                                            edit
                                         </a>
-                                        <a href="#">
-                                            <button class="btn btn-danger btn-flat show_confirm"
-                                                data-id="{{ $page->id }}">delete</button>
+                                        <a href="#" class="btn btn-danger btn-flat show_confirm" data-id="{{ $page->id }}">
+                                            delete
                                         </a>
                                     </td>
                                 </tr>

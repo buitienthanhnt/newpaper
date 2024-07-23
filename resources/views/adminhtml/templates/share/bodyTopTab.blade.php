@@ -4,18 +4,10 @@
             <li class="nav-item">
                 <a class="nav-link active ps-0" id="home-tab" data-bs-toggle="tab"
                     href={{ asset('assets/adminhtml/#overview') }} role="tab" aria-controls="overview"
-                    aria-selected="true">Overview</a>
+                    aria-selected="true">Demographics</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href={{ asset('assets/adminhtml/#audiences') }}
-                    role="tab" aria-selected="false">Audiences</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href={{ asset('assets/adminhtml/#demographics') }}
-                    role="tab" aria-selected="false">Demographics</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-primary" id="more-tab" href={{ route('category_admin_list') }} role="tab"
+                <a class="nav-link text-success" id="list-cate-tab" href={{ route('category_admin_list') }} role="tab"
                     aria-selected="false">list category</a>
             </li>
             <li class="nav-item">
@@ -23,7 +15,7 @@
                     aria-selected="false">setup category top</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link border-0 text-info" id="more-tab" href={{ route('admin_new_by_url') }} role="tab"
+                <a class="nav-link border-0 text-warning" id="new-paper-url-tab" href={{ route('admin_new_by_url') }} role="tab"
                     aria-selected="false">paper by url</a>
             </li>
         </ul>

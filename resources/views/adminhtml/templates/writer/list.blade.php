@@ -19,8 +19,8 @@
     @endif
     <div class="container">
         <div class="row">
-            <a href="{{ route('admin_writer_create') }}">
-                <button class="btn btn-info">create writer</button>
+            <a href="{{ route('admin_writer_create') }}"  class="col-md-2 btn btn-info">
+                create writer
             </a>
 
             <div class="table-responsive">
@@ -48,12 +48,11 @@
                                     </td>
                                     <td>{{ $writer->active ? 'active' : 'inactive' }}</td>
                                     <td>
-                                        <a href="{{ route('admin_writer_edit', ['writer_id' => $writer->id]) }}">
-                                            <button class="btn btn-info">edit</button>
+                                        <a class="btn btn-info" href="{{ route('admin_writer_edit', ['writer_id' => $writer->id]) }}">
+                                            edit
                                         </a>
-                                        <a href="">
-                                            <button class="btn btn-danger btn-flat show_confirm"
-                                                data-id="{{ $writer->id }}">delete</button>
+                                        <a href="" class="btn btn-danger btn-flat show_confirm" data-id="{{ $writer->id }}">
+                                            delete
                                         </a>
                                     </td>
                                 </tr>

@@ -26,30 +26,29 @@
 
 @section('body_main_conten')
     <div class="row">
-        <div class="col-md-12">
-            <span>noi dung cua order detail</span>
-            <div class="card">
+        <div class="col-md-8">
+            <span class="text-uppercase">thông tin đơn hàng:</span>
+            <div class="card mt-2">
                 <div class="card-body">
-                  <h5 class="card-title">nguoi mua: {{ $order->name }}</h5>
+                  <h5 class="card-title">người mua: {{ $order->name }}</h5>
                   <h6 class="card-subtitle mb-2 text-muted">email: {{ $order->email }}</h6>
                   <h6 class="card-subtitle mb-2 text-muted">sdt: {{ $order->phone }}</h6>
-                  <h6 class="card-subtitle mb-2 text-muted">ngay tao: {{ $order->created_at }}</h6>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <h6 class="card-subtitle mb-2 text-muted">ngày tạo: {{ $order->created_at }}</h6>
+                  <p class="card-text">ghi chú: Hiện tại chưa hỗ trợ</p>
 
                   <ul class="list-group">
                     @foreach ($order->orderItems() as $item)
                     <li class="list-group-item">
                         <div>
-                            <p>paper name: {{$item->title}}</p>
-                            <p>gia: {{$item->price}}</p>
-                            <p>so luong: {{$item->qty}}</p>
+                            <p>Tên sản phẩm: {{$item->title}}</p>
+                            <p>Giá: {{$item->price}}</p>
+                            <p>Số lượng: {{$item->qty}}</p>
                         </div>
                     </li>
                     @endforeach
                   </ul>
 
-                  <a href="#" class="text-success mr-5">{{ $order->status }}</a>
-                  <a href="#" class="card-link">Another link</a>
+                    <a href="#" class="text-success mr-5">Trạng thái: {{ $order->status }}</a>
                 </div>
               </div>
         </div>

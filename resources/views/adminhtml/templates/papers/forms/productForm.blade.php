@@ -1,11 +1,11 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Title:</label>
+            <label class="col-sm-2">Title:</label>
             <div class="col-sm-8">
                 <input type="text" class="form-control" name="page_title" required
                     value="@isset($title){{ $title }}@endisset" required
-                    placeholder="page title" />
+                    placeholder="tiêu đề" />
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@
             <label for="url-alias" class="col-sm-2">Url alias:</label>
             <div class="col-sm-8">
                 <input id="url-alias" class="form-control" type="text" name="alias"
-                    placeholder="use page title if this value is null"
+                    placeholder="dùng tiêu đề thay thế nếu dòng này để trống"
                     value="@isset($url_alias){{ $url_alias }}@endisset">
             </div>
         </div>
@@ -48,11 +48,11 @@
         <label for="short_conten" class="col-sm-4 col-form-label">Short conten:</label>
         <div class="col-sm-10">
             <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                style="padding: 10px; height: 100%;">
-                @isset($short_conten)
+                placeholder="mô tả ngắn cho bài viết" style="padding: 10px; height: 100%;">
+@isset($short_conten)
 {{ $short_conten }}
 @endisset
-            </textarea>
+</textarea>
         </div>
     </div>
 
@@ -60,33 +60,6 @@
         <label for="auto_hide" class="col-sm-2">Auto hide: </label>
         <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide"
             @if (isset($auto_hide)) {{ $auto_hide ? 'checked' : '' }} @else checked @endif>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6"></div>
-    <div class="col-md-6">
-        <div class="form-group row">
-            <label for="url-alias" class="col-sm-2">Timeline:</label>
-            <div class="cs-form col-sm-8">
-                <input name="time_line_value" id="timelineInput" />
-                <script type="text/javascript">
-                    // https://gijgo.com/datetimepicker
-                    $("#timelineInput").datetimepicker({
-                        datepicker: {
-                            showOtherMonths: true,
-                            calendarWeeks: true,
-                            todayHighlight: true
-                        },
-                        footer: true,
-                        modal: true,
-                        header: true,
-                        value: '',
-                        format: 'yyyy-dd-mm HH:MM:ss',
-                    });
-                </script>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -111,7 +84,7 @@
                         <i class="fa fa-picture-o"></i> Choose
                     </a>
                 </span>
-                <input id="thumbnail" class="form-control" type="text" name="image_path">
+                <input id="thumbnail" class="form-control" type="text" name="image_path" placeholder="ảnh đại diện">
             </div>
             <img id="holder" style="margin-top:15px;max-height:100px;">
         </div>

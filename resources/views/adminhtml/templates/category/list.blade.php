@@ -23,17 +23,8 @@
                 </p> --}}
                 <div class="row float-right">
                     <div class="col-md-9">
-                        <a href={{ route('category_admin_create') }}>
-                            <button class="btn btn-info">
-                                Create category
-                            </button>
-                        </a>
-
-                        <a href={{ route('category_admin_create', ['type' => 'time_line']) }}>
-                            <button class="btn btn-info">
-                                Create Timeline
-                            </button>
-                        </a>
+                        <a class="btn btn-info" href={{ route('category_admin_create') }}>Create category</a>
+                        <a class="btn btn-info" href={{ route('category_admin_create', ['type' => 'time_line']) }}>Create Timeline</a>
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-warning syncCategoryFirebase">Upload category firebase</button>
