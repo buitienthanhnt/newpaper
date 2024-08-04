@@ -76,16 +76,18 @@
                             </div>
                             <!-- Main-menu  top category menu -->
                             @render(\App\ViewBlock\TopCategory::class)
-
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4">
                             <div class="header-right f-right d-none d-lg-block">
                                 <!-- Heder social -->
                                 <ul class="header-social">
-                                    <li><a href="https://www.facebook.com/profile.php?id=61562482551696" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="tel:{{ $DomHtml->getConfig('contact_phone') }}"><i class="fa fa-phone"></i></a></li>
+                                    <li><a href="https://www.facebook.com/profile.php?id=61562482551696"
+                                           target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="tel:{{ $DomHtml->getConfig('contact_phone') }}"><i
+                                                class="fa fa-phone"></i></a></li>
                                     <li><a href="{{ route('paper_cart') }}"><i
-                                                class="fa fa-shopping-cart text-black"></i> {{$cart_count ?: ''}}</a></li>
+                                                class="fa fa-shopping-cart text-black"></i> {{$cart_count ?: ''}}</a>
+                                    </li>
                                     @if (Auth::check())
                                         <li><a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
                                         </li>
@@ -104,7 +106,13 @@
                         </div>
                         <!-- Mobile Menu -->
                         <div class="col-12">
-                            <div class="mobile_menu d-block d-md-none"></div>
+                            <div class="mobile_menu d-block d-md-none">
+                                @if($cart_count)
+                                    <a href="http://localhost/laravel1/public/paper/cart" style="position: absolute; top: inherit; right: 10px; color: white">
+                                        <i class="fa fa-shopping-cart text-black" style="margin-top: 5px"></i> {{$cart_count ?: ''}}
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
