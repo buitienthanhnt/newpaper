@@ -92,8 +92,6 @@
                                         <li><a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
                                         </li>
                                     @else
-                                        {{-- D:\xampp\htdocs\newpaper\public\assets\frontend\css\fontawesome-all.min.css
-                                        --}}
                                         <li><a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
                                     @endif
 
@@ -107,11 +105,10 @@
                         <!-- Mobile Menu -->
                         <div class="col-12">
                             <div class="mobile_menu d-block d-md-none">
-                                @if($cart_count)
-                                    <a href="http://localhost/laravel1/public/paper/cart" style="position: absolute; top: inherit; right: 10px; color: white">
-                                        <i class="fa fa-shopping-cart text-black" style="margin-top: 5px"></i> {{$cart_count ?: ''}}
-                                    </a>
-                                @endif
+                                <a href="http://localhost/laravel1/public/paper/cart" style="position: absolute; top: inherit; right: 10px; color: white">
+                                    <i class="fa fa-shopping-cart text-black" style="margin-top: 5px"></i>
+                                    @if($cart_count){{$cart_count ?: ''}} @endif
+                                </a>
                             </div>
                         </div>
                     </div>

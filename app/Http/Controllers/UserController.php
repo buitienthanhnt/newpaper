@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Services\FirebaseService;
@@ -70,6 +71,7 @@ class UserController extends BaseController
                 $user = $this->user->where("email", "=", $email)->first();
                 if ($user) {
                     Auth::login($user);
+                    Cache::forget('top_menu_view');
                 }
             }
         }
@@ -91,6 +93,7 @@ class UserController extends BaseController
     {
         if (Auth::check()) {
             Auth::logout();
+            Cache::forget('top_menu_view');
             return redirect("/");
         }
         return redirect()->back(302);
