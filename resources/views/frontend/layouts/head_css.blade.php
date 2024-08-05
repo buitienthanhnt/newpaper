@@ -14,9 +14,9 @@
  <link rel="stylesheet" href={{ asset('assets/frontend/css/style.css') }}>
  <style>
  </style>
- @if ($custom_css)
+ @isset ($custom_css)
      <style>
         {{ $custom_css }}
      </style>
- @endif
+ @endisset
  @yield('css_after')
