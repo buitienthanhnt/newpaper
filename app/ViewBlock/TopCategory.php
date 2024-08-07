@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\View;
 class TopCategory implements Htmlable
 {
 	protected $template = 'frontend.templates.share.topCategory';
-	
+
 	function toHtml()
 	{
-		if (Cache::has('top_menu_view')) {
-			$top_menu =  Cache::get('top_menu_view');
+		if (Cache::has('top_menu_view') && $top_menu = Cache::get('top_menu_view')) {
 			return $top_menu;
 		} else {
 			$_topcategory = [];

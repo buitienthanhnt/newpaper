@@ -34,7 +34,7 @@ class UserController extends BaseController
     public function loginPage()
     {
         if (Auth::check()) {
-            return redirect(route("user_detail"));
+            return redirect(route("/"));
         } else {
             return view("frontend/templates/login");
         }
@@ -65,8 +65,10 @@ class UserController extends BaseController
 
     public function login()
     {
-        if ($email = $this->request->get("email") && $password = $this->request->get("password")) {
-            $check_login = Auth::attempt(["email" => $this->request->get("email"), "password" => $this->request->get("password")]);
+        $email = $this->request->get("email");
+        $password = $this->request->get("password");
+        if ($email && $password) {
+            $check_login = Auth::attempt(["email" => $email, "password" => $password]);
             if ($check_login) {
                 $user = $this->user->where("email", "=", $email)->first();
                 if ($user) {
