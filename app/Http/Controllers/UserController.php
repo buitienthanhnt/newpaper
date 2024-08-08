@@ -98,6 +98,7 @@ class UserController extends BaseController
             Cache::forget('top_menu_view');
             return redirect("/");
         }
+        Cache::forget('top_menu_view');
         return redirect()->back(302);
     }
 
