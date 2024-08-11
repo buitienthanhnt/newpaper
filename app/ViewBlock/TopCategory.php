@@ -22,16 +22,15 @@ class TopCategory implements Htmlable
                 $topcategory = ConfigCategory::where("path", ConfigCategory::TOP_CATEGORY)->firstOr(function () {
                     return null;
                 });
-
                 if ($topcategory) {
                     $_topcategory = Category::find(explode("&", $topcategory->value));
+                    Cache::put(ConfigCategory::TOP_CATEGORY, $_topcategory);
                 }
             } catch (\Exception $e) {
                 return '';
             }
         }
         $top_menu_view = View::make($this->template)->with('topcategory', $_topcategory)->render();
-        Cache::put(ConfigCategory::TOP_CATEGORY, $_topcategory);
         return $top_menu_view;
     }
 
