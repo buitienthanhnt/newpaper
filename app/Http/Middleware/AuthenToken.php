@@ -6,6 +6,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Thanhnt\Nan\Helper\TokenManager;
 
 class AuthenToken
@@ -49,8 +50,17 @@ class AuthenToken
                 ], 401);
             }
             $tokenData = (array) $tokenData['iss'];
+
             if (isset($tokenData['id'])) {
                 Auth::setUser($this->user->find($tokenData['id']) ?? null);
+            }
+
+            if (isset($tokenData['sid'])) {
+                if (!Session::isStarted()) {
+                    Session::start();
+                }
+                Session::setId($tokenData['sid']);
+                Session::save();
             }
         }
         return $next($request);
