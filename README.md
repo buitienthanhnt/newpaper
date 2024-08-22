@@ -92,3 +92,17 @@
 # trên windown thì thêm file: php_grpc.dll vào thư mục ext và thêm dòng: extension=php_grpc.dll vào file php.ini
 # =========================================================================
 
+# X-debug fix error not Step Debugger============================================================
+
+<!-- You just have to do these changes in php.ini file.
+For Xdebug v3.x.x : (Note that port number in this version has changed to 9003).
+
+[XDebug]
+xdebug.mode = debug
+xdebug.start_with_request = yes
+
+For Xdebug v2.x.x:
+
+[XDebug]
+xdebug.remote_enable = 1 xdebug.remote_autostart = 1
+xdebug.remote_port = 9000 -->
