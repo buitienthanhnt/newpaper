@@ -50,7 +50,6 @@ class AuthenToken
                 ], 401);
             }
             $tokenData = (array) $tokenData['iss'];
-
             if (isset($tokenData['id'])) {
                 Auth::setUser($this->user->find($tokenData['id']) ?? null);
             }

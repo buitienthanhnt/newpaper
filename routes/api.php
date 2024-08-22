@@ -89,6 +89,10 @@ Route::prefix('paper')->group(function () {
     Route::post("like/{comment_id?}", "PaperController@like")->name("api_paper_like");
 
     Route::get("firebase/{paper_id?}", "ManagerController@firebasePaperDetail")->name("api_paper_detail_firebase");
+
+    Route::post("addCart", "PaperController@addCartApi")->name("api_paper_add_cart");
+
+    Route::get("cart", "PaperController@getCartApi")->name("api_get_cart");
 });
 
 Route::post('login', "ManagerController@loginApi")->name('api_login');

@@ -19,6 +19,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Thanhnt\Nan\Helper\LogTha;
 
 class PaperController extends Controller
@@ -414,9 +415,19 @@ class PaperController extends Controller
         return redirect()->back()->with("success", "add success");
     }
 
+    function addCartApi(Request $request)
+    {
+        $cartData = $this->cartService->addCart($request->get('id'));
+        return $cartData;
+    }
+
     function cart(): View
     {
         return view('frontend.templates.cart.index', ['cart' => $this->cartService->getCart()]);
+    }
+
+    function getCartApi() {
+        return $this->cartService->getCart();
     }
 
     function clearCart()
@@ -430,7 +441,8 @@ class PaperController extends Controller
         return view("frontend.templates.cart.checkout", ['cart' => $this->cartService->getCart()]);
     }
 
-    function checkoutPro() {
+    function checkoutPro()
+    {
         $order_data = $this->cartService->submitOrder();
         return redirect()->back()->with($order_data['status'] ? "success" : 'error', $order_data['message']);
     }
