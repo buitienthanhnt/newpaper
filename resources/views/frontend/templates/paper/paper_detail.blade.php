@@ -2,6 +2,11 @@
 
 @section('meta_title')
     <meta name="title" content="{{$paper->title}}">
+    <meta property="og:image" content="{{ $paper->image_path }}" />
+    <meta name="twitter:image" content="{{ $paper->image_path }}">
+    <meta name="image" content="{{ $paper->image_path }}">  
+    <meta property="og:image:height" content="600">
+	<meta property="og:image:width" content="600">
 @endsection
 
 @section('page_header')
