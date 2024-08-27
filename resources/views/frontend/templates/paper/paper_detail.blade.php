@@ -1,7 +1,12 @@
 @extends('frontend.layouts.pagestruct')
 
 @section('meta_title')
-    <meta name="title" content="{{ $paper->title }}">
+    <meta name="title" content="{{$paper->title}}">
+    <meta property="og:image" content="{{ $paper->image_path }}" />
+    <meta name="twitter:image" content="{{ $paper->image_path }}">
+    <meta name="image" content="{{ $paper->image_path }}">
+    <meta property="og:image:height" content="600">
+	<meta property="og:image:width" content="600">
 @endsection
 
 @section('page_header')
@@ -12,9 +17,7 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-@section('page_title')
-    detail page
-@endsection
+@section('page_title') detail page @endsection
 
 @section('css_after')
     <link rel="stylesheet" href={{ asset('assets/frontend/css/paper/detail.css') }}>
@@ -159,7 +162,7 @@
                                                 <img src="{{ $item->value }}" style="width: 100%; max-height: 480px;"
                                                     alt="">
                                                 <div>
-                                                    
+
                                                 </div>
                                                 @isset($item->depend_value)
                                                     <div class="justify-content-center align-items-center d-flex mt-2">
