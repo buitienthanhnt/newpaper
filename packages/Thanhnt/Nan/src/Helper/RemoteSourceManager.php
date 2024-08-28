@@ -49,7 +49,8 @@ class RemoteSourceManager
         "www.24h.com.vn"    => "get_www_24h_com_vn",
         "s.cafef.vn"        => "get_s_cafef_vn",
         "nld.com.vn"        => "get_nld_com_vn",
-        "vanvn.vn"          => "get_vanvn_vn"
+        "vanvn.vn"          => "get_vanvn_vn",
+        "scov.gov.vn"       => "get_scov_gov_vn",
     ];
 
     protected $request;
@@ -350,6 +351,11 @@ class RemoteSourceManager
     // get_vanvn_vn
     function get_vanvn_vn($doc): array{
         return call_user_func(fn () => $this->getValueByClassName($doc, "entry-content"));
+    }
+
+    // get_scov_gov_vn
+    function get_scov_gov_vn($doc): array{
+        return call_user_func(fn () => $this->getValueByClassName($doc, "article-content"));
     }
 
     // ===================================================================//
