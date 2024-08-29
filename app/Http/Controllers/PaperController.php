@@ -426,7 +426,8 @@ class PaperController extends Controller
         return view('frontend.templates.cart.index', ['cart' => $this->cartService->getCart()]);
     }
 
-    function getCartApi() {
+    function getCartApi()
+    {
         return $this->cartService->getCart();
     }
 
@@ -434,6 +435,12 @@ class PaperController extends Controller
     {
         $this->cartService->clearCart();
         return redirect()->back()->with("success", "clear cart success");
+    }
+
+    function clearCartApi()
+    {
+        $this->cartService->clearCart();
+        return $this->getCartApi();
     }
 
     function checkout(): View
