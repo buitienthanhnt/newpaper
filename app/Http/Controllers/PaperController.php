@@ -371,12 +371,22 @@ class PaperController extends Controller
     {
         $params = $request->toArray();
         $paperSource = ViewSource::where('type', '=', ViewSource::PAPER_TYPE)->where('source_id', '=', $paper_id)->first();
-        if ($params['type'] === 'like') {
-            $paperSource->like = $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1;
-        } elseif ($params['type'] === 'heart') {
-            $paperSource->heart = $params['action'] === 'add' ? $paperSource->heart + 1 : $paperSource->heart - 1;
+        if (empty($paperSource)) {
+            ViewSource::firstOrCreate([
+                "type" => $params['paper'], 
+                "source_id" => $paper_id, 
+                "value" => 1, 
+                'heart' => $params['type'] === 'heart' ? 1 : 0,
+                'like' => $params['type'] === 'like' ? 1 : 0
+            ]);
+        }else {
+            if ($params['type'] === 'like') {
+                $paperSource->like = $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1;
+            } elseif ($params['type'] === 'heart') {
+                $paperSource->heart = $params['action'] === 'add' ? $paperSource->heart + 1 : $paperSource->heart - 1;
+            }
+            $paperSource->save();
         }
-        $paperSource->save();
         return response('success');
     }
 
