@@ -153,8 +153,7 @@ class CartService implements CartServiceInterface
         return $this->getCart();
     }
 
-    public
-    function session_begin(): void
+    public function session_begin(): void
     {
         if (!Session::isStarted()) {
             Session::start();
