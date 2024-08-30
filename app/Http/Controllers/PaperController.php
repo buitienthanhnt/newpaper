@@ -460,6 +460,11 @@ class PaperController extends Controller
         return redirect()->back()->with('success', "removed the item");
     }
 
+    function removeItemApi($id) {
+        $this->cartService->xoaItem($id);   
+        return $this->cartService->getCart();
+    }
+
     function byType($type, Request $request): View
     {
         $limit = $request->get('limit', 4);

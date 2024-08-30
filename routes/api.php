@@ -95,6 +95,8 @@ Route::prefix('paper')->group(function () {
     Route::get("cart", "PaperController@getCartApi")->name("api_get_cart");
 
     Route::delete("clearCart", "PaperController@clearCartApi")->name("api_clear_cart");
+
+    Route::delete('removeItem/{id}', "PaperController@removeItemApi")->name("api_remove_item");
 });
 
 Route::post('login', "ManagerController@loginApi")->name('api_login');

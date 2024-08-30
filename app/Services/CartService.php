@@ -45,8 +45,7 @@ class CartService implements CartServiceInterface
         $paper['qty'] = $this->request->get('qty');
         if (is_array($current_cart)) {
             array_push($current_cart, $paper);
-            Session::put(self::KEY, $current_cart);
-            Session::save();
+            $this->saveCart($current_cart);
         } else {
             Session::forget(self::KEY);
             Session::save();
@@ -164,7 +163,7 @@ class CartService implements CartServiceInterface
 
     function saveCart($cart)
     {
-        Session::put(self::KEY, $cart);
+        Session::put(self::KEY, [...$cart]);
         Session::save();
     }
 }
