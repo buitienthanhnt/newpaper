@@ -115,10 +115,7 @@
                     <button type="button" class="btn form-control btn-primary" data-toggle="modal" id="addSlider">
                         Add slider item
                     </button>
-
                     <textarea id="sliderDataConten" style="display: none" name="slider_data"></textarea>
-
-
                     <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog"
                         aria-labelledby="sliderModal" aria-hidden="true">
                         <div class="modal-dialog modal-lg" style="max-width: 800px" role="document">

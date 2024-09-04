@@ -104,6 +104,8 @@ class PaperController extends Controller
     public function insertPaper()
     {
         $request = $this->request;
+        dd($request);
+        
         $category_option = $request->__get("category_option");
         try {
             $paper = $this->paper;
