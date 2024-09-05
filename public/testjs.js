@@ -1,7 +1,10 @@
-function formatDate(date, type = 'en-US') {
-	return new Date(date).toLocaleDateString(type, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'});
-}
+// function formatDate(date, type = 'en-US') {
+// 	return new Date(date).toLocaleDateString(type, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'});
+// }
 
-const params = process.argv;
-// console.log(params);
-console.log(formatDate(params[2], params[3]));
+// const params = process.argv;
+// // console.log(params);
+// console.log(formatDate(params[2], params[3]));
+
+let a = '(m20)';
+console.log(a.replace(['(', ')'], ['', '']));

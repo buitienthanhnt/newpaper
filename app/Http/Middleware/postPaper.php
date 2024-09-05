@@ -16,6 +16,8 @@ class postPaper
      */
     public function handle(Request $request, Closure $next)
     {
+        echo($request->toArray()['conten']);
+        dd($request->toArray());
         if (!$request->get("page_title")) {
             return redirect()->back()->with("error", "page title is require!");
         }
