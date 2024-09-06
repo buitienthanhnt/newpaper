@@ -85,6 +85,7 @@ class PaperController extends Controller
             "category_option" => $this->category->category_tree_option(),
             "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
             "filemanager_url_base" => url("adminhtml/file/manager"),
+            "time_line_option" => $this->category->time_line_option(),
             "writers" => $writers
         ]);
     }

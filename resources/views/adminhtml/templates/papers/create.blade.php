@@ -49,8 +49,6 @@
     <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
     <div class="col-12 grid-margin">
         <div>
-            <label for='hy'>Move stuff between these two containers. Note how the stuff gets inserted near the mouse
-                pointer? Great stuff.</label>
             <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
                 @csrf
                 <div class="row">
@@ -65,12 +63,11 @@
 
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="active" class="col-sm-1">Active:</label>
+                            <label for="active" class="col-sm-3">Active:</label>
                             <div class="col-sm-1">
                                 <input id="active" class="form-check-input" type="checkbox" name="active"
                                     {{ 'checked' }}>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -86,7 +83,7 @@
                     </div>
 
                     <div class="col-md-6 row">
-                        <label for="show" class="col-sm-1">show:</label>
+                        <label for="show" class="col-sm-3">show:</label>
                         <div class="col-sm-1">
                             <input id="show" class="form-check-input" type="checkbox" name="show"
                                 {{ 'checked' }}>
@@ -103,12 +100,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="auto_hide">auto hide: </label>
+                    <div class="col-md-6 row">
+                        <label for="auto_hide" class="col-sm-3">auto hide: </label>
+                        <div class="col-sm-1">
                             <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide"
                                 {{ 'checked' }}>
                         </div>
+
                     </div>
                 </div>
 
@@ -146,8 +144,69 @@
                 </div>
                 <div class='wrapper col-md-12'>
                     <div id='left-defaults' class='container' style="width: 30%">
-                        <div style="height: 150px" data-type="p-carousel" ondragover="">
+                        <div data-type="p-carousel" ondragover="">
                             <p>paper carousel</p>
+                            <div class="data-content" style="display: none">
+                                <button type="button" class="btn form-control btn-primary" data-toggle="modal"
+                                    id="addSlider">
+                                    Add slider item
+                                </button>
+                                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                                </div>
+                                <textarea id="sliderDataConten" style="display: none" name="slider_data"></textarea>
+                                <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="sliderModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" style="max-width: 800px" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Input item content</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="captions_label">captions label</label>
+                                                    <input id="captions_label" class="form-control" type="text"
+                                                        name="captions_label">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="captions_content">captions content</label>
+                                                    <textarea id="captions_content" class="form-control" style="height: auto" name="captions_content" rows="6"></textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-3 col-form-label">image:</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="input-group">
+                                                                <span class="input-group-btn">
+                                                                    <a id="slider_image" data-input="slider_images"
+                                                                        data-preview="holder" class="btn btn-primary">
+                                                                        <i class="fa fa-picture-o"></i> Choose
+                                                                    </a>
+                                                                </span>
+                                                                <input id="slider_images" class="form-control"
+                                                                    type="text" name="slider_images">
+                                                            </div>
+                                                            <img id="holder" style="margin-top:15px;max-height:100px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                    id="closeSliderImages">Close</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    id="saveCarouiselItem">Save
+                                                    changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div style="" data-type="p-html">
@@ -159,22 +218,40 @@
                         <div data-type="p-timeline">
                             <p>paper timeline</p>
                             <div class="data-content form-group" style="display: none">
-                                <input name="time_line_value" id="timelineInput" />
-                                <script type="text/javascript">
-                                    // https://gijgo.com/datetimepicker
-                                    $("#timelineInput").datetimepicker({
-                                        datepicker: {
-                                            showOtherMonths: true,
-                                            calendarWeeks: true,
-                                            todayHighlight: true
-                                        },
-                                        footer: true,
-                                        modal: true,
-                                        header: true,
-                                        value: '',
-                                        format: 'yyyy-mm-dd HH:MM:ss',
-                                    });
-                                </script>
+                                <div class="col-md-12 r">
+                                    <label for="time_line_type" class="col-sm-2 col-form-label">TimeLine:</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-group">
+                                            <select id="time_line_type" class="form-control" name="time_line_type"
+                                                multiple="multiple">
+                                                {!! $time_line_option !!}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="align-content: center">
+                                    <div class="form-group row" style="margin-bottom: 0px">
+                                        <label for="url-alias" class="col-sm-2">Timeline:</label>
+                                        <div class="cs-form col-sm-8">
+                                            <input name="time_line_value" id="timelineInput" />
+                                            <script type="text/javascript">
+                                                // https://gijgo.com/datetimepicker
+                                                $("#timelineInput").datetimepicker({
+                                                    datepicker: {
+                                                        showOtherMonths: true,
+                                                        calendarWeeks: true,
+                                                        todayHighlight: true
+                                                    },
+                                                    footer: true,
+                                                    modal: true,
+                                                    header: true,
+                                                    value: '',
+                                                    format: 'yyyy-mm-dd HH:MM:ss',
+                                                });
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div data-type="p-price">
@@ -199,20 +276,19 @@
                                         <i class="fa fa-picture-o"></i> Choose
                                     </a>
                                 </span>
-                                <input id="thumbnail2" class="form-control" type="text" name="image_path2">
+                                <input id="thumbnail2" class="form-control" type="text" name="list_images[]" multiple>
                             </div>
                             <img id="holder" style="margin-top:15px;max-height:100px;">
-
                         </div>
                         <div style="height: 150px" data-type="p-video">
                             <p>paper video</p>
                         </div>
                     </div>
-                    <div id='right-defaults' class='container col-md-7' style="background-color: rgb(115, 150, 136)">
+                    <div id='right-defaults' class='container col-md-7'>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
+                <div class="row justify-content-center mt-2">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <button type="submit" class="btn btn-info btn-lg"
                                 style="width: -webkit-fill-available;">save</button>
@@ -246,7 +322,9 @@
                         return false; // don't prevent any drags from initiating by default
                     },
                     direction: 'vertical', // Y axis is considered when determining where an element would be dropped
-                    copy: false, // elements are moved by default, not copied
+                    copy: function (el, source) { 
+                        return $(el).attr('data-type') === 'p-picture' && $(source).attr('id') === 'left-defaults';
+                    }, // elements are moved by default, not copied
                     copySortSource: true, // elements in copy-source containers can be reordered
                     revertOnSpill: false, // spilling will put the element back where it was dragged from, if this is true
                     removeOnSpill: false, // spilling will `.remove` the element, if this is true
@@ -257,6 +335,14 @@
                 }
             ).on('dragend', function(el) {
                 console.log('dragend', $($(el).parent()[0]).attr('id'));
+                if ($(el).attr('data-type') === 'p-picture' && $($(el).parent()[0]).attr('id') === 'left-defaults') {
+                    console.log('======>', $("div[data-type=p-picture]"));
+                    if ($("div[data-type=p-picture]").length > 1) {
+                        $(el).remove();
+                    } 
+                    return;
+                }
+
                 if ($($(el).parent()[0]).attr('id') === 'left-defaults') {
                     $($(el).children()[0]).show();
                     $($(el).children()[1]).hide();
@@ -302,9 +388,15 @@
                                 }
                             })
                             break;
+                        case 'p-picture':
+                            console.log('---->', $($(this).children()[1]));
+                            $($(this).children()[0]).hide();
+                            $($(this).children()[1]).show();
+                            const
+                            $($($(this).children()[1]).children()[0]).children()[0].attr("id", )
                         case 'p-price':
                         case 'p-timeline':
-                        case 'p-picture':
+                        case 'p-carousel':
                             $($(this).children()[0]).hide();
                             $($(this).children()[1]).show();
                             break;
@@ -369,6 +461,61 @@
 @endsection
 
 @section('after_js')
+    <script>
+        var slider = [];
+        function renderCarousel(data) {
+            let beginIndicator = '<ol class="carousel-indicators">';
+            let content = ' <div class="carousel-inner">';
+            let change =
+                '<a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">' +
+                '<span class="carousel-control-prev-icon" aria-hidden="true"></span>' +
+                '<span class="sr-only">Previous</span>' +
+                '</a>' +
+                '<a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">' +
+                '<span class="carousel-control-next-icon" aria-hidden="true"></span>' +
+                '<span class="sr-only">Next</span>' +
+                '</a>';
+            for (let i = 0; i < slider.length; i++) {
+                beginIndicator += '<li data-target="#carouselExampleCaptions" data-slide-to="' + i + '" class="' + (
+                    i == 0 ? 'active' : ' ') + '"></li>';
+
+                content += '<div class="carousel-item ' + (i == 0 ? 'active' : '') + '">' +
+                    '<img class="d-block w-100 sliderImages" src="' + (slider[i].image_path) + '" >' +
+                    '<div class="carousel-caption d-none d-md-block">' +
+                    '<h5>' + (slider[i].title) + '</h5>' +
+                    '<p>' + (slider[i].label) + '</p>' +
+                    '</div>' +
+                    '</div>';
+            }
+            beginIndicator += '</ol>';
+            content += ' </div>';
+            return beginIndicator + content + change;
+        }
+        $(document).ready(function() {
+            $("#carouselExampleCaptions").html(renderCarousel(slider));
+
+            $("#addSlider").click(function() {
+                $("#sliderModal").modal('show');
+            });
+            $("#closeSliderImages").click(function() {
+                $("#sliderModal").modal('hide');
+            })
+
+            $("#saveCarouiselItem").click(function() {
+                let title = $("#captions_label").val();
+                let content = $("#captions_content").val();
+                let image_path = $("#slider_images").val();
+                slider.push({
+                    title: title,
+                    label: content,
+                    image_path: image_path
+                });
+                $("#carouselExampleCaptions").html(renderCarousel(slider));
+                $("#sliderDataConten").val(JSON.stringify(slider));
+                $("#sliderModal").modal('hide');
+            });
+        })
+    </script>
     {{-- <script type="text/javascript">
         encodeURI('\uD800\uDFFF');
         tinymce.init({
