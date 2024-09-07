@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Paper;
+use App\Models\PaperContent;
 use App\Models\PaperTimeLine;
 use App\Models\RemoteSourceHistory;
 use App\Models\ViewSource;
@@ -49,7 +50,8 @@ class PaperController extends Controller
         HelperFunction $helperFunction,
         LogTha $logTha,
         CartService $cartService
-    ) {
+    )
+    {
         $this->request = $request;
         $this->paper = $paper;
         $this->logTha = $logTha;
@@ -102,11 +104,79 @@ class PaperController extends Controller
         return 'content';
     }
 
+    protected function convertRequestData(int $paper_id): array
+    {
+        $datas = $this->request->toArray();
+        $returnValues = [];
+        foreach ($datas as $key => $value) {
+            if (empty($value)){
+                continue;
+            }
+            if (strpos($key, 'images_imagex') !== false) {
+                $returnValues[] = [
+                    "type" => "image",
+//                    "key" => $key,
+                    "value" => $value,
+                    "paper_id" => $paper_id,
+                    "depend_value" => null,
+                ];
+                continue;
+            }
+
+            switch ($key) {
+                case 'price':
+                    $returnValues[] = [
+                        "type" => "price",
+//                        "key" => $key,
+                        "value" => $value,
+                        "paper_id" => $paper_id,
+                        "depend_value" => null,
+                    ];
+                    break;
+                case 'slider_data':
+                    $returnValues[] = [
+                        "type" => "slider_data",
+//                        "key" => $key,
+                        "value" => $value,
+                        "paper_id" => $paper_id,
+                        "depend_value" => null,
+                    ];
+                    break;
+                case 'conten':
+                    $returnValues[] = [
+                        "type" => "conten",
+//                        "key" => $key,
+                        "value" => $value,
+                        "paper_id" => $paper_id,
+                        "depend_value" => null,
+                    ];
+                    break;
+                case 'time_line_type':
+                    break;
+                case 'time_line_value':
+                    $returnValues[] = [
+                        "type" => "timeline",
+//                        "key" => $key,
+                        "depend_value" => $datas['time_line_type'],
+                        "value" => $value,
+                        "paper_id" => $paper_id
+                    ];
+                default:
+            }
+        }
+        return $returnValues;
+    }
+
+    protected function insertPaperConten($new_id){
+        $contents = $this->convertRequestData($new_id);
+//        dd($contents);
+        PaperContent::insert($contents);
+    }
+
     public function insertPaper()
     {
         $request = $this->request;
-        dd($request);
-        
+
         $category_option = $request->__get("category_option");
         try {
             $paper = $this->paper;
@@ -114,7 +184,7 @@ class PaperController extends Controller
                 "title" => $request->__get("page_title"),
                 "url_alias" => $request->__get("alias") ? str_replace(" ", "-", $request->__get("alias")) : str_replace(" ", "-", $request->get("page_title")),
                 "short_conten" => $request->__get("short_conten"),
-                "conten" => $request->__get("conten"),
+                "conten" => null,
                 "active" => $request->__get("active") ? true : false,
                 "show" => $request->get("show", false) === 'on',
                 "auto_hide" => $request->__get("auto_hide") === 'on',
@@ -126,40 +196,20 @@ class PaperController extends Controller
             ]);
             $paper->save();
             if ($new_id = $paper->id) {
-
                 /**
-                 * insert paper list image of carousel.
+                 * insert list content of paper.
                  */
-                if ($request->get('slider_data') && $listImages = json_decode($request->get('slider_data'))) {
-                    DB::table('paper_carousel')->insert(array_map(function ($item) use ($new_id) {
-                        return [
-                            "title" => $item->title,
-                            "description" => $item->label,
-                            "value" => $item->image_path,
-                            "paper_id" => $new_id
-                        ];
-                    }, $listImages));
-                }
+                $this->insertPaperConten((int) $new_id);
+
                 /**
                  * save in DB page category
                  */
                 $this->insert_page_category($new_id, $category_option);
 
                 /**
-                 * insert for paper to timeline
-                 */
-                if ($time_line_type = $this->request->get('time_line_type') && $time_line_value = $this->request->get('time_line_value')) {
-                    $this->insert_paper_timeline($new_id, $time_line_type, $time_line_value);
-                }
-                /**
                  * save in DB page tags
                  */
                 $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAGE_TAG);
-
-                /**
-                 * save price for paper
-                 */
-                $this->insert_paper_price($request->__get("price"), $new_id);
 
                 /**
                  * save for history
@@ -376,13 +426,13 @@ class PaperController extends Controller
         $paperSource = ViewSource::where('type', '=', ViewSource::PAPER_TYPE)->where('source_id', '=', $paper_id)->first();
         if (empty($paperSource)) {
             ViewSource::firstOrCreate([
-                "type" => $params['paper'], 
-                "source_id" => $paper_id, 
-                "value" => 1, 
+                "type" => $params['paper'],
+                "source_id" => $paper_id,
+                "value" => 1,
                 'heart' => $params['type'] === 'heart' ? 1 : 0,
                 'like' => $params['type'] === 'like' ? 1 : 0
             ]);
-        }else {
+        } else {
             if ($params['type'] === 'like') {
                 $paperSource->like = $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1;
             } elseif ($params['type'] === 'heart') {
@@ -473,8 +523,9 @@ class PaperController extends Controller
         return redirect()->back()->with('success', "removed the item");
     }
 
-    function removeItemApi($id) {
-        $this->cartService->xoaItem($id);   
+    function removeItemApi($id)
+    {
+        $this->cartService->xoaItem($id);
         return $this->cartService->getCart();
     }
 
