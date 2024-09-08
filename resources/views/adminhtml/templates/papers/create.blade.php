@@ -28,12 +28,10 @@
             color: color(white);
             border: 0;
             border-radius: 3px;
-            padding: 6px;
+            padding: 6px !important;
             font-size: larger !important;
             font-family: inherit;
             line-height: 1;
-        }
-
         }
 
         .sliderImages {
@@ -50,286 +48,289 @@
 @section('body_main_conten')
     <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
     <div class="col-12 grid-margin">
-        <div>
-            <form class="form-sample" method="POST" enctype="multipart/form-data"
-                  action={{ route('admin_paper_save') }}>
-                @csrf
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Title:</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" name="page_title" required/>
-                            </div>
-                        </div>
-                    </div>
+        <h4 class="card-title">add new source</h4>
+        <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
+            @csrf
+            @if ($message = session('success'))
+                <?php
+                alert()->success('server message', $message);
+                session()->forget("success");
+                ?>
+            @elseif ($error = session('error'))
+                <?php alert()->warning('server mesage', $error); ?>
+            @endif
 
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label for="active" class="col-sm-3">Active:</label>
-                            <div class="col-sm-1">
-                                <input id="active" class="form-check-input" type="checkbox" name="active"
-                                    {{ 'checked' }}>
-                            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Title:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="page_title" required/>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label for="url-alias" class="col-sm-2">url alias:</label>
-                            <div class="col-sm-8">
-                                <input id="url-alias" class="form-control" type="text" name="alias">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 row">
-                        <label for="show" class="col-sm-3">show:</label>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="active" class="col-sm-3">Active:</label>
                         <div class="col-sm-1">
-                            <input id="show" class="form-check-input" type="checkbox" name="show"
-                                {{ 'checked' }}>
+                            <input id="active" class="form-check-input" type="checkbox" name="active"
+                                   checked>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="url-alias" class="col-sm-2">url alias:</label>
+                        <div class="col-sm-8">
+                            <input id="url-alias" class="form-control" type="text" name="alias">
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="short_conten" class="col-sm-2">short conten:</label>
-                        <div class="col-sm-10">
-                            <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                                      style="padding: 10px; height: 100%;"></textarea>
-                        </div>
+                <div class="col-md-6 row">
+                    <label for="show" class="col-sm-3">show:</label>
+                    <div class="col-sm-1">
+                        <input id="show" class="form-check-input" type="checkbox" name="show"
+                               checked>
                     </div>
+                </div>
+            </div>
 
-                    <div class="col-md-6 row">
-                        <label for="auto_hide" class="col-sm-3">auto hide: </label>
-                        <div class="col-sm-1">
-                            <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide"
-                                {{ 'checked' }}>
-                        </div>
-
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="short_conten">short conten:</label>
+                    <div class="col-sm-10">
+                        <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
+                                  style="padding: 10px; height: 100%;"></textarea>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="category" class="col-sm-2">category:</label>
-                        <div class="col-sm-10">
-                            <div class="form-group">
-                                <select id="category_option" class="form-control" name="category_option[]"
-                                        multiple="multiple">
-                                    {!! $category_option !!}
-                                </select>
+                <div class="col-md-6 row">
+                    <label for="auto_hide" class="col-sm-3">auto hide: </label>
+                    <div class="col-sm-1">
+                        <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide"
+                               checked>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="category" class="col-sm-2">category:</label>
+                    <div class="col-sm-10">
+                        <div class="form-group">
+                            <select id="category_option" class="form-control" name="category_option[]"
+                                    multiple="multiple">
+                                {!! $category_option !!}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label class="col-sm-3">image:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a id="lfm" data-input="thumbnail" data-preview="holder"
+                                   class="btn btn-primary">
+                                    <i class="fa fa-picture-o"></i> Choose
+                                </a>
+                            </span>
+                            <input id="thumbnail" class="form-control" type="text" name="image_path"
+                                   value="">
+                        </div>
+                        <img id="holder" style="margin-top:15px;max-height:100px;">
+                    </div>
+                </div>
+            </div>
+            <div class='wrapper col-md-12'>
+                <div id='left-defaults' class='container' style="width: 30%">
+                    <div data-type="p-carousel" ondragover="">
+                        <p>paper carousel</p>
+                        <div class="data-content" style="display: none">
+                            <button type="button" class="btn form-control btn-primary" data-toggle="modal"
+                                    id="addSlider">
+                                Add slider item
+                            </button>
+                            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">image:</label>
-                            <div class="col-sm-9">
-                                <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <a id="lfm" data-input="thumbnail" data-preview="holder"
-                                           class="btn btn-primary">
-                                            <i class="fa fa-picture-o"></i> Choose
-                                        </a>
-                                    </span>
-                                    <input id="thumbnail" class="form-control" type="text" name="image_path"
-                                           value="">
-                                </div>
-                                <img id="holder" style="margin-top:15px;max-height:100px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class='wrapper col-md-12'>
-                    <div id='left-defaults' class='container' style="width: 30%">
-                        <div data-type="p-carousel" ondragover="">
-                            <p>paper carousel</p>
-                            <div class="data-content" style="display: none">
-                                <button type="button" class="btn form-control btn-primary" data-toggle="modal"
-                                        id="addSlider">
-                                    Add slider item
-                                </button>
-                                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                                </div>
-                                <textarea id="sliderDataConten" style="display: none" name="slider_data"></textarea>
-                                <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog"
-                                     aria-labelledby="sliderModal" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" style="max-width: 800px" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Input item content</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                            <textarea id="sliderDataConten" style="display: none" name="slider_data"></textarea>
+                            <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="sliderModal" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" style="max-width: 800px" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Input item content</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="captions_label">captions label</label>
+                                                <input id="captions_label" class="form-control" type="text">
                                             </div>
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="captions_label">captions label</label>
-                                                    <input id="captions_label" class="form-control" type="text"
-                                                          >
-                                                </div>
 
-                                                <div class="form-group">
-                                                    <label for="captions_content">captions content</label>
-                                                    <textarea id="captions_content" class="form-control"
-                                                              style="height: auto" name="captions_content"
-                                                              rows="6"></textarea>
-                                                </div>
+                                            <div class="form-group">
+                                                <label for="captions_content">captions content</label>
+                                                <textarea id="captions_content" class="form-control"
+                                                          style="height: auto" name="captions_content"
+                                                          rows="6"></textarea>
+                                            </div>
 
-                                                <div class="form-group">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-3 col-form-label">image:</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="input-group">
-                                                                <span class="input-group-btn">
-                                                                    <a id="slider_image" data-input="slider_images"
-                                                                       data-preview="holder" class="btn btn-primary">
-                                                                        <i class="fa fa-picture-o"></i> Choose
-                                                                    </a>
-                                                                </span>
-                                                                <input id="slider_images" class="form-control"
-                                                                       type="text">
-                                                            </div>
-                                                            <img id="holder" style="margin-top:15px;max-height:100px;">
+                                            <div class="form-group">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-3 col-form-label">image:</label>
+                                                    <div class="col-sm-9">
+                                                        <div class="input-group">
+                                                            <span class="input-group-btn">
+                                                                <a id="slider_image" data-input="slider_images"
+                                                                   data-preview="holder" class="btn btn-primary">
+                                                                    <i class="fa fa-picture-o"></i> Choose
+                                                                </a>
+                                                            </span>
+                                                            <input id="slider_images" class="form-control"
+                                                                   type="text">
                                                         </div>
+                                                        <img id="holder" style="margin-top:15px;max-height:100px;">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                        id="closeSliderImages">Close
-                                                </button>
-                                                <button type="button" class="btn btn-primary"
-                                                        id="saveCarouiselItem">Save
-                                                    changes
-                                                </button>
-                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                    id="closeSliderImages">Close
+                                            </button>
+                                            <button type="button" class="btn btn-primary"
+                                                    id="saveCarouiselItem">Save
+                                                changes
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div style="" data-type="p-html">
-                            <p>paper html content</p>
-                            <div class="data-content">
-                                <textarea id="conten" name="conten" class="form-control"
-                                          style="height: 720px; display: none"></textarea>
-                            </div>
+                    <div style="" data-type="p-html">
+                        <p>paper html content</p>
+                        <div class="data-content">
+                            <textarea id="conten" name="conten" class="form-control"
+                                      style="height: 720px; display: none"></textarea>
                         </div>
-                        <div data-type="p-timeline">
-                            <p>paper timeline</p>
-                            <div class="data-content form-group" style="display: none">
-                                <div class="col-md-12 r">
-                                    <label for="time_line_type" class="col-sm-2 col-form-label">TimeLine:</label>
-                                    <div class="col-sm-10">
-                                        <div class="form-group">
-                                            <select id="time_line_type" class="form-control" name="time_line_type"
-                                                    multiple="multiple">
-                                                {!! $time_line_option !!}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12" style="align-content: center">
-                                    <div class="form-group row" style="margin-bottom: 0px">
-                                        <label for="url-alias" class="col-sm-2">Timeline:</label>
-                                        <div class="cs-form col-sm-8">
-                                            <input name="time_line_value" id="timelineInput"/>
-                                            <script type="text/javascript">
-                                                // https://gijgo.com/datetimepicker
-                                                $("#timelineInput").datetimepicker({
-                                                    datepicker: {
-                                                        showOtherMonths: true,
-                                                        calendarWeeks: true,
-                                                        todayHighlight: true
-                                                    },
-                                                    footer: true,
-                                                    modal: true,
-                                                    header: true,
-                                                    value: '',
-                                                    format: 'yyyy-mm-dd HH:MM:ss',
-                                                });
-                                            </script>
-                                        </div>
+                    </div>
+                    <div data-type="p-timeline">
+                        <p>paper timeline</p>
+                        <div class="data-content form-group" style="display: none">
+                            <div class="col-md-12 r">
+                                <label for="time_line_type" class="col-sm-2 col-form-label">TimeLine:</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <select id="time_line_type" class="form-control" name="time_line_type"
+                                                multiple="multiple">
+                                            {!! $time_line_option !!}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div data-type="p-price">
-                            <p>paper price</p>
-                            <div class="data-content form-group row" style="display: none">
-                                <label for="price" class="col-sm-2">Price:</label>
-                                <div class="col-sm-8">
-                                    <input type="number" name="price" id="price" placeholder="nghìn vnđ"
-                                           class="form-control" min="0"
-                                           value="@isset($price)
-                                           {{ $price }}
-                                           @endisset">
+                            <div class="col-md-12" style="align-content: center">
+                                <div class="form-group row" style="margin-bottom: 0px">
+                                    <label for="url-alias" class="col-sm-2">Timeline:</label>
+                                    <div class="cs-form col-sm-8">
+                                        <input name="time_line_value" id="timelineInput"/>
+                                        <script type="text/javascript">
+                                            // https://gijgo.com/datetimepicker
+                                            $("#timelineInput").datetimepicker({
+                                                datepicker: {
+                                                    showOtherMonths: true,
+                                                    calendarWeeks: true,
+                                                    todayHighlight: true
+                                                },
+                                                footer: true,
+                                                modal: true,
+                                                header: true,
+                                                value: '',
+                                                format: 'yyyy-mm-dd HH:MM:ss',
+                                            });
+                                        </script>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div data-type="p-picture">
-                            <p>paper picture</p>
-                            <div class="data-content input-group" style="display: none">
-                                <span class="input-group-btn">
-                                    <a
-                                       class="btn btn-primary">
-                                        <i class="fa fa-picture-o"></i> Choose
-                                    </a>
-                                </span>
-                                <input class="form-control" type="text" multiple>
+                    </div>
+                    <div data-type="p-price">
+                        <p>paper price</p>
+                        <div class="data-content form-group row" style="display: none">
+                            <label for="price" class="col-sm-2">Price:</label>
+                            <div class="col-sm-8">
+                                <input type="number" name="price" id="price" placeholder="nghìn vnđ"
+                                       class="form-control" min="0"
+                                       value="@isset($price)
+                                       {{ $price }}
+                                       @endisset">
                             </div>
-                            <img id="holder" style="margin-top:15px;max-height:100px;">
-                        </div>
-                        <div style="height: 150px" data-type="p-video">
-                            <p>paper video</p>
                         </div>
                     </div>
-                    <div id='right-defaults' class='container col-md-7'>
+                    <div data-type="p-picture">
+                        <p>paper picture</p>
+                        <div class="data-content input-group" style="display: none">
+                            <span class="input-group-btn">
+                                <a
+                                    class="btn btn-primary">
+                                    <i class="fa fa-picture-o"></i> Choose
+                                </a>
+                            </span>
+                            <input class="form-control" type="text" multiple>
+                        </div>
+                        <img id="holder" style="margin-top:15px;max-height:100px;">
+                    </div>
+                    <div style="height: 150px" data-type="p-video">
+                        <p>paper video</p>
                     </div>
                 </div>
+                <div id='right-defaults' class='container col-md-7'>
+                </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="paper-tag">tag for links</label>
-                            <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        {{-- <input id="paper_writer" class="form-control" type="text" name="writer"> --}}
-                        <div class="form-group">
-                            <label for="paper_writer">writer:</label>
-                            <select class="form-control" name="writer" id="paper_writer">
-                                @if ($writers)
-                                    @foreach ($writers as $writer)
-                                        <option value="{{ $writer->id }}">{{ $writer->name }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="paper-tag">tag for links</label>
+                        <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
+                        </select>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="paper_writer">writer:</label>
+                        <select class="form-control" name="writer" id="paper_writer">
+                            @if ($writers)
+                                @foreach ($writers as $writer)
+                                    <option value="{{ $writer->id }}">{{ $writer->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-                <div class="row justify-content-center mt-2">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-info btn-lg"
-                                    style="width: -webkit-fill-available;">save
-                            </button>
-                        </div>
+            <div class="row justify-content-center mt-2">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info btn-lg"
+                                style="width: -webkit-fill-available;">save
+                        </button>
                     </div>
                 </div>
-            </form>
-            <pre style="background-color: rgb(97, 53, 148)">
+            </div>
+        </form>
+        <pre style="background-color: rgb(97, 53, 148)">
                 <code>
                     dragula([
                         document.getElementById('left-defaults'),
@@ -337,9 +338,7 @@
                     ]);
                 </code>
             </pre>
-        </div>
         <script>
-
             function imgOnclick(type = 'file', options = {
                 prefix: url_base,
             }) {
@@ -401,7 +400,6 @@
             ).on('dragend', function (el) {
                 console.log('dragend', $($(el).parent()[0]).attr('id'));
                 if ($(el).attr('data-type') === 'p-picture' && $($(el).parent()[0]).attr('id') === 'left-defaults') {
-                    console.log('======>', $("div[data-type=p-picture]"));
                     if ($("div[data-type=p-picture]").length > 1) {
                         $(el).remove();
                     }
@@ -415,7 +413,7 @@
                 }
 
                 $(el).click(function (params) {
-                    // console.log(222345, params, $(this).attr('data-type'));
+                    // console.log(params, $(this).attr('data-type'));
                     let p_type = $(this).attr('data-type');
                     switch (p_type) {
                         case 'p-html':
@@ -454,7 +452,6 @@
                             })
                             break;
                         case 'p-picture':
-                            // console.log('---->', $($(this).children()[1]));
                             $($(this).children()[0]).hide();
                             $($(this).children()[1]).show();
                             const pictute_thum = 'imagex_' + $("#right-defaults > div[data-type=p-picture]").length;
@@ -462,9 +459,6 @@
                             $($($($(this).children()[1]).children()[0]).children()[0]).attr("id", id_thum).attr("data-input", pictute_thum);
                             $($($(this).children()[1]).children()[1]).attr("id", pictute_thum).attr("name", "images_" + pictute_thum);
                             $($($($(this).children()[1]).children()[0]).children()[0]).on('click', imgOnclick);
-                            // imgOnclick('file', {
-                            //     prefix: url_base,
-                            // }, $($($($(this).children()[1]).children()[0]).children()[0]));
                             $(this).off('click');
                         case 'p-price':
                         case 'p-timeline':
@@ -518,13 +512,6 @@
             tags: true,
             tokenSeparators: [',', ' '],
             placeholder: 'danh mục bài viết'
-        });
-
-        // for conten of paper process
-        $(document).ready(function () {
-            // $("#right-defaults").children().click(function (params) {
-            //     console.log(123123, params);
-            // })
         });
     </script>
 @endsection
@@ -588,32 +575,32 @@
         })
     </script>
     {{-- <script type="text/javascript">
-        encodeURI('\uD800\uDFFF');
-        tinymce.init({
-            convert_urls: false,
-            selector: "textarea#conten",
-            plugins: ["image", "table", "code", "codesample", "addcomment", "showcomments", "media"],
-            toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
-            toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
-            file_picker_callback: function(callback, value, meta) {
-                let x = window.innerWidth || document.documentElement.clientWidth || document
-                    .getElementsByTagName('body')[0].clientWidth;
-                let y = window.innerHeight || document.documentElement.clientHeight || document
-                    .getElementsByTagName('body')[0].clientHeight;
+            encodeURI('\uD800\uDFFF');
+            tinymce.init({
+                convert_urls: false,
+                selector: "textarea#conten",
+                plugins: ["image", "table", "code", "codesample", "addcomment", "showcomments", "media"],
+                toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
+                toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
+                file_picker_callback: function(callback, value, meta) {
+                    let x = window.innerWidth || document.documentElement.clientWidth || document
+                        .getElementsByTagName('body')[0].clientWidth;
+                    let y = window.innerHeight || document.documentElement.clientHeight || document
+                        .getElementsByTagName('body')[0].clientHeight;
 
-                let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                    url = '{!! $filemanager_url !!}';
+                    let type = 'image' === meta.filetype ? 'Images' : 'Files',
+                        url = '{!! $filemanager_url !!}';
 
-                tinymce.activeEditor.windowManager.openUrl({
-                    url: url,
-                    title: 'Filemanager',
-                    width: x * 0.8,
-                    height: y * 0.8,
-                    onMessage: (api, message) => {
-                        callback(message.content);
-                    }
-                });
-            }
-        });
-    </script> --}}
+                    tinymce.activeEditor.windowManager.openUrl({
+                        url: url,
+                        title: 'Filemanager',
+                        width: x * 0.8,
+                        height: y * 0.8,
+                        onMessage: (api, message) => {
+                            callback(message.content);
+                        }
+                    });
+                }
+            });
+        </script> --}}
 @endsection

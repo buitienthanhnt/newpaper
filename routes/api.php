@@ -26,8 +26,6 @@ Route::get('info', "ManagerController@info")->name('info');
 
 Route::get('getpapers', 'ManagerController@apiSourcePapers');
 
-Route::get("getpaperdetail/{paper_id}", "ManagerController@getPaperDetail")->name('api_paperDetail');
-
 Route::get("getcategorytop", "ManagerController@getCategoryTop");
 
 Route::get("papercategory/{category_id}", "ManagerController@getPaperCategory");
@@ -86,6 +84,9 @@ Route::prefix('share')->group(function () {
 });
 
 Route::prefix('paper')->group(function () {
+
+    Route::get("detail/{paper_id}", "ManagerController@getPaperDetail")->name('api_paperDetail');
+
     Route::post("like/{comment_id?}", "PaperController@like")->name("api_paper_like");
 
     Route::get("firebase/{paper_id?}", "ManagerController@firebasePaperDetail")->name("api_paper_detail_firebase");

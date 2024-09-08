@@ -87,17 +87,17 @@ ul {
   padding: 20px;
 }
 
-input {
-  border: none;
-  outline: none;
-  background-color: #ecf0f1;
-  padding: 10px;
-  color: #942A57;
-  border: 0;
-  margin: 5px 0;
-  display: block;
-  width: 100%;
-}
+/*input {*/
+/*  border: none;*/
+/*  outline: none;*/
+/*  background-color: #ecf0f1;*/
+/*  padding: 10px;*/
+/*  color: #942A57;*/
+/*  border: 0;*/
+/*  margin: 5px 0;*/
+/*  display: block;*/
+/*  width: 100%;*/
+/*}*/
 
 button {
   background-color: #ecf0f1;

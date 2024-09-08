@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-// use Illuminate\Database\Eloquent\Relations\MorphOne;
-
 class Paper extends Model
 {
     use HasFactory;
@@ -44,6 +42,10 @@ class Paper extends Model
     public function to_tag(): HasMany
     {
         return $this->hasMany(PageTag::class, "entity_id");
+    }
+
+    function to_contents() : mixed {
+        return $this->hasMany('\App\Models\PaperContent', "paper_id")->getResults();
     }
 
     public function to_writer(): BelongsTo

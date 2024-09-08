@@ -16,6 +16,7 @@ class CreatePaperContentsTable extends Migration
         Schema::create('paper_contents', function (Blueprint $table) {
             $table->id();
             $table->string('type');
+            $table->string('key');
             $table->string('depend_value')->nullable();
             $table->longText('value')->nullable();
             $table->integer('paper_id');

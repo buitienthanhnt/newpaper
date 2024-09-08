@@ -65,6 +65,18 @@ trait Page
         return false;
     }
 
+    /**
+     * @param Paper $paper
+     */
+    protected function delete_paper_content($paper){
+        $contents = $paper->to_contents();
+        if (count($contents)) {
+            foreach ($contents as $content) {
+                $content->delete();
+            }
+        }
+    }
+
     public function format_page_category($page_id, $values)
     {
         $result = [];

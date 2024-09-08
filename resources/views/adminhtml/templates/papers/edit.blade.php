@@ -36,161 +36,154 @@
 
 @section('body_main_conten')
     <div class="col-12 grid-margin">
-        <div>
-            <div class="card-body">
-                <h4 class="card-title">add new source</h4>
-                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_update', ["paper_id" => $paper->id]) }}>
-                    @csrf
+        <h4 class="card-title">add update source</h4>
+        <form class="form-sample" method="POST" enctype="multipart/form-data"
+              action={{ route('admin_paper_update', ["paper_id" => $paper->id]) }}>
+            @csrf
+            @if ($message = session('success'))
+                <?php
+                    alert()->success('server message', $message);
+                    session()->forget("success");
+                ?>
+            @elseif ($error = session('error'))
+                <?php alert()->warning('server mesage', $error); ?>
+            @endif
 
-                    @if ($message = session('success'))
-                        <?php
-                        alert()->success('server message', $message);
-                        session()->forget("success");
-                         ?>
-                    @elseif ($error = session('error'))
-                        <?php alert()->warning('server mesage', $error); ?>
-                    @endif
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Title:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="page_title" required value="{{ $paper->title }}" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="active" class="col-sm-1">Active:</label>
-                                <div class="col-sm-1">
-                                    <input id="active" class="form-check-input" type="checkbox" name="active" {{ $paper->active ? "checked" : "" }}>
-                                </div>
-
-                            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-2">Title:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="page_title" required
+                                   value="{{ $paper->title }}"/>
                         </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="url-alias" class="col-sm-2">url alias:</label>
-                                <div class="col-sm-8">
-                                    <input id="url-alias" class="form-control" type="text" name="alias" required value="{{ $paper->url_alias }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 row">
-                            <label for="show" class="col-sm-1">show:</label>
-                            <div class="col-sm-1">
-                                <input id="show" class="form-check-input" type="checkbox" name="show" {{ $paper->show ? "checked" : "" }}>
-                            </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="active" class="col-sm-3">Active:</label>
+                        <div class="col-sm-1">
+                            <input id="active" class="form-check-input" type="checkbox"
+                                   name="active" {{ $paper->active ? "checked" : "" }}>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="short_conten" class="col-sm-2">short conten:</label>
-                            <div class="col-sm-10">
-                                <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                                    style="padding: 10px; height: 100%;">{{ $paper->short_conten }}</textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="auto_hide">auto hide: </label>
-                                <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide" {{ $paper->auto_hide ? "checked" : "" }}>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="category" class="col-sm-2">category:</label>
-                            <div class="col-sm-10">
-                                <div class="form-group">
-                                    <select id="category_option" class="form-control" name="category_option[]"
-                                        multiple="multiple">
-                                        {!! $category_option !!}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">image:</label>
-                                <div class="col-sm-9">
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <a id="lfm" data-input="thumbnail" data-preview="holder"
-                                                class="btn btn-primary">
-                                                <i class="fa fa-picture-o"></i> Choose
-                                            </a>
-                                        </span>
-                                        <input id="thumbnail" class="form-control" type="text" name="image_path" value="{{ $paper->getImagePath() }}">
-                                    </div>
-                                    <img id="holder" style="margin-top:15px;max-height:100px;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="form-group">
-                                <label for="conten" class="col-sm-2">page conten:</label>
-                                <textarea style="height: 720px" id="conten" name="conten" class="form-control">{!!$paper->conten !!}</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="paper-tag">tag for links</label>
-                                <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
-                                    @if ($tags = $paper->to_tag()->getResults())
-                                        @foreach ($tags as $tag)
-                                            <option value="{{ $tag->value }}" selected>{{ $tag->value }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            {{-- <input id="paper_writer" class="form-control" type="text" name="writer"> --}}
-                            <div class="form-group">
-                                <label for="paper_writer">writer:</label>
-                                <select class="form-control" name="writer" id="paper_writer">
-                                    @if ($writers)
-                                        @foreach ($writers as $writer)
-                                            <option value="{{ $writer->id }}" @if ($paper->writer && $paper->writer == $writer->id)
-                                                selected
-                                            @endif>{{ $writer->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-info btn-lg"
-                                    style="width: -webkit-fill-available;">update paper</button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
             </div>
 
-            </form>
-        </div>
-    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="url-alias" class="col-sm-2">url alias:</label>
+                        <div class="col-sm-8">
+                            <input id="url-alias" class="form-control" type="text" name="alias" required
+                                   value="{{ $paper->url_alias }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 row">
+                    <label for="show" class="col-sm-3">show:</label>
+                    <div class="col-sm-1">
+                        <input id="show" class="form-check-input" type="checkbox"
+                               name="show" {{ $paper->show ? "checked" : "" }}>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 form-group">
+                    <label for="short_conten">short conten:</label>
+                    <div class="col-sm-10">
+                        <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
+                                  style="padding: 10px; height: 100%;">{{ $paper->short_conten }}</textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-6 row">
+                    <label for="auto_hide" class="col-sm-3">auto hide: </label>
+                    <div class="col-sm-1">
+                        <input id="auto_hide" class="form-check-input" type="checkbox"
+                               name="auto_hide" {{ $paper->auto_hide ? "checked" : "" }}>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="category" class="col-sm-2">category:</label>
+                    <div class="col-sm-10">
+                        <div class="form-group">
+                            <select id="category_option" class="form-control" name="category_option[]"
+                                    multiple="multiple">
+                                {!! $category_option !!}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label class="col-sm-3">image:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a id="lfm" data-input="thumbnail" data-preview="holder"
+                                   class="btn btn-primary">
+                                    <i class="fa fa-picture-o"></i> Choose
+                                </a>
+                            </span>
+                            <input id="thumbnail" class="form-control" type="text" name="image_path"
+                                   value="{{ $paper->getImagePath() }}">
+                        </div>
+                        <img id="holder" style="margin-top:15px;max-height:100px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="paper-tag">tag for links</label>
+                        <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
+                            @if ($tags = $paper->to_tag()->getResults())
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->value }}" selected>{{ $tag->value }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="paper_writer">writer:</label>
+                        <select class="form-control" name="writer" id="paper_writer">
+                            @if ($writers)
+                                @foreach ($writers as $writer)
+                                    <option value="{{ $writer->id }}"
+                                            @if ($paper->writer && $paper->writer == $writer->id)
+                                            selected
+                                        @endif>{{ $writer->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info btn-lg"
+                                style="width: -webkit-fill-available;">update paper
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 @endsection
 
@@ -217,14 +210,13 @@
 
 @section('after_js')
     <script>
-
         tinymce.init({
             convert_urls: false,
             selector: "textarea#conten",
             plugins: ["image", "table", "code", "codesample", "addcomment", "showcomments", "media"],
             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
             toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
-            file_picker_callback: function(callback, value, meta) {
+            file_picker_callback: function (callback, value, meta) {
                 let x = window.innerWidth || document.documentElement.clientWidth || document
                     .getElementsByTagName('body')[0].clientWidth;
                 let y = window.innerHeight || document.documentElement.clientHeight || document
