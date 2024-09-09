@@ -6,6 +6,8 @@
 <script src={{ asset('assets/select2/dist/js/select2.js') }}></script>
 {{-- <script src="https://unpkg.com/sweetalert2@7.18.0/dist/sweetalert2.all.js"></script> --}}
 <script src={{asset('assets/frontend/js/sweetalert2.all.js')}}></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+
 
 
 @yield('head_js_after')

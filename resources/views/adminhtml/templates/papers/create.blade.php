@@ -148,6 +148,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class='wrapper col-md-12'>
                 <div id='left-defaults' class='container' style="width: 30%">
                     <div data-type="p-carousel" ondragover="">
@@ -330,14 +331,7 @@
                 </div>
             </div>
         </form>
-        <pre style="background-color: rgb(97, 53, 148)">
-                <code>
-                    dragula([
-                        document.getElementById('left-defaults'),
-                        document.getElementById('right-defaults')
-                    ]);
-                </code>
-            </pre>
+    
         <script>
             function imgOnclick(type = 'file', options = {
                 prefix: url_base,

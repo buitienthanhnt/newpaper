@@ -57,12 +57,12 @@ class Category extends Model
         return $html;
     }
 
-    function time_line_option()
+    function time_line_option($selected = null)
     {
         $time_lines = $this->all()->where('type', '=', 'time_line');
         $html = '';
         foreach ($time_lines as $value) {
-            $html .= '<option value="' . $value->id . '">' . $value->name . '</option>';
+            $html .= '<option value="' . $value->id . '" '.($selected == $value->id ? 'selected ' : '').'>' . $value->name . '</option>';
         }
         return $html;
     }
