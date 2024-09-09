@@ -151,7 +151,7 @@
                                         showConfirmButton: false,
                                         timer: 2000
                                     });
-                                    $(this).parent().parent().parent().remove();
+                                    $(this).parent().parent().remove();
                                 } else {
                                     Swal.fire({
                                         position: 'center',

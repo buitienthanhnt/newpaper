@@ -21,7 +21,7 @@ class AddAdminUser extends Command
      *
      * @var string
      */
-    protected $signature = 'adminUser:add {admin_user} {admin_email} {admin_password}';
+    protected $signature = 'tha:addAdminUser {admin_user} {admin_email} {admin_password}';
 
     /**
      * The console command description.
@@ -84,14 +84,12 @@ class AddAdminUser extends Command
                 "password" => Hash::make($this->argument("admin_password")),
                 "active" => 1
             ]);
-
             DB::commit();
 
             //send output to the console
             $this->info('Success!');
         } catch (\Exception $e) {
             DB::rollBack();
-
             $this->error($e->getMessage());
         }
     }
