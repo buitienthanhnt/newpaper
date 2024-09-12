@@ -62,6 +62,9 @@
     var value = '@php echo($item->value); @endphp';
     var slider = JSON.parse(value);
     function renderCarousel(data) {
+        if (!data || data.length < 1) {
+            return '';
+        }
         let beginIndicator = '<ol class="carousel-indicators">';
         let content = ' <div class="carousel-inner">';
         let change =
