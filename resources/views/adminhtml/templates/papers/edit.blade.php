@@ -146,7 +146,7 @@
             <div class="row">
                 <div class='wrapper col-md-12'>
                     <div id='left-defaults' class='container' style="width: 30%">
-                        <div data-type="p-carousel" ondragover="">
+                        {{-- <div data-type="p-carousel" ondragover="">
                             <p>paper carousel</p>
                             <div class="data-content" style="display: none">
                                 <button type="button" class="btn form-control btn-primary" data-toggle="modal"
@@ -210,7 +210,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- <div style="" data-type="p-html">
                             <p>paper html content</p>
                             <div class="data-content">
@@ -284,7 +284,7 @@
                             </div>
                             <img id="holder" style="margin-top:15px;max-height:100px;">
                         </div> --}}
-                        
+
                         <div style="height: 150px" data-type="p-video">
                             <p>paper video</p>
                         </div>
@@ -308,6 +308,12 @@
 
                                 @case('conten')
                                     {!! view('adminhtml.templates.papers.contenElement.conten', [
+                                        'item' => $item,
+                                    ])->render() !!}
+                                @break
+
+                                @case('slider_data')
+                                    {!! view('adminhtml.templates.papers.contenElement.sliderData', [
                                         'item' => $item,
                                     ])->render() !!}
                                 @break
@@ -370,6 +376,10 @@
         $(".paper_tag").select2({
             tags: true,
             tokenSeparators: [',']
+        });
+
+        $('#slider_image').filemanager('file', {
+            prefix: url_base
         });
 
         $("#category_option").select2({
@@ -560,19 +570,19 @@
             }
         });
 
-        $(document).ready(function(){
+        $(document).ready(function() {
             $("#timelineInput").datetimepicker({
-            datepicker: {
-                showOtherMonths: true,
-                calendarWeeks: true,
-                todayHighlight: true
-            },
-            footer: true,
-            modal: true,
-            header: true,
-            value: '',
-            format: 'yyyy-mm-dd HH:MM:ss',
-        });
+                datepicker: {
+                    showOtherMonths: true,
+                    calendarWeeks: true,
+                    todayHighlight: true
+                },
+                footer: true,
+                modal: true,
+                header: true,
+                value: '',
+                format: 'yyyy-mm-dd HH:MM:ss',
+            });
         })
     </script>
 @endsection
