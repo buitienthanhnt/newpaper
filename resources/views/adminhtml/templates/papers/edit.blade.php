@@ -13,13 +13,14 @@
 @endsection
 
 @section('head_js_after')
-    <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
-    <script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
-    <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
+<script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+<script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
 @endsection
 
 @section('after_css')
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .select2-selection--multiple {
             .select2-selection__choice {
@@ -39,6 +40,7 @@
 @endsection
 
 @section('body_main_conten')
+<script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
     <div class="col-12 grid-margin">
         <h4 class="card-title">add update source</h4>
         <form class="form-sample" method="POST" enctype="multipart/form-data"
@@ -570,19 +572,19 @@
             }
         });
 
-        $(document).ready(function() {
-            $("#timelineInput").datetimepicker({
-                datepicker: {
-                    showOtherMonths: true,
-                    calendarWeeks: true,
-                    todayHighlight: true
-                },
-                footer: true,
-                modal: true,
-                header: true,
-                value: '',
-                format: 'yyyy-mm-dd HH:MM:ss',
-            });
-        })
+        // $(document).ready(function() {
+        //     $("#timelineInput").datetimepicker({
+        //         datepicker: {
+        //             showOtherMonths: true,
+        //             calendarWeeks: true,
+        //             todayHighlight: true
+        //         },
+        //         footer: true,
+        //         modal: true,
+        //         header: true,
+        //         value: '',
+        //         format: 'yyyy-mm-dd HH:MM:ss',
+        //     });
+        // })
     </script>
 @endsection
