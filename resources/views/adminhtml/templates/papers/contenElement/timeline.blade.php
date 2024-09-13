@@ -27,7 +27,7 @@
                             footer: true,
                             modal: true,
                             header: true,
-                            value: '',
+                            value: '{!! $item->value !!}',
                             format: 'yyyy-mm-dd HH:MM:ss',
                         });
                     </script>
