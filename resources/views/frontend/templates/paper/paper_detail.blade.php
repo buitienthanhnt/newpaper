@@ -1,7 +1,7 @@
 @extends('frontend.layouts.pagestruct')
 
 @section('meta_title')
-    <meta name="title" content="{{$paper->title}}">
+    <meta name="title" content="{{ $paper->title }}">
 @endsection
 
 @section('page_header')
@@ -12,7 +12,9 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-@section('page_title') detail page @endsection
+@section('page_title')
+    detail page
+@endsection
 
 @section('css_after')
     <link rel="stylesheet" href={{ asset('assets/frontend/css/paper/detail.css') }}>
@@ -57,12 +59,12 @@
                     <div id="detail_main_conten" class="about-right mb-90">
                         <?php /** @var \App\Models\Paper $paper */ ?>
                         @if (!$paper->paperPrice())
-                            <div class="about-img">
+                            {{-- <div class="about-img">
                                 @if (isset($paper->image_path))
                                     <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
                                         style="max-height: 600px; object-fit: cover">
                                 @endif
-                            </div>
+                            </div> --}}
                         @endif
 
                         <div class="heading-news mb-30 pt-30">
@@ -73,72 +75,98 @@
                                 <h4>{{ $paper->short_conten }}</h4>
                             @endisset
                         </div>
+                        <div class="col-md-12">
+                            @if (!!$paper->to_contents())
+                                @foreach ($paper->to_contents() as $item)
+                                    @switch($item->type)
+                                        @case('conten')
+                                            {!! $item->value !!}
+                                        @break
 
-                        @if ($sliderImages = $paper->sliderImages())
-                            <div class="bd-example">
-                                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                                    <ol class="carousel-indicators">
-                                        @for ($i = 0; $i < count($sliderImages); $i++)
-                                            <li data-target="#carouselExampleCaptions" data-slide-to="{{ $i }}"
-                                                class="{{ $i === 0 ? 'active' : ' ' }}"></li>
-                                        @endfor
-                                    </ol>
+                                        @case('slider_data')
+                                            @if ($sliderImages = json_decode($item->value, true))
+                                                <div class="bd-example">
+                                                    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            @for ($i = 0; $i < count($sliderImages); $i++)
+                                                                <li data-target="#carouselExampleCaptions"
+                                                                    data-slide-to="{{ $i }}"
+                                                                    class="{{ $i === 0 ? 'active' : ' ' }}"></li>
+                                                            @endfor
+                                                        </ol>
 
-                                    <div class="carousel-inner">
-                                        @php
-                                            $j = 0;
-                                        @endphp
-                                        @foreach ($sliderImages as $item)
-                                            <div class="carousel-item {{ $j === 0 ? 'active' : ' ' }}">
-                                                <img src="{{ $item->value }}" style="width: 100%; height: 560px;"
-                                                    alt="">
-                                                <div class="carousel-caption d-none d-md-block">
-                                                    <h5>{{ $item->title }}</h5>
-                                                    <p>{{ $item->description }}</p>
+                                                        <div class="carousel-inner">
+                                                            @php
+                                                                $j = 0;
+                                                            @endphp
+                                                            @foreach ($sliderImages as $i)
+                                                                <div class="carousel-item {{ $j === 0 ? 'active' : ' ' }}">
+                                                                    <img src="{{ $i['image_path'] }}"
+                                                                        style="width: 100%; max-height: 480px;" alt="">
+                                                                    <div class="carousel-caption d-none d-md-block">
+                                                                        <h5>{{ $i['title'] }}</h5>
+                                                                        <p>{{ $i['label'] }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                @php
+                                                                    $j += 1;
+                                                                @endphp
+                                                            @endforeach
+
+                                                        </div>
+                                                        <a class="carousel-control-prev" href="#carouselExampleCaptions"
+                                                            role="button" data-slide="prev">
+                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                            <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <a class="carousel-control-next" href="#carouselExampleCaptions"
+                                                            role="button" data-slide="next">
+                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @break
+
+                                        @case('price')
+                                            <div class="row">
+                                                <div class="col-md-12 p-2">
+                                                    <form action="{{ route('paper_addCart') }}" method="post">
+                                                        @csrf
+                                                        <div class="form-group container row">
+                                                            <div class="form-group col-sm-10 row">
+                                                                <label class="col-form-label" for="qty">Giá:
+                                                                    {{ $item->value }}
+                                                                    vnđ</label>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" name="qty" class="form-control"
+                                                                        id="qty" min="1" value="1">
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $paper->id }}">
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu giỏ
+                                                                hàng</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
-                                            @php
-                                                $j += 1;
-                                            @endphp
-                                        @endforeach
+                                        @break
 
-                                    </div>
-                                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button"
-                                        data-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button"
-                                        data-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
-                        <div class="col-md-12">
-                            @if ($paper->paperPrice())
-                                <form action="{{ route('paper_addCart') }}" method="post">
-                                    @csrf
-                                    <div class="form-group container row">
-                                        <div class="form-group col-sm-10 row">
-                                            <label class="col-form-label" for="qty">Giá:
-                                                {{$paper->paperPrice(true)}}
-                                                vnđ</label>
-                                            <div class="col-sm-3">
-                                                <input type="number" name="qty" class="form-control" id="qty"
-                                                    min="1" value="1">
-                                                <input type="hidden" name="id" value="{{ $paper->id }}">
+                                        @case('image')
+                                            <div class="col-md-12 p-2">
+                                                <img src="{{ $item->value }}" style="width: 100%; max-height: 480px;"
+                                                    alt="">
                                             </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu giỏ hàng</button>
-                                    </div>
-                                </form>
+                                        @break
+
+                                        @default
+                                    @endswitch
+                                @endforeach
                             @endif
 
-                            @isset($paper->conten)
-                                {!! $paper->conten !!}
-                            @endisset
+
                         </div>
                         <div class="social-share pt-30">
                             {!! view('frontend.templates.paper.component.Tags', ['paper' => $paper])->render() !!}
