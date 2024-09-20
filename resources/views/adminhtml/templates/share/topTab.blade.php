@@ -5,21 +5,21 @@
                 <p class="statistics-title">lượt xem</p>
                 <h3 class="rate-percentage">{{ $list_data['paper_view_count'] }}</h3>
                 <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>avg:
-                        {{ floor($list_data['paper_view_count'] / $list_data['active_page']) }} views/page</span>
+                        {{$list_data['active_page'] ? floor($list_data['paper_view_count'] / $list_data['active_page']) : 0 }} views/page</span>
                 </p>
             </div>
             <div>
                 <p class="statistics-title">Số bài viết</p>
                 <h3 class="rate-percentage">{{ $list_data['active_page'] }}</h3>
                 <p class="text-danger d-flex"><i
-                        class="mdi mdi-menu-down"></i><span>{{ number_format(($list_data['active_page'] / $list_data['all_page']) * 100, 2) }}</span>
+                        class="mdi mdi-menu-down"></i><span>{{$list_data['all_page'] ? number_format(($list_data['active_page'] / $list_data['all_page']) * 100, 2) : 0 }}</span>
                 </p>
             </div>
             <div>
                 <p class="statistics-title">trên firebase</p>
                 <h3 class="rate-percentage">{{ $list_data['paper_in_firebase'] }}</h3>
                 <p class="text-danger d-flex"><i
-                        class="mdi mdi-menu-down"></i><span>{{ number_format(($list_data['paper_in_firebase'] / $list_data['all_page']) * 100, 2) }}%</span>
+                        class="mdi mdi-menu-down"></i><span>{{$list_data['all_page'] ? number_format(($list_data['paper_in_firebase'] / $list_data['all_page']) * 100, 2) : 0 }}%</span>
                 </p>
             </div>
             <div class="d-none d-md-block">
