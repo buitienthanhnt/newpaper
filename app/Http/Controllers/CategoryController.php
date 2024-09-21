@@ -138,8 +138,13 @@ class CategoryController extends Controller
         if ($current_setup->count()) {
             $list_current = explode("&", $current_setup->first()->value);
         }
-        $setup_type = [ConfigCategory::TOP_CATEGORY];
-        return view("adminhtml/templates/category/setup", ["parent_category" => $parent_category, "all_category" => $all_category, "list_current" => $list_current, "setup_type" => $setup_type]);
+        $setup_type = [ConfigCategory::TOP_CATEGORY, ConfigCategory::CENTER_CATEGORY];
+        return view("adminhtml/templates/category/setup",
+            [
+                "parent_category" => $parent_category,
+                "all_category" => $all_category,
+                "list_current" => $list_current,
+                "setup_type" => $setup_type]);
     }
 
     public function setupSave()
@@ -148,7 +153,7 @@ class CategoryController extends Controller
         $configCategory = $this->configCategory;
         $setup_type = $this->request->get("setup_type");
         if ($setup_type) {
-            $top_category = $configCategory::firstWhere("path", ConfigCategory::TOP_CATEGORY);
+            $top_category = $configCategory::firstWhere("path", $setup_type);
             if ($top_category) {
                 $configCategory = $configCategory::find($top_category->id);
             }
