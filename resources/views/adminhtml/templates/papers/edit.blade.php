@@ -13,14 +13,14 @@
 @endsection
 
 @section('head_js_after')
-<script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
-<script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
-<script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
-<script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
 @endsection
 
 @section('after_css')
-    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .select2-selection--multiple {
             .select2-selection__choice {
@@ -40,7 +40,7 @@
 @endsection
 
 @section('body_main_conten')
-<script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
+    <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
     <div class="col-12 grid-margin">
         <h4 class="card-title">add update source</h4>
         <form class="form-sample" method="POST" enctype="multipart/form-data"
@@ -274,18 +274,24 @@
                             </div>
                         </div> --}}
 
-                        {{-- <div data-type="p-picture">
+                        <div data-type="p-picture">
                             <p>paper picture</p>
                             <div class="data-content input-group" style="display: none">
-                                <span class="input-group-btn">
-                                    <a class="btn btn-primary">
-                                        <i class="fa fa-picture-o"></i> Choose
-                                    </a>
-                                </span>
+                                <div>
+                                    <span class="input-group-btn">
+                                        <a class="btn btn-primary">
+                                            <i class="fa fa-picture-o"></i> Choose
+                                        </a>
+                                    </span>
+                                </div>
                                 <input class="form-control" type="text" multiple>
+                                <div class="input-group">
+                                    <span class="input-group-btn">description:&nbsp;</span>
+                                    <input class="form-control" type="text" name="">
+                                </div>
                             </div>
                             <img id="holder" style="margin-top:15px;max-height:100px;">
-                        </div> --}}
+                        </div>
 
                         <div style="height: 150px" data-type="p-video">
                             <p>paper video</p>
@@ -521,6 +527,12 @@
                             "data-input", pictute_thum);
                         $($($(this).children()[1]).children()[1]).attr("id", pictute_thum).attr("name",
                             "images_" + pictute_thum);
+                        // set image desciption name:
+                        const pictute_desc = 'imagex_desc_' + $(
+                                "#right-defaults > div[data-type=p-picture]")
+                            .length;
+                        $($($($(this).children()[1]).children()[2]).children()[1]).attr('name',
+                            pictute_desc)
                         $($($($(this).children()[1]).children()[0]).children()[0]).on('click', imgOnclick);
                         $(this).off('click');
                     case 'p-price':

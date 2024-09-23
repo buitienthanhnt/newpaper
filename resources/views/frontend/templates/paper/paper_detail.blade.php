@@ -158,6 +158,14 @@
                                             <div class="col-md-12 p-2">
                                                 <img src="{{ $item->value }}" style="width: 100%; max-height: 480px;"
                                                     alt="">
+                                                <div>
+                                                    
+                                                </div>
+                                                @isset($item->depend_value)
+                                                    <div class="justify-content-center align-items-center d-flex mt-2">
+                                                        <span class="text-success" style="font-size: 12px; text-decoration: underline">{{ $item->depend_value }}</span>
+                                                    </div>
+                                                @endisset
                                             </div>
                                         @break
 

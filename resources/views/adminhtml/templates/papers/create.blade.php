@@ -13,8 +13,7 @@
 @endsection
 
 @section('head_js_after')
-    <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}">
-    </script>
+    <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
     <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
@@ -110,7 +109,8 @@
                     <label for="short_conten">short conten:</label>
                     <div class="col-sm-10">
                         <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                            style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset</textarea>
+                            style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset
+                        </textarea>
                     </div>
                 </div>
 
@@ -218,15 +218,26 @@
                     </div>
 
                     <div style="" data-type="p-html">
-                        <div id="demo-content-source">
-                            <p class="text-primary" style="font-size: 16px; font-weight: 600; text-decoration: underline;">view demo frontend(pull right to add content):</p>
-                            @isset($conten){!! $conten !!} @else <p>paper html content</p> @endisset
+                        <div class="demo-content-source">
+                            <p class="text-primary"
+                                style="font-size: 16px; font-weight: 600; text-decoration: underline;">view demo
+                                frontend(pull right to add content):</p>
+                            @isset($conten)
+                            <style>
+                                .demo-content-source img{
+                                    max-width: 30% !important;
+                                    width: auto !important;
+                                    height: auto !important;
+                                }
+                            </style>
+                                {!! $conten !!}
+                            @else
+                                <p>paper html content</p>
+                            @endisset
                         </div>
                         <div class="data-content">
                             <textarea id="conten" name="conten" class="form-control" style="height: 720px; display: none">
-                                @isset($conten)
-                                    {{ $conten }}
-                                @endisset
+                                @isset($conten){{ $conten }}@endisset
                             </textarea>
                         </div>
                     </div>
@@ -461,16 +472,18 @@
                             $($(this).children()[1]).show();
                             const pictute_thum = 'imagex_' + $("#right-defaults > div[data-type=p-picture]")
                                 .length;
-
-                            const pictute_desc = 'imagex_desc_' + $(
-                                    "#right-defaults > div[data-type=p-picture]")
-                                .length;
                             const id_thum = 'lfm_' + pictute_thum;
                             $($($($(this).children()[1]).children()[0]).children()[0]).attr("id", id_thum).attr(
                                 "data-input", pictute_thum);
                             $($($(this).children()[1]).children()[1]).attr("id", pictute_thum).attr("name",
                                 "images_" + pictute_thum);
-
+                            // set image desciption name:
+                            const pictute_desc = 'imagex_desc_' + $(
+                                    "#right-defaults > div[data-type=p-picture]")
+                                .length;
+                            $($($($(this).children()[1]).children()[2]).children()[1]).attr('name',
+                                pictute_desc)
+                            // gán sự kiện cho nút: 'choose image'.
                             $($($($(this).children()[1]).children()[0]).children()[0]).on('click', imgOnclick);
                             $(this).off('click');
                         case 'p-price':

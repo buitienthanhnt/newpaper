@@ -113,12 +113,13 @@ class PaperController extends Controller
                 continue;
             }
             if (strpos($key, 'images_imagex') !== false) {
+                $img_desc = $datas[str_replace('images_imagex_', 'imagex_desc_', $key)] ?: null;
                 $returnValues[] = [
                     "type" => "image",
                     "key" => $key,
                     "value" => $value,
                     "paper_id" => $paper_id,
-                    "depend_value" => null,
+                    "depend_value" => $img_desc,
                 ];
                 continue;
             }
