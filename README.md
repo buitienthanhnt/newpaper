@@ -89,6 +89,7 @@
 # nếu lỗi thì xóa bỏ php version rồi cài lại các bước trên.
 # ======================
 # grpc cho win: https://cloud.google.com/php/grpc#windows_1
+# lưu ý cần tải đúng version: nts-vs16-64
 # trên windown thì thêm file: php_grpc.dll vào thư mục ext và thêm dòng: extension=php_grpc.dll vào file php.ini
 # =========================================================================
 
