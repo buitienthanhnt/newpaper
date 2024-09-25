@@ -553,14 +553,16 @@ class PaperController extends Controller
     function byType($type, Request $request): View
     {
         $limit = $request->get('limit', 4);
-        $papers = Paper::all()->where("type", "=", $type)->slice($request->get('p', 0) * $limit, $limit);
+        $paper_ids = array_column(PaperContent::all()->where(PaperContent::ATTR_TYPE, $type)->slice($request->get('p', 0) * $limit, $limit)->toArray(), 'paper_id');
+        $papers = Paper::find($paper_ids);
         return view('frontend.templates.paper.product', ['papers' => $papers, "type" => $type]);
     }
 
     function moreByType($type, Request $request): Response
     {
         $limit = $request->get('limit', 4);
-        $papers = Paper::all()->where("type", "=", $type)->slice($request->get('p', 0) * $limit, $limit);
+        $paper_ids = array_column(PaperContent::all()->where(PaperContent::ATTR_TYPE, $type)->slice($request->get('p', 0) * $limit, $limit)->toArray(), 'paper_id');
+        $papers = Paper::find($paper_ids);
         $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
 
         return response(json_encode([

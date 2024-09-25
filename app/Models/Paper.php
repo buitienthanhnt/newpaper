@@ -44,7 +44,8 @@ class Paper extends Model
         return $this->hasMany(PageTag::class, "entity_id");
     }
 
-    function to_contents() : mixed {
+    function to_contents(): mixed
+    {
         return $this->hasMany('\App\Models\PaperContent', "paper_id")->getResults();
     }
 
@@ -105,7 +106,8 @@ class Paper extends Model
         return 1;
     }
 
-    function getTimeline() {
+    function getTimeline()
+    {
         $timeline = $this->hasOne(PaperTimeLine::class, "paper_id");
         return new Carbon($timeline->getResults()->timeline_value) ?: '';
     }
@@ -129,7 +131,8 @@ class Paper extends Model
         return new ViewSource();
     }
 
-    function sliderImages() {
+    function sliderImages()
+    {
         return DB::table('paper_carousel')->where('paper_id', $this->id)->get();
     }
 
@@ -161,7 +164,8 @@ class Paper extends Model
         ];
     }
 
-    public function getImagePath() : string {
+    public function getImagePath(): string
+    {
         if ($image_path = $this->image_path) {
 
             if (file_exists($image_path)) {
@@ -183,8 +187,10 @@ class Paper extends Model
     function paperPrice($format = false)
     {
         try {
-            $val = DB::table('price')->where('paper_id', $this->id)->get()->first();
-            return $val && $val->value ? $format ? number_format($val->value * 1000) : $val->value*1000 : null;
+            $price = $this->to_contents()->where(PaperContent::ATTR_TYPE, PaperContent::TYPE_PRICE)->first();
+            if ($price) {
+                return $price && $price->value ? $format ? number_format($price->value * 1000) : $price->value * 1000 : null;
+            }
         } catch (\Throwable $th) {
             //throw $th;
         }

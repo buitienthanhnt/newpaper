@@ -18,7 +18,7 @@
             @endforeach
             @if($lever == 0)
                 <li>
-                    <a class="text-info" href="{{ route('paper_byType', ['type' => "product"]) }}">mua bán <i class="fa fa-cloud"></i></a>
+                    <a class="text-info" href="{{ route('paper_byType', ['type' => "price"]) }}">mua bán <i class="fa fa-cloud"></i></a>
                 </li>
                 <li class="d-block d-md-none" style="float: right">
                     @if (Auth::check())
