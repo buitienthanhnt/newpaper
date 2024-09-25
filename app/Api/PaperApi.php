@@ -11,8 +11,11 @@ use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\PageTag;
+use App\Models\PaperContent;
 use App\Models\PaperTimeLine;
 use Carbon\Carbon;
+use DateTime;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Thanhnt\Nan\Helper\LogTha;
 
@@ -22,6 +25,10 @@ class PaperApi extends BaseApi
 	protected $request;
 	protected $writerApi;
 	protected $paperTimeLine;
+	/**
+	 * @var PaperContent $paperContent
+	 */
+	protected $paperContent;
 
 	function __construct(
 		FirebaseService $firebaseService,
@@ -29,12 +36,14 @@ class PaperApi extends BaseApi
 		Request $request,
 		WriterApi $writerApi,
 		LogTha $logTha,
-		PaperTimeLine $paperTimeLine
+		PaperTimeLine $paperTimeLine,
+		PaperContent $paperContent
 	) {
 		$this->helperFunction = $helperFunction;
 		$this->request = $request;
 		$this->writerApi = $writerApi;
 		$this->paperTimeLine = $paperTimeLine;
+		$this->paperContent = $paperContent;
 		parent::__construct($firebaseService, $logTha);
 	}
 
@@ -558,16 +567,26 @@ class PaperApi extends BaseApi
 
 	function timeLine()
 	{
-		$paperTimeLine = $this->paperTimeLine;
 		$dt = Carbon::now('Asia/Ho_Chi_Minh');
-		$timeLine = $paperTimeLine->where('timeline_value', ">=", $dt->toDateTimeString())->orderBy('timeline_value', 'ASC')->take(8)->get('paper_id');
+		/**
+		 * @var Collection $timeLine
+		 */
+		$timeLine = $this->paperContent
+			->where(PaperContent::ATTR_TYPE, PaperContent::TYPE_TIMELINE)
+			->where(PaperContent::ATTR_VALUE, ">=", $dt->toDateTimeString())
+			->orderBy(PaperContent::ATTR_VALUE, 'ASC')
+			->take(8)
+			->get();
 		$papers = [];
 		foreach ($timeLine as $time) {
-			$value = Paper::find($time)->first()->makeHidden(['conten']);
-			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
-			$value->time = date_format($value->getTimeline(), "d-m-Y H:i");
-			$value->description = $value->title;
-			$papers[] = $value;
+			/**
+			 * @var PaperContent $time
+			 */
+			$paper = $time->toPaper()->getResults();
+			$paper->image_path = $this->helperFunction->replaceImageUrl($paper->image_path);
+			$paper->time = date_format(new DateTime($time->value), "d-m-Y H:i");
+			$paper->description = $paper->title;
+			$papers[] = $paper;
 		}
 		return $papers;
 	}
@@ -575,7 +594,6 @@ class PaperApi extends BaseApi
 	function homeInfo(): array
 	{
 		$timeLine = $this->timeLine();
-
 		$hit = $this->hit();
 		$forward = $this->forward();
 		$mostPopulator = $this->mostPopulator();

@@ -5,6 +5,7 @@ namespace Thanhnt\Nan\Helper;
 use Illuminate\Http\Request;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\RemoteSourceHistory;
+use Exception;
 use Illuminate\Support\Facades\Response;
 
 class RemoteSourceManager
@@ -49,7 +50,9 @@ class RemoteSourceManager
         "www.24h.com.vn"    => "get_www_24h_com_vn",
         "s.cafef.vn"        => "get_s_cafef_vn",
         "nld.com.vn"        => "get_nld_com_vn",
-        "vanvn.vn"          => "get_vanvn_vn"
+        "vanvn.vn"          => "get_vanvn_vn",
+        "thuvienphapluat.vn" => "get_thuvienphapluat_vn",
+        "plo.vn" => "get_plo_vn"
     ];
 
     protected $request;
@@ -108,21 +111,47 @@ class RemoteSourceManager
 
     function file_get_contents_source($url)
     {
-        $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
-            "ssl" => array(
-                // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
-                "verify_peer" => false,
-                "verify_peer_name" => false,
-            ),
-            // skyp error "failed to open stream: operation failed" + "Redirection limit reached"
-            'http' => array(
-                'max_redirects' => 101,
-                'ignore_errors' => '1'
-            ),
-        );
-
         $html = "";
         try {
+            fopen("cookies.txt", "w");
+            $parts = parse_url($url);
+            $host = $parts['host'];
+            $ch = curl_init();
+            // https://stackoverflow.com/questions/17363545/file-get-contents-is-not-working-for-some-url
+            $header = array(
+                'GET /1575051 HTTP/1.1',
+                "Host: {$host}",
+                'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language:en-US,en;q=0.8',
+                'Cache-Control:max-age=0',
+                'Connection:keep-alive',
+                'Host:adfoc.us',
+                'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36',
+            );
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_ENCODING, "gzip"); // https://stackoverflow.com/questions/18398510/file-get-contents-the-contents-are-encrypted
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
+            curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+            curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookies.txt');
+            curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookies.txt');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+            $html = curl_exec($ch);
+            curl_close($ch);
+        } catch (\Throwable $th) {
+            $arrContextOptions = array( // https://www.php.net/manual/en/context.http.php
+                "ssl" => array(
+                    // skip error "Failed to enable crypto" + "SSL operation failed with code 1."
+                    "verify_peer" => false,
+                    "verify_peer_name" => false,
+                ),
+                // skyp error "failed to open stream: operation failed" + "Redirection limit reached"
+                'http' => array(
+                    'max_redirects' => 101,
+                    'ignore_errors' => '1'
+                ),
+            );
             $html = file_get_contents($url, false, stream_context_create($arrContextOptions));
             if (!$html) {
                 $ch = curl_init();
@@ -132,8 +161,6 @@ class RemoteSourceManager
                 $html = curl_exec($ch);
                 curl_close($ch);
             }
-        } catch (\Throwable $th) {
-            //throw $th;
         }
         return $html;
     }
@@ -232,119 +259,137 @@ class RemoteSourceManager
 
     function get_niithanoi_edu_vn($doc)
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "noidung TextSize noidungList", ""));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "noidung TextSize noidungList", ""));
     }
 
     function get_techmaster_vn($doc)
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "techmaster-font-open-sans post-content", ""));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "techmaster-font-open-sans post-content", ""));
     }
 
     function get_kienthuc_net_vn($doc)
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "cms-body", "sapo cms-desc"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "cms-body", "sapo cms-desc"));
     }
 
     // get_www_thivien_net
     function get_www_thivien_net($doc)
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "poem-content", "page-header"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "poem-content", "page-header"));
     }
 
     public function get_topdev_vn($doc)
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "td-post-content", "entry-title"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "td-post-content", "entry-title"));
     }
 
     public function get_toidicode_com($doc)
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "entry-main-content", "entry-title"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "entry-main-content", "entry-title"));
     }
 
     function get_freetuts_net($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "article", ""));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "article", ""));
     }
 
     function get_thanhnien_vn($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "detail-cmain", "detail-title"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "detail-cmain", "detail-title"));
     }
 
     function get_laodong_vn($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "wrapper", "title"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "wrapper", "title"));
     }
 
     // get_vnexpress_net
     function get_vnexpress_net($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "fck_detail", "title-detail"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "fck_detail", "title-detail"));
     }
 
     function get_www_w3schools_com($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "l10", ""));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "l10", ""));
     }
 
     function get_laracoding_com($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "entry-content"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "entry-content"));
     }
 
     // get_vtcnews_vn
     function get_vtcnews_vn($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "content-wrapper"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "content-wrapper"));
     }
 
     // get_doanhnghiepvn_vn
     function get_doanhnghiepvn_vn($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "single-entry-summary"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "single-entry-summary"));
     }
 
     // get_codestus_com
     function get_codestus_com($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "prose"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "prose"));
     }
 
     // get_jaredchu_com
     function get_jaredchu_com($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "post-content"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "post-content"));
     }
 
     // get_danviet_vn
     function get_danviet_vn($doc): array
     {
-        return call_user_func(fn () => $this->getValueByClassName($doc, "dt-content"));
+        return call_user_func(fn() => $this->getValueByClassName($doc, "dt-content"));
     }
 
-    function get_seongon_com($doc): array{
-        return call_user_func(fn () => $this->getValueByClassName($doc, "elementor-element"));
+    function get_seongon_com($doc): array
+    {
+        return call_user_func(fn() => $this->getValueByClassName($doc, "elementor-element"));
     }
 
     // get_www_24h_com_vn
-    function get_www_24h_com_vn($doc): array{
-        return call_user_func(fn () => $this->getValueByClassName($doc, "cate-24h-foot-arti-deta-info", "cate-24h-foot-arti-deta-title"));
+    function get_www_24h_com_vn($doc): array
+    {
+        return call_user_func(fn() => $this->getValueByClassName($doc, "cate-24h-foot-arti-deta-info", "cate-24h-foot-arti-deta-title"));
     }
 
     // get_s_cafef_vn
-    function get_s_cafef_vn($doc): array{
-        return call_user_func(fn () => $this->getValueById($doc, "newscontent", "intro"));
+    function get_s_cafef_vn($doc): array
+    {
+        return call_user_func(fn() => $this->getValueById($doc, "newscontent", "intro"));
     }
 
     // get_nld_com_vn
-    function get_nld_com_vn($doc): array{
-        return call_user_func(fn () => $this->getValueByClassName($doc, "detail-cmain", "detail-sapo"));
+    function get_nld_com_vn($doc): array
+    {
+        return call_user_func(fn() => $this->getValueByClassName($doc, "detail-cmain", "detail-sapo"));
     }
 
     // get_vanvn_vn
-    function get_vanvn_vn($doc): array{
-        return call_user_func(fn () => $this->getValueByClassName($doc, "entry-content"));
+    function get_vanvn_vn($doc): array
+    {
+        return call_user_func(fn() => $this->getValueByClassName($doc, "entry-content"));
     }
+
+    // get_thuvienphapluat_vn
+    function get_thuvienphapluat_vn($doc): array
+    {
+        return call_user_func(fn() => $this->getValueByClassName($doc, ["newcontent", "news-content"]));
+    }
+
+    // get_plo_vn
+    function get_plo_vn($doc): array
+    {
+        return call_user_func(fn() => $this->getValueByClassName($doc, "cms-body", "cms-desc"));
+    }
+
 
     // ===================================================================//
 
@@ -370,7 +415,7 @@ class RemoteSourceManager
 
     /**
      * @param $doc                       // source for search
-     * @param string $class_conten       // for main of conten
+     * @param string|array $class_conten       // for main of conten
      * @param string $class_short_conten // for short conten
      * @return array
      */
@@ -390,9 +435,24 @@ class RemoteSourceManager
         }
 
         try {
-            $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
-            $conten = $this->getNodeHtml($nodes[0]);
+            if (is_string($class_conten)) {
+                $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
+                $conten = $this->getNodeHtml($nodes[0]);
+            } elseif (is_array($class_conten)) {
+                for ($i = 0; $i < count($class_conten); $i++) {
+                    $nodes = $this->findByXpath($doc, "class", $class_conten[$i]); // load content: (image error)
+                    if (isset($nodes[0])) {
+                        $conten = $this->getNodeHtml($nodes[0]);
+                        if ($conten) {
+                            break;
+                        }
+                    }else {
+                        continue;
+                    }  
+                }
+            }
         } catch (\Exception $e) {
+            dd($e);
         }
 
         return [
@@ -410,7 +470,8 @@ class RemoteSourceManager
         ];
     }
 
-    function getValueById($doc, $id_content, $class_short_content = '') : array {
+    function getValueById($doc, $id_content, $class_short_content = ''): array
+    {
         $request = $this->request;
         $title = $this->getTitle($doc);
         $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " ", "|", "/", "\\"], "", $this->vn_to_str($title, 1));
@@ -420,7 +481,8 @@ class RemoteSourceManager
             if (count($short_conten)) {
                 $short_conten_value = trim($short_conten[0]->textContent);
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return [
             "title" => $title,
