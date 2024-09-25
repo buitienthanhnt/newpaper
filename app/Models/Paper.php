@@ -44,8 +44,10 @@ class Paper extends Model
         return $this->hasMany(PageTag::class, "entity_id");
     }
 
-    function to_contents(): mixed
-    {
+    /**
+     * @return mixed
+     */
+    function to_contents() {
         return $this->hasMany('\App\Models\PaperContent', "paper_id")->getResults();
     }
 
