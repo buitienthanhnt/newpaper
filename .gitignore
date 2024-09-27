@@ -1,6 +1,6 @@
 /vendor/
 /tests/
-/bootstrap/
+# /bootstrap/
 #/config/
 /.env.example
 /artisan

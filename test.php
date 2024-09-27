@@ -32,8 +32,6 @@ exit();
         function log() : string {
             $this->a = 12334456;
             echo($this->a);
-
-
             // echo 'day la noi dung nam trong ham log duwoc goi qua construc';
             return '';
         }
