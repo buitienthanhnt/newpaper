@@ -58,7 +58,7 @@ class ChangeSource extends Command
 
     protected function checkExist(int $paper_id): bool
     {
-        $paperConten = PaperContent::where('type', '=', 'conten')->where('paper_id', '=', $paper_id)->select()->first();
+        $paperConten = PaperContent::where('paper_id', '=', $paper_id)->select()->first();
         if ($paperConten && $paperConten->id) {
             return true;
         }
@@ -108,7 +108,7 @@ class ChangeSource extends Command
     {
         try {
             if ($this->checkExist($paper_id)) {
-                $this->error('conten of the paper_id has exist!');
+                $this->error("conten of the paper_id=$paper_id  has exist!");
                 return;
             }
             /**
