@@ -1,4 +1,7 @@
 <?php
+$str = "comfy and i don&#039;t feel like a loser carrying it.";
+echo(html_entity_decode($str));
+return;
 $cart = [
     ['price' => 123, "qty" => 1],
     ['price' => 22, "qty" => 1],
