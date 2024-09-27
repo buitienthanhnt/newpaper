@@ -139,8 +139,8 @@ class ChangeSource extends Command
              */
             $this->moveSlider($paper);
 
-            $this->logTha->logEvent('info', "coppied for paper of: $paper_id ($paper->title)");
-            $this->info("coppied for paper of: $paper_id \n");
+            $this->logTha->logEvent('info', "moved for paper of: $paper_id ($paper->title)");
+            $this->info("moved for paper of: $paper_id \n");
         } catch (\Throwable $th) {
             $this->error('-----> ' . $th->getMessage());
             //throw $th;
@@ -156,7 +156,12 @@ class ChangeSource extends Command
     {
         $move_paper = $this->argument('paper_id');
         if ($move_paper === 'all') {
-            $paper_ids = array_column(Paper::all(['id'])->toArray(), 'id');
+            $exist_ids = array_column(PaperContent::all(['paper_id'])->unique('paper_id')->toArray(), 'paper_id');
+            $paper_ids = array_column(Paper::all(['id'])->whereNotIn('id', $exist_ids)->toArray(), 'id');
+            if (empty($paper_ids)) {
+                $this->info('not has new source for update!');
+                return;
+            }
             for ($i = 0; $i < count($paper_ids); $i++) {
                 $this->moveData($paper_ids[$i]);
             }
