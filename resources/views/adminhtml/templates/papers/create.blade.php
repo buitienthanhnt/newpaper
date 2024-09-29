@@ -23,7 +23,6 @@
     <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .select2-selection--multiple {
-
             .select2-selection__choice {
                 color: color(white);
                 border: 0;
@@ -33,7 +32,6 @@
                 font-family: inherit;
                 line-height: 1;
             }
-
             .sliderImages {
                 max-height: 480px !important;
             }
@@ -51,74 +49,35 @@
         <h4 class="card-title">add new source</h4>
         <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
             @csrf
-            @if ($message = session('success'))
-                <?php
-                alert()->success('server message', $message);
-                session()->forget('success');
-                ?>
-            @elseif ($error = session('error'))
-                <?php alert()->warning('server mesage', $error); ?>
-            @endif
+            {!! view('elements.message.index')->render(); !!}
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Title:</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="page_title" required
-                                @isset($title)
-                                    value="{{ $title }}"
-                                @endisset />
-                        </div>
-                    </div>
+                    {!! view('elements.formFields.textField', ['label' => 'Title', 'name' => 'page_title', 'require' => true])->render() !!}
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group row">
-                        <label for="active" class="col-sm-3">Active:</label>
-                        <div class="col-sm-1">
-                            <input id="active" class="form-check-input" type="checkbox" name="active" checked>
-                        </div>
-                    </div>
+                    {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked'=> true])->render(); !!}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group row">
-                        <label for="url-alias" class="col-sm-2">url alias:</label>
-                        <div class="col-sm-8">
-                            <input id="url-alias" class="form-control" type="text" name="alias"
-                                @isset($url_alias)
-                                value="{{ $url_alias }}"
-                            @endisset>
-                        </div>
-                    </div>
+                    {!! view('elements.formFields.textField', ['label' => 'url alias', 'name' => 'alias'])->render() !!}
                 </div>
 
-                <div class="col-md-6 row">
-                    <label for="show" class="col-sm-3">show:</label>
-                    <div class="col-sm-1">
-                        <input id="show" class="form-check-input" type="checkbox" name="show" checked>
-                    </div>
+                <div class="col-md-6">
+                    {!! view('elements.formFields.checkBox', ['label' => 'show', 'name' => 'show', 'checked'=> true])->render(); !!}
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-6 form-group">
-                    <label for="short_conten">short conten:</label>
-                    <div class="col-sm-10">
-                        <textarea id="short_conten" name="short_conten" class="form-control" rows="4"
-                            style="padding: 10px; height: 100%;">@isset($short_conten){{ $short_conten }}@endisset
-                        </textarea>
-                    </div>
+                <div class="col-md-6">
+                  {!! view('elements.formFields.textArea', ['label' => 'short conten', 'name' => 'short_conten',])->render(); !!}
                 </div>
 
-                <div class="col-md-6 row">
-                    <label for="auto_hide" class="col-sm-3">auto hide: </label>
-                    <div class="col-sm-1">
-                        <input id="auto_hide" class="form-check-input" type="checkbox" name="auto_hide" checked>
-                    </div>
+                <div class="col-md-6">
+                    {!! view('elements.formFields.checkBox', ['label' => 'auto hide', 'name' => 'auto_hide', 'checked'=> true])->render(); !!}
                 </div>
             </div>
 
@@ -600,33 +559,4 @@
             });
         })
     </script>
-    {{-- <script type="text/javascript">
-            encodeURI('\uD800\uDFFF');
-            tinymce.init({
-                convert_urls: false,
-                selector: "textarea#conten",
-                plugins: ["image", "table", "code", "codesample", "addcomment", "showcomments", "media"],
-                toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
-                toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
-                file_picker_callback: function(callback, value, meta) {
-                    let x = window.innerWidth || document.documentElement.clientWidth || document
-                        .getElementsByTagName('body')[0].clientWidth;
-                    let y = window.innerHeight || document.documentElement.clientHeight || document
-                        .getElementsByTagName('body')[0].clientHeight;
-
-                    let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                        url = '{!! $filemanager_url !!}';
-
-                    tinymce.activeEditor.windowManager.openUrl({
-                        url: url,
-                        title: 'Filemanager',
-                        width: x * 0.8,
-                        height: y * 0.8,
-                        onMessage: (api, message) => {
-                            callback(message.content);
-                        }
-                    });
-                }
-            });
-        </script> --}}
 @endsection
