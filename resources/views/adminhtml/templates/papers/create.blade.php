@@ -32,9 +32,11 @@
                 font-family: inherit;
                 line-height: 1;
             }
+
             .sliderImages {
                 max-height: 480px !important;
             }
+        }
     </style>
 
     <meta charset='utf-8'>
@@ -46,66 +48,73 @@
 @section('body_main_conten')
     <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
     <div class="col-12 grid-margin">
-        <h4 class="card-title">add new source</h4>
+        <h4 class="card-title">Design new source</h4>
         <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
             @csrf
-            {!! view('elements.message.index')->render(); !!}
+            {!! view('elements.message.index')->render() !!}
 
             <div class="row">
                 <div class="col-md-6">
-                    {!! view('elements.formFields.textField', ['label' => 'Title', 'name' => 'page_title', 'require' => true])->render() !!}
+                    {!! view('elements.formFields.textField', [
+                        'label' => 'Title',
+                        'name' => 'page_title',
+                        'require' => true,
+                        'value' => $value ?? null,
+                    ])->render() !!}
                 </div>
 
                 <div class="col-md-6">
-                    {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked'=> true])->render(); !!}
+                    {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked' => true])->render() !!}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    {!! view('elements.formFields.textField', ['label' => 'url alias', 'name' => 'alias'])->render() !!}
+                    {!! view('elements.formFields.textField', ['label' => 'Url alias', 'name' => 'alias'])->render() !!}
                 </div>
 
                 <div class="col-md-6">
-                    {!! view('elements.formFields.checkBox', ['label' => 'show', 'name' => 'show', 'checked'=> true])->render(); !!}
+                    {!! view('elements.formFields.checkBox', ['label' => 'Show', 'name' => 'show', 'checked' => true])->render() !!}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                  {!! view('elements.formFields.textArea', ['label' => 'short conten', 'name' => 'short_conten',])->render(); !!}
+                    {!! view('elements.formFields.textArea', ['label' => 'Short conten', 'name' => 'short_conten'])->render() !!}
                 </div>
 
                 <div class="col-md-6">
-                    {!! view('elements.formFields.checkBox', ['label' => 'auto hide', 'name' => 'auto_hide', 'checked'=> true])->render(); !!}
+                    {!! view('elements.formFields.checkBox', [
+                        'label' => 'Auto hide',
+                        'name' => 'auto_hide',
+                        'checked' => true,
+                    ])->render() !!}
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-6 form-group">
-                    <label for="category" class="col-sm-2">category:</label>
+                <div class="col-md-6">
                     <div class="col-sm-10">
-                        <div class="form-group">
-                            <select id="category_option" class="form-control" name="category_option[]" multiple="multiple">
-                                {!! $category_option !!}
-                            </select>
-                        </div>
+                        {!! view('elements.formFields.select2Fields', [
+                            'label' => 'Select category',
+                            'id' => 'category_option',
+                            'name' => 'category_option',
+                            'options' => $category_option,
+                            'place_holder' => 'Select an option',
+                            'token_separators' => [',', ' '],
+                            'multiple' => true
+                        ])->render() !!}
                     </div>
                 </div>
 
-                <div class="col-md-6 form-group">
-                    <label class="col-sm-3">image:</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                    <i class="fa fa-picture-o"></i> Choose
-                                </a>
-                            </span>
-                            <input id="thumbnail" class="form-control" type="text" name="image_path" value="">
-                        </div>
-                        <img id="holder" style="margin-top:15px;max-height:100px;">
-                    </div>
+                <div class="col-md-6">
+                    {!! view('elements.formFields.chooseFile', [
+                        'label' => 'Thumbnail image',
+                        'id' => 'lfm_1',
+                        'input_id' => 'input_id_1',
+                        'name' => 'image_path',
+                        'preview_id' => 'preview_id_1',
+                    ])->render() !!}
                 </div>
             </div>
 
@@ -114,8 +123,7 @@
                     <div data-type="p-carousel" ondragover="">
                         <p>paper carousel</p>
                         <div class="data-content" style="display: none">
-                            <button type="button" class="btn form-control btn-primary" data-toggle="modal"
-                                id="addSlider">
+                            <button type="button" class="btn form-control btn-primary" data-toggle="modal" id="addSlider">
                                 Add slider item
                             </button>
                             <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
@@ -127,8 +135,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Input item content</h5>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -154,8 +161,7 @@
                                                                     <i class="fa fa-picture-o"></i> Choose
                                                                 </a>
                                                             </span>
-                                                            <input id="slider_images" class="form-control"
-                                                                type="text">
+                                                            <input id="slider_images" class="form-control" type="text">
                                                         </div>
                                                         <img id="holder" style="margin-top:15px;max-height:100px;">
                                                     </div>
@@ -182,13 +188,13 @@
                                 style="font-size: 16px; font-weight: 600; text-decoration: underline;">view demo
                                 frontend(pull right to add content):</p>
                             @isset($conten)
-                            <style>
-                                .demo-content-source img{
-                                    max-width: 30% !important;
-                                    width: auto !important;
-                                    height: auto !important;
-                                }
-                            </style>
+                                <style>
+                                    .demo-content-source img {
+                                        max-width: 30% !important;
+                                        width: auto !important;
+                                        height: auto !important;
+                                    }
+                                </style>
                                 {!! $conten !!}
                             @else
                                 <p>paper html content</p>
@@ -196,7 +202,9 @@
                         </div>
                         <div class="data-content">
                             <textarea id="conten" name="conten" class="form-control" style="height: 720px; display: none">
-                                @isset($conten){{ $conten }}@endisset
+                                @isset($conten)
+{{ $conten }}
+@endisset
                             </textarea>
                         </div>
                     </div>
@@ -283,39 +291,37 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="paper-tag">tag for links</label>
-                        <select class="paper_tag form-control" name="paper_tag[]" multiple="multiple">
-                        </select>
-                    </div>
+                    {!! view('elements.formFields.select2Fields', [
+                        'id' => 'paper_tag',
+                        'label' => 'Tag for links',
+                        'name' => 'paper_tag',
+                        'place_holder' => 'liên kết',
+                        'token_separators' => [','],
+                        'multiple' => true
+                    ])->render(); !!}
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="paper_writer">writer:</label>
-                        <select class="form-control" name="writer" id="paper_writer">
-                            @if ($writers)
-                                @foreach ($writers as $writer)
-                                    <option value="{{ $writer->id }}">{{ $writer->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
+                    {!! view('elements.formFields.select2Fields', [
+                        'label' => 'Writer',
+                        'id' => 'paper_writer',
+                        'name' => 'writer',
+                        'options' => $writers,
+                        'token_separators' => [''],
+                        'multiple' => false
+                    ])->render(); !!}
                 </div>
             </div>
 
             <div class="row justify-content-center mt-2">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-info btn-lg" style="width: -webkit-fill-available;">save
-                        </button>
-                    </div>
+                    {!! view('elements.formFields.submitBtn')->render() !!}
                 </div>
             </div>
         </form>
 
         <script>
             function imgOnclick(type = 'file', options = {
-                prefix: url_base,
+                prefix: filemanager_url_base,
             }) {
                 var route_prefix = (options && options.prefix) ? options.prefix : '/filemanager';
                 var target_input = $('#' + $(this).data('input'));
@@ -471,32 +477,14 @@
 
 @section('before_bottom_js')
     <script type="text/javascript">
-        var url_base = '{!! $filemanager_url_base !!}';
-        $('#lfm').filemanager('file', {
-            prefix: url_base
-        });
-
         // slider_image
         $('#slider_image').filemanager('file', {
-            prefix: url_base
-        });
-
-        $(".paper_tag").select2({
-            tags: true,
-            tokenSeparators: [','],
-            placeholder: 'liên kết'
+            prefix: filemanager_url_base
         });
 
         $("#time_line_type").select2({
             placeholder: 'Select an value',
             maximumSelectionLength: 1
-        });
-
-        $("#category_option").select2({
-            placeholder: 'Select an option',
-            tags: true,
-            tokenSeparators: [',', ' '],
-            placeholder: 'danh mục bài viết'
         });
     </script>
 @endsection

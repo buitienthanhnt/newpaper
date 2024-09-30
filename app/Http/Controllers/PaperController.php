@@ -191,7 +191,7 @@ class PaperController extends Controller
             "show_writer" => $this->request->get("show_writer") === 'on',
             "show_time" => $this->request->get("show_time"),
             "image_path" => $this->request->get("image_path") ?: "",
-            "writer" => $this->request->get("writer", null),
+            "writer" => $this->request->get("writer")[0] ?? null ,
             "type" => $this->pageType()
         ]);
         $paper->save();
