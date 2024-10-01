@@ -148,154 +148,30 @@
             <div class="row">
                 <div class='wrapper col-md-12'>
                     <div id='left-defaults' class='container' style="width: 30%">
-                        {{-- <div data-type="p-carousel" ondragover="">
-                            <p>paper carousel</p>
-                            <div class="data-content" style="display: none">
-                                <button type="button" class="btn form-control btn-primary" data-toggle="modal"
-                                    id="addSlider">
-                                    Add slider item
-                                </button>
-                                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-                                </div>
-                                <textarea id="sliderDataConten" style="display: none" name="slider_data"></textarea>
-                                <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="sliderModal" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" style="max-width: 800px" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Input item content</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="captions_label">captions label</label>
-                                                    <input id="captions_label" class="form-control" type="text">
-                                                </div>
+                        {!! view('adminhtml.templates.papers.contenElement.image')->render() !!}
+                        @php
+                            $list_contens = $paper->to_contents()->pluck('type')->toArray();
+                        @endphp
 
-                                                <div class="form-group">
-                                                    <label for="captions_content">captions content</label>
-                                                    <textarea id="captions_content" class="form-control" style="height: auto" name="captions_content" rows="6"></textarea>
-                                                </div>
+                        @if (!in_array('price', $list_contens))
+                            {!! view('adminhtml.templates.papers.contenElement.price')->render() !!}
+                        @endif
 
-                                                <div class="form-group">
-                                                    <div class="form-group row">
-                                                        <label class="col-sm-3 col-form-label">image:</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="input-group">
-                                                                <span class="input-group-btn">
-                                                                    <a id="slider_image" data-input="slider_images"
-                                                                        data-preview="holder" class="btn btn-primary">
-                                                                        <i class="fa fa-picture-o"></i> Choose
-                                                                    </a>
-                                                                </span>
-                                                                <input id="slider_images" class="form-control"
-                                                                    type="text">
-                                                            </div>
-                                                            <img id="holder" style="margin-top:15px;max-height:100px;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                    id="closeSliderImages">Close
-                                                </button>
-                                                <button type="button" class="btn btn-primary"
-                                                    id="saveCarouiselItem">Save
-                                                    changes
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div style="" data-type="p-html">
-                            <p>paper html content</p>
-                            <div class="data-content">
-                                <textarea id="conten" name="conten" class="form-control" style="height: 720px; display: none"></textarea>
-                            </div>
-                        </div> --}}
+                        @if (!in_array('timeline', $list_contens))
+                            {!! view('adminhtml.templates.papers.contenElement.timeline', [
+                                'time_line_option' => $time_line_option,
+                            ])->render() !!}
+                        @endif
 
-                        {{-- <div data-type="p-timeline">
-                            <p>paper timeline</p>
-                            <div class="data-content form-group" style="display: none">
-                                <div class="col-md-12 r">
-                                    <label for="time_line_type" class="col-sm-2 col-form-label">TimeLine:</label>
-                                    <div class="col-sm-10">
-                                        <div class="form-group">
-                                            <select id="time_line_type" class="form-control" name="time_line_type"
-                                                multiple="multiple">
-                                                {!! $time_line_option !!}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12" style="align-content: center">
-                                    <div class="form-group row" style="margin-bottom: 0px">
-                                        <label for="url-alias" class="col-sm-2">Timeline:</label>
-                                        <div class="cs-form col-sm-8">
-                                            <input name="time_line_value" id="timelineInput" />
-                                            <script type="text/javascript">
-                                                // https://gijgo.com/datetimepicker
-                                                $("#timelineInput").datetimepicker({
-                                                    datepicker: {
-                                                        showOtherMonths: true,
-                                                        calendarWeeks: true,
-                                                        todayHighlight: true
-                                                    },
-                                                    footer: true,
-                                                    modal: true,
-                                                    header: true,
-                                                    value: '',
-                                                    format: 'yyyy-mm-dd HH:MM:ss',
-                                                });
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
+                        @if (!in_array('conten', $list_contens))
+                            {!! view('adminhtml.templates.papers.contenElement.conten')->render() !!}
+                        @endif
 
-                        {{-- <div data-type="p-price">
-                            <p>paper price</p>
-                            <div class="data-content form-group row" style="display: none">
-                                <label for="price" class="col-sm-2">Price:</label>
-                                <div class="col-sm-8">
-                                    <input type="number" name="price" id="price" placeholder="nghìn vnđ"
-                                        class="form-control" min="0"
-                                        value="@isset($price)
-                                           {{ $price }}
-                                           @endisset">
-                                </div>
-                            </div>
-                        </div> --}}
+                        @if (!in_array('slider_data', $list_contens))
+                            {!! view('adminhtml.templates.papers.contenElement.sliderData')->render() !!}
+                        @endif
 
-                        <div data-type="p-picture">
-                            <p>paper picture</p>
-                            <div class="data-content input-group" style="display: none">
-                                <div>
-                                    <span class="input-group-btn">
-                                        <a class="btn btn-primary">
-                                            <i class="fa fa-picture-o"></i> Choose
-                                        </a>
-                                    </span>
-                                </div>
-                                <input class="form-control" type="text" multiple>
-                                <div class="input-group">
-                                    <span class="input-group-btn">description:&nbsp;</span>
-                                    <input class="form-control" type="text" name="">
-                                </div>
-                            </div>
-                            <img id="holder" style="margin-top:15px;max-height:100px;">
-                        </div>
-
-                        <div style="height: 150px" data-type="p-video">
-                            <p>paper video</p>
-                        </div>
+                        {!! view('adminhtml.templates.papers.contenElement.video')->render(); !!}
                     </div>
                     <div id='right-defaults' class='container col-md-7'>
                         @foreach ($paper->to_contents() as $item)
@@ -352,7 +228,8 @@
                         <select class="form-control" name="writer" id="paper_writer">
                             @if ($writers)
                                 @foreach ($writers as $writer)
-                                    <option value="{{ $writer->id }}" @if ($paper->writer && $paper->writer == $writer->id) selected @endif>
+                                    <option value="{{ $writer->id }}"
+                                        @if ($paper->writer && $paper->writer == $writer->id) selected @endif>
                                         {{ $writer->name }}</option>
                                 @endforeach
                             @endif

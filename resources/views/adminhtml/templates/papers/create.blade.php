@@ -134,9 +134,7 @@
 
                     {!! view('adminhtml.templates.papers.contenElement.image')->render() !!}
 
-                    <div style="height: 150px; display: flex; justify-content: center; align-items: center" data-type="p-video">
-                       <img src="{{ asset('/assets/adminhtml/images/bullhorn.png') }}" alt="" style="width: auto; height: 100%;">
-                    </div>
+                    {!! view('adminhtml.templates.papers.contenElement.video')->render(); !!}
                 </div>
                 <div id='right-defaults' class='container col-md-7'>
                 </div>
