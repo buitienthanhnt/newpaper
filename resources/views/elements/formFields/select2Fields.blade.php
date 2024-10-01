@@ -3,7 +3,11 @@
         <label for="category">{{ $label }}:</label>
     @endisset
     <div class="form-group">
-        <select id="{{ $id }}" class="form-control" name="{{ $name}}[]" multiple="multiple">
+        <select id="{{ $id }}" class="form-control" name="{{ $name }}[]" multiple="multiple"
+            @isset($require)
+                @if ($require)required @endif
+            @endisset
+        >
             @isset($options)
                 @if (is_string($options))
                     {!! $options !!}

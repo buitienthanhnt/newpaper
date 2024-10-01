@@ -1,6 +1,11 @@
 <div data-type="p-carousel" ondragover="">
-    <p style="display: none">paper carousel</p>
-    <div class="data-content">
+    <p @isset($item)
+            style="display: none"
+        @endisset>paper carousel</p>
+    <div class="data-content"
+        @isset($item)
+            @else style="display: none"
+        @endisset>
         <button type="button" class="btn form-control btn-primary" data-toggle="modal" id="addSlider">
             Add slider item
         </button>
@@ -58,9 +63,13 @@
         </div>
     </div>
 </div>
-<script>
-    var value = '@php echo($item->value); @endphp';
+<script type="text/javascript">
+    $('#slider_image').filemanager('file', {
+        prefix: filemanager_url_base
+    });
+    var value = '@php echo($item->value ?? json_encode([])); @endphp';
     var slider = JSON.parse(value);
+
     function renderCarousel(data) {
         if (!data || data.length < 1) {
             return '';
@@ -81,7 +90,8 @@
                 i == 0 ? 'active' : ' ') + '"></li>';
 
             content += '<div class="carousel-item ' + (i == 0 ? 'active' : '') + '" style="max-height: 320px;">' +
-                '<span class="position-absolute btn btn-danger" onclick="removeItem('+i+')" style="right: 50px; top: 10px">delete</span>' +
+                '<span class="position-absolute btn btn-danger" onclick="removeItem(' + i +
+                ')" style="right: 50px; top: 10px">delete</span>' +
                 '<img class="d-block w-100 sliderImages" src="' + (slider[i].image_path) + '" >' +
                 '<div class="carousel-caption d-none d-md-block">' +
                 '<h5>' + (slider[i].title) + '</h5>' +
@@ -94,12 +104,12 @@
         return beginIndicator + content + change;
     }
 
-    function removeItem(index){
+    function removeItem(index) {
         console.log(index);
-        
+
         slider.splice(index, 1);
         console.log(slider);
-        
+
         $("#carouselExampleCaptions").html(renderCarousel(slider));
     }
 

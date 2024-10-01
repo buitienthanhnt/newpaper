@@ -363,11 +363,7 @@
 
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-info btn-lg" style="width: -webkit-fill-available;">update
-                            paper
-                        </button>
-                    </div>
+                    {!! view('elements.formFields.submitBtn', ['label' => 'update content'])->render() !!}
                 </div>
             </div>
         </form>
