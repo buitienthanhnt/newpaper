@@ -39,7 +39,10 @@
     </div>
 @else
     <div data-type="p-timeline">
-        <p>paper timeline</p>
+        <div style="height: 150px; display: flex; justify-content: center; align-items: center">
+            {{-- https://www.flaticon.com/search?word=picture --}}
+            <img src="{{ asset('/assets/adminhtml/images/timeline.png') }}" alt="" style="width: auto; height: 100%;">
+        </div>
         <div class="data-content form-group" style="display: none">
             <div class="col-md-12 r">
                 <label for="time_line_type" class="col-sm-2 col-form-label">TimeLine:</label>

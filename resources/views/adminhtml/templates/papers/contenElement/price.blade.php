@@ -1,6 +1,5 @@
 @isset($item)
     <div data-type="p-price">
-        <p style="display: none">paper price</p>
         <div class="data-content form-group row">
             <label for="price" class="col-sm-2">Price:</label>
             <div class="col-sm-8">
@@ -11,7 +10,9 @@
     </div>
 @else
     <div data-type="p-price">
-        <p>paper price</p>
+        <div style="height: 150px; display: flex; justify-content: center; align-items: center">
+            <img src="{{ asset('/assets/adminhtml/images/price-tag.png') }}" alt="" style="width: auto; height: 100%;">
+        </div>
         <div class="data-content form-group row" style="display: none">
             <label for="price" class="col-sm-2">Price:</label>
             <div class="col-sm-8">

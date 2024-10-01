@@ -1,7 +1,7 @@
 <div data-type="p-carousel" ondragover="">
-    <p @isset($item)
-            style="display: none"
-        @endisset>paper carousel</p>
+    <div style="@isset($item)display: none; @endisset height: 150px; display: flex; justify-content: center; align-items: center" >
+        <img src="{{ asset('/assets/adminhtml/images/image-split-testing.png') }}" alt="" style="width: auto; height: 100%;">
+    </div>
     <div class="data-content"
         @isset($item)
             @else style="display: none"

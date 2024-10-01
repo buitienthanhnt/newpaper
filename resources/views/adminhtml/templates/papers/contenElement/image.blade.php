@@ -21,7 +21,10 @@
     </div>
 @else
     <div data-type="p-picture">
-        <p>paper picture</p>
+        <div style="height: 150px; display: flex; justify-content: center; align-items: center">
+            {{-- https://www.flaticon.com/search?word=picture --}}
+            <img src="{{ asset('/assets/adminhtml/images/picture.png') }}" alt="" style="width: auto; height: 100%;">
+        </div>
         <div class="data-content input-group" style="display: none">
             <div>
                 <span class="input-group-btn">

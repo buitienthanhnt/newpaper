@@ -10,9 +10,10 @@
 @else
     <div style="" data-type="p-html">
         <div class="demo-content-source">
-            <p class="text-primary" style="font-size: 16px; font-weight: 600; text-decoration: underline;">
-                view demo
-                frontend(pull right to add content):</p>
+            <div style="height: 150px; display: flex; justify-content: center; align-items: center">
+                {{-- https://www.flaticon.com/search?word=picture --}}
+                <img src="{{ asset('/assets/adminhtml/images/content-management.png') }}" alt="" style="width: auto; height: 100%;">
+            </div>
             @isset($conten)
                 <style>
                     .demo-content-source img {
