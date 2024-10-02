@@ -52,7 +52,8 @@ class PaperController extends Controller
         HelperFunction $helperFunction,
         LogTha $logTha,
         CartService $cartService
-    ) {
+    )
+    {
         $this->request = $request;
         $this->paper = $paper;
         $this->logTha = $logTha;
@@ -183,7 +184,7 @@ class PaperController extends Controller
         $paper = $this->paper;
         $paper->fill([
             "title" => $this->request->get("page_title"),
-            "url_alias" => $this->formatPath($this->request->get("alias", $this->request->get("page_title"))),
+            "url_alias" => $this->formatPath($this->request->get("alias") ?: $this->request->get("page_title")),
             "short_conten" => $this->request->get("short_conten"),
             "conten" => null,
             "active" => $this->request->get("active") ? true : false,
@@ -258,10 +259,11 @@ class PaperController extends Controller
         $paper_category = array_column($paper->to_category()->get(["category_id"])->toArray(), "category_id");
         $category_option = $this->category->setSelected($paper_category)->category_tree_option();
         $time_line_option = $this->category->time_line_option(array_filter($paper->to_contents()->toArray(), function ($i) {
-            return $i['type'] === 'timeline';
-        })[0]['depend_value'] ?? null);
+                return $i['type'] === 'timeline';
+            })[0]['depend_value'] ?? null);
 
-        return view("adminhtml.templates.papers.edit", compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "time_line_option"));
+        return view("adminhtml.templates.papers.edit",
+            compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "time_line_option"));
     }
 
     public function updatePaper($paper_id)

@@ -16,7 +16,7 @@
             <input id="{{ $input_id }}" class="form-control" type="text" name="{{ $name }}"
                 @isset($value)value="{{ $value }}"@endisset>
         </div>
-        <img id="{{ $preview_id }}" style="margin-top:15px;max-height:100px;">
+        <img id="{{ $preview_id }}" style="margin-top:5px;max-height:100px;">
     </div>
 </div>
 

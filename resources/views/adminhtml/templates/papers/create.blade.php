@@ -16,37 +16,39 @@
     <script src="{{ asset('assets/all/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/all/tinymce/js/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('/vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
-    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="{{ asset('assets/adminhtml/gijgo/gijgo.min.js') }}"></script>
     <script src="{{ asset('assets/frontend/js/dragula/dragula.js') }}"></script>
 @endsection
 
 @section('after_css')
-    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
     <link rel="shortcut icon" href="favicon.ico">
-    <link href="{{ asset('assets/frontend/css/dragula/dragula.css') }}" rel='stylesheet' type='text/css' />
-    <link href="{{ asset('assets/frontend/css/dragula/example.css') }}" rel='stylesheet' type='text/css' />
+    <link href="{{ asset('assets/frontend/css/dragula/dragula.css') }}" rel='stylesheet' type='text/css'/>
+    <link href="{{ asset('assets/frontend/css/dragula/example.css') }}" rel='stylesheet' type='text/css'/>
     <style type="text/css">
-        .select2-selection--multiple {
-            .select2-selection__choice {
-                color: color(white);
-                border: 0;
-                border-radius: 3px;
-                padding: 6px !important;
-                font-size: larger !important;
-                font-family: inherit;
-                line-height: 1;
-            }
+        .select2-selection--multiple > .select2-selection__choice {
+            color: color('white');
+            border: 0;
+            border-radius: 3px;
+            padding: 6px !important;
+            font-size: larger !important;
+            font-family: inherit;
+            line-height: 1;
+        }
 
-            .sliderImages {
-                max-height: 480px !important;
-            }
+        .select2-selection--multiple > .sliderImages {
+            max-height: 480px !important;
+        }
+
+        .form-group {
+            margin-bottom: 10px !important;
         }
     </style>
 @endsection
 
 @section('body_main_conten')
     <div class="col-12 grid-margin">
-        <h4 class="card-title">Design new source</h4>
+        <h5 class="card-title">Design paper</h5>
         <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
             @csrf
             {!! view('elements.message.index')->render() !!}
@@ -61,41 +63,32 @@
                     ])->render() !!}
                 </div>
                 <div class="col-md-6">
-                    {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked' => true])->render() !!}
+                    <div class="row">
+                        <div class="col-md-4">
+                            {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked' => true])->render() !!}
+                        </div>
+                        <div class="col-md-4">
+                            {!! view('elements.formFields.checkBox', ['label' => 'Show', 'name' => 'show', 'checked' => true])->render() !!}
+                        </div>
+                        <div class="col-md-4">
+                            {!! view('elements.formFields.checkBox', [
+                                'label' => 'Auto hide',
+                                'name' => 'auto_hide',
+                                'checked' => true,
+                            ])->render() !!}
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     {!! view('elements.formFields.textField', [
-                        'label' => 'Url alias',
-                        'name' => 'alias',
-                        'value' => $value['url_alias'] ?? '',
-                    ])->render() !!}
+                    'label' => 'Url alias',
+                    'name' => 'alias',
+                    'value' => $value['url_alias'] ?? '',
+                ])->render() !!}
                 </div>
-                <div class="col-md-6">
-                    {!! view('elements.formFields.checkBox', ['label' => 'Show', 'name' => 'show', 'checked' => true])->render() !!}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    {!! view('elements.formFields.textArea', [
-                        'label' => 'Short conten',
-                        'name' => 'short_conten',
-                        'value' => $value['short_conten'] ?? null,
-                    ])->render() !!}
-                </div>
-                <div class="col-md-6">
-                    {!! view('elements.formFields.checkBox', [
-                        'label' => 'Auto hide',
-                        'name' => 'auto_hide',
-                        'checked' => true,
-                    ])->render() !!}
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col-md-6">
                     <div class="col-sm-10">
                         {!! view('elements.formFields.select2Fields', [
@@ -109,34 +102,46 @@
                         ])->render() !!}
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    {!! view('elements.formFields.textArea', [
+                        'label' => 'Short conten',
+                        'name' => 'short_conten',
+                        'value' => $value['short_conten'] ?? null,
+                    ])->render() !!}
+                </div>
                 <div class="col-md-6">
                     {!! view('elements.formFields.chooseFile', [
-                        'label' => 'Thumbnail image',
-                        'id' => 'lfm_1',
-                        'input_id' => 'input_id_1',
-                        'name' => 'image_path',
-                        'preview_id' => 'preview_id_1',
-                    ])->render() !!}
+                     'label' => 'Thumbnail image',
+                     'id' => 'lfm_1',
+                     'input_id' => 'input_id_1',
+                     'name' => 'image_path',
+                     'preview_id' => 'preview_id_1',
+                 ])->render() !!}
                 </div>
             </div>
 
-            <div class='wrapper col-md-12'>
-                <div id='left-defaults' class='container' style="width: 30%">
-                    {!! view('adminhtml.templates.papers.contenElement.sliderData')->render() !!}
+            <div class="row">
+                <div class='wrapper col-md-12'>
+                    <div id='left-defaults' class='container' style="width: 30%">
+                        {!! view('adminhtml.templates.papers.contenElement.sliderData')->render() !!}
 
-                    {!! view('adminhtml.templates.papers.contenElement.conten', ['conten' => $value['conten'] ?? null])->render() !!}
+                        {!! view('adminhtml.templates.papers.contenElement.conten', ['conten' => $value['conten'] ?? null])->render() !!}
 
-                    {!! view('adminhtml.templates.papers.contenElement.timeline', [
-                        'time_line_option' => $time_line_option,
-                    ])->render() !!}
+                        {!! view('adminhtml.templates.papers.contenElement.timeline', [
+                            'time_line_option' => $time_line_option,
+                        ])->render() !!}
 
-                    {!! view('adminhtml.templates.papers.contenElement.price')->render() !!}
+                        {!! view('adminhtml.templates.papers.contenElement.price')->render() !!}
 
-                    {!! view('adminhtml.templates.papers.contenElement.image')->render() !!}
+                        {!! view('adminhtml.templates.papers.contenElement.image')->render() !!}
 
-                    {!! view('adminhtml.templates.papers.contenElement.video')->render(); !!}
-                </div>
-                <div id='right-defaults' class='container col-md-7'>
+                        {!! view('adminhtml.templates.papers.contenElement.video')->render(); !!}
+                    </div>
+                    <div id='right-defaults' class='container col-md-7'>
+                    </div>
                 </div>
             </div>
 
@@ -182,8 +187,8 @@
             var target_input = $('#' + $(this).data('input'));
             var target_preview = $('#' + $(this).data('preview'));
             window.open(route_prefix + '?type=' + type, 'FileManager', 'width=900,height=600');
-            window.SetUrl = function(items) {
-                var file_path = items.map(function(item) {
+            window.SetUrl = function (items) {
+                var file_path = items.map(function (item) {
                     return item.url;
                 }).join(',');
                 // set the value of the desired input to image url
@@ -191,7 +196,7 @@
                 // clear previous preview
                 target_preview.html('');
                 // set or change the preview image src
-                items.forEach(function(item) {
+                items.forEach(function (item) {
                     target_preview.append(
                         $('<img>').css('height', '5rem').attr('src', item.thumb_url)
                     );
@@ -205,20 +210,20 @@
         // https://github.com/bevacqua/dragula
         var dra = dragula(
             [document.getElementById('left-defaults'), document.getElementById('right-defaults')], {
-                isContainer: function(el) {
+                isContainer: function (el) {
                     return false; // only elements in drake.containers will be taken into account
                 },
-                moves: function(el, source, handle, sibling) {
+                moves: function (el, source, handle, sibling) {
                     return true; // elements are always draggable by default
                 },
-                accepts: function(el, target, source, sibling) {
+                accepts: function (el, target, source, sibling) {
                     return true; // elements can be dropped in any of the `containers` by default
                 },
-                invalid: function(el, handle) {
+                invalid: function (el, handle) {
                     return false; // don't prevent any drags from initiating by default
                 },
                 direction: 'vertical', // Y axis is considered when determining where an element would be dropped
-                copy: function(el, source) {
+                copy: function (el, source) {
                     return $(el).attr('data-type') === 'p-picture' && $(source).attr('id') === 'left-defaults';
                 }, // elements are moved by default, not copied
                 copySortSource: true, // elements in copy-source containers can be reordered
@@ -229,7 +234,7 @@
                 slideFactorX: 0, // allows users to select the amount of movement on the X axis before it is considered a drag instead of a click
                 slideFactorY: 0, // allows users to select the amount of movement on the Y axis before it is considered a drag instead of a click
             }
-        ).on('dragend', function(el) {
+        ).on('dragend', function (el) {
             console.log('dragend', $($(el).parent()[0]).attr('id'));
             if ($(el).attr('data-type') === 'p-picture' && $($(el).parent()[0]).attr('id') === 'left-defaults') {
                 if ($("div[data-type=p-picture]").length > 1) {
@@ -244,7 +249,7 @@
                 return;
             }
 
-            $(el).click(function(params) {
+            $(el).click(function (params) {
                 let p_type = $(this).attr('data-type');
                 switch (p_type) {
                     case 'p-html':
@@ -259,7 +264,7 @@
                             ],
                             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
                             toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
-                            file_picker_callback: function(callback, value, meta) {
+                            file_picker_callback: function (callback, value, meta) {
                                 let x = window.innerWidth || document.documentElement
                                     .clientWidth || document
                                     .getElementsByTagName('body')[0].clientWidth;
@@ -293,9 +298,7 @@
                         $($($(this).children()[1]).children()[1]).attr("id", pictute_thum).attr("name",
                             "images_" + pictute_thum);
                         // set image desciption name:
-                        const pictute_desc = 'imagex_desc_' + $(
-                                "#right-defaults > div[data-type=p-picture]")
-                            .length;
+                        const pictute_desc = 'imagex_desc_' + $("#right-defaults > div[data-type=p-picture]").length;
                         $($($($(this).children()[1]).children()[2]).children()[1]).attr('name',
                             pictute_desc)
                         // gán sự kiện cho nút: 'choose image'.
@@ -311,15 +314,12 @@
                         break;
                 }
             });
-        }).on('remove', function(el) {
+        }).on('remove', function (el) {
             console.log('remove');
-        }).on('drop', function(el) {
+        }).on('drop', function (el) {
             console.log('drop');
-        }).on('cancel', function(el) {
+        }).on('cancel', function (el) {
             console.log('cancel');
         });
     </script>
-@endsection
-
-@section('after_js')
 @endsection

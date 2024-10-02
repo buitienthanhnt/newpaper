@@ -1,8 +1,10 @@
-@if ($message = session('success'))
+@if (session('success'))
     <?php
-    alert()->success('server message', $message);
-    session()->forget('success');
+        alert()->success('server message', session('success'));
+        session()->forget('success');
     ?>
 @elseif ($error = session('error'))
-    <?php alert()->warning('server mesage', $error); ?>
+    <?php
+        alert()->warning('server mesage', session('error'));
+    ?>
 @endif

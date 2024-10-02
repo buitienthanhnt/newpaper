@@ -13,7 +13,13 @@
                     {!! $options !!}
                 @else
                     @foreach ($options as $option)
-                        <option value="{{ $option->id }}">{{ $option->name }}</option>
+                        <option value="{{ $option->value ?? $option->id }}"
+                            @isset($value)
+                                @if(in_array($option->value ?? $option->id, $value)) selected @endif
+                            @endisset
+                        >
+                            {{ $option->name ?? $option->value }}
+                        </option>
                     @endforeach
                 @endif
             @endisset
