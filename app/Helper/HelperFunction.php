@@ -126,10 +126,16 @@ class HelperFunction
     // allway use default image url.
     public function defaultUrl(): string
     {
-        $ip = "";
-        $main = "";
         try {
             DB::beginTransaction();
+            $default_image = DB::table($this->coreConfigTable())->where("name", "=", "default_image")->first('value')->value;
+            if ($default_image){
+                return $default_image;
+            }
+            $is_windown = DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->first('value')->value;
+            if (!$is_windown){
+                return public_path('assets/pub_image/defaul.PNG');
+            }
             $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->first('value')->value;
             $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->first('value')->value;
         } catch (\Throwable $th) {
