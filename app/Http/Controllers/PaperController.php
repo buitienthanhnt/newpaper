@@ -21,11 +21,13 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\LogTha;
+use Thanhnt\Nan\Helper\StringHelper;
 use Throwable;
 
 class PaperController extends Controller
 {
     use Page;
+    use StringHelper;
 
     protected $request;
     protected $paper;
@@ -50,8 +52,7 @@ class PaperController extends Controller
         HelperFunction $helperFunction,
         LogTha $logTha,
         CartService $cartService
-    )
-    {
+    ) {
         $this->request = $request;
         $this->paper = $paper;
         $this->logTha = $logTha;
@@ -182,7 +183,7 @@ class PaperController extends Controller
         $paper = $this->paper;
         $paper->fill([
             "title" => $this->request->get("page_title"),
-            "url_alias" => $this->request->get("alias") ? str_replace(" ", "-", $this->request->__get("alias")) : str_replace(" ", "-", $this->request->get("page_title")),
+            "url_alias" => $this->formatPath($this->request->get("alias", $this->request->get("page_title"))),
             "short_conten" => $this->request->get("short_conten"),
             "conten" => null,
             "active" => $this->request->get("active") ? true : false,
@@ -191,7 +192,7 @@ class PaperController extends Controller
             "show_writer" => $this->request->get("show_writer") === 'on',
             "show_time" => $this->request->get("show_time"),
             "image_path" => $this->request->get("image_path") ?: "",
-            "writer" => $this->request->get("writer")[0] ?? null ,
+            "writer" => $this->request->get("writer")[0] ?? null,
             "type" => $this->pageType()
         ]);
         $paper->save();
@@ -256,7 +257,9 @@ class PaperController extends Controller
         $filemanager_url_base = url("adminhtml/file/manager");
         $paper_category = array_column($paper->to_category()->get(["category_id"])->toArray(), "category_id");
         $category_option = $this->category->setSelected($paper_category)->category_tree_option();
-        $time_line_option = $this->category->time_line_option(array_filter($paper->to_contents()->toArray(), function($i){return $i['type'] === 'timeline';})[0]['depend_value'] ?? null);
+        $time_line_option = $this->category->time_line_option(array_filter($paper->to_contents()->toArray(), function ($i) {
+            return $i['type'] === 'timeline';
+        })[0]['depend_value'] ?? null);
 
         return view("adminhtml.templates.papers.edit", compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "time_line_option"));
     }

@@ -9,9 +9,12 @@
         </div>
     </div>
 @else
-    <div data-type="p-price">
-        <div style="height: 150px; display: flex; justify-content: center; align-items: center">
-            <img src="{{ asset('/assets/adminhtml/images/price-tag.png') }}" alt="" style="width: auto; height: 100%;">
+    <div data-type="p-price" style="border-radius: 5px">
+        <div>
+            <div style="display: flex; justify-content: center; align-items: center">
+                <img src="{{ asset('/assets/adminhtml/images/price-tag.png') }}" alt="" style="width: auto; height: 50px">
+            </div>
+            <p style="text-align: center; color: aliceblue; margin-top: 5px; margin-bottom: 0px">Product price</p>
         </div>
         <div class="data-content form-group row" style="display: none">
             <label for="price" class="col-sm-2">Price:</label>

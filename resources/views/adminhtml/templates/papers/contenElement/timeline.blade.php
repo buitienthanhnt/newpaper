@@ -38,10 +38,13 @@
         </div>
     </div>
 @else
-    <div data-type="p-timeline">
-        <div style="height: 150px; display: flex; justify-content: center; align-items: center">
-            {{-- https://www.flaticon.com/search?word=picture --}}
-            <img src="{{ asset('/assets/adminhtml/images/timeline.png') }}" alt="" style="width: auto; height: 100%;">
+    <div data-type="p-timeline" style="border-radius: 5px">
+        <div>
+            <div style="display: flex; justify-content: center; align-items: center">
+                {{-- https://www.flaticon.com/search?word=picture --}}
+                <img src="{{ asset('/assets/adminhtml/images/timeline.png') }}" alt="" style="width: auto; height: 50px;">
+            </div>
+            <p style="text-align: center; color: aliceblue; margin-top: 5px; margin-bottom: 0px">TimeLine</p>
         </div>
         <div class="data-content form-group" style="display: none">
             <div class="col-md-12 r">

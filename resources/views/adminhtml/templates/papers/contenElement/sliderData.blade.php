@@ -1,6 +1,12 @@
-<div data-type="p-carousel" ondragover="">
-    <div style="@isset($item)display: none; @endisset height: 150px; display: flex; justify-content: center; align-items: center" >
-        <img src="{{ asset('/assets/adminhtml/images/image-split-testing.png') }}" alt="" style="width: auto; height: 100%;">
+<div data-type="p-carousel" ondragover="" style="border-radius: 5px">
+    <div>
+        <div
+            style="@isset($item)display: none; @endisset display: flex; justify-content: center; align-items: center">
+            <img src="{{ asset('/assets/adminhtml/images/image-split-testing.png') }}" alt=""
+                style="width: auto; height: 50px">
+
+        </div>
+        <p style="text-align: center; color: aliceblue; margin-top: 5px; margin-bottom: 0px">Carousel images</p>
     </div>
     <div class="data-content"
         @isset($item)

@@ -20,10 +20,13 @@
         <img style="margin-top:15px;max-height:100px;" src="{{ $item->value }}">
     </div>
 @else
-    <div data-type="p-picture">
-        <div style="height: 150px; display: flex; justify-content: center; align-items: center">
-            {{-- https://www.flaticon.com/search?word=picture --}}
-            <img src="{{ asset('/assets/adminhtml/images/picture.png') }}" alt="" style="width: auto; height: 100%;">
+    <div data-type="p-picture" style="border-radius: 5px">
+        <div>
+            <div style="display: flex; justify-content: center; align-items: center">
+                {{-- https://www.flaticon.com/search?word=picture --}}
+                <img src="{{ asset('/assets/adminhtml/images/picture.png') }}" alt="" style="width: auto; height: 50px">
+            </div>
+            <p style="text-align: center; color: aliceblue; margin-top: 5px; margin-bottom: 0px">Picture</p>
         </div>
         <div class="data-content input-group" style="display: none">
             <div>
@@ -38,7 +41,7 @@
                 <span class="input-group-btn">description:&nbsp;</span>
                 <input class="form-control" type="text" name="">
             </div>
+            <img id="holder" style="margin-top:15px;max-height:100px;">
         </div>
-        <img id="holder" style="margin-top:15px;max-height:100px;">
     </div>
 @endisset

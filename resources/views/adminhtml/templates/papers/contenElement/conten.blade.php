@@ -8,11 +8,11 @@
         </div>
     </div>
 @else
-    <div style="" data-type="p-html">
+    <div style="border-radius: 5px" data-type="p-html">
         <div class="demo-content-source">
-            <div style="height: 150px; display: flex; justify-content: center; align-items: center">
+            <div style="display: flex; justify-content: center; align-items: center">
                 {{-- https://www.flaticon.com/search?word=picture --}}
-                <img src="{{ asset('/assets/adminhtml/images/content-management.png') }}" alt="" style="width: auto; height: 100%;">
+                <img src="{{ asset('/assets/adminhtml/images/content-management.png') }}" alt="" style="width: auto; height: 50px">
             </div>
             @isset($conten)
                 <style>
@@ -24,7 +24,7 @@
                 </style>
                 {!! $conten !!}
             @else
-                <p>paper html content</p>
+                <p style="text-align: center; color: aliceblue; margin-top: 5px; margin-bottom: 0px">Paper html content</p>
             @endisset
         </div>
         <div class="data-content">

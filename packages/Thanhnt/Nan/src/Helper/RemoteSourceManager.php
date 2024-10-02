@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Response;
 class RemoteSourceManager
 {
     use DomHtml;
+    use StringHelper;
 
     const SOURCE = [
         "soha.vn"           => "get_soha_value",

@@ -13,12 +13,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Thanhnt\Nan\Helper\RemoteSourceManager;
+use Thanhnt\Nan\Helper\StringHelper;
 
 // https://www.php.net/manual/en/langref.php php
 class ExtensionController extends Controller
 {
     use DomHtml;
     use ImageUpload;
+    use StringHelper;
 
     protected $request;
     protected $paper;
