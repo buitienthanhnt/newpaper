@@ -254,8 +254,6 @@ class PaperController extends Controller
          */
         $paper = $this->paper->find($paper_id);
         $writers = Writer::all();
-        $filemanager_url = url("adminhtml/file/manager") . "?editor=tinymce5";
-        $filemanager_url_base = url("adminhtml/file/manager");
         $paper_category = array_column($paper->to_category()->get(["category_id"])->toArray(), "category_id");
         $category_option = $this->category->setSelected($paper_category)->category_tree_option();
         $time_line_option = $this->category->time_line_option(array_filter($paper->to_contents()->toArray(), function ($i) {
@@ -263,7 +261,7 @@ class PaperController extends Controller
             })[0]['depend_value'] ?? null);
 
         return view("adminhtml.templates.papers.edit",
-            compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "time_line_option"));
+            compact("paper", "writers", "category_option", "time_line_option"));
     }
 
     public function updatePaper($paper_id)
