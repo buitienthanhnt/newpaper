@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Writer extends Model
+class Writer extends Model implements WriterInterface
 {
     use HasFactory;
-    protected $guarded = [];
     use SoftDeletes;
+    protected $guarded = [];
 
     function getPapers(): HasMany {
         return $this->hasMany(Paper::class, 'writer');

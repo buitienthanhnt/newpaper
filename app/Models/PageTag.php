@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PageTag extends Model
+class PageTag extends Model implements PaperTagInterface
 {
     use HasFactory;
-    protected $table = "page_tag";
+    protected $table = self::TABLE_NAME;
 
     public function to_paper($tag_value)
     {

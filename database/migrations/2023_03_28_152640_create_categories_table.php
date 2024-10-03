@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CategoryInterface;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,14 +14,15 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create(CategoryInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string("name")->nullable();
-            $table->string("description")->nullable();
-            $table->boolean("active")->default(true);
-            $table->integer("parent_id")->default(0);
-            $table->string("image_path")->nullable();
-            $table->string("url_alias")->nullable();
+            $table->string(CategoryInterface::ATTR_NAME);
+            $table->string(CategoryInterface::ATTR_URL_ALIAS);
+            $table->boolean(CategoryInterface::ATTR_ACTIVE)->default(true);
+            $table->string(CategoryInterface::ATTR_TYPE)->default(CategoryInterface::TYPE_DEFAULT);
+            $table->integer(CategoryInterface::ATTR_PARENT_ID)->default(0);
+            $table->string(CategoryInterface::ATTR_IMAGE_PATH)->nullable();
+            $table->string(CategoryInterface::ATTR_DESCRIPTION)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -33,6 +35,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists(CategoryInterface::TABLE_NAME);
     }
 }
