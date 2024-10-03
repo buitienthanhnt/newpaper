@@ -18,6 +18,8 @@ class Paper extends Model implements PaperInterface
     use SoftDeletes;
     use ImageUpload;
 
+    const PAGE_TAG = 'page_tag';
+
     protected $guarded;
     protected $viewSource = null;
 
@@ -102,12 +104,6 @@ class Paper extends Model implements PaperInterface
             //throw $th;
         }
         return 1;
-    }
-
-    function getTimeline()
-    {
-        $timeline = $this->hasOne(PaperTimeLine::class, "paper_id");
-        return new Carbon($timeline->getResults()->timeline_value) ?: '';
     }
 
     /**

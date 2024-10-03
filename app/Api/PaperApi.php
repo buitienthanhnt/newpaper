@@ -24,7 +24,6 @@ class PaperApi extends BaseApi
 	protected $helperFunction;
 	protected $request;
 	protected $writerApi;
-	protected $paperTimeLine;
 	/**
 	 * @var PaperContent $paperContent
 	 */
@@ -36,13 +35,11 @@ class PaperApi extends BaseApi
 		Request $request,
 		WriterApi $writerApi,
 		LogTha $logTha,
-		PaperTimeLine $paperTimeLine,
 		PaperContent $paperContent
 	) {
 		$this->helperFunction = $helperFunction;
 		$this->request = $request;
 		$this->writerApi = $writerApi;
-		$this->paperTimeLine = $paperTimeLine;
 		$this->paperContent = $paperContent;
 		parent::__construct($firebaseService, $logTha);
 	}

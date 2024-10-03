@@ -35,7 +35,6 @@ class PaperController extends Controller
     protected $notification;
     protected $helperFunction;
     protected $logTha;
-    protected $paper_timeline;
     /**
      * @var CartService $cartService
      */
@@ -47,7 +46,6 @@ class PaperController extends Controller
         Request $request,
         Paper $paper,
         Category $category,
-        PaperTimeLine $paper_timeline,
         Notification $notification,
         HelperFunction $helperFunction,
         LogTha $logTha,
@@ -60,7 +58,6 @@ class PaperController extends Controller
         $this->category = $category;
         $this->notification = $notification;
         $this->helperFunction = $helperFunction;
-        $this->paper_timeline = $paper_timeline;
         $this->cartService = $cartService;
     }
 
