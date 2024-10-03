@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PaperInterface;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,22 +14,18 @@ class CreatePapersTable extends Migration
      */
     public function up()
     {
-        Schema::create('papers', function (Blueprint $table) {
+        Schema::create(PaperInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string("title")->nullable(false);
-            $table->string("url_alias")->nullable(true);
-            $table->string("short_conten")->nullable(true);
-            $table->text("conten")->nullable(true);
-            $table->boolean("active");
-            $table->boolean("show")->default(1);
-            // $table->boolean("hot")->default(false);
-            // $table->boolean("news")->default(false);
-            $table->time("show_time")->nullable(true);
-            $table->string("image_path");
-            $table->string("tag")->nullable(true);
-            $table->boolean("auto_hide")->default(0);
-            $table->string("writer")->nullable(true);
-            $table->boolean("show_writer")->default(1);
+            $table->string(PaperInterface::ATTR_TITLE)->nullable(false);
+            $table->string(PaperInterface::ATTR_URL_ALIAS)->nullable(true);
+            $table->string(PaperInterface::ATTR_SHORT_CONTENT)->nullable(true);
+            $table->boolean(PaperInterface::ATTR_ACTIVE);
+            $table->boolean(PaperInterface::ATTR_SHOW)->default(1);
+            $table->time(PaperInterface::ATTR_SHOW_TIME)->nullable(true);
+            $table->string(PaperInterface::ATTR_IMAGE_PATH);
+            $table->boolean(PaperInterface::ATTR_AUTO_HIDE)->default(0);
+            $table->string(PaperInterface::ATTR_WRITER)->nullable(true);
+            $table->boolean(PaperInterface::ATTR_SHOW_WRITER)->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -41,6 +38,6 @@ class CreatePapersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('papers');
+        Schema::dropIfExists(PaperInterface::TABLE_NAME);
     }
 }

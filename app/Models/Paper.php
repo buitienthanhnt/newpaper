@@ -12,19 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class Paper extends Model
+class Paper extends Model implements PaperInterface
 {
     use HasFactory;
     use SoftDeletes;
     use ImageUpload;
 
-    const PAGE_TAG = "page_tag";
     protected $guarded;
     protected $viewSource = null;
-
-    const PRODUCT_TYPE = "carousel";
-    const CAROUSEL_TYPE = "product";
-    const CONTENT_TYPE = "content";
 
     public function to_category(): HasMany
     {
