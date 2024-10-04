@@ -80,21 +80,21 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin . "_permission_detail");
     });
 
-    Route::prefix('rule')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get('/', "RuleController@list")->name($admin . "_rule_list");
-
-        Route::get("all", "RuleController@allRules")->name($admin . "_rule_all");
-
-        Route::get('/create', "RuleController@create")->name($admin . "_rule_create");
-
-        Route::post('/insert', "RuleController@insert")->name($admin . "_rule_insert");
-
-        Route::get("edit", "RuleController@edit")->name($admin . "_rule_edit");
-
-        Route::delete("delete", "RuleController@delete")->name($admin . "_rule_delete");
-
-        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin . "_rule_add_children");
-    });
+//    Route::prefix('rule')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+//        Route::get('/', "RuleController@list")->name($admin . "_rule_list");
+//
+//        Route::get("all", "RuleController@allRules")->name($admin . "_rule_all");
+//
+//        Route::get('/create', "RuleController@create")->name($admin . "_rule_create");
+//
+//        Route::post('/insert', "RuleController@insert")->name($admin . "_rule_insert");
+//
+//        Route::get("edit", "RuleController@edit")->name($admin . "_rule_edit");
+//
+//        Route::delete("delete", "RuleController@delete")->name($admin . "_rule_delete");
+//
+//        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin . "_rule_add_children");
+//    });
 
     Route::prefix('user')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         Route::get("listUser", "AdminUserController@listUser")->name($admin . "_user_list");
