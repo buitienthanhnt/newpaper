@@ -3,8 +3,7 @@ namespace App\Models;
 
 interface PaperInterface{
     const TABLE_NAME = 'papers';
-    
-    const ATTR_ID = 'id';
+
     const ATTR_TITLE = 'title';
     const ATTR_URL_ALIAS = 'url_alias';
     const ATTR_SHORT_CONTENT = 'short_conten';
@@ -15,6 +14,8 @@ interface PaperInterface{
     const ATTR_IMAGE_PATH = 'image_path';
     const ATTR_WRITER = 'writer';
     const ATTR_SHOW_WRITER = 'show_writer';
+
+    const PRIMARY_ALIAS = 'paper_id';
 }
 
 ?>

@@ -18,7 +18,8 @@ class ConfigController extends Controller
     function __construct(
         HelperFunction $helperFunction,
         LogTha $logTha
-    ) {
+    )
+    {
         $this->helperFunction = $helperFunction;
         $this->logTha = $logTha;
     }
@@ -80,6 +81,12 @@ class ConfigController extends Controller
         $config_id = $request->get('config_id');
         try {
             extract($this->helperFunction->deleteConfig($config_id));
+            if (!$configValue) {
+                return response(json_encode([
+                    "code" => "401",
+                    "value" => "deleted: success!"
+                ]), 401);
+            }
             $this->logTha->logEvent('warning', "deleted config with : {key} & {value}", [
                 'key' => $configValue->name,
                 'value' => $configValue->value

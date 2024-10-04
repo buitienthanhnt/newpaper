@@ -27,7 +27,7 @@ trait Nan
         return public_path($path);
     }
 
-    public function pageCategoryTable()
+    public static function pageCategoryTable()
     {
         return "page_category";
     }
@@ -41,11 +41,6 @@ trait Nan
         return "price";
     }
 
-    // public function permissionRulesTable()
-    // {
-    //     return "rule_permissions";
-    // }
-
     public function permissionRulesTable()
     {
         return "permission_rules";
@@ -56,13 +51,8 @@ trait Nan
         return "admin_user_permissions";
     }
 
-    function coreConfigTable(): string
+    public static function coreConfigTable(): string
     {
         return "core_config";
-    }
-
-    function viewSourceTable(): string
-    {
-        return 'view_sources';
     }
 }

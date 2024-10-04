@@ -307,7 +307,7 @@ class PaperApi extends BaseApi
 		// 	'12' => '2312312312'
 		// ]);
 
-		// $this->fireStore->collection('detailContent')->newDocument()->create([  
+		// $this->fireStore->collection('detailContent')->newDocument()->create([
 		// 	'121' => '2312312312'
 		// ]);
 
@@ -510,7 +510,7 @@ class PaperApi extends BaseApi
 
 	function mostPopulator()
 	{
-		$mostView = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'DESC')->limit(8)->get(['source_id'])->toArray();
+		$mostView = ViewSource::where('type', ViewSource::TYPE_PAPER)->orderBy('value', 'DESC')->limit(8)->get(['source_id'])->toArray();
 		$mostPapers = Paper::find(array_column($mostView, "source_id"))->makeHidden(['conten']);
 		foreach ($mostPapers as &$value) {
 			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);

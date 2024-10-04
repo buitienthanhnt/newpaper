@@ -13,16 +13,16 @@ class CreateCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create(\App\Models\CommentInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string("email")->nullable();
-            $table->string("name")->nullable();
-            $table->string("subject")->nullable();
-            $table->text("content");
-            $table->integer("parent_id")->nullable();
-            $table->integer("paper_id");
-            $table->boolean("show")->default(false);
-            $table->integer("like")->nullable();
+            $table->string(\App\Models\CommentInterface::ATTR_EMAIL);
+            $table->string(\App\Models\CommentInterface::ATTR_NAME);
+            $table->string(\App\Models\CommentInterface::ATTR_SUBJECT)->nullable();
+            $table->text(\App\Models\CommentInterface::ATTR_CONTENT);
+            $table->boolean(\App\Models\CommentInterface::ATTR_SHOW)->default(false);
+            $table->integer(\App\Models\CommentInterface::ATTR_LIKE)->nullable();
+            $table->integer(\App\Models\CommentInterface::ATTR_PARENT_ID)->nullable();
+            $table->integer(\App\Models\CommentInterface::ATTR_PAPER_ID);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -35,6 +35,6 @@ class CreateCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists(\App\Models\CommentInterface::TABLE_NAME);
     }
 }

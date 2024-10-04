@@ -16,11 +16,10 @@ class CreatePaperContentsTable extends Migration
     {
         Schema::create(PaperContentInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string(PaperContentInterface::ATTR_ID);
             $table->string(PaperContentInterface::ATTR_TYPE);
             $table->string(PaperContentInterface::ATTR_KEY);
             $table->longText(PaperContentInterface::ATTR_VALUE)->nullable();
-            $table->string(PaperContentInterface::ATTR_DEPEND_VALUE)->nullable(); 
+            $table->string(PaperContentInterface::ATTR_DEPEND_VALUE)->nullable();
             $table->integer(PaperContentInterface::ATTR_PAPER_ID);
             $table->softDeletes();
             $table->timestamps();

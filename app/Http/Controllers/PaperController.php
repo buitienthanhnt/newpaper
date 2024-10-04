@@ -446,7 +446,7 @@ class PaperController extends Controller
     function addLike($paper_id, Request $request)
     {
         $params = $request->toArray();
-        $paperSource = ViewSource::where('type', '=', ViewSource::PAPER_TYPE)->where('source_id', '=', $paper_id)->first();
+        $paperSource = ViewSource::where('type', '=', ViewSource::TYPE_PAPER)->where('source_id', '=', $paper_id)->first();
         if (empty($paperSource)) {
             ViewSource::firstOrCreate([
                 "type" => $params['paper'],

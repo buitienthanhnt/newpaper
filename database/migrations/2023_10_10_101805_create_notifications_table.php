@@ -13,12 +13,12 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create(\App\Models\NotificationInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string('type')->nullable();
-            $table->text('fcmToken');
-            $table->string('deviceId')->nullable();
-            $table->boolean('active');
+            $table->string(\App\Models\NotificationInterface::ATTR_TYPE)->nullable();
+            $table->text(\App\Models\NotificationInterface::ATTR_FCM_TOKEN);
+            $table->string(\App\Models\NotificationInterface::ATTR_DEVICE_ID)->nullable();
+            $table->boolean(\App\Models\NotificationInterface::ATTR_ACTIVE);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists(\App\Models\NotificationInterface::TABLE_NAME);
     }
 }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 // use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Collection;
 
-class AdminUser extends Model
+class AdminUser extends Model implements AdminUserInterface
 {
     use HasFactory;
     use SoftDeletes;

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RemoteSourceHistory extends Model
+class RemoteSourceHistory extends Model implements RemoteSourceHistoryInterface
 {
     use HasFactory;
     use SoftDeletes;

@@ -5,7 +5,6 @@ namespace App\Models;
 interface PaperContentInterface{
     const TABLE_NAME = 'paper_contents';
 
-    const ATTR_ID = 'id';
     const ATTR_TYPE = 'type';
     const ATTR_KEY = 'key';
     const ATTR_VALUE = 'value';

@@ -116,7 +116,7 @@ class Paper extends Model implements PaperInterface
             if ($this->viewSource) {
                 return $this->viewSource;
             }
-            $viewSource = $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::PAPER_TYPE)->first();
+            $viewSource = $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::TYPE_PAPER)->first();
             $this->viewSource = $viewSource;
             return $viewSource;
         } catch (\Throwable $th) {

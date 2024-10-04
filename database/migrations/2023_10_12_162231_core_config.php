@@ -6,6 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 class CoreConfig extends Migration
 {
+    use \App\Helper\Nan;
+
+    const ATTR_NAME = 'name';
+    const ATTR_VALUE = 'value';
+    const ATTR_DESCRIPTION = 'description';
+    const ATTR_TYPE = 'type';
+
     /**
      * Run the migrations.
      *
@@ -13,15 +20,11 @@ class CoreConfig extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('core_config', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("value")->nullable();
-            $table->text("description")->nullable(true);
-            $table->text("type")->default('text');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::create(self::coreConfigTable(), function (Blueprint $table) {
+            $table->string(self::ATTR_NAME);
+            $table->string(self::ATTR_VALUE)->nullable();
+            $table->text(self::ATTR_DESCRIPTION)->nullable(true);
+            $table->text(self::ATTR_TYPE)->default('text');
         });
     }
 
@@ -33,6 +36,6 @@ class CoreConfig extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('core_config');
+        Schema::dropIfExists(self::coreConfigTable());
     }
 }

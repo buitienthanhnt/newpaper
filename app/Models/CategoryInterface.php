@@ -15,4 +15,6 @@ interface CategoryInterface {
 
     const TYPE_DEFAULT = 'default';
     const TYPE_TIME_LINE = 'time_line';
+
+    const PRIMARY_ALIAS = 'category_id';
 }

@@ -13,7 +13,7 @@ class MostPopulator implements Htmlable
 	function toHtml(): string
 	{
 		try {
-			$mostView = ViewSource::where('type', ViewSource::PAPER_TYPE)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
+			$mostView = ViewSource::where('type', ViewSource::TYPE_PAPER)->orderBy('value', 'desc')->limit(8)->get(['source_id'])->toArray();
 			$mostPapers = Paper::find(array_column($mostView, "source_id"));
 			$html = view($this->template, ['most_popular' => $mostPapers]);
 			return $html;

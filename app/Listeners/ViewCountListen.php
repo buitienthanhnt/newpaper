@@ -42,11 +42,11 @@ class ViewCountListen implements ShouldQueue
         $type = null;
         $source = $event->source;
         if ($source instanceof \App\Models\Paper) {
-            $type = ViewSource::PAPER_TYPE;
+            $type = ViewSource::TYPE_PAPER;
         }
 
         if ($source instanceof \App\Models\Category) {
-            $type = ViewSource::CATEGORY_TYPE;
+            $type = ViewSource::TYPE_CATEGORY;
         }
         try {
             $data_source = $this->viewSource->firstOrCreate(["type" => $type, "source_id" => $source->id], ["value" => 1]);

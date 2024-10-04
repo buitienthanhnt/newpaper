@@ -13,10 +13,10 @@ class PageCategory extends Migration
      */
     public function up()
     {
-        Schema::create('page_category', function (Blueprint $table) {
+        Schema::create(\App\Helper\Nan::pageCategoryTable(), function (Blueprint $table) {
             $table->id();
-            $table->integer("page_id");
-            $table->integer("category_id");
+            $table->integer(\App\Models\PaperInterface::PRIMARY_ALIAS);
+            $table->integer(\App\Models\CategoryInterface::PRIMARY_ALIAS);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class PageCategory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('page_category');
+        Schema::dropIfExists(\App\Helper\Nan::pageCategoryTable());
     }
 }
