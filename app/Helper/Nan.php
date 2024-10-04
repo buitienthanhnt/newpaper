@@ -47,7 +47,7 @@ trait Nan
         return "permission_rules";
     }
 
-    public function userPermissionTable(): string
+    public static function userPermissionTable(): string
     {
         return "admin_user_permissions";
     }

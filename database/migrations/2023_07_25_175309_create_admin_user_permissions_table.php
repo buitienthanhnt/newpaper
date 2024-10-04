@@ -13,10 +13,10 @@ class CreateAdminUserPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('admin_user_permissions', function (Blueprint $table) {
+        Schema::create(\App\Helper\Nan::userPermissionTable(), function (Blueprint $table) {
             $table->id();
-            $table->integer("user_id");
-            $table->integer("permission_id");
+            $table->integer(\App\Models\AdminUserInterface::PRIMARY_ALIAS);
+            $table->integer(\App\Models\PermissionInterface::PRIMARY_ALIAS);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateAdminUserPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin_user_permissions');
+        Schema::dropIfExists(\App\Helper\Nan::userPermissionTable());
     }
 }

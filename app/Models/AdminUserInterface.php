@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-interface AdminUserInterface{
+interface AdminUserInterface extends BaseAttributeInterface {
     const TABLE_NAME = 'admin_users';
 
     const ATTR_NAME = 'name';
@@ -10,5 +10,9 @@ interface AdminUserInterface{
     const ATTR_ACTIVE = 'active';
     const ATTR_LOG_DATE = 'log_date';
     const ATTR_LOG_ERROR_NUM = 'log_error_num';
+
+    const PRIMARY_ALIAS = 'admin_user_id';
+
+    const ACTIVE_VALUE = true;
 }
 

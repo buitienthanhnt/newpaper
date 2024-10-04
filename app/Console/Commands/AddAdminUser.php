@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AdminUser;
 use App\Models\AdminUserInterface;
 use App\Models\Permission;
+use App\Models\PermissionInterface;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class AddAdminUser extends Command
     /**
      * The name and signature of the console command.
      *
-     * php artisan tha:addAdminUser tha tha@gmail.com admin123
+     * php artisan tha:addAdminUser admin admin@gmail.com admin123
      *
      * @var string
      */
@@ -49,41 +50,45 @@ class AddAdminUser extends Command
     public function handle()
     {
         try {
+            $rootAdmin = Permission::where(PermissionInterface::ATTR_LABEL, PermissionInterface::PERMISSION_ROOT)->first();
+            if (!$rootAdmin) {
+                // insert root permission by const value.
+                $rootAdmin = new Permission(
+                    [
+                        PermissionInterface::ATTR_LABEL, PermissionInterface::PERMISSION_ROOT,
+                        PermissionInterface::ATTR_KEY => PermissionInterface::PERMISSION_ROOT
+                    ]
+                );
+                $rootAdmin->save();
+            }
             $adminUser = new AdminUser(
                 [
                     AdminUserInterface::ATTR_NAME => $this->argument("admin_user"),
                     AdminUserInterface::ATTR_EMAIL => $this->argument("admin_email"),
                     AdminUserInterface::ATTR_PASSWORD => Hash::make($this->argument("admin_password")),
-                    AdminUserInterface::ATTR_ACTIVE => 1,
-                    "created_at" => (string) Carbon::now()->getTimestamp(),
-                    "updated_at" => (string) Carbon::now()->getTimestamp()
+                    AdminUserInterface::ATTR_ACTIVE => AdminUserInterface::ACTIVE_VALUE,
+                    AdminUserInterface::ATTR_CREATED_AT => (string)Carbon::now()->getTimestamp(),
+                    AdminUserInterface::ATTR_UPDATED_AT => (string)Carbon::now()->getTimestamp()
                 ]
             );
-
-            $rootAdmin = Permission::where("label", "root")->first();
-            if (!$rootAdmin) {
-                $rootAdmin = new Permission(["label" => "root"]);
-                $rootAdmin->save();
-            }
-
             $adminUser->save();
             $adminUser->savePermissions($adminUser, [$rootAdmin->id]);
             $this->info("add new adminUser success!");
         } catch (\Throwable $th) {
-            $this->error("add new adminUser fail! message: ".$th->getMessage());
+            $this->error("add new adminUser fail! message: " . $th->getMessage());
         }
     }
 
-    protected function insertByBD() {
+    protected function insertByBD()
+    {
         try {
             DB::beginTransaction();
-
             //update publish_time column
-            DB::table('admin_users')->update([
-                "name" => $this->argument("admin_user"),
-                "email" => $this->argument("admin_email"),
-                "password" => Hash::make($this->argument("admin_password")),
-                "active" => 1
+            DB::table(AdminUserInterface::TABLE_NAME)->update([
+                AdminUserInterface::ATTR_NAME => $this->argument("admin_user"),
+                AdminUserInterface::ATTR_EMAIL => $this->argument("admin_email"),
+                AdminUserInterface::ATTR_PASSWORD => Hash::make($this->argument("admin_password")),
+                AdminUserInterface::ATTR_ACTIVE => AdminUserInterface::ACTIVE_VALUE
             ]);
             DB::commit();
 

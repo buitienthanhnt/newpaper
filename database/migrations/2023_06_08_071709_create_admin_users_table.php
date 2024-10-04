@@ -15,8 +15,8 @@ class CreateAdminUsersTable extends Migration
     {
         Schema::create(\App\Models\AdminUserInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string(\App\Models\AdminUserInterface::ATTR_NAME);
-            $table->string(\App\Models\AdminUserInterface::ATTR_EMAIL);
+            $table->string(\App\Models\AdminUserInterface::ATTR_NAME)->unique();
+            $table->string(\App\Models\AdminUserInterface::ATTR_EMAIL)->unique();
             $table->string(\App\Models\AdminUserInterface::ATTR_PASSWORD);
             $table->boolean(\App\Models\AdminUserInterface::ATTR_ACTIVE);
             $table->date(\App\Models\AdminUserInterface::ATTR_LOG_DATE)->nullable();

@@ -13,10 +13,10 @@ class CreatePermissionRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('permission_rules', function (Blueprint $table) {
+        Schema::create(\App\Models\PermissionRulesInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->integer("permission_id");
-            $table->string("rule_value");
+            $table->integer(\App\Models\PermissionRulesInterface::ATTR_PERMISSION_ID);
+            $table->string(\App\Models\PermissionRulesInterface::ATTR_VALUE);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreatePermissionRulesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_rules');
+        Schema::dropIfExists(\App\Models\PermissionRulesInterface::TABLE_NAME);
     }
 }
