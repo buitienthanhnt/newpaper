@@ -19,10 +19,10 @@ class CreatePapersTable extends Migration
             $table->string(PaperInterface::ATTR_TITLE)->nullable(false);
             $table->string(PaperInterface::ATTR_URL_ALIAS)->nullable(true);
             $table->string(PaperInterface::ATTR_SHORT_CONTENT)->nullable(true);
+            $table->string(PaperInterface::ATTR_IMAGE_PATH);
             $table->boolean(PaperInterface::ATTR_ACTIVE);
             $table->boolean(PaperInterface::ATTR_SHOW)->default(1);
             $table->time(PaperInterface::ATTR_SHOW_TIME)->nullable(true);
-            $table->string(PaperInterface::ATTR_IMAGE_PATH);
             $table->boolean(PaperInterface::ATTR_AUTO_HIDE)->default(0);
             $table->string(PaperInterface::ATTR_WRITER)->nullable(true);
             $table->boolean(PaperInterface::ATTR_SHOW_WRITER)->default(1);

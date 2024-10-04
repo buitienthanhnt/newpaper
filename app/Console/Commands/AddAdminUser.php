@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\AdminUser;
+use App\Models\AdminUserInterface;
 use App\Models\Permission;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -17,7 +18,7 @@ class AddAdminUser extends Command
     /**
      * The name and signature of the console command.
      *
-     * php artisan adminUser:add tha tha@gmail.com admin123
+     * php artisan tha:addAdminUser tha tha@gmail.com admin123
      *
      * @var string
      */
@@ -50,10 +51,10 @@ class AddAdminUser extends Command
         try {
             $adminUser = new AdminUser(
                 [
-                    "name" => $this->argument("admin_user"),
-                    "email" => $this->argument("admin_email"),
-                    "password" => Hash::make($this->argument("admin_password")),
-                    "active" => 1,
+                    AdminUserInterface::ATTR_NAME => $this->argument("admin_user"),
+                    AdminUserInterface::ATTR_EMAIL => $this->argument("admin_email"),
+                    AdminUserInterface::ATTR_PASSWORD => Hash::make($this->argument("admin_password")),
+                    AdminUserInterface::ATTR_ACTIVE => 1,
                     "created_at" => (string) Carbon::now()->getTimestamp(),
                     "updated_at" => (string) Carbon::now()->getTimestamp()
                 ]
@@ -65,11 +66,11 @@ class AddAdminUser extends Command
                 $rootAdmin->save();
             }
 
-            $res = $adminUser->save();
+            $adminUser->save();
             $adminUser->savePermissions($adminUser, [$rootAdmin->id]);
-            $this->line("add new adminUser success!");
+            $this->info("add new adminUser success!");
         } catch (\Throwable $th) {
-            $this->line("add new adminUser fail! message: ".$th->getMessage());
+            $this->error("add new adminUser fail! message: ".$th->getMessage());
         }
     }
 

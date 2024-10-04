@@ -36,6 +36,7 @@ trait Nan
     {
         return "page_tag";
     }
+
     public function pagePriceTable()
     {
         return "price";

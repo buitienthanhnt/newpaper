@@ -57,7 +57,7 @@ class WriterController extends Controller
             "name_alias" => $request->__get("alias"),
             "active" => $request->__get("active") ?: true,
             "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
-            "good" => $request->__get("good") ?: null
+            "rating" => $request->__get("good") ?: null
         ]);
 
         $result = $writer->save();

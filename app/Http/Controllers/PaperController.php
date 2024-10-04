@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Paper;
 use App\Models\PaperContent;
+use App\Models\PaperInterface;
 use App\Models\PaperTimeLine;
 use App\Models\RemoteSourceHistory;
 use App\Models\ViewSource;
@@ -180,18 +181,16 @@ class PaperController extends Controller
     {
         $paper = $this->paper;
         $paper->fill([
-            "title" => $this->request->get("page_title"),
-            "url_alias" => $this->formatPath($this->request->get("alias") ?: $this->request->get("page_title")),
-            "short_conten" => $this->request->get("short_conten"),
-            "conten" => null,
-            "active" => $this->request->get("active") ? true : false,
-            "show" => $this->request->get("show", false) === 'on',
-            "auto_hide" => $this->request->get("auto_hide") === 'on',
-            "show_writer" => $this->request->get("show_writer") === 'on',
-            "show_time" => $this->request->get("show_time"),
-            "image_path" => $this->request->get("image_path") ?: "",
-            "writer" => $this->request->get("writer")[0] ?? null,
-            "type" => $this->pageType()
+            PaperInterface::ATTR_TITLE => $this->request->get("page_title"),
+            PaperInterface::ATTR_URL_ALIAS => $this->formatPath($this->request->get("alias") ?: $this->request->get("page_title")),
+            PaperInterface::ATTR_SHORT_CONTENT => $this->request->get("short_conten"),
+            PaperInterface::ATTR_IMAGE_PATH => $this->request->get("image_path") ?: "",
+            PaperInterface::ATTR_ACTIVE => $this->request->get("active") ? true : false,
+            PaperInterface::ATTR_SHOW => $this->request->get("show", false) === 'on',
+            PaperInterface::ATTR_AUTO_HIDE => $this->request->get("auto_hide") === 'on',
+            PaperInterface::ATTR_SHOW_TIME => $this->request->get("show_time"),
+            PaperInterface::ATTR_SHOW_WRITER => $this->request->get("show_writer") === 'on',
+            PaperInterface::ATTR_WRITER => $this->request->get("writer")[0] ?? null,
         ]);
         $paper->save();
         return $paper;

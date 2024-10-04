@@ -2,6 +2,8 @@
 
 namespace App\Helper;
 
+use App\Models\CategoryInterface;
+use App\Models\PaperInterface;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -81,7 +83,7 @@ trait Page
     {
         $result = [];
         foreach ($values as $value) {
-            $result[] = array("page_id" => $page_id, "category_id" => $value);
+            $result[] = array(PaperInterface::PRIMARY_ALIAS => $page_id, CategoryInterface::PRIMARY_ALIAS => $value);
         }
         return $result;
     }
