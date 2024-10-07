@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 interface CategoryControllerInterface{
     const CONTROLLER_NAME = 'CategoryController';
+    const PREFIX = 'category';
 
     const LISTCATEGORY = 'listCategory';
     const CREATE_CATEGORY = 'createCategory';

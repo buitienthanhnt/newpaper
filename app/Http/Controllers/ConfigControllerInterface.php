@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 interface ConfigControllerInterface{
     const CONTROLLER_NAME = 'ConfigController';
+    const PREFIX = 'config';
 
     const LIST_CONFIG = 'listConfig';
     const CREATE_CONFIG = 'createConfig';

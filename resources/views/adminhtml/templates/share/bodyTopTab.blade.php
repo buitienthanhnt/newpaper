@@ -7,11 +7,11 @@
                     aria-selected="true">Demographics</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-success" id="list-cate-tab" href={{ route('category_admin_list') }} role="tab"
+                <a class="nav-link text-success" id="list-cate-tab" href={{ route('admin_list_category') }} role="tab"
                     aria-selected="false">list category</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-info" id="more-tab" href={{ route('category_top_setup') }} role="tab"
+                <a class="nav-link text-info" id="more-tab" href={{ route('admin_setup_category') }} role="tab"
                     aria-selected="false">setup category top</a>
             </li>
             <li class="nav-item">

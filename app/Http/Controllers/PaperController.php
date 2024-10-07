@@ -211,7 +211,7 @@ class PaperController extends Controller implements PaperControllerInterface
                 /**
                  * save in DB page tags
                  */
-                $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAGE_TAG);
+                $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAPER_TAG);
 
                 /**
                  * save for history
@@ -290,7 +290,7 @@ class PaperController extends Controller implements PaperControllerInterface
                  * update paper tags.
                  */
                 $this->delete_page_tag($paper);
-                $this->insert_page_tag($this->request->__get("paper_tag"), $paper->id, Paper::PAGE_TAG);
+                $this->insert_page_tag($this->request->__get("paper_tag"), $paper->id, Paper::PAPER_TAG);
                 return redirect()->back()->with("success", "updated success");
             } catch (Throwable $th) {
                 $th->getMessage();

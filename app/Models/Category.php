@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\pageCategory;
+use App\Models\PaperCategory;
 
 class Category extends Model implements CategoryInterface
 {
@@ -81,12 +81,12 @@ class Category extends Model implements CategoryInterface
 
     public function to_page_category(): HasMany
     {
-        return $this->hasMany(PageCategory::class, "category_id");
+        return $this->hasMany(PaperCategory::class, "category_id");
     }
 
     public function get_papers($limit = 4, $offset = 0, $order_by = [], $hidden = [])
     {
-        $page_id = array_column($this->to_page_category()->getResults()->toArray(), "page_id");
+        $page_id = array_column($this->to_page_category()->getResults()->toArray(), Paper::PRIMARY_ALIAS);
         $result = null;
         if ($order_by) {
             $result =  Paper::whereIn("id", $page_id)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 interface PaperControllerInterface{
     const CONTROLLER_NAME = 'PaperController';
+    const PREFIX = 'paper';
 
     const LIST_PAPER = 'listPaper';
     const CREATE_PAPER = 'createPaper';

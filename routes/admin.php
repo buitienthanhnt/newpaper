@@ -9,6 +9,8 @@ use App\Http\Controllers\PermissionControllerInterface;
 use App\Http\Controllers\AdminUserControllerInterface;
 use App\Http\Controllers\ConfigControllerInterface;
 use App\Http\Controllers\OrderControllerInterface;
+use App\Http\Controllers\ImageControllerInterface;
+use App\Http\Controllers\FirebaseControllerInterface;
 
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = AdminControllerInterface::ADMIN;
@@ -22,7 +24,9 @@ Route::group(["prefix" => "adminhtml"], function () {
 
     Route::get('logout', $admin_controller.AdminControllerInterface::LOGOUT)->name($admin . "_logout");
 
-    Route::prefix('writer')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+    $middlewareAdminPermission = ["adminLogin", "AdminPermission"];
+
+    Route::prefix(WriterControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
         $writerController = WriterControllerInterface::CONTROLLER_NAME.'@';
 
         Route::get("/", $writerController.WriterControllerInterface::LIST_WRITER)->name($admin . "_list_writer");
@@ -38,27 +42,27 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", $writerController.WriterControllerInterface::DELETE_WRITER)->name($admin . "_delete_writer");
     });
 
-    Route::prefix('category')->middleware(["adminLogin", "AdminPermission"])->group(function () {
+    Route::prefix(CategoryControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use($admin) {
         $categoryController = CategoryControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("list", $categoryController.CategoryControllerInterface::LISTCATEGORY)->name("category_admin_list");
+        Route::get("/", $categoryController.CategoryControllerInterface::LISTCATEGORY)->name($admin ."_list_category");
 
-        Route::get("create", $categoryController.CategoryControllerInterface::CREATE_CATEGORY)->name("category_admin_create");
+        Route::get("create", $categoryController.CategoryControllerInterface::CREATE_CATEGORY)->name($admin ."_create_category");
 
-        Route::post("insert", $categoryController.CategoryControllerInterface::INSERT_CATEGORY)->name("category_admin_insert");
+        Route::post("insert", $categoryController.CategoryControllerInterface::INSERT_CATEGORY)->name($admin ."_insert_category");
 
-        Route::get("edit/{category_id}", $categoryController.CategoryControllerInterface::EDIT_CATEGORY)->name("category_admin_edit");
+        Route::get("edit/{category_id}", $categoryController.CategoryControllerInterface::EDIT_CATEGORY)->name($admin ."_edit_category");
 
-        Route::post("update/{category_id}", $categoryController.CategoryControllerInterface::UPDATE_CATEGORY)->name("category_admin_update");
+        Route::post("update/{category_id}", $categoryController.CategoryControllerInterface::UPDATE_CATEGORY)->name($admin ."_update_category");
 
-        Route::post("delete/{category_id}", $categoryController.CategoryControllerInterface::DELETE_CATEGORY)->name("category_admin_delete");
+        Route::post("delete/{category_id}", $categoryController.CategoryControllerInterface::DELETE_CATEGORY)->name($admin ."_delete_category");
 
-        Route::get("setup", $categoryController.CategoryControllerInterface::SETUP_CATEGORY)->name("category_top_setup");
+        Route::get("setup", $categoryController.CategoryControllerInterface::SETUP_CATEGORY)->name($admin ."_setup_category");
 
-        Route::post("setup/save", $categoryController.CategoryControllerInterface::SETUP_SAVE)->name("category_setup_save");
+        Route::post("setup/save", $categoryController.CategoryControllerInterface::SETUP_SAVE)->name($admin ."_setup_save_category");
     });
 
-    Route::prefix('paper')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+    Route::prefix(PaperControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
         $paperController = PaperControllerInterface::CONTROLLER_NAME.'@';
 
         Route::get("/", $paperController.PaperControllerInterface::LIST_PAPER)->name($admin . "_list_paper");
@@ -78,7 +82,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("sourcePaper", $paperController.PaperControllerInterface::SOURCE_PAPER)->name($admin . "_source_paper");
     });
 
-    Route::prefix('permission')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+    Route::prefix(PermissionControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
         $permissionController = PermissionControllerInterface::CONTROLLER_NAME.'@';
 
         Route::get('/', $permissionController.PermissionControllerInterface::LIST_PERMISSION)->name($admin . "_list_permission");
@@ -96,23 +100,23 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("detail/{permission_id}", $permissionController.PermissionControllerInterface::DETAIL_PERMISSION)->name($admin . "_detail_permission");
     });
 
-    Route::prefix('adminUser')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+    Route::prefix(AdminUserControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
         $adminUserController = AdminUserControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("listUser", $adminUserController.AdminUserControllerInterface::LIST_ADMIN_USER)->name($admin . "_list_admin_user");
+        Route::get("listUser", $adminUserController.AdminUserControllerInterface::LIST_ADMIN_USER)->name($admin . "_list_user");
 
-        Route::get("createUser", $adminUserController.AdminUserControllerInterface::CREATE_ADMIN_USER)->name($admin . "_create_admin_user");
+        Route::get("createUser", $adminUserController.AdminUserControllerInterface::CREATE_ADMIN_USER)->name($admin . "_create_user");
 
-        Route::post("insetUser", $adminUserController.AdminUserControllerInterface::INSERT_ADMIN_USER)->name($admin . "_insert_admin_user");
+        Route::post("insetUser", $adminUserController.AdminUserControllerInterface::INSERT_ADMIN_USER)->name($admin . "_insert_user");
 
-        Route::get("editUser/{user_id}", $adminUserController.AdminUserControllerInterface::EDIT_ADMIN_USER)->name($admin . "_edit_admin_user");
+        Route::get("editUser/{user_id}", $adminUserController.AdminUserControllerInterface::EDIT_ADMIN_USER)->name($admin . "_edit_user");
 
-        Route::post("updateUser/{user_id}", $adminUserController.AdminUserControllerInterface::UPDATE_ADMIN_USER)->name($admin . "_update_admin_user");
+        Route::post("updateUser/{user_id}", $adminUserController.AdminUserControllerInterface::UPDATE_ADMIN_USER)->name($admin . "_update_user");
 
-        Route::delete("deleteUser", $adminUserController.AdminUserControllerInterface::DELETE_ADMIN_USER)->name($admin . "_delete_admin_user");
+        Route::delete("deleteUser", $adminUserController.AdminUserControllerInterface::DELETE_ADMIN_USER)->name($admin . "_delete_user");
     });
 
-    Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+    Route::prefix(ConfigControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
         $configController = ConfigControllerInterface::CONTROLLER_NAME.'@';
 
         Route::get("/", $configController.ConfigControllerInterface::LIST_CONFIG)->name($admin . "_list_config");
@@ -126,7 +130,7 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::delete("delete", $configController.ConfigControllerInterface::DELETE_CONFIG)->name($admin . "_delete_config");
     });
 
-    Route::prefix("orders")->group(function () use ($admin) {
+    Route::prefix(OrderControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
         $orderController = OrderControllerInterface::CONTROLLER_NAME.'@';
 
         Route::get("/", $orderController.OrderControllerInterface::LIST_ORDER)->name($admin . "_list_order");
@@ -134,42 +138,40 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get("info/{order_id}", $orderController.OrderControllerInterface::DETAIL_ORDER)->name($admin."_detail_order");
     });
 
-    Route::prefix('file')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+    Route::prefix(ImageControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin){
+        $imageController = ImageControllerInterface::CONTROLLER_NAME.'@';
+
+        Route::get("/", $imageController.ImageControllerInterface::LIST_FILE)->name($admin . "_list_file");
+
+        Route::get("add", $imageController.ImageControllerInterface::ADD_FILE)->name($admin . "_add_file");
+
+        Route::post("save", $imageController.ImageControllerInterface::SAVE_FILE)->name($admin . "_save_file");
+
+        Route::delete("delete", $imageController.ImageControllerInterface::DELETE_FILE)->name($admin . "_delete_file");
 
         Route::group(['prefix' => 'manager'], function () {
             \UniSharp\LaravelFilemanager\Lfm::routes();
         });
-
-        Route::get("/", "ImageController@listFile")->name($admin . "_file_list");
-
-        Route::get("add", "ImageController@addFile")->name($admin . "_file_add");
-
-        Route::post("save", "ImageController@saveFile")->name($admin . "_file_save");
-
-        Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
     });
 
-    Route::prefix('firebase')->middleware(["adminLogin", 'AdminPermission'])->group(function () use ($admin) {
-        Route::get('/', "FirebaseController@dashboard")->name($admin . "_firebase");
+    Route::prefix(FirebaseControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {
+        $firebaseController = FirebaseControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::post('addPaper', "FirebaseController@addPaper")->name($admin . "_firebase_addPaper");
+        Route::get('/', $firebaseController.FirebaseControllerInterface::DASH_BOARD)->name($admin . "_firebase_dashboard");
 
-        Route::delete('deletePaper', "FirebaseController@deletePaper")->name($admin . "_firebase_deletePaper");
+        Route::post('uploadPaper', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_PAPER)->name($admin . "_firebase_upload_paper");
 
-        Route::get('fireStore', "FirebaseController@fireStore")->name($admin . "_firebase_fireStore");
+        Route::delete('deletePaper', $firebaseController.FirebaseControllerInterface::FIREBASE_DELETE_PAPER)->name($admin . "_firebase_delete_paper");
 
-        Route::get('topCategory', "FirebaseController@upCategoryTop")->name($admin . "_upCategoryTop");
+        Route::get('setupHome', $firebaseController.FirebaseControllerInterface::FIREBASE_SETUP_HOME_INFO)->name($admin . "_firebase_setup_home_info");
 
-        Route::get('homeInfo', "FirebaseController@info")->name($admin . "_firebase_homeInfo");
+        Route::get('uploadHomeInfo', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_HOME_INFO)->name($admin . "_firebase_upload_home_info");
 
-        Route::get('setupHome', "FirebaseController@setupHome")->name($admin . "_firebase_setupHome");
+        Route::get('uploadCategoryTop', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_CATEGORY_TOP)->name($admin . "_firebase_upload_category_top");
 
-        Route::post('upFirebase/home', "FirebaseController@upHomeInfo")->name($admin . "_firebase_upDefaultHome");
+        Route::get('uploadCategoryTree', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_CATEGORY_TREE)->name($admin . "_firebase_upload_category_tree");
 
-        Route::get('nhaDashboard', "FirebaseController@nhaDashboard")->name($admin . "_firebase_nhaDashboard");
-
-        Route::post('nhaUp', "FirebaseController@nhaUp")->name($admin . "_firebase_nhaUp");
     });
 
-    Route::get("default", "AdminController@default")->name($admin . "_default");
+    Route::get("default", $admin_controller.AdminControllerInterface::ADMIN_DEFAULT)->name($admin . "_default");
 });

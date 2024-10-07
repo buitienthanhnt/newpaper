@@ -29,12 +29,12 @@ trait Nan
 
     public static function pageCategoryTable()
     {
-        return "page_category";
+        return "paper_category";
     }
 
     public function pageTagTable()
     {
-        return "page_tag";
+        return "paper_tag";
     }
 
     public function pagePriceTable()

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 interface OrderControllerInterface{
     const CONTROLLER_NAME = 'OrderController';
+    const PREFIX = 'orders';
 
     const LIST_ORDER = 'listOrder';
     const DETAIL_ORDER = 'detailOrder';

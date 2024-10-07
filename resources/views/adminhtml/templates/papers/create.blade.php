@@ -49,7 +49,7 @@
 @section('body_main_conten')
     <div class="col-12 grid-margin">
         <h5 class="card-title">Design paper</h5>
-        <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
+        <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_save_paper') }}>
             @csrf
             {!! view('elements.message.index')->render() !!}
 

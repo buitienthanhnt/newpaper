@@ -25,7 +25,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <a href="{{ route('admin_user_create') }}" class="btn btn-info">create adminuser</a>
+                <a href="{{ route('admin_create_user') }}" class="btn btn-info">create adminuser</a>
             </div>
         </div>
         <div class="row">
@@ -50,7 +50,7 @@
 							<td>{{ $user->created_at }}</td>
 							<td>{{ $user->updated_at }}</td>
                             <td>
-                                <a href="{{ route('admin_user_edit', ['user_id'=>$user->id]) }}" class="btn btn-info">edit</a>
+                                <a href="{{ route('admin_edit_user', ['user_id'=>$user->id]) }}" class="btn btn-info">edit</a>
                                 <a href="" class="">
                                     <button class="btn btn-danger btn-flat show_confirm" data-id="{{ $user->id }}">delete</button>
                                 </a>
@@ -77,7 +77,7 @@
     var token = "{{ csrf_token() }}";
     $('.show_confirm').click(function(event) {
         var user_id = $(this).attr("data-id");
-        var url = "{{ route('admin_user_delete') }}";
+        var url = "{{ route('admin_delete_user') }}";
 
         event.preventDefault();
         Swal.fire({

@@ -49,7 +49,7 @@
     <div class="col-12 grid-margin">
         <h4 class="card-title">add update source</h4>
         <form class="form-sample" method="POST" enctype="multipart/form-data"
-              action={{ route('admin_paper_update', ['paper_id' => $paper->id]) }}>
+              action={{ route('admin_update_paper', ['paper_id' => $paper->id]) }}>
             @csrf
             {!! view('elements.message.index')->render() !!}
             <div class="row">

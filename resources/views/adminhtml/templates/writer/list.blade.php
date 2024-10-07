@@ -19,7 +19,7 @@
     @endif
     <div class="container">
         <div class="row">
-            <a href="{{ route('admin_writer_create') }}"  class="col-md-2 btn btn-info">
+            <a href="{{ route('admin_create_writer') }}"  class="col-md-2 btn btn-info">
                 create writer
             </a>
 
@@ -48,7 +48,7 @@
                                     </td>
                                     <td>{{ $writer->active ? 'active' : 'inactive' }}</td>
                                     <td>
-                                        <a class="btn btn-info" href="{{ route('admin_writer_edit', ['writer_id' => $writer->id]) }}">
+                                        <a class="btn btn-info" href="{{ route('admin_edit_writer', ['writer_id' => $writer->id]) }}">
                                             edit
                                         </a>
                                         <a href="" class="btn btn-danger btn-flat show_confirm" data-id="{{ $writer->id }}">
@@ -76,7 +76,7 @@
         var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
             var id = $(this).attr("data-id");
-            var url = "{{ route('admin_writer_delete') }}";
+            var url = "{{ route('admin_delete_writer') }}";
 
             event.preventDefault();
             Swal.fire({

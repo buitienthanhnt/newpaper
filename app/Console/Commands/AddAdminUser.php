@@ -55,7 +55,7 @@ class AddAdminUser extends Command
                 // insert root permission by const value.
                 $rootAdmin = new Permission(
                     [
-                        PermissionInterface::ATTR_LABEL, PermissionInterface::PERMISSION_ROOT,
+                        PermissionInterface::ATTR_LABEL => PermissionInterface::PERMISSION_ROOT,
                         PermissionInterface::ATTR_KEY => PermissionInterface::PERMISSION_ROOT
                     ]
                 );

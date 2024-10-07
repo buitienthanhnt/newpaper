@@ -34,9 +34,7 @@
                     new paper
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{{ route('admin_paper_create') }}">default conten</a>
-                    <a class="dropdown-item" href="{{ route('admin_paper_create', ['type' => 'product']) }}">product page</a>
-                    <a class="dropdown-item" href="{{ route('admin_paper_create', ['type' => 'carousel']) }}">carousel image</a>
+                    <a class="dropdown-item" href="{{ route('admin_create_paper') }}">default conten</a>
                     <a class="dropdown-item" href="{{ route('admin_new_by_url') }}">new by url</a>
                 </div>
             </div>
@@ -78,7 +76,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a class="btn btn-info" href="{{ route('admin_paper_edit', ['paper_id' => $page->id]) }}">
+                                        <a class="btn btn-info" href="{{ route('admin_edit_paper', ['paper_id' => $page->id]) }}">
                                             edit
                                         </a>
                                         <a href="#" class="btn btn-danger btn-flat show_confirm" data-id="{{ $page->id }}">
@@ -111,7 +109,7 @@
         var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
             var id = $(this).attr("data-id");
-            var url = "{{ route('admin_paper_delete') }}";
+            var url = "{{ route('admin_delete_paper') }}";
 
             event.preventDefault();
             Swal.fire({

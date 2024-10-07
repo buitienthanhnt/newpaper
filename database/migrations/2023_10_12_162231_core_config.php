@@ -14,6 +14,7 @@ class CoreConfig extends Migration
     public function up()
     {
         Schema::create(\App\Helper\Nan::coreConfigTable(), function (Blueprint $table) {
+            $table->id();
             $table->string(\App\Constant\AttributeInterface::ATTR_NAME);
             $table->string(\App\Constant\AttributeInterface::ATTR_VALUE)->nullable();
             $table->text(\App\Constant\AttributeInterface::ATTR_DESCRIPTION)->nullable(true);

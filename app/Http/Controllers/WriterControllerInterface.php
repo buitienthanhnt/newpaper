@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 interface WriterControllerInterface{
-    const DEFAULT = '';
     const CONTROLLER_NAME = 'WriterController';
+    const PREFIX = 'writer';
 
     const LIST_WRITER = 'listWriter';
     const CREATE_WRITER = 'createWriter';

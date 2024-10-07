@@ -9,6 +9,7 @@ interface AdminControllerInterface
     const CONTROLLER_NAME = 'AdminController';
 
     const ADMIN = 'admin';
+    const ADMIN_DEFAULT = 'default';
     const ADMIN_HOME = 'home';
     const ADMIN_LOGIN = 'adminLogin';
     const LOGIN_POST = 'loginPost';
@@ -25,4 +26,6 @@ interface AdminControllerInterface
     public function loginPost(Request $request);
 
     public function logout();
+
+    public function default();
 }

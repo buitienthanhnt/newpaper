@@ -14,7 +14,7 @@
             <div class="card-body">
                 <h4 class="card-title">Create new category</h4>
                 <form class="form-sample" method="POST"
-                    action={{ route('category_admin_update', ['category_id' => $category->id]) }}>
+                    action={{ route('admin_update_category', ['category_id' => $category->id]) }}>
                     @csrf
                     @if (session('success'))
                         <div class="alert alert-success" id="category_insert_success" role="alert">
@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <a href="{{ route('category_admin_list') }}" class="btn btn-primary">list category</a>
+                            <a href="{{ route('admin_list_category') }}" class="btn btn-primary">list category</a>
                         </div>
                     </div>
                 </form>

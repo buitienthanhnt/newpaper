@@ -42,9 +42,8 @@ class PermissionController extends Controller implements PermissionControllerInt
 
     function createPermission()
     {
-        $ul_rules = $this->rule->root_rules_html();
         $prefixGroup = $this->allRules();
-        return view("adminhtml/templates/permission/create", ["rules" => json_encode($prefixGroup), "ul_rules" => $ul_rules]);
+        return view("adminhtml/templates/permission/create", ["rules" => json_encode($prefixGroup)]);
         // return view("adminhtml/templates/permission/create", ["rules" => json_encode(["Name" => "all", "Number" => 0, "Children" => $rules]), "ul_rules" => $ul_rules]);
     }
 

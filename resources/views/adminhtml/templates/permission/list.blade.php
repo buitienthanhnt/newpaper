@@ -25,7 +25,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <a href="{{ route('admin_permission_create') }}" class="btn btn-info">create permission</a>
+                <a href="{{ route('admin_create_permission') }}" class="btn btn-info">create permission</a>
             </div>
         </div>
         <div class="row">
@@ -44,7 +44,7 @@
                             <td>{{ $permission->id }}</td>
                             <td>{{ $permission->label }}</td>
                             <td>
-                                <a href="{{ route('admin_permission_detail', ['permission_id' => $permission->id]) }}" class="btn btn-info">edit</a>
+                                <a href="{{ route('admin_detail_permission', ['permission_id' => $permission->id]) }}" class="btn btn-info">edit</a>
                                 <a href="" class="">
                                     <button class="btn btn-danger btn-flat show_confirm" data-id="{{ $permission->id }}">delete</button>
                                 </a>
@@ -71,7 +71,7 @@
         var token = "{{ csrf_token() }}";
         $('.show_confirm').click(function(event) {
             var permission_id = $(this).attr("data-id");
-            var url = "{{ route('admin_permission_delete') }}";
+            var url = "{{ route('admin_delete_permission') }}";
 
             event.preventDefault();
             Swal.fire({

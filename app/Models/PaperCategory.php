@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\Paper;
 
-class pageCategory extends Model
+class PaperCategory extends Model
 {
     use HasFactory;
-    protected $table = "page_category";
+    protected $table = "paper_category";
 
     public function for_category(): BelongsTo
     {

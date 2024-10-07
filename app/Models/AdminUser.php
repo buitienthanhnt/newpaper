@@ -118,7 +118,7 @@ class AdminUser extends Model implements AdminUserInterface
      */
     function getPermissionsIds()
     {
-        $permissions = $this->hasMany(AdminUserPermission::class, "user_id");
+        $permissions = $this->hasMany(AdminUserPermission::class, AdminUser::PRIMARY_ALIAS);
         $permissionValues = array_column($permissions->getResults()->toArray(), "permission_id");
         return $permissionValues;
     }
@@ -131,7 +131,7 @@ class AdminUser extends Model implements AdminUserInterface
         if (in_array($permission, $userPermissions)) {
             return ['rootAdmin'];
         } else {
-            $userPermissions = collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
+            $userPermissions = collect($this->hasMany(AdminUserPermission::class, AdminUser::PRIMARY_ALIAS)->getResults());
             foreach ($userPermissions->all() as $userPermission) {
                 $data_rules = $userPermission->hasMany(PermissionRules::class, "permission_id", "permission_id")->getResults()->map(fn($item) => $item->rule_value)->all();
                 $rules = [...$rules, ...$data_rules];

@@ -91,7 +91,7 @@ class ManagerController extends Controller
             $list_papers = [];
             foreach ($list_center as $center) {
                 $page_category = $center->to_page_category()->getResults()->toArray();
-                $list_papers = array_unique([...array_column($page_category, "page_id"), ...$list_papers]);
+                $list_papers = array_unique([...array_column($page_category, Paper::PRIMARY_ALIAS), ...$list_papers]);
             }
         }
         // $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();

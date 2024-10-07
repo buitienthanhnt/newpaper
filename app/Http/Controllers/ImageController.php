@@ -6,7 +6,7 @@ use App\Helper\ImageUpload;
 use App\Models\ImageModel;
 use Illuminate\Http\Request;
 
-class ImageController extends Controller
+class ImageController extends Controller implements ImageControllerInterface
 {
     //
     use ImageUpload;
@@ -24,6 +24,11 @@ class ImageController extends Controller
     {
         $list_file = ImageModel::paginate(8);
         return view("adminhtml.templates.files.list", compact("list_file"));
+    }
+
+    public function addFile()
+    {
+        return view("adminhtml.templates.files.add");
     }
 
     public function deleteFile()
@@ -53,11 +58,6 @@ class ImageController extends Controller
                 "value" => "deleted: error"
             ]), 401);
         }
-    }
-
-    public function addFile()
-    {
-        return view("adminhtml.templates.files.add");
     }
 
     public function saveFile()

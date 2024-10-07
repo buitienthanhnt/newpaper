@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 interface PermissionControllerInterface{
     const CONTROLLER_NAME = 'PermissionController';
+    const PREFIX = 'permission';
 
     const LIST_PERMISSION = 'listPermission';
     const CREATE_PREMISSION = 'createPermission';

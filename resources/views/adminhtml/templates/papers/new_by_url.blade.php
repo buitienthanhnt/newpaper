@@ -40,12 +40,12 @@
             <div class="card-body">
                 <h4 class="card-title">add new source</h4>
                 <form class="form-sample" style="margin-top: 12px" method="GET" enctype="multipart/form-data"
-                    action={{ route('admin_source') }}>
+                    action={{ route('admin_source_paper') }}>
                     @csrf
-                    @if ($message = session('success'))
-                        <?php alert()->success('server message', $message); ?>
-                    @elseif ($error = session('error'))
-                        <?php alert()->warning('server mesage', $error); ?>
+                    @if (session('success'))
+                        <?php alert()->success('server message', session('success')); ?>
+                    @elseif (session('error'))
+                        <?php alert()->warning('server mesage', session('error')); ?>
                     @endif
 
                     <div class="row" style="margin-bottom: 10px">

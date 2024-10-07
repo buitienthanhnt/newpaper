@@ -18,14 +18,14 @@ class Paper extends Model implements PaperInterface
     use SoftDeletes;
     use ImageUpload;
 
-    const PAGE_TAG = 'page_tag';
+    const PAPER_TAG = 'paper_tag';
 
     protected $guarded;
     protected $viewSource = null;
 
     public function to_category(): HasMany
     {
-        return $this->hasMany("\App\Models\pageCategory", "page_id");
+        return $this->hasMany("\App\Models\PaperCategory", Paper::PRIMARY_ALIAS);
     }
 
     function listIdCategories(): array
