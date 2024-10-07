@@ -165,11 +165,11 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::get('setupHome', $firebaseController.FirebaseControllerInterface::FIREBASE_SETUP_HOME_INFO)->name($admin . "_firebase_setup_home_info");
 
-        Route::get('uploadHomeInfo', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_HOME_INFO)->name($admin . "_firebase_upload_home_info");
+        Route::post('uploadHomeInfo', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_HOME_INFO)->name($admin . "_firebase_upload_home_info");
 
-        Route::get('uploadCategoryTop', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_CATEGORY_TOP)->name($admin . "_firebase_upload_category_top");
+        Route::post('uploadCategoryTop', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_CATEGORY_TOP)->name($admin . "_firebase_upload_category_top");
 
-        Route::get('uploadCategoryTree', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_CATEGORY_TREE)->name($admin . "_firebase_upload_category_tree");
+        Route::post('uploadCategoryTree', $firebaseController.FirebaseControllerInterface::FIREBASE_UPLOAD_CATEGORY_TREE)->name($admin . "_firebase_upload_category_tree");
 
     });
 
