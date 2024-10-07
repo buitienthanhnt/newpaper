@@ -9,9 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class AdminUserController extends Controller
+class AdminUserController extends Controller implements AdminUserControllerInterface
 {
-    //
     protected $request;
     protected $adminUser;
 
@@ -21,13 +20,23 @@ class AdminUserController extends Controller
         $this->adminUser = $adminUser;
     }
 
-    function createUser(Request $request)
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    function listAdminUser()
+    {
+        $allAdminUser = AdminUser::paginate(8);
+        return view("adminhtml.templates.adminUser.list", ["allUser" => $allAdminUser]);
+    }
+
+    function createAdminUser()
     {
         return view("adminhtml/templates/adminUser/create");
     }
 
-    function insertUser(Request $request)
+    function insertAdminUser()
     {
+        $request = $this->request;
         $adminUser = $this->adminUser;
         $adminUser->fill([
             "name" => $request->get("admin_user"),
@@ -44,25 +53,15 @@ class AdminUserController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
-    function listUser(Request $request)
-    {
-        $allAdminUser = AdminUser::paginate(8);
-        return view("adminhtml.templates.adminUser.list", ["allUser" => $allAdminUser]);
-    }
-
-    /**
      * https://phpgrid.com/blog/time-to-use-php-return-types-in-your-code/
      * https://www.php.net/manual/en/language.types.declarations.php
      *
-     * @param integer $user_id
-     * @param Request
+     * @param integer $admin_user_id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function editUser($user_id, Request $request)
+    public function editAdminUser($admin_user_id)
     {
-        $user = AdminUser::findOrFail($user_id);
+        $user = AdminUser::findOrFail($admin_user_id);
         $allPermission = Permission::all();
         $userPermissions = $user->getPermissionsIds();
         return view("adminhtml.templates.adminUser.edit", ["user" => $user, "permissions" => $allPermission, "userPermissions" => $userPermissions]);
@@ -76,8 +75,9 @@ class AdminUserController extends Controller
      * @param Request
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function updateUser($user_id, Request $request)
+    public function updateAdminUser($user_id)
     {
+        $request = $this->request;
         $user = AdminUser::findOrFail($user_id);
         $user->{AdminUserInterface::ATTR_NAME} = $request->get("admin_user");
         $user->save();
@@ -90,12 +90,11 @@ class AdminUserController extends Controller
     }
 
     /**
-     * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function deleteUser(Request $request)
+    public function deleteAdminUser()
     {
-        $adminUser = AdminUser::find($request->get("user_id"));
+        $adminUser = AdminUser::find($$this->request->get("user_id"));
         if ($adminUser) {
             $adminUser->delete();
             return response(

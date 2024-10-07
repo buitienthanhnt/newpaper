@@ -51,7 +51,7 @@
                                 <label class="col-sm-3 col-form-label">Parent Category</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="parent_id">
-                                        <?= $parent_category ?>
+                                        <?= $category_tree_option ?>
                                     </select>
                                 </div>
                             </div>

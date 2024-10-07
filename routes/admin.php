@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminControllerInterface;
 use App\Http\Controllers\WriterControllerInterface;
+use App\Http\Controllers\CategoryControllerInterface;
+use App\Http\Controllers\PaperControllerInterface;
+use App\Http\Controllers\PermissionControllerInterface;
+use App\Http\Controllers\AdminUserControllerInterface;
+use App\Http\Controllers\ConfigControllerInterface;
+use App\Http\Controllers\OrderControllerInterface;
 
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = AdminControllerInterface::ADMIN;
@@ -19,84 +25,113 @@ Route::group(["prefix" => "adminhtml"], function () {
     Route::prefix('writer')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         $writerController = WriterControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("/", $writerController.WriterControllerInterface::LIST_WRITER)->name($admin . "_writer_list");
+        Route::get("/", $writerController.WriterControllerInterface::LIST_WRITER)->name($admin . "_list_writer");
 
-        Route::get("create", $writerController.WriterControllerInterface::CREATE_WRITER)->name($admin . "_writer_create");
+        Route::get("create", $writerController.WriterControllerInterface::CREATE_WRITER)->name($admin . "_create_writer");
 
-        Route::post("insert", $writerController.WriterControllerInterface::INSERT_WRITER)->name($admin . "_writer_insert");
+        Route::post("insert", $writerController.WriterControllerInterface::INSERT_WRITER)->name($admin . "_insert_writer");
 
-        Route::get("edit/{writer_id}", $writerController.WriterControllerInterface::EDIT_WRITER)->name($admin . "_writer_edit");
+        Route::get("edit/{writer_id}", $writerController.WriterControllerInterface::EDIT_WRITER)->name($admin . "_edit_writer");
 
-        Route::post("update/{writer_id}", $writerController.WriterControllerInterface::UPDATE_WRITER)->name($admin . "_writer_update");
+        Route::post("update/{writer_id}", $writerController.WriterControllerInterface::UPDATE_WRITER)->name($admin . "_update_writer");
 
-        Route::delete("delete", $writerController.WriterControllerInterface::DELETE_WRITER)->name($admin . "_writer_delete");
+        Route::delete("delete", $writerController.WriterControllerInterface::DELETE_WRITER)->name($admin . "_delete_writer");
     });
 
     Route::prefix('category')->middleware(["adminLogin", "AdminPermission"])->group(function () {
-        Route::get("list", "CategoryController@listCategory")->name("category_admin_list");
+        $categoryController = CategoryControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("create", "CategoryController@createCategory")->name("category_admin_create");
+        Route::get("list", $categoryController.CategoryControllerInterface::LISTCATEGORY)->name("category_admin_list");
 
-        Route::post("insert", "CategoryController@insertCategory")->name("category_admin_insert");
+        Route::get("create", $categoryController.CategoryControllerInterface::CREATE_CATEGORY)->name("category_admin_create");
 
-        Route::get("edit/{category_id}", "CategoryController@editCategory")->name("category_admin_edit");
+        Route::post("insert", $categoryController.CategoryControllerInterface::INSERT_CATEGORY)->name("category_admin_insert");
 
-        Route::post("update/{category_id}", "CategoryController@updateCategory")->name("category_admin_update");
+        Route::get("edit/{category_id}", $categoryController.CategoryControllerInterface::EDIT_CATEGORY)->name("category_admin_edit");
 
-        Route::post("delete/{category_id}", "CategoryController@deleteCategory")->name("category_admin_delete");
+        Route::post("update/{category_id}", $categoryController.CategoryControllerInterface::UPDATE_CATEGORY)->name("category_admin_update");
 
-        Route::get("setup", "CategoryController@setupCategory")->name("category_top_setup");
+        Route::post("delete/{category_id}", $categoryController.CategoryControllerInterface::DELETE_CATEGORY)->name("category_admin_delete");
 
-        Route::post("setup/save", "CategoryController@setupSave")->name("category_setup_save");
+        Route::get("setup", $categoryController.CategoryControllerInterface::SETUP_CATEGORY)->name("category_top_setup");
+
+        Route::post("setup/save", $categoryController.CategoryControllerInterface::SETUP_SAVE)->name("category_setup_save");
     });
 
     Route::prefix('paper')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        $paperController = PaperControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("/", "PaperController@listPaper")->name($admin . "_paper_list");
+        Route::get("/", $paperController.PaperControllerInterface::LIST_PAPER)->name($admin . "_list_paper");
 
-        Route::get("create", "PaperController@createPaper")->name($admin . "_paper_create");
+        Route::get("create", $paperController.PaperControllerInterface::CREATE_PAPER)->name($admin . "_create_paper");
 
-        Route::get("newbyurl", "PaperController@newByUrl")->name($admin . "_new_by_url");
+        Route::post("insert", $paperController.PaperControllerInterface::INSERT_PAPER)->middleware("postPaper")->name($admin . "_save_paper");
 
-        Route::get("extension", "ExtensionController@source")->name($admin . "_source");
+        Route::get("edit/{paper_id}", $paperController.PaperControllerInterface::EDIT_PAPER)->name($admin . "_edit_paper");
 
-        Route::post("insert", "PaperController@insertPaper")->middleware("postPaper")->name($admin . "_paper_save");
+        Route::post("update/{paper_id}", $paperController.PaperControllerInterface::UPDATE_PAPER)->name($admin . "_update_paper");
 
-        Route::get("edit/{paper_id}", "PaperController@editPaper")->name($admin . "_paper_edit");
+        Route::delete("delete", $paperController.PaperControllerInterface::DELETE_PAPER)->name($admin . "_delete_paper");
 
-        Route::post("update/{paper_id}", "PaperController@updatePaper")->name($admin . "_paper_update");
+        Route::get("newbyurl", $paperController.PaperControllerInterface::NEW_BY_URL)->name($admin . "_new_by_url");
 
-        Route::delete("delete", "PaperController@deletePaper")->name($admin . "_paper_delete");
+        Route::get("sourcePaper", $paperController.PaperControllerInterface::SOURCE_PAPER)->name($admin . "_source_paper");
     });
 
     Route::prefix('permission')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get('/', "PermissionController@list")->name($admin . "_permission_list");
+        $permissionController = PermissionControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("create", "PermissionController@create")->name($admin . "_permission_create");
+        Route::get('/', $permissionController.PermissionControllerInterface::LIST_PERMISSION)->name($admin . "_list_permission");
 
-        Route::post("insert", "PermissionController@insert")->name($admin . "_permission_insert");
+        Route::get("create", $permissionController.PermissionControllerInterface::CREATE_PREMISSION)->name($admin . "_create_permission");
 
-        Route::get("edit/{permission_id}", "PermissionController@edit")->name($admin . "_permission_edit");
+        Route::post("insert", $permissionController.PermissionControllerInterface::INSERT_PERMISSION)->name($admin . "_insert_permission");
 
-        Route::post("update", "PermissionController@update")->name($admin . "_permission_update");
+        Route::get("edit/{permission_id}", $permissionController.PermissionControllerInterface::EDIT_PERMISSION)->name($admin . "_edit_permission");
 
-        Route::delete("delete", "PermissionController@delete")->name($admin . "_permission_delete");
+        Route::post("update", $permissionController.PermissionControllerInterface::UPDATE_PERMISSION)->name($admin . "_update_permisison");
 
-        Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin . "_permission_detail");
+        Route::delete("delete", $permissionController.PermissionControllerInterface::DELETE_PERMISSION)->name($admin . "_delete_permission");
+
+        Route::get("detail/{permission_id}", $permissionController.PermissionControllerInterface::DETAIL_PERMISSION)->name($admin . "_detail_permission");
     });
 
-    Route::prefix('user')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get("listUser", "AdminUserController@listUser")->name($admin . "_user_list");
+    Route::prefix('adminUser')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        $adminUserController = AdminUserControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("editUser/{user_id}", "AdminUserController@editUser")->name($admin . "_user_edit");
+        Route::get("listUser", $adminUserController.AdminUserControllerInterface::LIST_ADMIN_USER)->name($admin . "_list_admin_user");
 
-        Route::post("updateUser/{user_id}", "AdminUserController@updateUser")->name($admin . "_user_update");
+        Route::get("createUser", $adminUserController.AdminUserControllerInterface::CREATE_ADMIN_USER)->name($admin . "_create_admin_user");
 
-        Route::get("createUser", "AdminUserController@createUser")->name($admin . "_user_create");
+        Route::post("insetUser", $adminUserController.AdminUserControllerInterface::INSERT_ADMIN_USER)->name($admin . "_insert_admin_user");
 
-        Route::post("insetUser", "AdminUserController@insertUser")->name($admin . "_insert_user");
+        Route::get("editUser/{user_id}", $adminUserController.AdminUserControllerInterface::EDIT_ADMIN_USER)->name($admin . "_edit_admin_user");
 
-        Route::delete("deleteUser", "AdminUserController@deleteUser")->name($admin . "_user_delete");
+        Route::post("updateUser/{user_id}", $adminUserController.AdminUserControllerInterface::UPDATE_ADMIN_USER)->name($admin . "_update_admin_user");
+
+        Route::delete("deleteUser", $adminUserController.AdminUserControllerInterface::DELETE_ADMIN_USER)->name($admin . "_delete_admin_user");
+    });
+
+    Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
+        $configController = ConfigControllerInterface::CONTROLLER_NAME.'@';
+
+        Route::get("/", $configController.ConfigControllerInterface::LIST_CONFIG)->name($admin . "_list_config");
+
+        Route::get("create", $configController.ConfigControllerInterface::CREATE_CONFIG)->name($admin . "_create_config");
+
+        Route::post("insert", $configController.ConfigControllerInterface::INSERT_CONFIG)->name($admin . "_insert_config");
+
+        Route::post("update", $configController.ConfigControllerInterface::UPDATE_CONFIG)->name($admin . "_update_config");
+
+        Route::delete("delete", $configController.ConfigControllerInterface::DELETE_CONFIG)->name($admin . "_delete_config");
+    });
+
+    Route::prefix("orders")->group(function () use ($admin) {
+        $orderController = OrderControllerInterface::CONTROLLER_NAME.'@';
+
+        Route::get("/", $orderController.OrderControllerInterface::LIST_ORDER)->name($admin . "_list_order");
+
+        Route::get("info/{order_id}", $orderController.OrderControllerInterface::DETAIL_ORDER)->name($admin."_detail_order");
     });
 
     Route::prefix('file')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
@@ -112,18 +147,6 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::post("save", "ImageController@saveFile")->name($admin . "_file_save");
 
         Route::delete("delete", "ImageController@deleteFile")->name($admin . "_file_delete");
-    });
-
-    Route::prefix("config")->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get("/", "ConfigController@list")->name($admin . "_config_list");
-
-        Route::get("create", "ConfigController@create")->name($admin . "_config_create");
-
-        Route::post("insert", "ConfigController@insert")->name($admin . "_config_insert");
-
-        Route::post("update", "ConfigController@update")->name($admin . "_config_update");
-
-        Route::delete("delete", "ConfigController@delete")->name($admin . "_config_delete");
     });
 
     Route::prefix('firebase')->middleware(["adminLogin", 'AdminPermission'])->group(function () use ($admin) {
@@ -146,12 +169,6 @@ Route::group(["prefix" => "adminhtml"], function () {
         Route::get('nhaDashboard', "FirebaseController@nhaDashboard")->name($admin . "_firebase_nhaDashboard");
 
         Route::post('nhaUp', "FirebaseController@nhaUp")->name($admin . "_firebase_nhaUp");
-    });
-
-    Route::prefix("orders")->group(function () use ($admin) {
-        Route::get("/", "OrderController@lists")->name($admin . "_orders_list");
-
-        Route::get("info/{order_id}", "OrderController@info")->name($admin."_order_info");
     });
 
     Route::get("default", "AdminController@default")->name($admin . "_default");

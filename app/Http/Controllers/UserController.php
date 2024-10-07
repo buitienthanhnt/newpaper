@@ -15,9 +15,8 @@ use Illuminate\Support\Str;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Google\Cloud\Storage\Connection\Rest;
 
-class UserController extends BaseController
+class UserController extends BaseController implements UserControllerInterface
 {
-    //
     protected $request;
     protected $user;
 

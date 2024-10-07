@@ -22,26 +22,28 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\LogTha;
+use Thanhnt\Nan\Helper\RemoteSourceManager;
 use Thanhnt\Nan\Helper\StringHelper;
 use Throwable;
 
-class PaperController extends Controller
+class PaperController extends Controller implements PaperControllerInterface
 {
     use Page;
     use StringHelper;
 
+    const PAGE_TYPE = 1;
+
+    /**
+     * @var CartService $cartService
+     */
+    protected $cartService;
     protected $request;
     protected $paper;
     protected $category;
     protected $notification;
     protected $helperFunction;
     protected $logTha;
-    /**
-     * @var CartService $cartService
-     */
-    protected $cartService;
-
-    const PAGE_TYPE = 1;
+    protected $remoteSourceManager;
 
     public function __construct(
         Request $request,
@@ -50,7 +52,8 @@ class PaperController extends Controller
         Notification $notification,
         HelperFunction $helperFunction,
         LogTha $logTha,
-        CartService $cartService
+        CartService $cartService,
+        RemoteSourceManager $remoteSourceManager
     )
     {
         $this->request = $request;
@@ -60,8 +63,12 @@ class PaperController extends Controller
         $this->notification = $notification;
         $this->helperFunction = $helperFunction;
         $this->cartService = $cartService;
+        $this->remoteSourceManager = $remoteSourceManager;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     */
     public function listPaper()
     {
         $page_lists = $this->paper->orderBy("updated_at", "DESC")->paginate(8);
@@ -80,28 +87,17 @@ class PaperController extends Controller
         return view("adminhtml.templates.papers.list", compact("page_lists"));
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     */
     public function createPaper()
     {
-        $writers = Writer::all();
         return view("adminhtml.templates.papers.create", [
             "category_option" => $this->category->category_tree_option(),
             "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
-            "filemanager_url_base" => url("adminhtml/file/manager"),
             "time_line_option" => $this->category->time_line_option(),
-            "writers" => $writers
+            "writers" => Writer::all()
         ]);
-    }
-
-    function pageType(): string
-    {
-        $request = $this->request;
-        if ($request->get('slider_data')) {
-            return 'carousel';
-        }
-        if (!empty($request->get('price'))) {
-            return 'product';
-        }
-        return 'content';
     }
 
     protected function convertRequestData(int $paper_id): array
@@ -243,6 +239,10 @@ class PaperController extends Controller
         }
     }
 
+    /**
+     * @param int $paper_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View|mixed
+     */
     public function editPaper($paper_id)
     {
         /**
@@ -262,6 +262,10 @@ class PaperController extends Controller
             compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "time_line_option"));
     }
 
+    /**
+     * @param int $paper_id
+     * @return \Illuminate\Http\RedirectResponse|mixed
+     */
     public function updatePaper($paper_id)
     {
         $paper = $this->paper->find($paper_id);
@@ -365,9 +369,35 @@ class PaperController extends Controller
         return false;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     */
     public function newByUrl()
     {
         return view("adminhtml.templates.papers.new_by_url");
+    }
+
+    public function sourcePaper()
+    {
+        $request = $this->request;
+        $value = $this->remoteSourceManager->source($request);
+        if (!$value) {
+            return redirect()->back()->with("error", "can not parse source!");
+        } else {
+            /**
+             * get write for
+             */
+            $writers = Writer::all();
+            $values = [
+                "value" => $value,
+                "category_option" => $this->category->category_tree_option(),
+                "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
+                "filemanager_url_base" => url("adminhtml/file/manager"),
+                "time_line_option" => $this->category->time_line_option(),
+                "writers" => $writers,
+            ];
+            return view("adminhtml.templates.papers.create", $values);
+        }
     }
 
     /**
