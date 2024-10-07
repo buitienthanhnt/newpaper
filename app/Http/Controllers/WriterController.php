@@ -7,21 +7,26 @@ use App\Models\Writer;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class WriterController extends Controller
+class WriterController extends Controller implements WriterControllerInterface
 {
     use ImageUpload;
+
     protected $request;
     protected $writer;
 
     public function __construct(
         Request $request,
         Writer $writer
-    ) {
+    )
+    {
         $this->request = $request;
         $this->writer = $writer;
     }
 
-    public function listOfWriter()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function listWriter()
     {
         if (view()->exists('adminhtml.templates.writer.list')) {
             $all_writer = Writer::paginate(8);
@@ -43,7 +48,7 @@ class WriterController extends Controller
     public function insertWriter()
     {
         $request = $this->request;
-        if ($file = $request->__get("image_post")){
+        if ($file = $request->__get("image_post")) {
             $image_upload_path = $this->uploadImage($file, "public/images/writer", "images/resize/writer");
         }
 
@@ -63,7 +68,7 @@ class WriterController extends Controller
         $result = $writer->save();
         if ($result) {
             return redirect()->back()->with("success", "created new writer");
-        }else {
+        } else {
             return redirect()->back()->with("error", "create fail!!, please try again.");
         }
     }
@@ -71,20 +76,19 @@ class WriterController extends Controller
     public function deleteWriter()
     {
         try {
-            $request = $this->request;
-        if ($writer_id = $request->__get("writer_id")) {
-            $writer = $this->writer->find($writer_id);
-            if ($writer && $writer->id) {
-                // delete resize file of writer
-                $this->delete_file($writer->image_path);
-                // $writer->delete // xoa mem
-                $writer->forceDelete(); // xoa han khoi ban ghi
-                return response(json_encode([
-                    "code" => "200",
-                    "value" => "deleted: $writer->name success"
-                ]), 200);
+            if ($writer_id = $this->request->__get("writer_id")) {
+                $writer = $this->writer->find($writer_id);
+                if ($writer && $writer->id) {
+                    // delete resize file of writer
+                    $this->delete_file($writer->image_path);
+                    // $writer->delete // xoa mem
+                    $writer->forceDelete(); // xoa han khoi ban ghi
+                    return response(json_encode([
+                        "code" => "200",
+                        "value" => "deleted: $writer->name success"
+                    ]), 200);
+                }
             }
-        }
         } catch (\Throwable $th) {
             //throw $th;
         }
@@ -111,7 +115,7 @@ class WriterController extends Controller
             $request = $this->request;
             $writer = $this->writer->find($writer_id);
             if ($writer) {
-                if ($file = $request->__get("image_post")){
+                if ($file = $request->__get("image_post")) {
                     $image_upload_path = $this->uploadImage($file, "public/images/writer", "images/resize/writer");
                     if ($image_upload_path) {
                         $this->delete_file($writer->image_path); // xoa file cu de thay bang file moi.
@@ -138,7 +142,7 @@ class WriterController extends Controller
                 }
                 return redirect()->back()->with("error", "can not update!");
             }
-        }else {
+        } else {
             return redirect()->back()->with("error", "can not update!");
         }
     }

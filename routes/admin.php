@@ -1,30 +1,35 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminControllerInterface;
+use App\Http\Controllers\WriterControllerInterface;
 
 Route::group(["prefix" => "adminhtml"], function () {
-    $admin = "admin";
+    $admin = AdminControllerInterface::ADMIN;
+    $admin_controller = AdminControllerInterface::CONTROLLER_NAME.'@';
 
-    Route::get("/", "AdminController@home")->name($admin)->middleware("adminLogin");
+    Route::get("/", $admin_controller.AdminControllerInterface::ADMIN_HOME)->name($admin)->middleware("adminLogin");
 
-    Route::get("login", "AdminController@adminLogin")->name($admin . "_login");
+    Route::get("login", $admin_controller.AdminControllerInterface::ADMIN_LOGIN)->name($admin . "_login");
 
-    Route::post("loginpost", "AdminController@loginPost")->name($admin . "_login_post");
+    Route::post("loginpost", $admin_controller.AdminControllerInterface::LOGIN_POST)->name($admin . "_login_post");
 
-    Route::get('logout', "AdminController@logout")->name($admin . "_logout");
+    Route::get('logout', $admin_controller.AdminControllerInterface::LOGOUT)->name($admin . "_logout");
 
     Route::prefix('writer')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-        Route::get("/", "WriterController@listOfWriter")->name($admin . "_writer_list");
+        $writerController = WriterControllerInterface::CONTROLLER_NAME.'@';
 
-        Route::get("create", "WriterController@createWriter")->name($admin . "_writer_create");
+        Route::get("/", $writerController.WriterControllerInterface::LIST_WRITER)->name($admin . "_writer_list");
 
-        Route::post("insert", "WriterController@insertWriter")->name($admin . "_writer_insert");
+        Route::get("create", $writerController.WriterControllerInterface::CREATE_WRITER)->name($admin . "_writer_create");
 
-        Route::get("edit/{writer_id}", "WriterController@editWriter")->name($admin . "_writer_edit");
+        Route::post("insert", $writerController.WriterControllerInterface::INSERT_WRITER)->name($admin . "_writer_insert");
 
-        Route::post("update/{writer_id}", "WriterController@updateWriter")->name($admin . "_writer_update");
+        Route::get("edit/{writer_id}", $writerController.WriterControllerInterface::EDIT_WRITER)->name($admin . "_writer_edit");
 
-        Route::delete("delete", "WriterController@deleteWriter")->name($admin . "_writer_delete");
+        Route::post("update/{writer_id}", $writerController.WriterControllerInterface::UPDATE_WRITER)->name($admin . "_writer_update");
+
+        Route::delete("delete", $writerController.WriterControllerInterface::DELETE_WRITER)->name($admin . "_writer_delete");
     });
 
     Route::prefix('category')->middleware(["adminLogin", "AdminPermission"])->group(function () {
@@ -79,22 +84,6 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::get("detail/{permission_id}", "PermissionController@detail")->name($admin . "_permission_detail");
     });
-
-//    Route::prefix('rule')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
-//        Route::get('/', "RuleController@list")->name($admin . "_rule_list");
-//
-//        Route::get("all", "RuleController@allRules")->name($admin . "_rule_all");
-//
-//        Route::get('/create', "RuleController@create")->name($admin . "_rule_create");
-//
-//        Route::post('/insert', "RuleController@insert")->name($admin . "_rule_insert");
-//
-//        Route::get("edit", "RuleController@edit")->name($admin . "_rule_edit");
-//
-//        Route::delete("delete", "RuleController@delete")->name($admin . "_rule_delete");
-//
-//        Route::any("addChildren/{parent_id?}", "RuleController@addChildren")->name($admin . "_rule_add_children");
-//    });
 
     Route::prefix('user')->middleware(["adminLogin", "AdminPermission"])->group(function () use ($admin) {
         Route::get("listUser", "AdminUserController@listUser")->name($admin . "_user_list");

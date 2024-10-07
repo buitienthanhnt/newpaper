@@ -14,8 +14,8 @@
 
 
 @section('body_main_conten')
-    @if ($message = session('success'))
-        <?php alert()->success('server message', $message); ?>
+    @if (session('success'))
+        <?php alert()->success('server message',  session('success')); ?>
     @endif
     <div class="container">
         <div class="row">

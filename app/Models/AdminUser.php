@@ -126,7 +126,7 @@ class AdminUser extends Model implements AdminUserInterface
     function getPermissionRules()
     {
         $rules = [];
-        $userPermissions = array_column($this->hasMany(AdminUserPermission::class, "user_id")->getResults()->toArray(), 'permission_id');
+        $userPermissions = array_column($this->hasMany(AdminUserPermission::class, AdminUserInterface::PRIMARY_ALIAS)->getResults()->toArray(), 'permission_id');
         $permission = Permission::where('label', '=', 'root')->first()->id ?? null;
         if (in_array($permission, $userPermissions)) {
             return ['rootAdmin'];
