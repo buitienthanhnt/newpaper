@@ -192,6 +192,10 @@ class PaperController extends Controller implements PaperControllerInterface
         return $paper;
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
     public function insertPaper()
     {
         $request = $this->request;
@@ -299,6 +303,9 @@ class PaperController extends Controller implements PaperControllerInterface
         return redirect()->back()->with("error", "update error, please try again!");
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
     public function deletePaper()
     {
         $request = $this->request;
@@ -335,11 +342,6 @@ class PaperController extends Controller implements PaperControllerInterface
                     }
 
                     /**
-                     * delete paper slider carousel.
-                     */
-                    $this->deleteImageCarousel($paper->id);
-
-                    /**
                      * delete main paper.
                      */
                     $paper->delete();
@@ -357,16 +359,6 @@ class PaperController extends Controller implements PaperControllerInterface
             "code" => 401,
             "value" => "delete error. Please try again!"
         ]), 401);
-    }
-
-    function deleteImageCarousel(int $paper_id): bool
-    {
-        try {
-            DB::table('paper_carousel')->where('paper_id', $paper_id)->delete();
-        } catch (Throwable $th) {
-            //throw $th;
-        }
-        return false;
     }
 
     /**
@@ -412,144 +404,15 @@ class PaperController extends Controller implements PaperControllerInterface
         return $history->save();
     }
 
-    function getCommentContent($paper_id, $p, Request $request): string
-    {
-        $_paper = $this->paper->find($paper_id);
-        $comments = $_paper->getComments(null, $p);
-        $commentsHtml = view('frontend.templates.paper.component.commentHistory', ['comments' => $comments])->render();
-        return $commentsHtml;
-    }
-
-    public function addComment($page_id, Request $request)
-    {
-        //throw new \Exception("Error Processing Request", 500);
-        try {
-            $comment = new Comment([
-                "paper_id" => $page_id,
-                "email" => $request->get("email", Auth::user()->email),
-                "name" => $request->get("name", Auth::user()->name),
-                "subject" => $request->get("subject"),
-                "content" => $request->get("message", $request->get("content")),
-                "parent_id" => $request->get("parent_id", null)
-            ]);
-
-            $comment->save();
-            return response(json_encode([
-                "code" => 200,
-                "data" => 123
-            ], 200));
-        } catch (Throwable $th) {
-            return response(json_encode([
-                "code" => 400,
-                "data" => null
-            ], 500));
-        }
-    }
-
-    function replyComment($comment_id, Request $request)
-    {
-
-        try {
-            $comment = new Comment([
-                "paper_id" => $request->get("paper_value"),
-                "parent_id" => $comment_id,
-                "email" => $request->get("email"),
-                "name" => $request->get("name"),
-                "content" => $request->get("conten")
-            ]);
-
-            $comment->save();
-            return response(json_encode([
-                "code" => 200,
-                "data" => 123
-            ], 200));
-        } catch (Throwable $th) {
-            //throw $th;
-        }
-        return response(json_encode([
-            "code" => 200,
-            "data" => 123
-        ], 500));
-    }
-
-    function addLike($paper_id, Request $request)
-    {
-        $params = $request->toArray();
-        $paperSource = ViewSource::where('type', '=', ViewSource::TYPE_PAPER)->where('source_id', '=', $paper_id)->first();
-        if (empty($paperSource)) {
-            ViewSource::firstOrCreate([
-                "type" => $params['paper'],
-                "source_id" => $paper_id,
-                "value" => 1,
-                'heart' => $params['type'] === 'heart' ? 1 : 0,
-                'like' => $params['type'] === 'like' ? 1 : 0
-            ]);
-        } else {
-            if ($params['type'] === 'like') {
-                $paperSource->like = $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1;
-            } elseif ($params['type'] === 'heart') {
-                $paperSource->heart = $params['action'] === 'add' ? $paperSource->heart + 1 : $paperSource->heart - 1;
-            }
-            $paperSource->save();
-        }
-        return response('success');
-    }
-
-    function like($comment_id, Request $request)
-    {
-        $type = $request->get("type");
-        if ($type == "like") {
-            $comment = Comment::find($comment_id);
-            $comment->like = $comment->like + 1;
-            $comment->save();
-            return response(json_encode([
-                "code" => 200,
-                "count" => $comment->like,
-                "message" => ""
-            ], 200));
-        } elseif ($type == "dislike") {
-            $comment = Comment::find($comment_id);
-            $comment->like = $comment->like - 1 <= 0 ? 0 : $comment->like - 1;
-            $comment->save();
-            return response(json_encode([
-                "code" => 200,
-                "count" => $comment->like,
-                "message" => ""
-            ], 200));
-        }
-        return response(json_encode([
-            "code" => 500,
-            "count" => 123,
-            "message" => ""
-        ], 500));
-    }
-
-    function addCart(Request $request)
-    {
-        $this->cartService->addCart($request->get('id'));
-        return redirect()->back()->with("success", "add success");
-    }
-
     function addCartApi(Request $request)
     {
         $cartData = $this->cartService->addCart($request->get('id'));
         return $cartData;
     }
 
-    function cart(): View
-    {
-        return view('frontend.templates.cart.index', ['cart' => $this->cartService->getCart()]);
-    }
-
     function getCartApi()
     {
         return $this->cartService->getCart();
-    }
-
-    function clearCart()
-    {
-        $this->cartService->clearCart();
-        return redirect()->back()->with("success", "clear cart success");
     }
 
     function clearCartApi()
@@ -558,47 +421,9 @@ class PaperController extends Controller implements PaperControllerInterface
         return $this->getCartApi();
     }
 
-    function checkout(): View
-    {
-        return view("frontend.templates.cart.checkout", ['cart' => $this->cartService->getCart()]);
-    }
-
-    function checkoutPro()
-    {
-        $order_data = $this->cartService->submitOrder();
-        return redirect()->back()->with($order_data['status'] ? "success" : 'error', $order_data['message']);
-    }
-
-    function xoaItem($id)
-    {
-        $this->cartService->xoaItem($id);
-        return redirect()->back()->with('success', "removed the item");
-    }
-
     function removeItemApi($id)
     {
         $this->cartService->xoaItem($id);
         return $this->cartService->getCart();
-    }
-
-    function byType($type, Request $request): View
-    {
-        $limit = $request->get('limit', 4);
-        $paper_ids = array_column(PaperContent::all()->where(PaperContent::ATTR_TYPE, $type)->slice($request->get('p', 0) * $limit, $limit)->toArray(), 'paper_id');
-        $papers = Paper::find($paper_ids);
-        return view('frontend.templates.paper.product', ['papers' => $papers, "type" => $type]);
-    }
-
-    function moreByType($type, Request $request): Response
-    {
-        $limit = $request->get('limit', 4);
-        $paper_ids = array_column(PaperContent::all()->where(PaperContent::ATTR_TYPE, $type)->slice($request->get('p', 0) * $limit, $limit)->toArray(), 'paper_id');
-        $papers = Paper::find($paper_ids);
-        $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
-
-        return response(json_encode([
-            "code" => 200,
-            "data" => $data
-        ]));
     }
 }

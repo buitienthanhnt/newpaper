@@ -1,0 +1,38 @@
+<?php
+namespace App\Http\Controllers;
+
+interface ManagerControllerInterface{
+    const CONTROLLER_NAME = 'ManagerController';
+
+    const HOME_PAGE = 'homePage';
+    const FORNT_CATEFORY_VIEW = 'categoryView';
+    const FRONT_PAPER_DETAIL = 'paperDetail';
+    const FRONT_TAG_VIEW = 'tagView';
+    const FRONT_SEARCH = 'search';
+    const LOAD_MORE = 'loadMore';
+
+    public function homePage();
+
+    /**
+     * @param string $category_alias
+     * @return mixed
+     */
+    public function categoryView(string $category_alias);
+
+    /**
+     * @param string $alias
+     * @param int    $paper_id
+     * @return mixed
+     */
+    public function paperDetail(string $alias, int $paper_id);
+
+    /**
+     * @param string $tag
+     * @return mixed
+     */
+    public function tagView(string $tag);
+
+    public function search();
+
+    public function loadMore();
+}

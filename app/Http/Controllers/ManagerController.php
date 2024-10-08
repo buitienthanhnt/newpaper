@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Thanhnt\Nan\Helper\TokenManager;
 
-class ManagerController extends Controller
+class ManagerController extends Controller implements ManagerControllerInterface
 {
     use DomHtml;
 
@@ -78,6 +78,9 @@ class ManagerController extends Controller
         return $this->paperApi->homeInfo();
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function homePage()
     {
         $list_center = [];
@@ -106,10 +109,81 @@ class ManagerController extends Controller
         return view("frontend/templates/homeconten", compact("list_center", "video_contens"));
     }
 
-    function search(Request $request)
+    /**
+     * @param string $category_alias
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function categoryView($category_alias)
+    {
+        $category = Category::where("url_alias", "like", $category_alias)->get()->first();
+        $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
+        event(new ViewCount($category));
+        return view("frontend/templates/categories", compact("category", "papers"));
+    }
+
+    /**
+     * @param $alias
+     * @param $page_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function paperDetail($alias, $page_id)
+    {
+        $key = 'paper_detail' . $page_id;
+        $paper = Cache::remember($key, 15, fn () => $this->paper->find($page_id));
+        $category = Cache::remember('category.alias.like', 15, function () {
+            return Category::all()->random(1)->first();
+        });
+
+        $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
+        $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
+        $top_paper = $papers->take(2);
+        $papers = $papers->diff($top_paper);
+        event(new ViewCount($paper));
+        return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
+    }
+
+    /**
+     * @param string $tag
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function tagView($tag)
+    {
+        $papers = null;
+        $paper_ids = $this->pageTag->to_paper($tag);
+        if ($paper_ids) {
+            $papers = $this->paper::whereIn("id", $paper_ids)->get();
+        }
+        $trending_left = $papers->first();
+        return view("frontend/templates/tags", ["tag" => $tag, "papers" => $papers, "trending_left" => [$trending_left]]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    function search()
     {
         $papers = $this->paperApi->searchAll();
         return view('frontend.templates.paper.searchResult', compact('papers'));
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function loadMore()
+    {
+        $request = $this->request;
+        $type = $request->get("type");
+        $page = $request->get("page");
+        if ($type) {
+            $category = $this->category->where("url_alias", "like", $type)->first();
+            $papers = $category->get_papers(4, $page);
+        }
+        $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
+
+        return response(json_encode([
+            "code" => 200,
+            "data" => $data
+        ]));
     }
 
     function searchApi()
@@ -125,60 +199,6 @@ class ManagerController extends Controller
 
         $writerApi = $this->writerApi->getPapers($id);
         return $writerApi;
-    }
-
-    public function pageDetail($alias, $page_id)
-    {
-        $key = 'paper_detail' . $page_id;
-        $paper = Cache::remember($key, 15, fn () => $this->paper->find($page_id));
-
-        $category = Cache::remember('category.alias.like', 15, function () {
-            return Category::all()->random(1)->first();
-            // return Category::where("url_alias", "like", "today")->get()->first();
-        });
-
-        $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
-        $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
-        $top_paper = $papers->take(2);
-        $papers = $papers->diff($top_paper);
-        event(new ViewCount($paper));
-        return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
-    }
-
-    public function categoryView($category_id)
-    {
-        $category = Category::where("url_alias", "like", $category_id)->get()->first();
-        $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
-        event(new ViewCount($category));
-        return view("frontend/templates/categories", compact("category", "papers"));
-    }
-
-    public function tagView($value)
-    {
-        $papers = null;
-        $paper_ids = $this->pageTag->to_paper($value);
-        if ($paper_ids) {
-            $papers = $this->paper::whereIn("id", $paper_ids)->get();
-        }
-        $trending_left = $papers->first();
-        return view("frontend/templates/tags", ["tag" => $value, "papers" => $papers, "trending_left" => [$trending_left]]);
-    }
-
-    public function load_more()
-    {
-        $request = $this->request;
-        $type = $request->get("type");
-        $page = $request->get("page");
-        if ($type) {
-            $category = $this->category->where("url_alias", "like", $type)->first();
-            $papers = $category->get_papers(4, $page);
-        }
-        $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
-
-        return response(json_encode([
-            "code" => 200,
-            "data" => $data
-        ]));
     }
 
     function apiSourcePapers(Request $request)

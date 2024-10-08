@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-sm-8">
             <center><h4>Login form</h4></center>
-            <form action="{{ route('login_post') }}" method="post">
+            <form action="{{ route('front_login_post') }}" method="post">
                 @csrf
                 <div class="form-group">
                     <label for="user_email">email:</label>
@@ -34,7 +34,7 @@
 @endsection
 
 @section('trending_right')
-    <a href="{{ route('account_create') }}">
+    <a href="{{ route('front_register_account') }}">
         <h3 class="text-info">Create new account</h3>
     </a>
 @endsection

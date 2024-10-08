@@ -26,11 +26,11 @@
                             <i class="fa fa-sign-out-alt"></i>&nbsp; LogOut
                         </a>
                     @else
-                        <a class="text-info" style="float: right" href="{{ route('user_login') }}">
+                        <a class="text-info" style="float: right" href="{{ route('front_login_page') }}">
                             <i class="fa fa-user"></i>&nbsp; LogIn
                         </a>
                     @endif
-                        <form action="{{ route('search_all') }}">
+                        <form action="{{ route('front_search_all') }}">
                             <input type="text" name="search" placeholder="Searching key" required>
                             <button type="submit" style="background-color: unset; border-width: inherit">
                                 <i class="fa fa-search text-info"></i>
