@@ -403,27 +403,4 @@ class PaperController extends Controller implements PaperControllerInterface
         $history = new RemoteSourceHistory(["url_value" => $request_url, "type" => $type, "paper_id" => $paper_id, "active" => $active]);
         return $history->save();
     }
-
-    function addCartApi(Request $request)
-    {
-        $cartData = $this->cartService->addCart($request->get('id'));
-        return $cartData;
-    }
-
-    function getCartApi()
-    {
-        return $this->cartService->getCart();
-    }
-
-    function clearCartApi()
-    {
-        $this->cartService->clearCart();
-        return $this->getCartApi();
-    }
-
-    function removeItemApi($id)
-    {
-        $this->cartService->xoaItem($id);
-        return $this->cartService->getCart();
-    }
 }

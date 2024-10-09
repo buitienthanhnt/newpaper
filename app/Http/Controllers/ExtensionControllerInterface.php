@@ -20,6 +20,12 @@ interface ExtensionControllerInterface{
     const MOST_POPULATOR_HTML = 'mostPopulator';
     const MOST_LIKE_HTML = 'likeMost';
     const MOST_TRENDING_HTML = 'trendingHtml';
+    const PAPER_DETAIL = 'getPaperDetail';
+
+    const ADD_TO_CART = 'addToCart';
+    const GET_CART = 'getCart';
+    const CLEAR_CART = 'clearCart';
+    const REMOVE_CART_ITEM = 'removeCartItem';
 
     public function homeInfo();
 
@@ -62,4 +68,22 @@ interface ExtensionControllerInterface{
     public function likeMost();
 
     public function trendingHtml();
+
+    /**
+     * @param int $paper_id
+     * @return mixed
+     */
+    public function getPaperDetail(int $paper_id);
+
+    public function addToCart();
+
+    public function getCart();
+
+    public function clearCart();
+
+    /**
+     * @param int $item_id
+     * @return mixed
+     */
+    public function removeCartItem(int $item_id);
 }

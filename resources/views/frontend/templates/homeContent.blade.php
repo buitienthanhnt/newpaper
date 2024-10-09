@@ -279,9 +279,9 @@
 
 @section('js_after')
     <script>
-        var mostPopulatorUrl = "{{ route('mostPopulator') }}";
-        var likeMost = "{{ route('likeMost') }}";
-        var trending = "{{ route('trending') }}";
+        var mostPopulatorUrl = "{{ route('api_most_populator') }}";
+        var likeMost = "{{ route('api_like_most') }}";
+        var trending = "{{ route('api_trending') }}";
 
         $(document).ready(function() {
             $.ajax({

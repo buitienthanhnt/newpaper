@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Api\PaperApi;
 use App\Api\WriterApi;
+use App\Events\ViewCount;
 use App\Helper\HelperFunction;
+use App\Services\CartService;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Helper\ImageUpload;
 use App\Models\Category;
@@ -48,6 +50,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     protected $likeMost;
     protected $trending;
 
+    protected $cartService;
+
     public function __construct(
         Request $request,
         Paper $paper,
@@ -60,7 +64,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         TokenManager $tokenManager,
         MostPopulator $mostPopulator,
         LikeMost $likeMost,
-        Trending $trending
+        Trending $trending,
+        CartService $cartService
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -74,6 +79,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->mostPopulator = $mostPopulator;
         $this->likeMost = $likeMost;
         $this->trending = $trending;
+        $this->cartService = $cartService;
     }
 
     public function homeInfo()
@@ -97,7 +103,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
                  ];
              }
          }
- 
+
          return $papers;
     }
 
@@ -276,6 +282,91 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             'dataHtml' => $trendingHtml
         ];
     }
+
+    public function getPaperDetail(int $paper_id)
+    {
+        // TODO: Implement getPaperDetail() method.
+        $covertContentData = function($datas){
+            if (empty($datas)) {
+                return null;
+            }
+            $convertSliderdata = function($slider_datas){
+                foreach ($slider_datas as &$value) {
+                    $value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
+                }
+                return $slider_datas;
+            };
+
+            $return_data = [];
+            for ($i=0; $i < count($datas); $i++) {
+                switch ($datas[$i]['type']) {
+                    case 'image':
+                        $return_data[] = [
+                            ...$datas[$i],
+                            'value' => $this->helperFunction->replaceImageUrl($datas[$i]['value'] ?? '')
+                        ];
+                        break;
+                    case 'slider_data':
+                        $return_data[] = [
+                            ...$datas[$i],
+                            'value' => $convertSliderdata(json_decode($datas[$i]['value'], true))
+                        ];
+                        break;
+                    default:
+                        $return_data[] = $datas[$i];
+                        break;
+                }
+            }
+            return $return_data;
+        };
+
+        if (Cache::has("api_detail_$paper_id")) {
+            $paper =  Cache::get("api_detail_$paper_id");
+            event(new ViewCount($paper));
+            return $paper;
+        } else {
+            /**
+             * @var Paper $detail
+             */
+            $detail = $this->paper->find($paper_id);
+            $detail->contents = $covertContentData($detail->to_contents()->toArray());
+            $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
+            $detail->info = $detail->paperInfo();
+            $detail->tags = $detail->to_tag()->getResults();
+            $detail->slider_images = array_map(function ($item) {
+                $item->value = $this->helperFunction->replaceImageUrl($item->value);
+                return $item;
+            }, $detail->sliderImages()->toArray());
+            $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'paper_id' => $detail->id]));
+            Cache::put("api_detail_$detail->id", $detail);
+            event(new ViewCount($detail));
+            return $detail;
+        }
+    }
+
+    function addToCart()
+    {
+        $cartData = $this->cartService->addCart($this->request->get('id'));
+        return $cartData;
+    }
+
+    function getCart()
+    {
+        return $this->cartService->getCart();
+    }
+
+    function clearCart()
+    {
+        $this->cartService->clearCart();
+        return $this->getCart();
+    }
+
+    function removeCartItem($item_id)
+    {
+        $this->cartService->xoaItem($item_id);
+        return $this->cartService->getCart();
+    }
+
     // ==============================================================
 
     public function source(Request $request)
