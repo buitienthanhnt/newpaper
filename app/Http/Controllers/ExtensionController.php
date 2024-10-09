@@ -13,6 +13,9 @@ use App\Models\ConfigCategory;
 use App\Models\Paper;
 use App\Models\User;
 use App\Models\Writer;
+use App\ViewBlock\LikeMost;
+use App\ViewBlock\MostPopulator;
+use App\ViewBlock\Trending;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -41,6 +44,10 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     protected $tokenManager;
     protected $helperFunction;
 
+    protected $mostPopulator;
+    protected $likeMost;
+    protected $trending;
+
     public function __construct(
         Request $request,
         Paper $paper,
@@ -50,7 +57,10 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         WriterApi $writerApi,
         HelperFunction $helperFunction,
         User $user,
-        TokenManager $tokenManager
+        TokenManager $tokenManager,
+        MostPopulator $mostPopulator,
+        LikeMost $likeMost,
+        Trending $trending
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -61,6 +71,9 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->helperFunction = $helperFunction;
         $this->user = $user;
         $this->tokenManager = $tokenManager;
+        $this->mostPopulator = $mostPopulator;
+        $this->likeMost = $likeMost;
+        $this->trending = $trending;
     }
 
     public function homeInfo()
@@ -238,6 +251,30 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             'message' => null,
             'userData' => null
         ], 200);
+    }
+
+    public function mostPopulator() {
+        $mostPopulatorHtml = $this->mostPopulator->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $mostPopulatorHtml
+        ];
+    }
+
+    public function likeMost(){
+        $likeMostHtml = $this->likeMost->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $likeMostHtml
+        ];
+    }
+
+    public function trendingHtml(){
+        $trendingHtml = $this->trending->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $trendingHtml
+        ];
     }
     // ==============================================================
 

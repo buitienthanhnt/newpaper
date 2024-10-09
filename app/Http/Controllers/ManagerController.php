@@ -268,33 +268,6 @@ class ManagerController extends Controller implements ManagerControllerInterface
         ];
     }
 
-    function mostPopulator()
-    {
-        $mostPopulatorHtml = $this->mostPopulator->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $mostPopulatorHtml
-        ];
-    }
-
-    function likeMost()
-    {
-        $likeMostHtml = $this->likeMost->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $likeMostHtml
-        ];
-    }
-
-    function trending()
-    {
-        $trendingHtml = $this->trending->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $trendingHtml
-        ];
-    }
-
     // pullFirebaseComment
     function pullFirebaseComment()
     {

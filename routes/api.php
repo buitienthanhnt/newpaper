@@ -93,29 +93,16 @@ Route::post('login', $extensionController.ExtensionControllerInterface::LOGIN);
 // https://localhost/laravel1/public/api/userInfo
 Route::get('userInfo', $extensionController.ExtensionControllerInterface::USER_INFO);
 
-Route::prefix('notification')->group(function () {
-    Route::post("addFcm", "NotificationController@registerFcm")->name('api_addFcm');
+Route::prefix('share')->group(function () use($extensionController){
 
-    Route::get('push', "NotificationController@push_notification")->name("api_notification_push");
-});
+    // https://localhost/laravel1/public/api/share/mostPopulator
+    Route::get("mostPopulator", $extensionController.ExtensionControllerInterface::MOST_POPULATOR_HTML)->name('mostPopulator');
 
-Route::prefix('test')->group(function () {
+    // https://localhost/laravel1/public/api/share/likeMost
+    Route::get("likeMost", $extensionController.ExtensionControllerInterface::MOST_LIKE_HTML)->name('likeMost');
 
-    Route::get('onesign', function () {
-        OneSignalFacade::sendNotificationToAll( // đã chạy: https://github.com/berkayk/laravel-onesignal
-            "Some Message",
-            'http://localhost/laravel1/public/',
-        );
-        return 123;
-    });
-});
-
-Route::prefix('share')->group(function () {
-    Route::get("mostPopulator", "ManagerController@mostPopulator")->name('mostPopulator');
-
-    Route::get("likeMost", "ManagerController@likeMost")->name('likeMost');
-
-    Route::get('trending', "ManagerController@trending")->name("trending");
+    // https://localhost/laravel1/public/api/share/trending
+    Route::get('trending', $extensionController.ExtensionControllerInterface::MOST_TRENDING_HTML)->name("trending");
 });
 
 Route::prefix('paper')->group(function () {
@@ -135,6 +122,12 @@ Route::prefix('paper')->group(function () {
     Route::delete('removeItem/{id}', "PaperController@removeItemApi")->name("api_remove_item");
 });
 
+Route::prefix('notification')->group(function () {
+    Route::post("addFcm", "NotificationController@registerFcm")->name('api_addFcm');
+
+    Route::get('push', "NotificationController@push_notification")->name("api_notification_push");
+});
+
 Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
 
 Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments")->name('upFirebaseComments');
@@ -144,5 +137,16 @@ Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name
 Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
 
 Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name('pullFirebaseComLike');
+
+Route::prefix('test')->group(function () {
+
+    Route::get('onesign', function () {
+        OneSignalFacade::sendNotificationToAll( // đã chạy: https://github.com/berkayk/laravel-onesignal
+            "Some Message",
+            'http://localhost/laravel1/public/',
+        );
+        return 123;
+    });
+});
 
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd
