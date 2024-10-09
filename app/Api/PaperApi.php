@@ -544,7 +544,7 @@ class PaperApi extends BaseApi
 		 */
 		$writer = $forward->to_writer()->getResults();
 		if ($writer) {
-			$writer->image_path = $this->helperFunction->replaceImageUrl($writer->image_path);
+			$writer->image_path = $this->helperFunction->replaceImageUrl($writer->image_path ?: '');
 			/**
 			 * set writer for data
 			 */
@@ -555,11 +555,16 @@ class PaperApi extends BaseApi
 
 	function listImages()
 	{
-		$listImages = Paper::all()->random(5)->makeHidden(['conten']);
-		foreach ($listImages as &$value) {
-			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		try {
+			$listImages = Paper::all()->random(5)->makeHidden(['conten']);
+			foreach ($listImages as &$value) {
+				$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+			}
+			return $listImages;
+		} catch (\Throwable $th) {
+			//throw $th;
 		}
-		return $listImages;
+		return null;
 	}
 
 	function timeLine()

@@ -5,6 +5,7 @@ namespace App\Models;
 interface CategoryInterface {
     const TABLE_NAME = 'categories';
 
+    const ATTR_PRIMARY = 'id';
     const ATTR_NAME = 'name';
     const ATTR_TYPE = 'type';
     const ATTR_DESCRIPTION = 'description';

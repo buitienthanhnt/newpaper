@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ExtensionControllerInterface;
+use App\Http\Controllers\PaperFrontControllerInterface;
 use Berkayk\OneSignal\OneSignalFacade; // https://github.com/berkayk/laravel-onesignal
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,47 +22,82 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('info', "ManagerController@info")->name('info');
+$extensionController = ExtensionControllerInterface::CONTROLLER_NAME.'@';
+$paperFrontController = PaperFrontControllerInterface::CONTROLLER_NAME.'@';
 
-Route::get('getpapers', 'ManagerController@apiSourcePapers');
+// https://localhost/laravel1/public/api/homeInfo
+Route::get('homeInfo', $extensionController.ExtensionControllerInterface::HOME_INFO);
 
-Route::get("getcategorytop", "ManagerController@getCategoryTop");
+// https://localhost/laravel1/public/api/getPapers
+Route::get('getPapers', $extensionController.ExtensionControllerInterface::LIST_PAPERS);
 
-Route::get("papercategory/{category_id}", "ManagerController@getPaperCategory");
+// https://localhost/laravel1/public/api/getCategoryTree
+Route::get("getCategoryTree", $extensionController.ExtensionControllerInterface::CATEGORY_TREE);
 
-Route::get("getRelatedPaper", "ManagerController@getRelatedPaper");
+// https://localhost/laravel1/public/api/getCategoryTop
+Route::get("getCategoryTop", $extensionController.ExtensionControllerInterface::CATEGORY_TOP);
 
-Route::get("getcategorytree", "ManagerController@getCategoryTree");
+// https://localhost/laravel1/public/api/paperByCategory/2
+Route::get("paperByCategory/{category_id}", $extensionController.ExtensionControllerInterface::PAPER_BY_CATEGORY);
+
+// https://localhost/laravel1/public/api/getRelatedPaper/1
+Route::get("getRelatedPaper/{paper_id}", $extensionController.ExtensionControllerInterface::PAPER_RELATED);
+
+// https://localhost/laravel1/public/api/paperComments/1
+Route::get('paperComments/{paper_id}', $extensionController.ExtensionControllerInterface::PAPER_COMMENTS);
+
+// curl  -X POST \
+//   'https://localhost/laravel1/public/api/paperAddComment/1' \
+//   --header 'Accept: */*' \
+//   --header 'Content-Type: application/json' \
+//   --data-raw '{
+//   "email": "a1@gmail.com",
+//   "name": "a12",
+//   "subject": "demo add comment api",
+//   "message": "noi dung"
+// }'
+Route::post("paperAddComment/{paper_id}", $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_ADD_COMMENT);
+
+// curl  -X POST \
+//   'https://localhost/laravel1/public/api/likePaper/1' \
+//   --header 'Accept: */*' \
+//   --header 'Content-Type: application/json' \
+//   --data-raw '{
+//   "name": "a12",
+//   "type": "like",
+//   "action": "add"
+// }'
+Route::post("likePaper/{paper_id}", $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_ADD_LIKE);
+
+// https://localhost/laravel1/public/api/search?query=demo
+Route::get('search', $extensionController.ExtensionControllerInterface::SEARCH);
+
+// https://localhost/laravel1/public/api/byWriter/1 
+Route::get('byWriter/{id}', $extensionController.ExtensionControllerInterface::PAPER_BY_WRITER);
 
 Route::get("parseUrl", 'ManagerController@parseUrl');
 
-Route::get('paperComment/{paper_id}', "ManagerController@getPaperComment")->name('getPaperComment');
+// https://localhost/laravel1/public/api/paperMostView
+Route::get('paperMostView', $extensionController.ExtensionControllerInterface::PAPER_MOST_VIEW);
 
-Route::post("paperAddComment/{paper_id}", "PaperController@addComment")->name("api_paper_add_comment");
+// curl  -X POST \
+//   'https://localhost/laravel1/public/api/login' \
+//   --header 'Accept: */*' \
+//   --header 'Content-Type: application/json' \
+//   --data-raw '{
+//   "email": "a12@gmail.com",
+//   "password": "admin123"
+// }'
+Route::post('login', $extensionController.ExtensionControllerInterface::LOGIN);
 
-Route::post("addLike/{paper_id}", "PaperController@addLike")->name("api_addLike");
-
-Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments")->name('upFirebaseComments');
+// https://localhost/laravel1/public/api/userInfo
+Route::get('userInfo', $extensionController.ExtensionControllerInterface::USER_INFO);
 
 Route::prefix('notification')->group(function () {
     Route::post("addFcm", "NotificationController@registerFcm")->name('api_addFcm');
 
     Route::get('push', "NotificationController@push_notification")->name("api_notification_push");
 });
-
-Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("mostviewdetail");
-
-Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
-
-Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name('pullFirebaseComment');
-
-Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
-
-Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name('pullFirebaseComLike');
-
-Route::get('search', "ManagerController@searchApi")->name('api_search');
-
-Route::get('byWriter/{id}', "ManagerController@byWriter")->name('api_search_byWriter');
 
 Route::prefix('test')->group(function () {
 
@@ -98,8 +135,14 @@ Route::prefix('paper')->group(function () {
     Route::delete('removeItem/{id}', "PaperController@removeItemApi")->name("api_remove_item");
 });
 
-Route::post('login', "ManagerController@loginApi")->name('api_login');
+Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
 
-Route::get('userInfo', "ManagerController@getUserInfo")->name('api_user_info');
+Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments")->name('upFirebaseComments');
+
+Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name('pullFirebaseComment');
+
+Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
+
+Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name('pullFirebaseComLike');
 
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd

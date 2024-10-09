@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class PaperFrontController extends Controller implements PaperFrontControllerInterface
 {
@@ -32,24 +33,28 @@ class PaperFrontController extends Controller implements PaperFrontControllerInt
     function addPaperLike($paper_id)
     {
         $params = $this->request->toArray();
-        $paperSource = ViewSource::where('type', '=', ViewSource::TYPE_PAPER)->where('source_id', '=', $paper_id)->first();
+        $paperSource = ViewSource::where(ViewSource::ATTR_TYPE, ViewSource::TYPE_PAPER)->where(ViewSource::ATTR_SOURCE_ID, $paper_id)->first();
         if (empty($paperSource)) {
             ViewSource::firstOrCreate([
-                "type" => $params['paper'],
-                "source_id" => $paper_id,
-                "value" => 1,
-                'heart' => $params['type'] === 'heart' ? 1 : 0,
-                'like' => $params['type'] === 'like' ? 1 : 0
+                ViewSource::ATTR_TYPE => ViewSource::TYPE_PAPER,
+                ViewSource::ATTR_SOURCE_ID => $paper_id,
+                ViewSource::ATTR_VALUE => 1,
+                ViewSource::ATTR_HEART => $params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_HEART ? 1 : 0,
+                ViewSource::ATTR_LIKE => $params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_LIKE ? 1 : 0
             ]);
         } else {
-            if ($params['type'] === 'like') {
-                $paperSource->like = $params['action'] === 'add' ? $paperSource->like + 1 : $paperSource->like - 1;
-            } elseif ($params['type'] === 'heart') {
-                $paperSource->heart = $params['action'] === 'add' ? $paperSource->heart + 1 : $paperSource->heart - 1;
+            if ($params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_LIKE) {
+                $paperSource->like = $params[ViewSource::PARAM_ACTION] === ViewSource::ACTION_VAL_ADD ? $paperSource->like + 1 : $paperSource->like - 1;
+            } elseif ($params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_HEART) {
+                $paperSource->heart = $params[ViewSource::PARAM_ACTION] === ViewSource::ACTION_VAL_ADD ? $paperSource->heart + 1 : $paperSource->heart - 1;
             }
             $paperSource->save();
         }
-        return response('success');
+
+        return response(json_encode([
+            "code" => 200,
+            "data" => "add ".$params[ViewSource::PARAM_TYPE]. "for the paper"
+        ], 200));
     }
 
     /**
@@ -75,8 +80,8 @@ class PaperFrontController extends Controller implements PaperFrontControllerInt
         try {
             $comment = new Comment([
                 "paper_id" => $paper_id,
-                "email" => $request->get("email", Auth::user()->email),
-                "name" => $request->get("name", Auth::user()->name),
+                "email" => Auth::user()?->email ?: $request->get("email"),
+                "name" => Auth::user()?->name ?: $request->get("name"),
                 "subject" => $request->get("subject"),
                 "content" => $request->get("message", $request->get("content")),
                 "parent_id" => $request->get("parent_id", null)
@@ -85,9 +90,10 @@ class PaperFrontController extends Controller implements PaperFrontControllerInt
             $comment->save();
             return response(json_encode([
                 "code" => 200,
-                "data" => 123
+                "data" => 'added comment for the paper'
             ], 200));
         } catch (Throwable $th) {
+            throw $th;
             return response(json_encode([
                 "code" => 400,
                 "data" => null
