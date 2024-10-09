@@ -12,7 +12,7 @@
 										data-duration="1000ms">{{ $first_category->for_category()->first()->name }}</span>
 								</a>
 							@endif
-							<h2><a href="{{ route('front_paper_detail', ['page' => $tren->id, 'alias' => $tren->url_alias]) }}"
+							<h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren->id, 'alias' => $tren->url_alias]) }}"
 									data-animation="fadeInUp" data-delay=".4s"
 									data-duration="1000ms">{{ $tren->title }}</a>
 							</h2>

@@ -105,7 +105,7 @@
                                                                 </div>
                                                                 <div class="whats-right-cap">
                                                                     <h4><a title="{{ $paper->short_conten }}"
-                                                                            href="{{ route('front_paper_detail', ['page' => $paper->id, 'alias' => $paper->url_alias]) }}">{{ $DomHtml->cut_str($paper->short_conten, 76, '...') }}</a>
+                                                                            href="{{ route('front_paper_detail', ['paper_id' => $paper->id, 'alias' => $paper->url_alias]) }}">{{ $DomHtml->cut_str($paper->short_conten, 76, '...') }}</a>
                                                                     </h4>
                                                                     <p>
                                                                         {{ date('M d, Y', strtotime($paper->updated_at)) }}

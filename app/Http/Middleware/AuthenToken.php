@@ -17,7 +17,7 @@ class AuthenToken
 
     private $passUrl = [
         'api/getcategorytop',
-        'api/mostviewdetail',
+        'api/paperMostView',
         'api/share/mostPopulator',
         'api/share/trending',
         'api/share/likeMost',

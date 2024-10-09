@@ -21,7 +21,7 @@
                             $first_category->for_category()->first()->name }}</span>
                     </a>
                     @endif
-                    <h2><a href="{{ route('front_paper_detail', ['page' => $tren->id, 'alias' => $tren->url_alias]) }}"
+                    <h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren->id, 'alias' => $tren->url_alias]) }}"
                             data-animation="fadeInUp" data-delay=".4s" data-duration="1000ms">{{ $tren->title }}</a>
                     </h2>
                     <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
@@ -48,7 +48,7 @@
             <img src="{{ $tren_r->getImagePath() }}" alt="">
             <div class="trend-top-cap trend-top-cap2">
                 <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
-                <h2><a href="{{ route('front_paper_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{
+                <h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{
                         $tren_r->title }}</a>
                 </h2>
                 <p>by {{ $tren_r->writerName() }}
@@ -105,7 +105,7 @@
                                         <div class="col-md-6 whats-right-cap">
                                             <h4>
                                                 <a
-                                                    href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
+                                                    href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'paper_id' => $paper->id]) }}">
                                                     <h4>
                                                         {{ $paper->title }}
                                                     </h4>

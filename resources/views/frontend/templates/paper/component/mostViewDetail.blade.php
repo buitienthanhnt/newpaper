@@ -35,7 +35,7 @@
         function loadMostView() {
             let conten_height = $(detail_main_conten).height();
             var data_page = $("#most_view_detail").attr('data-page');
-            let url = "{{ route('mostviewdetail') }}";
+            let url = "{{ route('paper_most_view') }}";
             let most_height = 172; // height of element
             // console.log(url + `/?page=${data_page}`);
             $.ajax({

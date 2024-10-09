@@ -243,7 +243,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
                 $item->value = $this->helperFunction->replaceImageUrl($item->value);
                 return $item;
             }, $detail->sliderImages()->toArray());
-            $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'page' => $detail->id]));
+            $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'paper_id' => $detail->id]));
             Cache::put("api_detail_$detail->id", $detail);
             event(new ViewCount($detail));
             return $detail;

@@ -11,7 +11,7 @@ Route::get("/", $managerController.ManagerControllerInterface::HOME_PAGE)->name(
 
 Route::get("/{category}.htm", $managerController.ManagerControllerInterface::FORNT_CATEFORY_VIEW)->name("front_category");
 
-Route::get("{alias?}_{page}.html", $managerController.ManagerControllerInterface::FRONT_PAPER_DETAIL)->name("front_paper_detail");
+Route::get("{alias?}_{paper_id}.html", $managerController.ManagerControllerInterface::FRONT_PAPER_DETAIL)->name("front_paper_detail");
 
 Route::get("tags/{value}", $managerController.ManagerControllerInterface::FRONT_TAG_VIEW)->name("front_tag_view");
 

@@ -11,7 +11,7 @@
                 <div class="most-recent-cap">
                     <span class="bgbeg">Vogue</span>
                     <h4><a
-                            href="{{ route('front_paper_detail', ['page' => $first_recent->id, 'alias' => $first_recent->url_alias]) }}">What
+                            href="{{ route('front_paper_detail', ['paper_id' => $first_recent->id, 'alias' => $first_recent->url_alias]) }}">What
                             to Wear: 9+ Cute Work <br>
                             Outfits to Wear This.</a></h4>
                     <p>{{ $first_recent->writerName() }}
@@ -28,7 +28,7 @@
                     </div>
                     <div class="most-recent-capt">
                         <h4><a
-                                href="{{ route('front_paper_detail', ['page' => $af_recent->id, 'alias' => $af_recent->url_alias]) }}">{{ $af_recent->title }}</a>
+                                href="{{ route('front_paper_detail', ['paper_id' => $af_recent->id, 'alias' => $af_recent->url_alias]) }}">{{ $af_recent->title }}</a>
                         </h4>
                         <p>{{ $af_recent->writerName() }}
                             | 2 hours ago</p>

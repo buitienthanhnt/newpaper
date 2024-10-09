@@ -7,7 +7,7 @@
                 </div>
                 <div class="weekly3-caption">
                     <h4><a
-                            href="{{ route('front_paper_detail', ['page' => $weekly3_conten->id, 'alias' => $weekly3_conten->url_alias]) }}">{{ $weekly3_conten->title }}</a>
+                            href="{{ route('front_paper_detail', ['paper_id' => $weekly3_conten->id, 'alias' => $weekly3_conten->url_alias]) }}">{{ $weekly3_conten->title }}</a>
                     </h4>
                     <p>{{ date('M d, Y', strtotime($weekly3_conten->updated_at)) }}</p>
                 </div>

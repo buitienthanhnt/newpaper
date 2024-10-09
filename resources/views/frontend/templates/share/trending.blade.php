@@ -12,7 +12,7 @@
 							<a
                                 href="">
                             	<h4>
-									<a href="{{ route('front_paper_detail', ['page' => $trending->id, 'alias' => $trending->url_alias]) }}">{{ $trending->title }}</a>
+									<a href="{{ route('front_paper_detail', ['paper_id' => $trending->id, 'alias' => $trending->url_alias]) }}">{{ $trending->title }}</a>
 								</h4>
                             </a>
 						</h4>

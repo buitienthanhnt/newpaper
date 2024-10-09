@@ -19,7 +19,7 @@
                             </div>
                             <div class="weekly2-caption">
                                 <h4><a
-                                        href="{{ route('front_paper_detail', ['page' => $popular_item->id, 'alias' => $popular_item->url_alias]) }}">{{ $popular_item->title }}</a>
+                                        href="{{ route('front_paper_detail', ['paper_id' => $popular_item->id, 'alias' => $popular_item->url_alias]) }}">{{ $popular_item->title }}</a>
                                 </h4>
                                 <p>{{ $popular_item->writerName() }}
                                     | 2 hours ago</p>
