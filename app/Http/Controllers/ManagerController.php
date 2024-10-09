@@ -12,6 +12,7 @@ use App\Models\PageTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use App\Helper\HelperFunction;
+use App\Models\PaperInterface;
 use App\Models\User;
 use App\ViewBlock\LikeMost;
 use App\ViewBlock\MostPopulator;
@@ -106,7 +107,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
         //     ['url' => "https://www.youtube.com/embed/sKdpqk7o5ac", "title" => "demo 5"],
         //     ['url' => "https://www.youtube.com/embed/lovblkkDVDU", "title" => "demo 6"],
         // ];
-        return view("frontend/templates/homeconten", compact("list_center", "video_contens"));
+        return view("frontend/templates/homeContent", compact("list_center", "video_contens"));
     }
 
     /**
@@ -151,7 +152,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
         $papers = null;
         $paper_ids = $this->pageTag->to_paper($tag);
         if ($paper_ids) {
-            $papers = $this->paper::whereIn("id", $paper_ids)->get();
+            $papers = $this->paper::whereIn(PaperInterface::ATTR_PRIMARY, $paper_ids)->get();
         }
         $trending_left = $papers->first();
         return view("frontend/templates/tags", ["tag" => $tag, "papers" => $papers, "trending_left" => [$trending_left]]);
@@ -284,7 +285,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
                 $item->value = $this->helperFunction->replaceImageUrl($item->value);
                 return $item;
             }, $detail->sliderImages()->toArray());
-            $detail->url = $this->helperFunction->replaceImageUrl(route('front_page_detail', ['alias' => $detail->url_alias, 'page' => $detail->id]));
+            $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'page' => $detail->id]));
             Cache::put("api_detail_$detail->id", $detail);
             event(new ViewCount($detail));
             return $detail;
@@ -388,7 +389,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
     {
         $papers = Paper::take($request->get('size', 15))->orderBy("updated_at", "ASC")->get(['id', 'title', 'image_path', 'updated_at', 'url_alias']);
         foreach ($papers as &$value) {
-            $value->url = route('front_page_detail', ['alias' => $value->url_alias, 'page' => $value->id]);
+            $value->url = route('front_paper_detail', ['alias' => $value->url_alias, 'page' => $value->id]);
             $value->image_path = $value->getImagePath();
         }
         return $papers;

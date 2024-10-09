@@ -46,9 +46,9 @@ Route::prefix(PaperFrontControllerInterface::PREFIX)->group(function () {
 
     Route::get('commentContent/{paper_id}/{p}', $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_COMMENTS)->name('front_paper_comment');
 
-    Route::post("comment/{paper_id}", $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_ADD_COMMENT)->name("front_add_comment");
+    Route::post("comment/{paper_id}", $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_ADD_COMMENT)->name("front_paper_add_comment");
 
-    Route::post('commentReply/{comment_id?}', $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_REPLY_COMMENT)->name("front_reply_comment");
+    Route::post('commentReply/{comment_id?}', $paperFrontController.PaperFrontControllerInterface::FRONT_PAPER_REPLY_COMMENT)->name("front_paper_reply_comment");
 
     Route::post("commentLike/{comment_id?}", $paperFrontController.PaperFrontControllerInterface::FRONT_COMMENT_LIKE)->name("front_comment_like");
 

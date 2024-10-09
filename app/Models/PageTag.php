@@ -10,9 +10,12 @@ class PageTag extends Model implements PaperTagInterface
     use HasFactory;
     protected $table = self::TABLE_NAME;
 
+    /**
+     * 
+     */
     public function to_paper($tag_value)
     {
-        $tags = $this->where("type", "=", "page_tag")->where("value", "=", $tag_value)->get()->groupBy("entity_id")->keys();
+        $tags = $this->where(self::ATTR_TYPE, self::TYPE_PAPER)->where(self::ATTR_VALUE, $tag_value)->get()->groupBy(self::ATTR_ENTITY_ID)->keys();
         return $tags;
     }
 }

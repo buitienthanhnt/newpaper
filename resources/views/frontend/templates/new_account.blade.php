@@ -23,7 +23,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6 pt-10 pb-10">
-                <form action="{{ route('front_register_account') }}" method="post">
+                <form action="{{ route('front_add_account') }}" method="POST">
                     @csrf
 
                     <div class="form-group">

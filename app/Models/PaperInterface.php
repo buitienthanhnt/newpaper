@@ -4,6 +4,7 @@ namespace App\Models;
 interface PaperInterface{
     const TABLE_NAME = 'papers';
 
+    const ATTR_PRIMARY = 'id';
     const ATTR_TITLE = 'title';
     const ATTR_URL_ALIAS = 'url_alias';
     const ATTR_SHORT_CONTENT = 'short_conten';

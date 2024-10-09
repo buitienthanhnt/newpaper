@@ -130,7 +130,6 @@
                     </form>
                 </div>
                 <div class="col-md-6">
-                    {{-- <a class="text-primary"href="{{ route('paper_byType', ['type' => "product"]) }}">Danh sách sản phẩm</a> --}}
                     <table class="table table-light">
                         <tbody>
                             <tr>
@@ -158,7 +157,7 @@
                 </div>
             @else
                 <p class="">Bạn chưa có sản phẩm nào trong giỏ hàng!!
-                    <a class="text-primary"href="{{ route('paper_byType', ['type' => 'price']) }}">click here to
+                    <a class="text-primary"href="{{ route('front_paper_by_type', ['type' => 'price']) }}">click here to
                         shopping</a>
                 </p>
             @endif

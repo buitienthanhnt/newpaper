@@ -3,8 +3,6 @@
 use Berkayk\OneSignal\OneSignalFacade; // https://github.com/berkayk/laravel-onesignal
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /*
 |--------------------------------------------------------------------------

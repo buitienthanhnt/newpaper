@@ -228,7 +228,7 @@
         }, 3000);
 
         var paper_value = "{{ $paper->id }}";
-        var addLike_url = '{{ route('paper_addLike', ['paper_id' => $paper->id]) }}';
+        var addLike_url = '{{ route('front_paper_add_like', ['paper_id' => $paper->id]) }}';
         requirejs([
             'require',
             'viewModal/BuildUrl',

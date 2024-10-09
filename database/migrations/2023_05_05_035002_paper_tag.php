@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\PaperTagInterface;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PageCategory extends Migration
+class PaperTag extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +14,11 @@ class PageCategory extends Migration
      */
     public function up()
     {
-        Schema::create(\App\Helper\Nan::pageCategoryTable(), function (Blueprint $table) {
+        Schema::create(PaperTagInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->integer(\App\Models\PaperInterface::PRIMARY_ALIAS);
-            $table->integer(\App\Models\CategoryInterface::PRIMARY_ALIAS);
+            $table->string(PaperTagInterface::ATTR_VALUE);
+            $table->integer(PaperTagInterface::ATTR_ENTITY_ID);
+            $table->string(PaperTagInterface::ATTR_TYPE);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +31,7 @@ class PageCategory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(\App\Helper\Nan::pageCategoryTable());
+        //
+        Schema::dropIfExists(PaperTagInterface::TABLE_NAME);
     }
 }

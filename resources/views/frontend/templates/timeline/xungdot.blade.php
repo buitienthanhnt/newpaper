@@ -687,7 +687,7 @@
                                                 </div>
                                                 <div class="whates-caption">
                                                     <h4><a
-                                                            href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
+                                                            href="{{ route('front_paper_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
                                                     </h4>
                                                     <p>{{ $paper_first->short_conten }}</p>
                                                     <span>by
@@ -714,7 +714,7 @@
                                                         <div class="col-md-6 whats-right-cap">
                                                             <h4>
                                                                 <a
-                                                                    href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
+                                                                    href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
                                                                     <h4>
                                                                         {{ $paper->title }}
                                                                     </h4>

@@ -9,7 +9,7 @@
                             ? $tren_r->to_category()->first()->for_category()->first()->name
                             : '' }}</span>
                     <h2><a
-                            href="{{ route('front_page_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>
+                            href="{{ route('front_paper_detail', ['page' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>
                     </h2>
                     <p>by {{ $tren_r->writerName() }}
                         -
