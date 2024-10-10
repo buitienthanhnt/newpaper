@@ -182,6 +182,32 @@ class ManagerController extends Controller implements ManagerControllerInterface
         ]));
     }
 
+    public function mostPopulator() {
+        $mostPopulatorHtml = $this->mostPopulator->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $mostPopulatorHtml
+        ];
+    }
+
+    public function likeMost(){
+        $likeMostHtml = $this->likeMost->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $likeMostHtml
+        ];
+    }
+
+    public function trendingHtml(){
+        $trendingHtml = $this->trending->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $trendingHtml
+        ];
+    }
+
+    // =====================================================================
+
     function formatSug($data)
     {
         return array_chunk(array_map(function ($item) {
@@ -291,4 +317,5 @@ class ManagerController extends Controller implements ManagerControllerInterface
             'message' => 'token expire. Please refresh token and try again!'
         ], 401);
     }
+
 }

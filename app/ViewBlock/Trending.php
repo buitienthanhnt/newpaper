@@ -11,7 +11,8 @@ class Trending implements Htmlable
 
 	function toHtml(): string
 	{
-		$trendings = Paper::all()->random(5);
+		$papers = Paper::all();
+		$trendings = $papers->random($papers->count() >= 5 ? 5 : $papers->count());
 		return view($this->template, ['trendings' => $trendings])->render();
 	}
 }

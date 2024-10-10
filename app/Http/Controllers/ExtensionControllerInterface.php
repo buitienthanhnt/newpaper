@@ -17,9 +17,6 @@ interface ExtensionControllerInterface{
     const PAPER_MOST_VIEW = 'getPaperMostView';
     const LOGIN = 'login';
     const USER_INFO = 'getUserInfo';
-    const MOST_POPULATOR_HTML = 'mostPopulator';
-    const MOST_LIKE_HTML = 'likeMost';
-    const MOST_TRENDING_HTML = 'trendingHtml';
     const PAPER_DETAIL = 'getPaperDetail';
 
     const ADD_TO_CART = 'addToCart';
@@ -62,12 +59,6 @@ interface ExtensionControllerInterface{
     public function login();
 
     public function getUserInfo();
-
-    public function mostPopulator();
-
-    public function likeMost();
-
-    public function trendingHtml();
 
     /**
      * @param int $paper_id

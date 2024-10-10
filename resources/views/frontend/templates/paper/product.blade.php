@@ -171,8 +171,8 @@
     <script>
         var token = "{{ csrf_token() }}";
         var url = "{{ route('more_type', ['type' => $type]) }}";
-        var mostPopulatorUrl = "{{ route('api_most_populator') }}";
-        var likeMost = "{{ route('api_like_most') }}";
+        var mostPopulatorUrl = "{{ route('front_most_populator_html') }}";
+        var likeMost = "{{ route('front_most_like_html') }}";
 
         function load_more() {
             var button = $("#load_more");

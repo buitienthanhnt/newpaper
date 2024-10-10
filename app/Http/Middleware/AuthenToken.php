@@ -20,7 +20,7 @@ class AuthenToken
         'api/paperMostView',
         'api/share/mostPopulator',
         'api/share/trending',
-        'api/share/likeMost',
+        'api/test/constEx',
         'api/test/submit'
     ];
 

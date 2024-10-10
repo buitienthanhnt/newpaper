@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use ReflectionClass;
 use Thanhnt\Nan\Helper\RemoteSourceManager;
 use Thanhnt\Nan\Helper\StringHelper;
 use Thanhnt\Nan\Helper\TokenManager;
@@ -259,30 +260,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ], 200);
     }
 
-    public function mostPopulator() {
-        $mostPopulatorHtml = $this->mostPopulator->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $mostPopulatorHtml
-        ];
-    }
-
-    public function likeMost(){
-        $likeMostHtml = $this->likeMost->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $likeMostHtml
-        ];
-    }
-
-    public function trendingHtml(){
-        $trendingHtml = $this->trending->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $trendingHtml
-        ];
-    }
-
     public function getPaperDetail(int $paper_id)
     {
         // TODO: Implement getPaperDetail() method.
@@ -365,6 +342,11 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     {
         $this->cartService->xoaItem($item_id);
         return $this->cartService->getCart();
+    }
+
+    static function getConstants() {
+        $oClass = new ReflectionClass(__CLASS__);
+        return $oClass->getConstants();
     }
 
     // ==============================================================

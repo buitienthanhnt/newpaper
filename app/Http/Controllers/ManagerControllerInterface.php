@@ -10,6 +10,9 @@ interface ManagerControllerInterface{
     const FRONT_TAG_VIEW = 'tagView';
     const FRONT_SEARCH = 'search';
     const LOAD_MORE = 'loadMore';
+    const MOST_POPULATOR_HTML = 'mostPopulator';
+    const MOST_LIKE_HTML = 'likeMost';
+    const MOST_TRENDING_HTML = 'trendingHtml';
 
     public function homePage();
 
@@ -35,4 +38,10 @@ interface ManagerControllerInterface{
     public function search();
 
     public function loadMore();
+
+    public function mostPopulator();
+
+    public function likeMost();
+
+    public function trendingHtml();
 }
