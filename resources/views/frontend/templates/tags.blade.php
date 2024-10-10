@@ -5,65 +5,13 @@
 {{ $tag }}
 @endsection
 
-{{-- col-lg-8 --}}
 @section('trending_left')
-<div class="slider-active">
-    @if ($trending_left)
-    @foreach ($trending_left as $tren)
-    <div class="single-slider">
-        <div class="trending-top mb-30">
-            <div class="trend-top-img">
-                <img src="{{ $tren->getImagePath() }}" alt="">
-                <div class="trend-top-cap">
-                    @if ($first_category = $tren->getPaperCategories()->first())
-                    <a href="">
-                        <span class="bgr" data-animation="fadeInUp" data-delay=".2s" data-duration="1000ms">{{
-                            $first_category->for_category()->first()->name }}</span>
-                    </a>
-                    @endif
-                    <h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren->id, 'alias' => $tren->url_alias]) }}"
-                            data-animation="fadeInUp" data-delay=".4s" data-duration="1000ms">{{ $tren->title }}</a>
-                    </h2>
-                    <p data-animation="fadeInUp" data-delay=".6s" data-duration="1000ms">by
-                        {{ $tren->writerName() }} -
-                        {{ date('M d, Y', strtotime($tren->updated_at)) }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-    @endif
-</div>
+    @render(App\ViewBlock\TrendingLeft::class)
 @endsection
-{{-- col-lg-8 --}}
 
-{{-- col-lg-4 --}}
 @section('trending_right')
-@isset($trending_right)
-@if ($trending_right)
-@foreach ($trending_right as $tren_r)
-<div class="col-lg-12 col-md-6 col-sm-6">
-    <div class="trending-top mb-30">
-        <div class="trend-top-img">
-            <img src="{{ $tren_r->getImagePath() }}" alt="">
-            <div class="trend-top-cap trend-top-cap2">
-                <span class="bgg">{{ $tren_r->getPaperCategories()->first()->for_category()->first()->name }}</span>
-                <h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{
-                        $tren_r->title }}</a>
-                </h2>
-                <p>by {{ $tren_r->writerName() }}
-                    -
-                    {{ date('M d, Y', strtotime($tren_r->updated_at)) }}</p>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-@endif
-@endisset
-</div>
+    @render(App\ViewBlock\TrendingRight::class)
 @endsection
-{{-- col-lg-4 --}}
 
 {{-- ========================new_post============================ --}}
 
@@ -94,8 +42,7 @@
                         <div class="col-xl-12 col-lg-12">
                             <div class="whats-news-single mb-20">
                                 <!-- single -->
-                                @if ($papers)
-                                @foreach ($papers as $paper)
+                                @foreach (\App\Models\PageTag::getPaperByTags($tag) as $paper)
                                 <div class="row">
                                     <div class="whats-right-single mb-10">
                                         <div class="col-md-6">
@@ -120,7 +67,6 @@
                                     </div>
                                 </div>
                                 @endforeach
-                                @endif
                             </div>
                         </div>
                     </div>

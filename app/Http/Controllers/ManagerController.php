@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Api\PaperApi;
 use App\Api\WriterApi;
 use App\Events\ViewCount;
+use App\Models\CategoryInterface;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\ConfigCategory;
@@ -79,20 +80,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
      */
     public function homePage()
     {
-        $list_center = [];
         $video_contens = null;
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
-            return null;
-        });
-
-        if ($center_category) {
-            $list_center = Category::find(explode("&", $center_category->value));
-            $list_papers = [];
-            foreach ($list_center as $center) {
-                $page_category = $center->getPaperCategories()->toArray();
-                $list_papers = array_unique([...array_column($page_category, Paper::PRIMARY_ALIAS), ...$list_papers]);
-            }
-        }
         // $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         // $video_contens = [
         //     ['url' => "https://www.youtube.com/embed/lhYztX6cdg8", "title" => "demo 1"],
@@ -102,7 +90,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
         //     ['url' => "https://www.youtube.com/embed/sKdpqk7o5ac", "title" => "demo 5"],
         //     ['url' => "https://www.youtube.com/embed/lovblkkDVDU", "title" => "demo 6"],
         // ];
-        return view("frontend/templates/homeContent", compact("list_center", "video_contens"));
+        return view("frontend/templates/homeContent", compact("video_contens"));
     }
 
     /**
@@ -111,7 +99,10 @@ class ManagerController extends Controller implements ManagerControllerInterface
      */
     public function categoryView($category_alias)
     {
-        $category = Category::where("url_alias", "like", $category_alias)->get()->first();
+        /**
+         * @var Category $category
+         */
+        $category = Category::where(CategoryInterface::ATTR_URL_ALIAS, $category_alias)->get()->first();
         $papers = $category->getPaperPaginate(4, 0, $order_by = ["updated_at", "DESC"]);
         event(new ViewCount($category));
         return view("frontend/templates/categories", compact("category", "papers"));
@@ -125,7 +116,11 @@ class ManagerController extends Controller implements ManagerControllerInterface
     public function paperDetail($alias, $paper_id)
     {
         $key = 'paper_detail' . $paper_id;
-        $paper = Cache::remember($key, 15, fn () => $this->paper->find($paper_id));
+        if (Cache::has($key)){
+            $paper = Cache::get($key);
+        }else{
+            $paper = Cache::remember($key, 15, fn () => $this->paper->find($paper_id));
+        }
         event(new ViewCount($paper));
         return view("frontend.templates.paper.paper_detail", ['paper' => $paper]);
     }
@@ -136,13 +131,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
      */
     public function tagView($tag)
     {
-        $papers = null;
-        $paper_ids = $this->pageTag->to_paper($tag);
-        if ($paper_ids) {
-            $papers = $this->paper::whereIn(PaperInterface::ATTR_PRIMARY, $paper_ids)->get();
-        }
-        $trending_left = $papers->first();
-        return view("frontend/templates/tags", ["tag" => $tag, "papers" => $papers, "trending_left" => [$trending_left]]);
+        return view("frontend/templates/tags", ["tag" => $tag]);
     }
 
     /**

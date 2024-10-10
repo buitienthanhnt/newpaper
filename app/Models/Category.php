@@ -124,7 +124,7 @@ class Category extends Model implements CategoryInterface
      * @param int offset (trang hiện tại)
      * @param array $order_by (sắp xếp theo vd: ["updated_at", "DESC"])
      */
-    public function getPaperPaginate($limit = 4, $offset = 0, $order_by = [])
+    public function getPaperPaginate($limit = 4, $offset = 0, $order_by = ["updated_at", "DESC"])
     {
         $listPaperIds = $this->listIdPapers();
         $result = null;

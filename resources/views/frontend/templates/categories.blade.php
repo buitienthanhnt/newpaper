@@ -40,7 +40,6 @@
 {{-- col-lg-8 left --}}
 @section('new_post_left')
     <div class="whats-news-wrapper">
-
         <!-- Heading & Nav Button -->
         <div class="row justify-content-between align-items-end mb-15">
             <div class="col-md-12">

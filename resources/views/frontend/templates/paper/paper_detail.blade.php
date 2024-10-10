@@ -25,15 +25,12 @@
         .paper_action {
             color: #13e6ed
         }
-
         .paper_action.checked {
             color: #cc18b4
         }
-
         .fa-arrow-down {
             color: #13e6ed
         }
-
         .fa-arrow-down:hover {
             color: #cc18b4
         }
@@ -42,7 +39,6 @@
 
 @section('head_before_js')
     <script type="text/javascript">
-        var baseUrl = "<?= route('/') ?>"
         var flashToken = "<?= csrf_token() ?>"
     </script>
 @endsection

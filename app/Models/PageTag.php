@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,11 +10,19 @@ class PageTag extends Model implements PaperTagInterface
     protected $table = self::TABLE_NAME;
 
     /**
-     * 
+     * @param string $tag
+     * @return int[]
      */
-    public function to_paper($tag_value)
+    public static function getPaperIds($tag)
     {
-        $tags = $this->where(self::ATTR_TYPE, self::TYPE_PAPER)->where(self::ATTR_VALUE, $tag_value)->get()->groupBy(self::ATTR_ENTITY_ID)->keys();
-        return $tags;
+        return self::where(self::ATTR_TYPE, self::TYPE_PAPER)->where(self::ATTR_VALUE, $tag)->pluck(self::ATTR_ENTITY_ID)->toArray() ?? [];
+    }
+
+    /**
+     * @param string $tag
+     * @return mixed
+     */
+    public static function getPaperByTags(string $tag){
+        return Paper::find(self::getPaperIds($tag));
     }
 }
