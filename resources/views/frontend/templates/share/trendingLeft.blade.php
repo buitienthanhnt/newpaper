@@ -6,7 +6,7 @@
 					<div class="trend-top-img">
 						<img style="max-height: 465px; object-fit: cover" src="{{ $tren->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
 						<div class="trend-top-cap">
-							@if ($first_category = $tren->to_category()->first())
+							@if ($first_category = $tren->getPaperCategories()->first())
 								<a href="">
 									<span class="bgr" data-animation="fadeInUp" data-delay=".2s"
 										data-duration="1000ms">{{ $first_category->for_category()->first()->name }}</span>

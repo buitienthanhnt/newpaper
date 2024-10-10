@@ -61,7 +61,7 @@
                     <!-- Trending Tittle -->
                     <div id="detail_main_conten" class="about-right mb-90">
                         <?php /** @var \App\Models\Paper $paper */ ?>
-                        @if (!$paper->paperPrice())
+                        @if (!$paper->getPrice())
                             {{-- <div class="about-img">
                                 @if (isset($paper->image_path))
                                     <img src="{{ $paper->image_path ?: asset('assets/pub_image/defaul.PNG') }}"
@@ -79,8 +79,8 @@
                             @endisset
                         </div>
                         <div class="col-md-12">
-                            @if (!!$paper->to_contents())
-                                @foreach ($paper->to_contents() as $item)
+                            @if (!!$paper->getContents())
+                                @foreach ($paper->getContents() as $item)
                                     @switch($item->type)
                                         @case('conten')
                                             {!! $item->value !!}

@@ -128,7 +128,7 @@
                     <div id='left-defaults' class='container' style="width: 30%">
                         {!! view('adminhtml.templates.papers.contenElement.image')->render() !!}
                         @php
-                            $list_contens = $paper->to_contents()->pluck('type')->toArray();
+                            $list_contens = $paper->getContents()->pluck('type')->toArray();
                         @endphp
 
                         @if (!in_array('price', $list_contens))
@@ -152,7 +152,7 @@
                         {!! view('adminhtml.templates.papers.contenElement.video')->render(); !!}
                     </div>
                     <div id='right-defaults' class='container col-md-7'>
-                        @foreach ($paper->to_contents() as $item)
+                        @foreach ($paper->getContents() as $item)
                             @switch($item->type)
                                 @case('price')
                                 {!! view('adminhtml.templates.papers.contenElement.price', ['item' => $item])->render() !!}
@@ -190,7 +190,7 @@
             <div class="row">
                 <div class="col-md-6">
                     @php
-                      $tags =  $paper->to_tag()->getResults();
+                      $tags =  $paper->get_tags();
                       $tag_values = array_column($tags->toArray(), 'value');
                     @endphp
                     {!! view('elements.formFields.select2Fields', [

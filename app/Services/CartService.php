@@ -38,7 +38,7 @@ class CartService implements CartServiceInterface
          */
         $paperObj = Paper::find($paper_id)->makeHidden('conten');
         $paper = $paperObj->toArray();
-        $paper['price'] = $paperObj->paperPrice();
+        $paper['price'] = $paperObj->getPrice();
         // $current_item = array_filter($this->getCart(), function ($item) use ($paper_id) {
         // 	return $item['id'] == $paper_id;
         // });

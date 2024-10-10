@@ -55,31 +55,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @isset($page_lists)
-                            @foreach ($page_lists as $page)
+                        @isset($papers)
+                            @foreach ($papers as $paper)
                                 <tr>
-                                    <td>{{ $page->title }}</td>
-                                    <td>{{ $page->active && $page->show ? 'yes' : 'no' }}</td>
+                                    <td>{{ $paper->title }}</td>
+                                    <td>{{ $paper->active && $paper->show ? 'yes' : 'no' }}</td>
                                     <td>
-                                        <img src="{{ $page->getImagePath() }}" alt="" style="width: 100px; height: 100px;">
+                                        <img src="{{ $paper->getImagePath() }}" alt=""
+                                            style="width: 100px; height: 100px;">
                                     </td>
                                     <td>
-                                        @if ($page->writer)
-                                            {{ $page->to_writer()->getResults()->name }}
-                                        @endif
+                                        {{ $paper->getWriter()->name }}
                                     </td>
                                     <td>
-                                        @if ($page->categories)
-                                            @foreach ($page->categories as $category)
-                                                <span style="margin-bottom: 10px !important">{{ $category->name }}</span><br>
-                                            @endforeach
-                                        @endif
+                                        @foreach ($paper->getCategories() as $category)
+                                            <span style="margin-bottom: 10px !important">{{ $category->name }}</span><br>
+                                        @endforeach
                                     </td>
                                     <td>
-                                        <a class="btn btn-info" href="{{ route('admin_edit_paper', ['paper_id' => $page->id]) }}">
+                                        <a class="btn btn-info"
+                                            href="{{ route('admin_edit_paper', ['paper_id' => $paper->id]) }}">
                                             edit
                                         </a>
-                                        <a href="#" class="btn btn-danger btn-flat show_confirm" data-id="{{ $page->id }}">
+                                        <a href="#" class="btn btn-danger btn-flat show_confirm"
+                                            data-id="{{ $paper->id }}">
                                             delete
                                         </a>
                                     </td>
@@ -89,14 +88,11 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="row" style="float: left">
                 <div class="col-md-12 mt-20 d-flex flex-row-reverse">
-                    {{ $page_lists->links() }}
+                    {{ $papers->links() }}
                 </div>
-
             </div>
-
         </div>
     </div>
 @endsection
@@ -123,13 +119,13 @@
             }).then((result) => {
                 if (result.value) {
                     Swal.fire({
-                            title: 'Please Wait !',
-                            html: 'data uploading', // add html attribute if you want or remove
-                            allowOutsideClick: false,
-                            onBeforeOpen: () => {
-                                Swal.showLoading()
-                            },
-                        });
+                        title: 'Please Wait !',
+                        html: 'data uploading', // add html attribute if you want or remove
+                        allowOutsideClick: false,
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
+                        },
+                    });
                     $.ajax({
                         url: url,
                         type: 'DELETE',

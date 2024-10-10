@@ -6,11 +6,8 @@ use App\Api\BaseApi;
 use App\Helper\ImageUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class Paper extends Model implements PaperInterface
 {
@@ -23,145 +20,12 @@ class Paper extends Model implements PaperInterface
     protected $guarded;
     protected $viewSource = null;
 
-    public function to_category(): HasMany
-    {
-        return $this->hasMany("\App\Models\PaperCategory", Paper::PRIMARY_ALIAS);
-    }
-
-    function listIdCategories(): array
-    {
-        return array_column($this->to_category()->get(["category_id"])->toArray(), "category_id") ?: [];
-    }
-
     /**
-     * tìm 1 khóa chính -> nhiều khóa phụ.
+     * lấy ảnh đại diện của bài viết.
      */
-    public function to_tag(): HasMany
-    {
-        return $this->hasMany(PageTag::class, "entity_id");
-    }
-
-    /**
-     * @return mixed
-     */
-    function to_contents()
-    {
-        return $this->hasMany('\App\Models\PaperContent', "paper_id")->getResults();
-    }
-
-    public function to_writer(): BelongsTo
-    {
-        return $this->belongsTo(Writer::class, "writer");
-    }
-
-    public function writerName(): string
-    {
-        return $this->to_writer()->getResults()->name ?? '';
-    }
-
-    public function save_new($value)
-    {
-        if ($value) {
-            try {
-                $this->fill($value)->save();
-                return true;
-            } catch (\Throwable $th) {
-                throw new \Exception($th->getMessage(), 1);
-            }
-        }
-        return false;
-    }
-
-    public function getComments($parentId = null, int $page = 0, int $limit = 4)
-    {
-        if ($page === 0 && $limit === 0) {
-            return $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->getResults();
-        }
-        return $this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", $parentId)->limit($limit)->offSet($page * $limit)->getResults();
-    }
-
-    function getCommentTree($parentId = null, int $page = 0, int $limit = 4)
-    {
-        $comments = $this->getComments($parentId, $page, $limit);
-        if (count($comments)) {
-            foreach ($comments as &$comment) {
-                $childrents = $this->getComments($comment->id);
-                if (count($childrents)) {
-                    $comment->childrents = $this->getCommentTree($comment->id, $page, $limit);
-                } else {
-                    $comment->childrents = null;
-                }
-            }
-        }
-        return $comments;
-    }
-
-    function commentCount(): int
-    {
-        try {
-            return count($this->hasMany(Comment::class, "paper_id")->where("parent_id", "=", null)->getResults());
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-        return 1;
-    }
-
-    /**
-     * get viewSourceInfo of paper
-     * @return ViewSource
-     */
-    function viewSource(): ViewSource
-    {
-        try {
-            if ($this->viewSource) {
-                return $this->viewSource;
-            }
-            $viewSource = $this->hasMany(ViewSource::class, 'source_id')->where('type', '=', ViewSource::TYPE_PAPER)->first();
-            $this->viewSource = $viewSource;
-            return $viewSource;
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-        return new ViewSource();
-    }
-
-    function sliderImages()
-    {
-        return DB::table('paper_carousel')->where('paper_id', $this->id)->get();
-    }
-
-    function viewCount(): string
-    {
-        $viewSource = $this->viewSource();
-        return $viewSource->value ?: 1;
-    }
-
-    function paperLike(): string
-    {
-        $viewSource = $this->viewSource();
-        return $viewSource->like ?: '';
-    }
-
-    function paperHeart(): string
-    {
-        $viewSource = $this->viewSource();
-        return $viewSource->heart ?: '';
-    }
-
-    function paperInfo()
-    {
-        return [
-            'view_count' => $this->viewCount(),
-            'comment_count' => $this->commentCount(),
-            'like' => $this->paperLike(),
-            'heart' => $this->paperHeart(),
-        ];
-    }
-
     public function getImagePath(): string
     {
         if ($image_path = $this->image_path) {
-
             if (file_exists($image_path)) {
                 return $image_path;
             }
@@ -175,13 +39,174 @@ class Paper extends Model implements PaperInterface
     }
 
     /**
+     * lấy liên kết bảng trung gian
+     */
+    protected function toPaperCategory(): HasMany
+    {
+        return $this->hasMany(PaperCategory::class, Paper::PRIMARY_ALIAS);
+    }
+
+    /**
+     * lấy danh sách kết quả bảng trung gian.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    function getPaperCategories() {
+        return $this->toPaperCategory()->getResults();
+    }
+
+    /**
+     * lấy danh sách id của category.
+     */
+    function listIdCategories(): array
+    {
+        return $this->getPaperCategories()->pluck(CategoryInterface::PRIMARY_ALIAS)->toArray() ?: [];
+    }
+
+    /**
+     * lấy danh sách category của bài viết.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    function getCategories() {
+        return Category::find($this->listIdCategories());
+    }
+
+    /**
+     * lấy các tag của bài viết.
+     * tìm 1 khóa chính -> nhiều khóa phụ.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function get_tags()
+    {
+        $tags = $this->hasMany(PageTag::class, PaperTagInterface::ATTR_ENTITY_ID)->getResults()
+                     ->where(PaperTagInterface::ATTR_TYPE, PaperTagInterface::TYPE_PAPER);
+        return $tags;
+    }
+
+    /**
+     * lấy tác giả của bài viết.
+     * @return Writer
+     */
+    public function getWriter() {
+        return $this->belongsTo(Writer::class, PaperInterface::ATTR_WRITER)->getResults();
+    }
+
+    /**
+     * @return string
+     */
+    public function writerName(): string
+    {
+        return $this->getWriter()->name ?? '';
+    }
+
+    /**
+     * lấy danh sách thành phần nội dung của bài viết.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    function getContents()
+    {
+        return $this->hasMany(PaperContent::class, PaperInterface::PRIMARY_ALIAS)->getResults();
+    }
+
+    /**
+     * lấy comment con theo paper_id và comment cha.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getComments($parentId = null, int $page = 0, int $limit = 4)
+    {
+        if ($page === 0 && $limit === 0) {
+            return $this->hasMany(Comment::class, PaperInterface::PRIMARY_ALIAS)->where(CommentInterface::ATTR_PARENT_ID, $parentId)->getResults();
+        }
+        return $this->hasMany(Comment::class, PaperInterface::PRIMARY_ALIAS)->where(CommentInterface::ATTR_PARENT_ID, $parentId)->limit($limit)->offSet($page * $limit)->getResults();
+    }
+
+    /**
+     * lấy cây đệ quy tuần tự của comment
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    function getCommentTree($parentId = null, int $page = 0, int $limit = 4)
+    {
+        $comments = $this->getComments($parentId, $page, $limit);
+        if ($comments->count()) {
+            foreach ($comments as &$comment) {
+                $childrents = $this->getComments($comment->id);
+                if ($childrents->count()) {
+                    $comment->childrents = $this->getCommentTree($comment->id, $page, $limit);
+                } else {
+                    $comment->childrents = null;
+                }
+            }
+        }
+        return $comments;
+    }
+
+    /**
+     * lấy tổng số bình luận của bài viết.
+     */
+    function commentCount(): int
+    {
+        try {
+            return $this->hasMany(Comment::class, PaperInterface::PRIMARY_ALIAS)->getResults()->count();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return 0;
+    }
+
+    /**
+     * lấy trạng thái hoạt động của bài đăng.
+     * @return ViewSource
+     */
+    function viewSource(): ViewSource
+    {
+        try {
+            if ($this->viewSource) {
+                return $this->viewSource;
+            }
+            $viewSource = $this->hasMany(ViewSource::class, ViewSourceInterface::ATTR_SOURCE_ID)->where(ViewSourceInterface::ATTR_TYPE, ViewSource::TYPE_PAPER)->first();
+            $this->viewSource = $viewSource;
+            return $viewSource;
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        return new ViewSource();
+    }
+
+    /**
+     * lấy số lượt xem
+     */
+    function viewCount(): int
+    {
+        $viewSource = $this->viewSource();
+        return $viewSource->value ?: 1;
+    }
+
+    /**
+     * lấy số lượt like
+     */
+    function paperLike(): int
+    {
+        $viewSource = $this->viewSource();
+        return $viewSource->like ?: 1;
+    }
+
+    /**
+     * lấy số lượt thả tim
+     */
+    function paperHeart(): int
+    {
+        $viewSource = $this->viewSource();
+        return $viewSource->heart ?: 1;
+    }
+
+    /**
+     * lấy giá(nếu có) đã đổi ra đơn vị vnđ.
      * @param false $format
      * @return float|int|null
      */
-    function paperPrice($format = false)
+    function getPrice($format = false)
     {
         try {
-            $price = $this->to_contents()->where(PaperContent::ATTR_TYPE, PaperContent::TYPE_PRICE)->first();
+            $price = $this->getContents()->where(PaperContent::ATTR_TYPE, PaperContent::TYPE_PRICE)->first();
             if ($price) {
                 return $price && $price->value ? $format ? number_format($price->value * 1000) : $price->value * 1000 : null;
             }
@@ -189,5 +214,19 @@ class Paper extends Model implements PaperInterface
             //throw $th;
         }
         return null;
+    }
+
+    /**
+     * lấy thông tin hoạt động bài viết
+     * @return array
+     */
+    function paperInfo(): array
+    {
+        return [
+            'view_count' => $this->viewCount(),
+            'comment_count' => $this->commentCount(),
+            'like' => $this->paperLike(),
+            'heart' => $this->paperHeart(),
+        ];
     }
 }

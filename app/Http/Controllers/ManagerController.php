@@ -89,7 +89,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
             $list_center = Category::find(explode("&", $center_category->value));
             $list_papers = [];
             foreach ($list_center as $center) {
-                $page_category = $center->to_page_category()->getResults()->toArray();
+                $page_category = $center->getPaperCategories()->toArray();
                 $list_papers = array_unique([...array_column($page_category, Paper::PRIMARY_ALIAS), ...$list_papers]);
             }
         }
@@ -112,30 +112,22 @@ class ManagerController extends Controller implements ManagerControllerInterface
     public function categoryView($category_alias)
     {
         $category = Category::where("url_alias", "like", $category_alias)->get()->first();
-        $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
+        $papers = $category->getPaperPaginate(4, 0, $order_by = ["updated_at", "DESC"]);
         event(new ViewCount($category));
         return view("frontend/templates/categories", compact("category", "papers"));
     }
 
     /**
-     * @param $alias
-     * @param $page_id
+     * @param string $alias
+     * @param int $paper_id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function paperDetail($alias, $page_id)
+    public function paperDetail($alias, $paper_id)
     {
-        $key = 'paper_detail' . $page_id;
-        $paper = Cache::remember($key, 15, fn () => $this->paper->find($page_id));
-        $category = Cache::remember('category.alias.like', 15, function () {
-            return Category::all()->random(1)->first();
-        });
-
-        $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
-        $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
-        $top_paper = $papers->take(2);
-        $papers = $papers->diff($top_paper);
+        $key = 'paper_detail' . $paper_id;
+        $paper = Cache::remember($key, 15, fn () => $this->paper->find($paper_id));
         event(new ViewCount($paper));
-        return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
+        return view("frontend.templates.paper.paper_detail", ['paper' => $paper]);
     }
 
     /**
@@ -172,7 +164,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
         $page = $request->get("page");
         if ($type) {
             $category = $this->category->where("url_alias", "like", $type)->first();
-            $papers = $category->get_papers(4, $page);
+            $papers = $category->getPaperPaginate(4, $page);
         }
         $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
 

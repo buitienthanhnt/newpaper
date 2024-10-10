@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\HelperFunction;
 use App\Helper\Page;
 use App\Models\Category;
+use App\Models\CategoryInterface;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Paper;
@@ -71,20 +72,8 @@ class PaperController extends Controller implements PaperControllerInterface
      */
     public function listPaper()
     {
-        $page_lists = $this->paper->orderBy("updated_at", "DESC")->paginate(8);
-        foreach ($page_lists as &$page) {
-            $resuls = [];
-            $categories = $page->to_category()->get("category_id")->toArray();
-            if ($categories) {
-                $id_of_categories = array_map(function ($item) {
-                    return $item["category_id"];
-                }, $categories);
-
-                $resuls = Category::all(['id', "name"])->whereIn("id", $id_of_categories);
-            }
-            $page->categories = $resuls;
-        }
-        return view("adminhtml.templates.papers.list", compact("page_lists"));
+        $papers = $this->paper->orderBy("updated_at", "DESC")->paginate(8);
+        return view("adminhtml.templates.papers.list", compact("papers"));
     }
 
     /**
@@ -256,9 +245,8 @@ class PaperController extends Controller implements PaperControllerInterface
         $writers = Writer::all();
         $filemanager_url = url("adminhtml/file/manager") . "?editor=tinymce5";
         $filemanager_url_base = url("adminhtml/file/manager");
-        $paper_category = array_column($paper->to_category()->get(["category_id"])->toArray(), "category_id");
-        $category_option = $this->category->setSelected($paper_category)->category_tree_option();
-        $time_line_option = $this->category->time_line_option(array_filter($paper->to_contents()->toArray(), function ($i) {
+        $category_option = $this->category->setSelected($paper->listIdCategories())->category_tree_option();
+        $time_line_option = $this->category->time_line_option(array_filter($paper->getContents()->toArray(), function ($i) {
                 return $i['type'] === 'timeline';
             })[0]['depend_value'] ?? null);
 
@@ -324,7 +312,7 @@ class PaperController extends Controller implements PaperControllerInterface
                     /**
                      * remove paper tags
                      */
-                    $tags = $paper->to_tag()->getResults();
+                    $tags = $paper->get_tags();
                     if ($tags->count()) {
                         foreach ($tags as $tag) {
                             $tag->forceDelete();
@@ -334,7 +322,7 @@ class PaperController extends Controller implements PaperControllerInterface
                     /**
                      * delete paper categories.
                      */
-                    $categories = $paper->to_category()->getResults();
+                    $categories = $paper->getPaperCategories();
                     if ($categories->count()) {
                         foreach ($categories as $category) {
                             $category->forceDelete();

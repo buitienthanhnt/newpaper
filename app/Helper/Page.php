@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use App\Models\CategoryInterface;
+use App\Models\Paper;
 use App\Models\PaperInterface;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -35,14 +36,15 @@ trait Page
         return false;
     }
 
-    public function delete_page_category($paper)
+    /**
+     * delete list category of paper
+     */
+    public function delete_page_category(Paper $paper)
     {
-        $paper_categories = $paper->to_category();
+        $paper_categories = $paper->getPaperCategories();
         try {
-            if ($categories = $paper_categories->getResults()) {
-                foreach ($categories as $category) {
-                    $category->forceDelele();
-                }
+            foreach ($paper_categories as $category) {
+                $category->forceDelele();
             }
             return true;
         } catch (\Throwable $th) {
@@ -53,12 +55,10 @@ trait Page
 
     public function delete_page_tag($paper)
     {
-        $paper_tags = $paper->to_tag();
+        $paper_tags = $paper->get_tags();
         try {
-            if ($tags = $paper_tags->getResults()) {
-                foreach ($tags as $tag) {
-                    $tag->forceDelete();
-                }
+            foreach ($paper_tags as $tag) {
+                $tag->forceDelete();
             }
             return true;
         } catch (\Throwable $th) {
@@ -70,12 +70,11 @@ trait Page
     /**
      * @param Paper $paper
      */
-    protected function delete_paper_content($paper){
-        $contents = $paper->to_contents();
-        if (count($contents)) {
-            foreach ($contents as $content) {
-                $content->delete();
-            }
+    protected function delete_paper_content($paper)
+    {
+        $contents = $paper->getContents();
+        foreach ($contents as $content) {
+            $content->delete();
         }
     }
 

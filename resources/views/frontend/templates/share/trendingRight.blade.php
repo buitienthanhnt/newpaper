@@ -5,8 +5,8 @@
                 <img src="{{ $tren_r->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" style="max-height: 210px; object-fit: cover" alt="">
                 <div class="trend-top-cap trend-top-cap2">
                     <span
-                        class="bgg">{{ $tren_r->to_category()->first()
-                            ? $tren_r->to_category()->first()->for_category()->first()->name
+                        class="bgg">{{ $tren_r->getPaperCategories()->first()
+                            ? $tren_r->getPaperCategories()->first()->for_category()->first()->name
                             : '' }}</span>
                     <h2><a
                             href="{{ route('front_paper_detail', ['paper_id' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{ $tren_r->title }}</a>

@@ -108,6 +108,9 @@ class PaperApi extends BaseApi
 
 	public function addFirebase($paperId, $hidden = []): array
 	{
+		/**
+		 * @var Paper $_paper
+		 */
 		$_paper = Paper::find($paperId);
 		$paper = $_paper->toArray();
 		$paper['categories'] = $_paper->listIdCategories();
@@ -317,7 +320,7 @@ class PaperApi extends BaseApi
 				$paper = $this->getDetail($paper);
 			}
 			$_paper = $paper->toArray();
-			$_paper['tags'] = $paper->to_tag()->getResults()->toArray();
+			$_paper['tags'] = $paper->get_tags()->toArray();
 			$_paper['slider_images'] = $this->upSliderImages($paper->sliderImages()->toArray());
 			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 			$this->logTha->logFirebase('info', "added for paper detail: " . $paper->id . " to document paper detail firebase", [

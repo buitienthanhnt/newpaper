@@ -171,10 +171,8 @@
     <script>
         var token = "{{ csrf_token() }}";
         var url = "{{ route('front_load_more') }}";
-        var mostPopulatorUrl = "{{ route('mostPopulator') }}";
-        var likeMost = "{{ route('likeMost') }}";
-
-
+        var mostPopulatorUrl = "{{ route('front_most_populator_html') }}";
+        var likeMost = "{{ route('front_most_like_html') }}";
         var type = "{{ $category->url_alias }}"
 
         function load_more() {

@@ -141,7 +141,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
              * @var \App\Models\Category $category
              */
             $category = $this->category->find($category_id);
-            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1, ['updated_at', 'desc'], ['conten']);
+            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->getPaperPaginate($limit, $page - 1, ['updated_at', 'desc'], ['conten']);
             foreach ($papers as &$value) {
                 $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
                 $value->info = [
@@ -306,10 +306,10 @@ class ExtensionController extends Controller implements ExtensionControllerInter
              * @var Paper $detail
              */
             $detail = $this->paper->find($paper_id);
-            $detail->contents = $covertContentData($detail->to_contents()->toArray());
+            $detail->contents = $covertContentData($detail->getContents()->toArray());
             $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
             $detail->info = $detail->paperInfo();
-            $detail->tags = $detail->to_tag()->getResults();
+            $detail->tags = $detail->get_tags();
             $detail->slider_images = array_map(function ($item) {
                 $item->value = $this->helperFunction->replaceImageUrl($item->value);
                 return $item;

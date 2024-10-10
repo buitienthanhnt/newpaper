@@ -15,7 +15,7 @@
             <div class="trend-top-img">
                 <img src="{{ $tren->getImagePath() }}" alt="">
                 <div class="trend-top-cap">
-                    @if ($first_category = $tren->to_category()->first())
+                    @if ($first_category = $tren->getPaperCategories()->first())
                     <a href="">
                         <span class="bgr" data-animation="fadeInUp" data-delay=".2s" data-duration="1000ms">{{
                             $first_category->for_category()->first()->name }}</span>
@@ -47,7 +47,7 @@
         <div class="trend-top-img">
             <img src="{{ $tren_r->getImagePath() }}" alt="">
             <div class="trend-top-cap trend-top-cap2">
-                <span class="bgg">{{ $tren_r->to_category()->first()->for_category()->first()->name }}</span>
+                <span class="bgg">{{ $tren_r->getPaperCategories()->first()->for_category()->first()->name }}</span>
                 <h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">{{
                         $tren_r->title }}</a>
                 </h2>

@@ -67,7 +67,7 @@
                                 id="{{ 'nav-' . $center_conten->id }}" role="tabpanel"
                                 aria-labelledby="{{ 'nav-' . $center_conten->id . '-tab' }}">
                                 <div class="row">
-                                    @if ($papers = $center_conten->get_papers())
+                                    @if ($papers = $center_conten->getPaperPaginate())
                                         <!-- Left Details Caption -->
                                         @if ($paper_first = $papers->first())
                                             <div class="col-xl-6">
