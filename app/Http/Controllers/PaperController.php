@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Helper\HelperFunction;
@@ -11,23 +10,22 @@ use App\Models\PaperContent;
 use App\Models\PaperContentInterface;
 use App\Models\PaperInterface;
 use App\Models\RemoteSourceHistory;
+use App\Models\RemoteSourceHistoryInterface;
 use App\Models\Writer;
 use App\Services\CartService;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
 use Thanhnt\Nan\Helper\LogTha;
 use Thanhnt\Nan\Helper\RemoteSourceManager;
 use Thanhnt\Nan\Helper\StringHelper;
+use Exception;
 use Throwable;
 
 class PaperController extends Controller implements PaperControllerInterface
 {
     use Page;
     use StringHelper;
-
-    const PAGE_TYPE = 1;
 
     /**
      * @var CartService $cartService
@@ -133,7 +131,7 @@ class PaperController extends Controller implements PaperControllerInterface
                     $returnValues[] = [
                         "type" => "timeline",
                         "key" => $key,
-                        "depend_value" => $datas['time_line_type'],
+                        "depend_value" => $datas[PaperContentInterface::TYPE_TIMELINE_DEPEND],
                         "value" => $value,
                         "paper_id" => $paper_id
                     ];
@@ -178,7 +176,6 @@ class PaperController extends Controller implements PaperControllerInterface
     public function insertPaper()
     {
         $request = $this->request;
-        dd($request->toArray());
         try {
             $paper = $this->saveMainPaper();
             if ($new_id = $paper->id) {
@@ -190,21 +187,21 @@ class PaperController extends Controller implements PaperControllerInterface
                 /**
                  * save in DB page category
                  */
-                $this->insert_page_category($new_id, $request->__get(PaperInterface::EX_ATTR_CATEGORY));
+                $this->insertPaperCategory($new_id, $request->__get(PaperInterface::EX_ATTR_CATEGORY));
 
                 /**
                  * save in DB page tags
                  */
-                $this->insert_page_tag($request->__get(PaperInterface::EX_ATTR_TAGS), $new_id, Paper::PAPER_TAG);
+                $this->insertTags($request->__get(PaperInterface::EX_ATTR_TAGS), $new_id, Paper::EX_ATTR_TAGS);
 
                 /**
                  * save for history
                  */
-                if ($request_url = $request->get("request_url")) {
+                if ($request_url = $request->get("source_request")) {
                     /**
                      * save source into database.
                      */
-                    $this->save_remote_source_history($request_url, self::PAGE_TYPE, $new_id, true);
+                    $this->saveRemoteSourceHistory($request_url, RemoteSourceHistoryInterface::TYPE_PAPER, $new_id, true);
                     /**
                      * log remote source of paper.
                      */
@@ -233,16 +230,7 @@ class PaperController extends Controller implements PaperControllerInterface
          * @var Paper $paper
          */
         $paper = $this->paper->find($paper_id);
-        $writers = Writer::all();
-        $filemanager_url = url("adminhtml/file/manager") . "?editor=tinymce5";
-        $filemanager_url_base = url("adminhtml/file/manager");
-        $category_option = $this->category->setSelected($paper->listIdCategories())->category_tree_option();
-        $time_line_option = $this->category->time_line_option(array_filter($paper->getContents()->toArray(), function ($i) {
-                return $i['type'] === 'timeline';
-            })[0]['depend_value'] ?? null);
-
-        return view("adminhtml.templates.papers.edit",
-            compact("paper", "writers", "category_option", "filemanager_url", "filemanager_url_base", "time_line_option"));
+        return view("adminhtml.templates.papers.edit", compact("paper"));
     }
 
     /**
@@ -268,12 +256,12 @@ class PaperController extends Controller implements PaperControllerInterface
                  * update paper category.
                  */
                 $this->delete_page_category($paper);
-                $this->insert_page_category($paper->id, $this->request->get("category_option"));
+                $this->insertPaperCategory($paper->id, $this->request->get(PaperInterface::EX_ATTR_CATEGORY));
                 /**
                  * update paper tags.
                  */
                 $this->delete_page_tag($paper);
-                $this->insert_page_tag($this->request->__get("paper_tag"), $paper->id, Paper::PAPER_TAG);
+                $this->insertTags($this->request->__get(Paper::EX_ATTR_TAGS), $paper->id, Paper::EX_ATTR_TAGS);
                 return redirect()->back()->with("success", "updated success");
             } catch (Throwable $th) {
                 $th->getMessage();
@@ -303,7 +291,7 @@ class PaperController extends Controller implements PaperControllerInterface
                     /**
                      * remove paper tags
                      */
-                    $tags = $paper->get_tags();
+                    $tags = $paper->getTags();
                     if ($tags->count()) {
                         foreach ($tags as $tag) {
                             $tag->forceDelete();
@@ -313,11 +301,8 @@ class PaperController extends Controller implements PaperControllerInterface
                     /**
                      * delete paper categories.
                      */
-                    $categories = $paper->getPaperCategories();
-                    if ($categories->count()) {
-                        foreach ($categories as $category) {
-                            $category->forceDelete();
-                        }
+                    foreach ($paper->getPaperCategories() as $category) {
+                        $category->forceDelete();
                     }
 
                     /**
@@ -335,9 +320,9 @@ class PaperController extends Controller implements PaperControllerInterface
             //throw $th;
         }
         return response(json_encode([
-            "code" => 401,
+            "code" => 405,
             "value" => "delete error. Please try again!"
-        ]), 401);
+        ]), 405);
     }
 
     /**
@@ -348,38 +333,35 @@ class PaperController extends Controller implements PaperControllerInterface
         return view("adminhtml.templates.papers.new_by_url");
     }
 
+    /**
+     * create paper by remote source
+     */
     public function sourcePaper()
     {
-        $request = $this->request;
-        $value = $this->remoteSourceManager->source($request);
+        $value = $this->remoteSourceManager->source($this->request);
         if (!$value) {
             return redirect()->back()->with("error", "can not parse source!");
         } else {
-            /**
-             * get write for
-             */
-            $writers = Writer::all();
-            $values = [
-                "value" => $value,
-                "category_option" => $this->category->category_tree_option(),
-                "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
-                "filemanager_url_base" => url("adminhtml/file/manager"),
-                "time_line_option" => $this->category->time_line_option(),
-                "writers" => $writers,
-            ];
-            return view("adminhtml.templates.papers.create", $values);
+            $value['source_request'] = $this->request->get('source_request');
+            return view("adminhtml.templates.papers.create", ["value" => $value]);
         }
     }
 
     /**
+     * @param string $request_url
+     * @param string|int $type
+     * @param int $paper_id
+     * @param bool $active
      * @return bool
      */
-    protected function save_remote_source_history($request_url = "", $type = null, $paper_id = null, $active = true)
+    protected function saveRemoteSourceHistory(string $request_url, $type = RemoteSourceHistoryInterface::TYPE_PAPER, $paper_id = null, $active = true)
     {
-        if (!$request_url) {
-            return false;
-        }
-        $history = new RemoteSourceHistory(["url_value" => $request_url, "type" => $type, "paper_id" => $paper_id, "active" => $active]);
+        $history = new RemoteSourceHistory([
+            RemoteSourceHistoryInterface::ATTR_URL_VALUE => $request_url, 
+            RemoteSourceHistoryInterface::ATTR_TYPE => $type, 
+            RemoteSourceHistoryInterface::ATTR_PAPER_ID => $paper_id, 
+            RemoteSourceHistoryInterface::ATTR_ACTIVE => $active
+        ]);
         return $history->save();
     }
 }

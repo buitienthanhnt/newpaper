@@ -1,10 +1,10 @@
 <div class="form-group row">
-    <label for="active" class="col-sm-3">
+    <label for="active" class="col-sm-6">
         @isset($label)
             {{ $label }}
         @endisset:
     </label>
-    <div class="col-sm-1">
+    <div class="col-sm-2">
         <input @isset($id)
                 id="{{ $id }}"
             @endisset

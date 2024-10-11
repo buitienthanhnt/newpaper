@@ -21,11 +21,11 @@
 @endsection
 
 @section('after_css')
-    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('assets/frontend/css/dragula/dragula.css') }}" rel='stylesheet' type='text/css'/>
-    <link href="{{ asset('assets/frontend/css/dragula/example.css') }}" rel='stylesheet' type='text/css'/>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/frontend/css/dragula/dragula.css') }}" rel='stylesheet' type='text/css' />
+    <link href="{{ asset('assets/frontend/css/dragula/example.css') }}" rel='stylesheet' type='text/css' />
     <style type="text/css">
-        .select2-selection--multiple > .select2-selection__choice {
+        .select2-selection--multiple>.select2-selection__choice {
             color: color('white');
             border: 0;
             border-radius: 3px;
@@ -35,7 +35,7 @@
             line-height: 1;
         }
 
-        .select2-selection--multiple > .sliderImages {
+        .select2-selection--multiple>.sliderImages {
             max-height: 480px !important;
         }
 
@@ -46,10 +46,12 @@
 @endsection
 
 @section('body_main_conten')
+    @inject('category', 'App\Models\Category')
+    @inject('writer', 'App\Models\Writer')
     <div class="col-12 grid-margin">
         <h4 class="card-title">add update source</h4>
         <form class="form-sample" method="POST" enctype="multipart/form-data"
-              action={{ route('admin_update_paper', ['paper_id' => $paper->id]) }}>
+            action={{ route('admin_update_paper', ['paper_id' => $paper->id]) }}>
             @csrf
             {!! view('elements.message.index')->render() !!}
             <div class="row">
@@ -64,10 +66,18 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-4">
-                            {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked' => $paper->active])->render() !!}
+                            {!! view('elements.formFields.checkBox', [
+                                'label' => 'Active',
+                                'name' => 'active',
+                                'checked' => $paper->active,
+                            ])->render() !!}
                         </div>
                         <div class="col-md-4">
-                            {!! view('elements.formFields.checkBox', ['label' => 'Show', 'name' => 'show', 'checked' => $paper->show])->render() !!}
+                            {!! view('elements.formFields.checkBox', [
+                                'label' => 'Show',
+                                'name' => 'show',
+                                'checked' => $paper->show,
+                            ])->render() !!}
                         </div>
                         <div class="col-md-4">
                             {!! view('elements.formFields.checkBox', [
@@ -83,10 +93,10 @@
             <div class="row">
                 <div class="col-md-6">
                     {!! view('elements.formFields.textField', [
-                    'label' => 'Url alias',
-                    'name' => 'alias',
-                    'value' => $paper->url_alias ?? '',
-                ])->render() !!}
+                        'label' => 'Url alias',
+                        'name' => 'alias',
+                        'value' => $paper->url_alias ?? '',
+                    ])->render() !!}
                 </div>
                 <div class="col-md-6">
                     <div class="col-sm-10">
@@ -94,7 +104,7 @@
                             'label' => 'Select category',
                             'id' => 'category_option',
                             'name' => 'category_option',
-                            'options' => $category_option,
+                            'options' => $category->setSelected($paper->listIdCategories())->category_tree_option(),
                             'place_holder' => 'Select an option',
                             'token_separators' => [',', ' '],
                             'multiple' => true,
@@ -113,13 +123,13 @@
                 </div>
                 <div class="col-md-6">
                     {!! view('elements.formFields.chooseFile', [
-                     'label' => 'Thumbnail image',
-                     'id' => 'lfm_1',
-                     'input_id' => 'input_id_1',
-                     'name' => 'image_path',
-                     'preview_id' => 'preview_id_1',
-                     'value' => $paper->image_path ?? null
-                 ])->render() !!}
+                        'label' => 'Thumbnail image',
+                        'id' => 'lfm_1',
+                        'input_id' => 'input_id_1',
+                        'name' => 'image_path',
+                        'preview_id' => 'preview_id_1',
+                        'value' => $paper->image_path ?? null,
+                    ])->render() !!}
                 </div>
             </div>
 
@@ -137,7 +147,16 @@
 
                         @if (!in_array('timeline', $list_contens))
                             {!! view('adminhtml.templates.papers.contenElement.timeline', [
-                                'time_line_option' => $time_line_option,
+                                'time_line_option' => $category->timelineOptionHtml(
+                                    array_filter(
+                                        array_map(function ($i) {
+                                            return $i[App\Models\PaperContentInterface::ATTR_TYPE] ===
+                                                App\Models\PaperContentInterface::TYPE_TIMELINE
+                                                ? $i[App\Models\PaperContentInterface::ATTR_DEPEND_VALUE]
+                                                : null;
+                                        }, $paper->getContents()->toArray()),
+                                    ),
+                                ),
                             ])->render() !!}
                         @endif
 
@@ -149,38 +168,45 @@
                             {!! view('adminhtml.templates.papers.contenElement.sliderData')->render() !!}
                         @endif
 
-                        {!! view('adminhtml.templates.papers.contenElement.video')->render(); !!}
+                        {!! view('adminhtml.templates.papers.contenElement.video')->render() !!}
                     </div>
                     <div id='right-defaults' class='container col-md-7'>
                         @foreach ($paper->getContents() as $item)
                             @switch($item->type)
                                 @case('price')
-                                {!! view('adminhtml.templates.papers.contenElement.price', ['item' => $item])->render() !!}
+                                    {!! view('adminhtml.templates.papers.contenElement.price', ['item' => $item])->render() !!}
                                 @break;
                                 @case('image')
-                                {!! view('adminhtml.templates.papers.contenElement.image', ['item' => $item])->render() !!}
-                                @break
-
+                                    {!! view('adminhtml.templates.papers.contenElement.image', ['item' => $item])->render() !!}
+                                @break;
                                 @case('timeline')
-                                {!! view('adminhtml.templates.papers.contenElement.timeline', [
-                                    'item' => $item,
-                                    'time_line_option' => $time_line_option,
-                                ])->render() !!}
-                                @break
-
+                                    {!! view('adminhtml.templates.papers.contenElement.timeline', [
+                                        'item' => $item,
+                                        'time_line_option' => $category->timelineOptionHtml(
+                                            array_filter(
+                                                array_map(function ($i) {
+                                                    return $i[App\Models\PaperContentInterface::ATTR_TYPE] ===
+                                                        App\Models\PaperContentInterface::TYPE_TIMELINE
+                                                        ? $i[App\Models\PaperContentInterface::ATTR_DEPEND_VALUE]
+                                                        : null;
+                                                }, $paper->getContents()->toArray()),
+                                            ),
+                                        ),
+                                    ])->render() !!}
+                                @break;
                                 @case('conten')
-                                {!! view('adminhtml.templates.papers.contenElement.conten', [
-                                    'item' => $item,
-                                ])->render() !!}
-                                @break
-
+                                    {!! view('adminhtml.templates.papers.contenElement.conten', [
+                                        'item' => $item,
+                                    ])->render() !!}
+                                @break;
                                 @case('slider_data')
-                                {!! view('adminhtml.templates.papers.contenElement.sliderData', [
-                                    'item' => $item,
-                                ])->render() !!}
-                                @break
+                                    {!! view('adminhtml.templates.papers.contenElement.sliderData', [
+                                        'item' => $item,
+                                    ])->render() !!}
+                                @break;
 
                                 @default
+                                    ;
                             @endswitch
                         @endforeach
                     </div>
@@ -190,8 +216,8 @@
             <div class="row">
                 <div class="col-md-6">
                     @php
-                      $tags =  $paper->get_tags();
-                      $tag_values = array_column($tags->toArray(), 'value');
+                        $tags = $paper->getTags();
+                        $tag_values = array_column($tags->toArray(), 'value');
                     @endphp
                     {!! view('elements.formFields.select2Fields', [
                         'id' => 'paper_tag',
@@ -209,7 +235,7 @@
                         'label' => 'Writer',
                         'id' => 'paper_writer',
                         'name' => 'writer',
-                        'options' => $writers,
+                        'options' => $writer->all(),
                         'value' => [$paper->writer],
                         'token_separators' => [''],
                         'multiple' => false,
@@ -236,8 +262,8 @@
             var target_input = $('#' + $(this).data('input'));
             var target_preview = $('#' + $(this).data('preview'));
             window.open(route_prefix + '?type=' + type, 'FileManager', 'width=900,height=600');
-            window.SetUrl = function (items) {
-                var file_path = items.map(function (item) {
+            window.SetUrl = function(items) {
+                var file_path = items.map(function(item) {
                     return item.url;
                 }).join(',');
 
@@ -248,7 +274,7 @@
                 target_preview.html('');
 
                 // set or change the preview image src
-                items.forEach(function (item) {
+                items.forEach(function(item) {
                     target_preview.append(
                         $('<img>').css('height', '5rem').attr('src', item.thumb_url)
                     );
@@ -263,20 +289,20 @@
         // https://github.com/bevacqua/dragula
         var dra = dragula(
             [document.getElementById('left-defaults'), document.getElementById('right-defaults')], {
-                isContainer: function (el) {
+                isContainer: function(el) {
                     return false; // only elements in drake.containers will be taken into account
                 },
-                moves: function (el, source, handle, sibling) {
+                moves: function(el, source, handle, sibling) {
                     return true; // elements are always draggable by default
                 },
-                accepts: function (el, target, source, sibling) {
+                accepts: function(el, target, source, sibling) {
                     return true; // elements can be dropped in any of the `containers` by default
                 },
-                invalid: function (el, handle) {
+                invalid: function(el, handle) {
                     return false; // don't prevent any drags from initiating by default
                 },
                 direction: 'vertical', // Y axis is considered when determining where an element would be dropped
-                copy: function (el, source) {
+                copy: function(el, source) {
                     return $(el).attr('data-type') === 'p-picture' && $(source).attr('id') === 'left-defaults';
                 }, // elements are moved by default, not copied
                 copySortSource: true, // elements in copy-source containers can be reordered
@@ -287,7 +313,7 @@
                 slideFactorX: 0, // allows users to select the amount of movement on the X axis before it is considered a drag instead of a click
                 slideFactorY: 0, // allows users to select the amount of movement on the Y axis before it is considered a drag instead of a click
             }
-        ).on('dragend', function (el) {
+        ).on('dragend', function(el) {
             console.log('dragend', $($(el).parent()[0]).attr('id'));
             if ($(el).attr('data-type') === 'p-picture' && $($(el).parent()[0]).attr('id') === 'left-defaults') {
                 if ($("div[data-type=p-picture]").length > 1) {
@@ -302,7 +328,7 @@
                 return;
             }
 
-            $(el).click(function (params) {
+            $(el).click(function(params) {
                 // console.log(params, $(this).attr('data-type'));
                 let p_type = $(this).attr('data-type');
                 switch (p_type) {
@@ -318,7 +344,7 @@
                             ],
                             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
                             toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
-                            file_picker_callback: function (callback, value, meta) {
+                            file_picker_callback: function(callback, value, meta) {
                                 let x = window.innerWidth || document.documentElement
                                     .clientWidth || document
                                     .getElementsByTagName('body')[0].clientWidth;
@@ -326,11 +352,10 @@
                                     .clientHeight || document
                                     .getElementsByTagName('body')[0].clientHeight;
 
-                                let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                                    url = '{!! $filemanager_url !!}';
+                                let type = 'image' === meta.filetype ? 'Images' : 'Files';
 
                                 tinymce.activeEditor.windowManager.openUrl({
-                                    url: url,
+                                    url: filemanager_url_base,
                                     title: 'Filemanager',
                                     width: x * 0.8,
                                     height: y * 0.8,
@@ -353,7 +378,7 @@
                             "images_" + pictute_thum);
                         // set image desciption name:
                         const pictute_desc = 'imagex_desc_' + $(
-                            "#right-defaults > div[data-type=p-picture]")
+                                "#right-defaults > div[data-type=p-picture]")
                             .length;
                         $($($($(this).children()[1]).children()[2]).children()[1]).attr('name',
                             pictute_desc)
@@ -369,13 +394,13 @@
                         break;
                 }
             });
-        }).on('remove', function (el) {
+        }).on('remove', function(el) {
             console.log('remove');
 
-        }).on('drop', function (el) {
+        }).on('drop', function(el) {
             console.log('drop');
 
-        }).on('cancel', function (el) {
+        }).on('cancel', function(el) {
             console.log('cancel');
 
         });
@@ -386,17 +411,16 @@
             plugins: ["image", "table", "code", "codesample", "addcomment", "showcomments", "media"],
             toolbar1: 'undo redo | fontfamily fontsize styles bold italic underline | alignleft aligncenter alignright alignjustify alignnone | indent outdent | wordcount | lineheight help image media',
             toolbar2: 'anchor | blockquote | backcolor forecolor | copy | cut | paste pastetext | hr | language | newdocument | print | remove removeformat | selectall | strikethrough | subscript superscript | visualaid | a11ycheck typopgraphy anchor restoredraft casechange charmap checklist ltr rtl editimage fliph flipv imageoptions rotateleft rotateright emoticons export footnotes footnotesupdate formatpainter fullscreen insertdatetime link openlink unlink bullist numlist mergetags mergetags_list nonbreaking pagebreak pageembed permanentpen preview quickimage quicklink cancel save searchreplace spellcheckdialog spellchecker | template typography | insertfile | visualblocks visualchars',
-            file_picker_callback: function (callback, value, meta) {
+            file_picker_callback: function(callback, value, meta) {
                 let x = window.innerWidth || document.documentElement.clientWidth || document
                     .getElementsByTagName('body')[0].clientWidth;
                 let y = window.innerHeight || document.documentElement.clientHeight || document
                     .getElementsByTagName('body')[0].clientHeight;
 
-                let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                    url = '{!! $filemanager_url !!}';
+                let type = 'image' === meta.filetype ? 'Images' : 'Files';
 
                 tinymce.activeEditor.windowManager.openUrl({
-                    url: url,
+                    url: filemanager_url_base,
                     title: 'Filemanager',
                     width: x * 0.8,
                     height: y * 0.8,

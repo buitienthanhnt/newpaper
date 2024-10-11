@@ -309,9 +309,9 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             $detail->contents = $covertContentData($detail->getContents()->toArray());
             $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
             $detail->info = $detail->paperInfo();
-            $detail->tags = $detail->get_tags();
+            $detail->tags = $detail->getTags();
             $detail->slider_images = array_map(function ($item) {
-                $item->value = $this->helperFunction->replaceImageUrl($item->value);
+                $item['value'] = $this->helperFunction->replaceImageUrl($item['value']);
                 return $item;
             }, $detail->sliderImages()->toArray());
             $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'paper_id' => $detail->id]));
@@ -321,23 +321,36 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         }
     }
 
+    /**
+     * thêm 1 item vào cart
+     */
     function addToCart()
     {
         $cartData = $this->cartService->addCart($this->request->get('id'));
         return $cartData;
     }
 
+    /**
+     * lấy cart data
+     */
     function getCart()
     {
         return $this->cartService->getCart();
     }
 
+    /**
+     * xóa hết item trong cart
+     */
     function clearCart()
     {
         $this->cartService->clearCart();
         return $this->getCart();
     }
 
+    /**
+     * xóa 1 item trong cart.
+     * @param int $item_id
+     */
     function removeCartItem($item_id)
     {
         $this->cartService->xoaItem($item_id);
@@ -351,73 +364,18 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     // ==============================================================
 
-    public function source(Request $request)
+    function formatSug($data)
     {
-        $value = $this->remoteSourceManager->source($request);
-        if (!$value) {
-            return redirect()->back()->with("error", "can not parse source!");
-        } else {
-            /**
-             * get write for
-             */
-            $writers = Writer::all();
-            $values = [
-                "value" => $value,
-                "category_option" => $this->category->category_tree_option(),
-                "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
-                "filemanager_url_base" => url("adminhtml/file/manager"),
-                "writers" => $writers,
-            ];
-            return view("adminhtml.templates.papers.create", $values);
-        }
+        return array_chunk(array_map(function ($item) {
+            $item['image_path'] = $this->helperFunction->replaceImageUrl($item['image_path']);
+            return $item;
+        }, $data), 2);
     }
-
-    /**
-     * @param $doc                       // source for search
-     * @param string $class_conten       // for main of conten
-     * @param string $class_short_conten // for short conten
-     * @return array
-     */
-    protected function getValueByClassName($doc, $class_conten, $class_short_conten)
-    {
-        $request = $this->request;
-        $title = $this->getTitle($doc);
-        $url_alias = str_replace([":", "'", '"', "“", "”", ",", ".", "·", " ", "|", "/", "\\"], "", $this->vn_to_str($title, 1));
-        $short_conten_value = "";
-        $conten = "";
-        try {
-            $short_conten = $this->findByXpath($doc, "class", $class_short_conten);
-            $short_conten_value = $short_conten[0]->textContent;
-        } catch (\Exception $e) {}
-
-        try {
-            $nodes = $this->findByXpath($doc, "class", $class_conten); // load content: (image error)
-            $conten = $this->getNodeHtml($nodes[0]);
-        } catch (\Exception $e) {}
-
-        return [
-            "title" => $title,
-            "url_alias" => $url_alias,
-            "short_conten" => $this->cut_str(trim($short_conten_value), 250, "..."),
-            "conten" => $conten,
-            "active" => $request->__get("active") ? true : false,
-            "show" => $request->__get("show") ? true : false,
-            "auto_hide" => $request->__get("auto_hide") ? true : false,
-            "show_writer" => $request->__get("show_writer") ? true : false,
-            "show_time" => $request->__get("show_time"),
-            "image_path" => $request->__get("image_path") ?: "",
-            "writer" => $request->get("writer", null)
-        ];
-    }
-
+    
     function download()
     {
         $file = public_path() . "/vendor/app-release.apk";
-
-        // $headers = array(
-        //       'Content-Type: application/pdf',
-        //     );
-
+        // $headers = array('Content-Type: application/pdf');
         return Response::download($file, 'app-release.apk');
     }
 
@@ -468,7 +426,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     function obser(Request $request) {
         $template = $request->get('type', 'observObj');
-
         return view("frontend.templates.test.knockout.$template");
     }
 

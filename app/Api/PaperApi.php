@@ -320,7 +320,7 @@ class PaperApi extends BaseApi
 				$paper = $this->getDetail($paper);
 			}
 			$_paper = $paper->toArray();
-			$_paper['tags'] = $paper->get_tags()->toArray();
+			$_paper['tags'] = $paper->getTags()->toArray();
 			$_paper['slider_images'] = $this->upSliderImages($paper->sliderImages()->toArray());
 			$this->fireStore->collection('detailContent')->document($_paper['id'])->create($_paper);
 			$this->logTha->logFirebase('info', "added for paper detail: " . $paper->id . " to document paper detail firebase", [

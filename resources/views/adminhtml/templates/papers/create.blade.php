@@ -54,7 +54,7 @@
         <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_save_paper') }}>
             @csrf
             {!! view('elements.message.index')->render() !!}
-
+            <input type="hidden" name="source_request" value="{{ $value['source_request'] ?? null }}">
             <div class="row">
                 <div class="col-md-6">
                     {!! view('elements.formFields.textField', [

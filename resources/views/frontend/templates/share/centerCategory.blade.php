@@ -1,3 +1,4 @@
+@inject('DomHtml', 'App\Helper\HelperFunction')
 <div class="whats-news-wrapper">
     <!-- Heading & Nav Button -->
     <div class="row justify-content-between align-items-end mb-15">

@@ -13,7 +13,7 @@ class PaperCategory extends Migration
      */
     public function up()
     {
-        Schema::create(\App\Helper\Nan::pageCategoryTable(), function (Blueprint $table) {
+        Schema::create(\App\Helper\Nan::paperCategoryTable(), function (Blueprint $table) {
             $table->id();
             $table->integer(\App\Models\PaperInterface::PRIMARY_ALIAS);
             $table->integer(\App\Models\CategoryInterface::PRIMARY_ALIAS);
@@ -29,6 +29,6 @@ class PaperCategory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(\App\Helper\Nan::pageCategoryTable());
+        Schema::dropIfExists(\App\Helper\Nan::paperCategoryTable());
     }
 }

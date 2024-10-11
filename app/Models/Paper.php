@@ -15,10 +15,9 @@ class Paper extends Model implements PaperInterface
     use SoftDeletes;
     use ImageUpload;
 
-    const PAPER_TAG = 'paper_tag';
-
     protected $guarded;
     protected $viewSource = null;
+    protected $content = null;
 
     /**
      * lấy ảnh đại diện của bài viết.
@@ -75,7 +74,7 @@ class Paper extends Model implements PaperInterface
      * tìm 1 khóa chính -> nhiều khóa phụ.
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function get_tags()
+    public function getTags()
     {
         $tags = $this->hasMany(PageTag::class, PaperTagInterface::ATTR_ENTITY_ID)->getResults()
                      ->where(PaperTagInterface::ATTR_TYPE, PaperTagInterface::TYPE_PAPER);
@@ -104,7 +103,17 @@ class Paper extends Model implements PaperInterface
      */
     function getContents()
     {
-        return $this->hasMany(PaperContent::class, PaperInterface::PRIMARY_ALIAS)->getResults();
+        if ($this->content) {
+            return $this->content;
+        }
+        $this->content = $this->hasMany(PaperContent::class, PaperInterface::PRIMARY_ALIAS)->getResults();
+        return $this->content;
+    }
+
+    function sliderImages() {
+        return $this->getContents()->filter(function($item){
+            return $item[PaperContentInterface::ATTR_TYPE] === PaperContentInterface::TYPE_TIMELINE;
+        });
     }
 
     /**

@@ -10,4 +10,7 @@ interface RemoteSourceHistoryInterface
     const ATTR_TYPE = 'type';
     const ATTR_ACTIVE = 'active';
     const ATTR_PAPER_ID = PaperInterface::PRIMARY_ALIAS;
+
+    const TYPE_PAPER = 'paper';
+    const TYPE = 'category';
 }

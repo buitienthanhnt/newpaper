@@ -27,12 +27,12 @@ trait Nan
         return public_path($path);
     }
 
-    public static function pageCategoryTable()
+    public static function paperCategoryTable()
     {
         return "paper_category";
     }
 
-    public function pageTagTable()
+    public function paperTagTable()
     {
         return "paper_tag";
     }
