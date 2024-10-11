@@ -19,7 +19,7 @@
         <div class="data-content form-group row" style="display: none">
             <label for="price" class="col-sm-2">Price:</label>
             <div class="col-sm-8">
-                <input type="number" name="price" id="price" placeholder="nghìn vnđ" class="form-control"
+                <input type="number" name="{{ App\Models\PaperContentInterface::TYPE_PRICE }}" id="price" placeholder="nghìn vnđ" class="form-control"
                     min="0"
                     value="@isset($price)
                    {{ $price }}

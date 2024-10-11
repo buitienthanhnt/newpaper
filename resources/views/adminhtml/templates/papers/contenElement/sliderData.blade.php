@@ -16,7 +16,7 @@
             Add slider item
         </button>
         <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel"></div>
-        <textarea id="sliderDataConten" style="display: none" name="slider_data"></textarea>
+        <textarea id="sliderDataConten" style="display: none" name="{{ App\Models\PaperContentInterface::TYPE_SLIDER }}"></textarea>
         <div class="modal fade" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="sliderModal"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" style="max-width: 800px" role="document">

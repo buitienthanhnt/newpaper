@@ -16,6 +16,10 @@ interface PaperInterface{
     const ATTR_WRITER = 'writer';
     const ATTR_SHOW_WRITER = 'show_writer';
 
+    const EX_ATTR_CATEGORY = 'category_option';
+    const EX_ATTR_TAGS = 'paper_tag';
+    const EX_ATTR_CONTENT = 'contents';
+
     const PRIMARY_ALIAS = 'paper_id';
 }
 

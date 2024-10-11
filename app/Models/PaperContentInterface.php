@@ -16,6 +16,8 @@ interface PaperContentInterface{
     const TYPE_IMAGE = 'image';
     const TYPE_SLIDER = 'slider_data';
     const TYPE_PRICE = 'price';
+
+    const TYPE_TIMELINE_DEPEND = 'timeline_type';
 }
 
 ?>

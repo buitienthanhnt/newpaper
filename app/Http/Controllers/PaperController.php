@@ -5,23 +5,18 @@ namespace App\Http\Controllers;
 use App\Helper\HelperFunction;
 use App\Helper\Page;
 use App\Models\Category;
-use App\Models\CategoryInterface;
-use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Paper;
 use App\Models\PaperContent;
+use App\Models\PaperContentInterface;
 use App\Models\PaperInterface;
-use App\Models\PaperTimeLine;
 use App\Models\RemoteSourceHistory;
-use App\Models\ViewSource;
 use App\Models\Writer;
 use App\Services\CartService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\LogTha;
 use Thanhnt\Nan\Helper\RemoteSourceManager;
 use Thanhnt\Nan\Helper\StringHelper;
@@ -81,12 +76,7 @@ class PaperController extends Controller implements PaperControllerInterface
      */
     public function createPaper()
     {
-        return view("adminhtml.templates.papers.create", [
-            "category_option" => $this->category->category_tree_option(),
-            "filemanager_url" => url("adminhtml/file/manager") . "?editor=tinymce5",
-            "time_line_option" => $this->category->time_line_option(),
-            "writers" => Writer::all()
-        ]);
+        return view("adminhtml.templates.papers.create");
     }
 
     protected function convertRequestData(int $paper_id): array
@@ -110,7 +100,7 @@ class PaperController extends Controller implements PaperControllerInterface
             }
 
             switch ($key) {
-                case 'price':
+                case PaperContentInterface::TYPE_PRICE:
                     $returnValues[] = [
                         "type" => "price",
                         "key" => $key,
@@ -119,7 +109,7 @@ class PaperController extends Controller implements PaperControllerInterface
                         "depend_value" => null,
                     ];
                     break;
-                case 'slider_data':
+                case PaperContentInterface::TYPE_SLIDER:
                     $returnValues[] = [
                         "type" => "slider_data",
                         "key" => $key,
@@ -128,7 +118,7 @@ class PaperController extends Controller implements PaperControllerInterface
                         "depend_value" => null,
                     ];
                     break;
-                case 'conten':
+                case PaperContentInterface::TYPE_CONTENT:
                     $returnValues[] = [
                         "type" => "conten",
                         "key" => $key,
@@ -137,9 +127,9 @@ class PaperController extends Controller implements PaperControllerInterface
                         "depend_value" => null,
                     ];
                     break;
-                case 'time_line_type':
+                case PaperContentInterface::TYPE_TIMELINE_DEPEND:
                     break;
-                case 'time_line_value':
+                case PaperContentInterface::TYPE_TIMELINE:
                     $returnValues[] = [
                         "type" => "timeline",
                         "key" => $key,
@@ -166,16 +156,16 @@ class PaperController extends Controller implements PaperControllerInterface
     {
         $paper = $this->paper;
         $paper->fill([
-            PaperInterface::ATTR_TITLE => $this->request->get("page_title"),
-            PaperInterface::ATTR_URL_ALIAS => $this->formatPath($this->request->get("alias") ?: $this->request->get("page_title")),
-            PaperInterface::ATTR_SHORT_CONTENT => $this->request->get("short_conten"),
-            PaperInterface::ATTR_IMAGE_PATH => $this->request->get("image_path") ?: "",
-            PaperInterface::ATTR_ACTIVE => $this->request->get("active") ? true : false,
-            PaperInterface::ATTR_SHOW => $this->request->get("show", false) === 'on',
-            PaperInterface::ATTR_AUTO_HIDE => $this->request->get("auto_hide") === 'on',
-            PaperInterface::ATTR_SHOW_TIME => $this->request->get("show_time"),
-            PaperInterface::ATTR_SHOW_WRITER => $this->request->get("show_writer") === 'on',
-            PaperInterface::ATTR_WRITER => $this->request->get("writer")[0] ?? null,
+            PaperInterface::ATTR_TITLE => $this->request->get(PaperInterface::ATTR_TITLE),
+            PaperInterface::ATTR_URL_ALIAS => $this->formatPath($this->request->get(PaperInterface::ATTR_URL_ALIAS) ?: $this->request->get(PaperInterface::ATTR_TITLE)),
+            PaperInterface::ATTR_SHORT_CONTENT => $this->request->get(PaperInterface::ATTR_SHORT_CONTENT),
+            PaperInterface::ATTR_IMAGE_PATH => $this->request->get(PaperInterface::ATTR_IMAGE_PATH) ?: "",
+            PaperInterface::ATTR_ACTIVE => $this->request->get(PaperInterface::ATTR_ACTIVE) ? true : false,
+            PaperInterface::ATTR_SHOW => $this->request->get(PaperInterface::ATTR_SHOW, false) === 'on',
+            PaperInterface::ATTR_AUTO_HIDE => $this->request->get(PaperInterface::ATTR_AUTO_HIDE) === 'on',
+            PaperInterface::ATTR_SHOW_TIME => $this->request->get(PaperInterface::ATTR_SHOW_TIME),
+            PaperInterface::ATTR_SHOW_WRITER => $this->request->get(PaperInterface::ATTR_SHOW_WRITER) === 'on',
+            PaperInterface::ATTR_WRITER => $this->request->get(PaperInterface::ATTR_WRITER)[0] ?? null,
         ]);
         $paper->save();
         return $paper;
@@ -188,6 +178,7 @@ class PaperController extends Controller implements PaperControllerInterface
     public function insertPaper()
     {
         $request = $this->request;
+        dd($request->toArray());
         try {
             $paper = $this->saveMainPaper();
             if ($new_id = $paper->id) {
@@ -199,12 +190,12 @@ class PaperController extends Controller implements PaperControllerInterface
                 /**
                  * save in DB page category
                  */
-                $this->insert_page_category($new_id, $request->__get("category_option"));
+                $this->insert_page_category($new_id, $request->__get(PaperInterface::EX_ATTR_CATEGORY));
 
                 /**
                  * save in DB page tags
                  */
-                $this->insert_page_tag($request->__get("paper_tag"), $new_id, Paper::PAPER_TAG);
+                $this->insert_page_tag($request->__get(PaperInterface::EX_ATTR_TAGS), $new_id, Paper::PAPER_TAG);
 
                 /**
                  * save for history

@@ -105,15 +105,15 @@ class Category extends Model implements CategoryInterface
 
     /**
      * lấy danh sách timeLine dạng html
-     * @param int $selected
+     * @param int[] $selected
      * @return string
      */
-    function time_line_option($selected = null)
+    public static function timelineOptionHtml($selected = [])
     {
-        $time_lines = $this->all()->where('type', '=', 'time_line');
+        $time_lines = Category::all()->where(CategoryInterface::ATTR_TYPE, CategoryInterface::TYPE_TIME_LINE);
         $html = '';
         foreach ($time_lines as $value) {
-            $html .= '<option value="' . $value->id . '" ' . ($selected == $value->id ? 'selected ' : '') . '>' . $value->name . '</option>';
+            $html .= '<option value="' . $value->id . '" ' . (in_array($value->id, $selected) ? 'selected ' : '') . '>' . $value->name . '</option>';
         }
         return $html;
     }
@@ -122,7 +122,7 @@ class Category extends Model implements CategoryInterface
      * lấy danh sách bài viết có phân trang
      * @param int $limit (số bài 1 trang)
      * @param int offset (trang hiện tại)
-     * @param array $order_by (sắp xếp theo vd: ["updated_at", "DESC"])
+     * @param array $order_by (sắp xếp theo)
      */
     public function getPaperPaginate($limit = 4, $offset = 0, $order_by = ["updated_at", "DESC"])
     {

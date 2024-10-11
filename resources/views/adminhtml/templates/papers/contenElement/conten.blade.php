@@ -28,7 +28,7 @@
             @endisset
         </div>
         <div class="data-content">
-            <textarea id="conten" name="conten" class="form-control" style="height: 720px; display: none">
+            <textarea id="conten" name="{{ App\Models\PaperContentInterface::TYPE_CONTENT }}" class="form-control" style="height: 720px; display: none">
                 @isset($conten){{ $conten }}@endisset
             </textarea>
         </div>
