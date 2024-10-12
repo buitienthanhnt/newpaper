@@ -1,4 +1,4 @@
-<div class="weekly2-news-area pt-50 pb-30 gray-bg">
+<div class="weekly2-news-area pb-30 gray-bg">
     <div class="container">
         <div class="weekly2-wrapper">
             <div class="row">
