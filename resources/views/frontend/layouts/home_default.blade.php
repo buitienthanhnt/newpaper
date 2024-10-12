@@ -13,8 +13,6 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-{{-- ========base============ --}}
-
 @section('page_title') Trang chủ @endsection
 
 @section('morning_post')

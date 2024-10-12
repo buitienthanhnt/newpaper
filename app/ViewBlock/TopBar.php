@@ -1,5 +1,4 @@
 <?php
-
 namespace App\ViewBlock;
 
 use App\Services\CartService;

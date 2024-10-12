@@ -4,19 +4,13 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="slider-wrapper">
-
                         <!-- Slider -->
                         <div class="row">
-                            <div class="col-lg-12 pt-20" style="background-color: #fff;">
-
-                                {{-- weekly3_conten --}}
+                            <div class="col-lg-12">
                                 @yield('weekly3_conten')
-                                {{-- weekly3_conten --}}
-
                             </div>
                         </div>
                         <!-- Slider -->
-
                     </div>
                 </div>
             </div>

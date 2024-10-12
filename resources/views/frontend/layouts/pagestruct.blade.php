@@ -2,7 +2,6 @@
 
 @section('page_main')
     <main>
-
         @yield('main_conten')
 
         <!-- morning_post Area Start -->
@@ -32,6 +31,5 @@
         <!-- banner-last Start -->
         @yield('banner_last')
         <!-- banner-last End -->
-
     </main>
 @endsection
