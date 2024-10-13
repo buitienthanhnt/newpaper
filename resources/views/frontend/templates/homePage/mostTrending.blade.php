@@ -1,10 +1,10 @@
-<div id="most-trending" style="background-color: #fff;"></div>
+<div id="most-trending"></div>
 <script type="text/javascript">
-    $(document).ready(function (){
+    $(document).ready(function () {
         $.ajax({
             url: "{{ route('front_trending_html') }}",
             type: "GET",
-            success: function(result) {
+            success: function (result) {
                 if (result.dataHtml) {
                     $("#most-trending").append(result.dataHtml);
                 }

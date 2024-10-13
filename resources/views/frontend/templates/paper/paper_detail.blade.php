@@ -1,4 +1,5 @@
 @extends('frontend.layouts.pagestruct')
+@inject('DomHtml', 'App\Helper\HelperFunction')
 
 @section('metas')
     <meta name="title" content="{{$paper->title}}">
@@ -17,7 +18,7 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-@section('page_title') detail page @endsection
+@section('page_title')detail page @endsection
 
 @section('css_after')
     <link rel="stylesheet" href={{ asset('assets/frontend/css/paper/detail.css') }}>
@@ -82,8 +83,7 @@
                                     @switch($item->type)
                                         @case('conten')
                                         {!! $item->value !!}
-                                        @break
-
+                                        @break;
                                         @case('slider_data')
                                         @if ($sliderImages = json_decode($item->value, true))
                                             <div class="bd-example">
@@ -131,8 +131,7 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        @break
-
+                                        @break;
                                         @case('price')
                                         <div class="row">
                                             <div class="col-md-12 p-2">
@@ -158,8 +157,7 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        @break
-
+                                        @break;
                                         @case('image')
                                         <div class="col-md-12 p-2">
                                             <img src="{{ $item->value }}" style="width: 100%; max-height: 480px;"
@@ -175,12 +173,10 @@
                                             @endisset
                                         </div>
                                         @break
-
                                         @default
                                     @endswitch
                                 @endforeach
                             @endif
-
 
                         </div>
                         <div class="social-share pt-30">
@@ -202,31 +198,21 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <!-- Flow Socail -->
-                {!! view('frontend.templates.share.social')->render() !!}
-                <!-- New Poster -->
-                    {{-- <div class="news-poster d-none d-lg-block"> --}}
-                    {{-- <img src="assets/img/news/news_card.jpg" > --}}
-                    {{-- </div> --}}
-
+                    {!! view('frontend.templates.share.social')->render() !!}
                     {{-- most of view --}}
                     {!! view('frontend.templates.paper.component.mostViewDetail')->render() !!}
                 </div>
             </div>
         </div>
     </div>
+@endsection
 
-    <div class="weekly2-news-area pt-50 pb-30 gray-bg">
-        <div class="container">
-            <div class="weekly2-wrapper">
-                <div class="row">
-                    <div class="col-lg-9">
-                        {!! view('frontend.templates.homePage.mostPopulator') !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+@section('weekly2_news')
+    {!! view('frontend.templates.homePage.mostPopulator') !!}
+@endsection
+
+@section('weekly3_news')
+    {!! view('frontend.templates.homePage.mostLike') !!}
 @endsection
 
 @section('js_after')
