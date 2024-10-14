@@ -267,6 +267,9 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ], 200);
     }
 
+    /**
+     * @param int $paper_id
+     */
     public function getPaperDetail(int $paper_id)
     {
         // TODO: Implement getPaperDetail() method.

@@ -37,20 +37,24 @@
                                     <div class="whats-news-single mb-20">
                                         <div class="whates-img">
                                             <img src="{{ $paper_first->getImagePath() }}"
-                                                 style="max-height: 210px; object-fit: cover" alt="">
+                                                style="max-height: 210px; object-fit: cover" alt="">
                                         </div>
                                         <div class="whates-caption">
-                                            <h4><a class="text-info"
-                                                   href="{{ route('front_paper_detail', ['alias' => $paper_first->url_alias, 'paper_id' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
-                                            </h4>
+                                            <a class="text-info"
+                                                href="{{ route('front_paper_detail', ['alias' => $paper_first->url_alias, 'paper_id' => $paper_first->id]) }}">
+                                                <h4
+                                                    style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $paper_first->title }}
+                                                </h4>
+                                            </a>
                                             <h6>{{ $paper_first->short_conten }}</h6>
                                             {!! view('frontend.templates.elements.dateTime', ['paper' => $paper_first])->render() !!}
                                         </div>
                                     </div>
                                 </div>
-                        @endforeach
-                    @endif
-                    <!-- Right single caption -->
+                            @endforeach
+                        @endif
+                        <!-- Right single caption -->
                         <div class="col-xl-12 col-lg-12">
                             <div class="whats-news-single mb-20" id="whats-right-single">
                                 <!-- single -->
@@ -60,16 +64,20 @@
                                             <div class="whats-right-single mb-10">
                                                 <div class="col-md-6">
                                                     <img src="{{ $paper->getImagePath() }}" class="whates-img"
-                                                         style="width: 100%; height: auto; min-height: 160px" alt="">
+                                                        style="width: 100%; height: auto; min-height: 160px" alt="">
                                                 </div>
                                                 <div class="col-md-6 whats-right-cap" style="padding-left: 15px">
                                                     <h4>
                                                         <a
                                                             href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'paper_id' => $paper->id]) }}">
-                                                            <h4 class="text-info">{{ $paper->title }}</h4>
+                                                            <h4 class="text-info"
+                                                                style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                                                {{ $paper->title }}</h4>
                                                         </a>
                                                     </h4>
-                                                    <h6>{{ $paper->short_conten }}</h6>
+                                                    <h6
+                                                        style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;">
+                                                        {{ $paper->short_conten }}</h6>
                                                     <span class="colorb" style="color: #ff2143">
                                                         {{ $paper->writerName() }}
                                                     </span>
@@ -89,7 +97,7 @@
                         <center>
                             {{-- https://www.w3schools.com/icons/fontawesome5_icons_spinners.asp --}}
                             <button id="load_more" data-page="1" class="btn btn-info" style="border-radius: 5px"
-                                    onclick="load_more()">
+                                onclick="load_more()">
                                 Load more
                             </button>
                         </center>
@@ -122,10 +130,9 @@
 @section('banner_last_conten')
     <div class="col-lg-10 col-md-10">
         <div class="banner-one">
-            <img
-                src={{ $DomHtml->getConfig('last_conten_image') ?: asset('assets/frontend/img/gallery/body_card3.png') }}
-                    width={{ $DomHtml->getConfig('home_image_width', 944) }}
-                    height={{ $DomHtml->getConfig('home_image_height', 152) }} />
+            <img src={{ $DomHtml->getConfig('last_conten_image') ?: asset('assets/frontend/img/gallery/body_card3.png') }}
+                width={{ $DomHtml->getConfig('home_image_width', 944) }}
+                height={{ $DomHtml->getConfig('home_image_height', 152) }} />
         </div>
     </div>
 @endsection
@@ -144,7 +151,7 @@
                 $.ajax({
                     url: url + "?page=" + page + "&type=" + type,
                     type: "GET",
-                    success: function (result) {
+                    success: function(result) {
                         result = JSON.parse(result);
                         let button = $("#load_more");
                         if (result.data) {
@@ -158,7 +165,7 @@
                             button.html('end conten').attr('disabled', true)
                         }
                     },
-                    error: function (error) {
+                    error: function(error) {
                         let button = $("#load_more");
                         button.html('load more').attr('disabled', false)
                     }

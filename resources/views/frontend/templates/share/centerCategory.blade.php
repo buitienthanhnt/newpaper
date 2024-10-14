@@ -52,7 +52,7 @@
                                                     <img src="{{ $paper_first->getImagePath() }}" alt="">
                                                 </div>
                                                 <div class="whates-caption">
-                                                    <a href="#">
+                                                    <a href="{{ route('front_paper_detail', ['paper_id' => $paper_first->id, 'alias' => $paper_first->url_alias]) }}">
                                                         <h4
                                                             style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
                                                             {{ $paper_first->title }}
@@ -62,7 +62,7 @@
                                                         {{ $paper_first->writerName() }}
                                                         -
                                                         {{ date('M d, Y', strtotime($paper_first->updated_at)) }}
-                                                        <a href="" class="text text-info" style="float: right;">
+                                                        <a href="#" class="text text-info" style="float: right;">
                                                             <i class="fa fa-eye"></i>
                                                             {{ $paper_first->viewCount() }}
                                                         </a>

@@ -11,7 +11,7 @@ class LikeMost implements Htmlable
 	function toHtml(): string
 	{
 		$papers = Paper::all();
-		$likeMost = $papers->random($papers->count() >= 8 ? 8 : $papers->count());
+		$likeMost = $papers->random($papers->count() >= 6 ? 6 : $papers->count());
 		return view($this->template, ['weekly3_contens' => $likeMost])->render();
 	}
 }

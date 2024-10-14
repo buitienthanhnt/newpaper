@@ -170,7 +170,7 @@
 @section('js_after')
     <script>
         var token = "{{ csrf_token() }}";
-        var url = "{{ route('more_type', ['type' => $type]) }}";
+        var url = "{{ route('front_paper_by_type', ['type' => $type]) }}";
         var mostPopulatorUrl = "{{ route('front_most_populator_html') }}";
         var likeMost = "{{ route('front_most_like_html') }}";
 
