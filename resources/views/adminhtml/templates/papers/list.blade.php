@@ -46,6 +46,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <td>stt</td>
                             <td>title</td>
                             <td>show</td>
                             <td>image</td>
@@ -58,6 +59,7 @@
                         @isset($papers)
                             @foreach ($papers as $paper)
                                 <tr>
+                                    <td>{{$paper->id}}</td>
                                     <td>{{ $paper->title }}</td>
                                     <td>{{ $paper->active && $paper->show ? 'yes' : 'no' }}</td>
                                     <td>

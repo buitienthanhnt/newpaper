@@ -5,14 +5,6 @@
     {{ $category->name }}
 @endsection
 
-@section('trending_left')
-    @render(App\ViewBlock\TrendingLeft::class)
-@endsection
-
-@section('trending_right')
-    @render(App\ViewBlock\TrendingRight::class)
-@endsection
-
 @section('weekly2_conten')
     {!! view('frontend.templates.homePage.mostPopulator') !!}
 @endsection

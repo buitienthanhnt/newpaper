@@ -41,13 +41,11 @@
                 <h4 class="card-title">add new source</h4>
                 <form class="form-sample" style="margin-top: 12px" method="GET" enctype="multipart/form-data"
                     action={{ route('admin_source_paper') }}>
-                    @csrf
                     @if (session('success'))
                         <?php alert()->success('server message', session('success')); ?>
                     @elseif (session('error'))
                         <?php alert()->warning('server mesage', session('error')); ?>
                     @endif
-
                     <div class="row" style="margin-bottom: 10px">
                         <div class="col-md-12 row">
                             <label for="source_request" class="col-sm-2">URL source--->:</label>
@@ -57,7 +55,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">

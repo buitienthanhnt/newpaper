@@ -6,6 +6,8 @@ use App\Models\Paper;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\DomHtml;
+use App\Constant\AttributeInterface;
+use Illuminate\Support\Facades\Cache;
 
 class HelperFunction
 {
@@ -19,7 +21,7 @@ class HelperFunction
     public function getConfigData(string $name)
     {
         try {
-            $value = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, $name)->first();
+            $value = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, $name)->first();
             return $value;
         } catch (\Throwable $th) {
             //throw $th;
@@ -35,7 +37,12 @@ class HelperFunction
     public function getConfig(string $name, $default = null)
     {
         try {
-            $value = $this->getConfigData($name)->{\CoreConfig::ATTR_VALUE};
+            $config_cache = 'config_value_' . $name;
+            if (Cache::has($config_cache)) {
+                return Cache::get($config_cache);
+            }
+            $value = $this->getConfigData($name)->{AttributeInterface::ATTR_VALUE};
+            Cache::put($config_cache, $value);
             return $value;
         } catch (\Throwable $th) {
             //throw $th;
@@ -55,7 +62,7 @@ class HelperFunction
     {
         DB::beginTransaction();
         try {
-            $saveStatus = DB::table($this->coreConfigTable())->updateOrInsert([\CoreConfig::ATTR_NAME => $name, \CoreConfig::ATTR_VALUE => $value, \CoreConfig::ATTR_DESCRIPTION => $description, \CoreConfig::ATTR_TYPE => $type]);
+            $saveStatus = DB::table($this->coreConfigTable())->updateOrInsert([AttributeInterface::ATTR_NAME => $name, AttributeInterface::ATTR_VALUE => $value, AttributeInterface::ATTR_DESCRIPTION => $description, AttributeInterface::ATTR_TYPE => $type]);
             if ($saveStatus) {
                 $configValue = $this->getConfigData($name);
             } else {
@@ -82,7 +89,7 @@ class HelperFunction
     {
         DB::beginTransaction();
         try {
-            $insert_value = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, $name)->limit(1)->update([\CoreConfig::ATTR_NAME => $name, \CoreConfig::ATTR_VALUE => $value, \CoreConfig::ATTR_DESCRIPTION => $description, \CoreConfig::ATTR_TYPE => $type]);
+            $insert_value = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, $name)->limit(1)->update([AttributeInterface::ATTR_NAME => $name, AttributeInterface::ATTR_VALUE => $value, AttributeInterface::ATTR_DESCRIPTION => $description, AttributeInterface::ATTR_TYPE => $type]);
             DB::commit();
             return ["status" => true, "value" => $insert_value];
         } catch (Exception $e) {
@@ -134,16 +141,16 @@ class HelperFunction
                     return $target_domain_val . 'public/storage' . $ex_image_path[1];
                 }
             }
-            $domain = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "domain")->select()->first()->value;
-            $main = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "main")->select()->first()->value;
-            $ip = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "ip")->select()->first()->value;
+            $domain = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "domain")->select()->first()->value;
+            $main = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "main")->select()->first()->value;
+            $ip = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "ip")->select()->first()->value;
         } catch (\Throwable $th) {
             //throw $th;
             return $imageUrl;
         }
         // support for windown platform
         try {
-            $is_windown = (bool)DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "is_windown")->select()->first()->value;
+            $is_windown = (bool)DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "is_windown")->select()->first()->value;
         } catch (\Throwable $th) {
         }
         $img = $is_windown ? str_replace($domain, $ip, $imageUrl) : str_replace($domain, $ip . "/" . $main . "/public", $imageUrl);
@@ -155,16 +162,16 @@ class HelperFunction
     {
         try {
             DB::beginTransaction();
-            $default_image = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "default_image")->first('value')->value;
+            $default_image = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "default_image")->first('value')->value;
             if ($default_image) {
                 return $default_image;
             }
-            $is_windown = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "is_windown")->first('value')->value;
+            $is_windown = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "is_windown")->first('value')->value;
             if (!$is_windown) {
                 return public_path('assets/pub_image/defaul.PNG');
             }
-            $main = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "main")->first('value')->value;
-            $ip = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "ip")->first('value')->value;
+            $main = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "main")->first('value')->value;
+            $ip = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "ip")->first('value')->value;
         } catch (\Throwable $th) {
             return "";
         }
@@ -233,7 +240,7 @@ class HelperFunction
         }
         $authorization = ""; //$authHeaders = [];
         try {
-            $authorization = DB::table($this->coreConfigTable())->where(\CoreConfig::ATTR_NAME, "=", "Authorization")->select()->first()->value;
+            $authorization = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "Authorization")->select()->first()->value;
         } catch (\Throwable $th) {
             return false;
             $th("not has authorization");

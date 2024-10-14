@@ -52,13 +52,15 @@
                                 $(most_view_detail).append(`
                                     <div class="most-recent mb-40">
                                         <div class="most-recent-img" style="background-image: url('${element.image_path}'); background-size: cover; border-radius: 8px">
-                                            <img src="${element.image_path}" />
-                                            <div class="most-recent-cap" style="padding-right: 4px; padding-left: 20px; padding-top: 20px;">
+                                            <img src="${element.image_path}" style="min-height: 170px" />
+                                            <div class="most-recent-cap" style="padding-left: 20px; padding-top: 20px;">
                                                 <span class="bgbeg" style="padding: 4px; border-radius: 4px">Vogue</span>
+                                                <div style="background-color: #cccccc; opacity: 0.6; border-radius: 5px 0px 0px 5px; padding-left: 4px">
                                                     <h5
                                                         style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; padding: 4px; border-radius: 4px; -webkit-box-orient: vertical; font-size: inherit"
                                                     > <a href="${element.url}">${element.title}</a></h5>
-                                                <p>Jhon | 2 hours ago</p>
+                                                    <p style="margin-bottom: 0px">Jhon | 2 hours ago</p>    
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

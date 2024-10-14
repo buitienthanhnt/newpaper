@@ -334,16 +334,28 @@ class PaperController extends Controller implements PaperControllerInterface
     }
 
     /**
+     * @param string $source_url
+     * @return null|RemoteSourceHistory
+     */
+    protected function checkSourceExist(string $source_url) {
+        return(RemoteSourceHistory::where(RemoteSourceHistoryInterface::ATTR_URL_VALUE, $source_url)->first());
+    }
+
+    /**
      * create paper by remote source
      */
     public function sourcePaper()
     {
-        $value = $this->remoteSourceManager->source($this->request);
-        if (!$value) {
+        $source_request = $this->request->get('source_request');
+        if($remoteData = $this->checkSourceExist($source_request)){
+            return redirect()->back()->with("error", "the url source exist with id = ".$remoteData->{RemoteSourceHistory::ATTR_PAPER_ID});
+        };
+        $sourceData = $this->remoteSourceManager->source($this->request);
+        if (!$sourceData) {
             return redirect()->back()->with("error", "can not parse source!");
         } else {
-            $value['source_request'] = $this->request->get('source_request');
-            return view("adminhtml.templates.papers.create", ["value" => $value]);
+            $sourceData['source_request'] = $this->request->get('source_request');
+            return view("adminhtml.templates.papers.create", ["value" => $sourceData]);
         }
     }
 

@@ -88,27 +88,28 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return $this->paperApi->homeInfo();
     }
 
-    public function listPapers() {
-         // not use ->makeHidden() with paginate
-         $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
-         if ($papers->count()) {
-             foreach ($papers as &$item) {
-                 $item->image_path = $this->helperFunction->replaceImageUrl($item->image_path ?: '');
-                 $item->short_conten = $this->cut_str($item->short_conten, 90, "...");
-                 // $item["title"] = $this->cut_str($item["title"], 80, "../");
-                 $item->info = [
-                     'view_count' => $item->viewCount(),
-                     'comment_count' => $item->commentCount(),
-                     'like' => $item->paperLike(),
-                     'heart' => $item->paperHeart(),
-                 ];
-             }
-         }
-
-         return $papers;
+    public function listPapers()
+    {
+        // not use ->makeHidden() with paginate
+        $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
+        if ($papers->count()) {
+            foreach ($papers as &$item) {
+                $item->image_path = $this->helperFunction->replaceImageUrl($item->image_path ?: '');
+                $item->short_conten = $this->cut_str($item->short_conten, 90, "...");
+                // $item["title"] = $this->cut_str($item["title"], 80, "../");
+                $item->info = [
+                    'view_count' => $item->viewCount(),
+                    'comment_count' => $item->commentCount(),
+                    'like' => $item->paperLike(),
+                    'heart' => $item->paperHeart(),
+                ];
+            }
+        }
+        return $papers;
     }
 
-    public function getCategoryTree(){
+    public function getCategoryTree()
+    {
         $category_id = $this->request->get("category_id", 0);
         if ($category_id) {
             $category = $this->category->find($category_id);
@@ -119,7 +120,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return $categories;
     }
 
-    public function getCategoryTop() {
+    public function getCategoryTop()
+    {
         $top_category = ConfigCategory::where("path", "=", ConfigCategory::TOP_CATEGORY);
         $values = Category::whereIn(CategoryInterface::ATTR_PRIMARY, explode("&", $top_category->first()->value))->get()->toArray();
         foreach ($values as &$value) {
@@ -128,7 +130,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return $values;
     }
 
-    function getPaperCategory($category_id) {
+    function getPaperCategory($category_id)
+    {
         $request = $this->request;
         $page = $request->get("page", 1);
         $limit = $request->get("limit", 12);
@@ -157,7 +160,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         }
     }
 
-    public function getRelatedPaper($paper_id) {
+    public function getRelatedPaper($paper_id)
+    {
         $papers = null;
 
         try {
@@ -171,7 +175,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return ['data' => $papers];
     }
 
-    public function getCommentsOfPaper($paper_id) {
+    public function getCommentsOfPaper($paper_id)
+    {
         $request = $this->request;
         $paper = $this->paper->find($paper_id);
         if ($request->get('all')) {
@@ -197,7 +202,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return $papers;
     }
 
-    public function getPaperMostView() {
+    public function getPaperMostView()
+    {
         $request = $this->request;
         $papers = Paper::take($request->get('size', 15))->orderBy("updated_at", "ASC")->get(['id', 'title', 'image_path', 'updated_at', 'url_alias']);
         foreach ($papers as &$value) {
@@ -246,7 +252,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ], 400);
     }
 
-    public function getUserInfo() {
+    public function getUserInfo()
+    {
         $tokenData = (array) $this->tokenManager->getTokenData()['iss'];
         if (isset($tokenData['id']) && $userId = $tokenData['id']) {
             return response([
@@ -263,11 +270,11 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     public function getPaperDetail(int $paper_id)
     {
         // TODO: Implement getPaperDetail() method.
-        $covertContentData = function($datas){
+        $covertContentData = function ($datas) {
             if (empty($datas)) {
                 return null;
             }
-            $convertSliderdata = function($slider_datas){
+            $convertSliderdata = function ($slider_datas) {
                 foreach ($slider_datas as &$value) {
                     $value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
                 }
@@ -275,7 +282,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             };
 
             $return_data = [];
-            for ($i=0; $i < count($datas); $i++) {
+            for ($i = 0; $i < count($datas); $i++) {
                 switch ($datas[$i]['type']) {
                     case 'image':
                         $return_data[] = [
@@ -357,7 +364,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return $this->cartService->getCart();
     }
 
-    static function getConstants() {
+    static function getConstants()
+    {
         $oClass = new ReflectionClass(__CLASS__);
         return $oClass->getConstants();
     }
@@ -371,7 +379,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             return $item;
         }, $data), 2);
     }
-    
+
     function download()
     {
         $file = public_path() . "/vendor/app-release.apk";
@@ -424,9 +432,9 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ];
     }
 
-    function obser(Request $request) {
+    function obser(Request $request)
+    {
         $template = $request->get('type', 'observObj');
         return view("frontend.templates.test.knockout.$template");
     }
-
 }
