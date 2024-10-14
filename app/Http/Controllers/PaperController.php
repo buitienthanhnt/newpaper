@@ -213,9 +213,9 @@ class PaperController extends Controller implements PaperControllerInterface
                 $all_fcm = $this->notification->where("active", true)->get()->toArray();
                 $this->helperFunction->push_notification_json($all_fcm, $paper);
             }
-            return redirect()->back()->with("success", "add success");
+            return redirect()->route('admin_list_paper')->with("success", "added success new paper!");
         } catch (Exception $e) {
-            // return redirect()->back()->with("error", $e->getMessage());
+            return redirect()->back()->with("error", $e->getMessage());
             throw new Exception($e->getMessage(), 1);
         }
     }
@@ -287,7 +287,6 @@ class PaperController extends Controller implements PaperControllerInterface
                      * delete paper contents.
                      */
                     $this->delete_paper_content($paper);
-
                     /**
                      * remove paper tags
                      */
@@ -297,14 +296,12 @@ class PaperController extends Controller implements PaperControllerInterface
                             $tag->forceDelete();
                         }
                     }
-
                     /**
                      * delete paper categories.
                      */
                     foreach ($paper->getPaperCategories() as $category) {
                         $category->forceDelete();
                     }
-
                     /**
                      * delete main paper.
                      */
@@ -352,7 +349,7 @@ class PaperController extends Controller implements PaperControllerInterface
         };
         $sourceData = $this->remoteSourceManager->source($this->request);
         if (!$sourceData) {
-            return redirect()->back()->with("error", "can not parse source!");
+            return redirect()->route('admin_new_by_url')->with("error", "can not parse source!");
         } else {
             $sourceData['source_request'] = $this->request->get('source_request');
             return view("adminhtml.templates.papers.create", ["value" => $sourceData]);
@@ -364,16 +361,16 @@ class PaperController extends Controller implements PaperControllerInterface
      * @param string|int $type
      * @param int $paper_id
      * @param bool $active
-     * @return bool
+     * @return void
      */
     protected function saveRemoteSourceHistory(string $request_url, $type = RemoteSourceHistoryInterface::TYPE_PAPER, $paper_id = null, $active = true)
     {
         $history = new RemoteSourceHistory([
-            RemoteSourceHistoryInterface::ATTR_URL_VALUE => $request_url, 
-            RemoteSourceHistoryInterface::ATTR_TYPE => $type, 
-            RemoteSourceHistoryInterface::ATTR_PAPER_ID => $paper_id, 
+            RemoteSourceHistoryInterface::ATTR_URL_VALUE => $request_url,
+            RemoteSourceHistoryInterface::ATTR_TYPE => $type,
+            RemoteSourceHistoryInterface::ATTR_PAPER_ID => $paper_id,
             RemoteSourceHistoryInterface::ATTR_ACTIVE => $active
         ]);
-        return $history->save();
+        $history->save();
     }
 }

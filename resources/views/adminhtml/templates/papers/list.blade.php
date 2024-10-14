@@ -27,6 +27,11 @@
 @section('body_main_conten')
     <div class="row">
         <div class="col-md-12 flex-row">
+            @if (session('success'))
+                <?php alert()->success('server message', session('success')); ?>
+            @elseif (session('error'))
+                <?php alert()->warning('server mesage', session('error')); ?>
+            @endif
             <span class="btn btn-primary">setting paper info</span>
             <div class="dropdown col-md-2 d-inline">
                 <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
