@@ -28,6 +28,7 @@ use ReflectionClass;
 use Thanhnt\Nan\Helper\RemoteSourceManager;
 use Thanhnt\Nan\Helper\StringHelper;
 use Thanhnt\Nan\Helper\TokenManager;
+use App\Http\Resources\Paper as PaperResouce;
 
 // https://www.php.net/manual/en/langref.php php
 class ExtensionController extends Controller implements ExtensionControllerInterface
@@ -327,7 +328,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'paper_id' => $detail->id]));
             Cache::put("api_detail_$detail->id", $detail);
             event(new ViewCount($detail));
-            return $detail;
+            return new PaperResouce($detail);
         }
     }
 
