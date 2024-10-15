@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\Data\Paper\Conten;
+use App\Api\Data\Paper\Info;
+use App\Api\Data\Paper\PaperDetail;
+use App\Api\Data\Paper\PaperItem;
+use App\Api\Data\Paper\Tag;
 use App\Api\PaperApi;
 use App\Api\WriterApi;
 use App\Events\ViewCount;
@@ -13,6 +18,9 @@ use App\Models\Category;
 use App\Models\CategoryInterface;
 use App\Models\ConfigCategory;
 use App\Models\Paper;
+use App\Models\PaperContentInterface;
+use App\Models\PaperInterface;
+use App\Models\PaperTagInterface;
 use App\Models\User;
 use App\Models\Writer;
 use App\ViewBlock\LikeMost;
@@ -66,7 +74,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         MostPopulator $mostPopulator,
         LikeMost $likeMost,
         Trending $trending,
-        CartService $cartService
+        CartService $cartService,
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -267,47 +275,103 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ], 200);
     }
 
+    function convertTags($tags) {
+        $values = [];
+        foreach ($tags as $tag) {
+            $_tag = new Tag();
+            $_tag->setId($tag->id);
+            $_tag->setEntityId($tag->{PaperTagInterface::ATTR_ENTITY_ID});
+            $_tag->setValue($tag->{PaperTagInterface::ATTR_VALUE});
+            $_tag->setType($tag->{PaperTagInterface::ATTR_TYPE});
+            $values[] = $_tag;
+        }
+        return $values;
+    }
+
+    /**
+     * @param Paper $paper
+     * @return PaperDetail
+     */
+    function convertPaperDetailApi($paper)
+    {
+        $response = new PaperDetail();
+        $response->setId($paper->id);
+        $response->setTitle($paper->{PaperInterface::ATTR_TITLE});
+        $response->setCreatedAt($paper->created_at);
+        $response->setUpdatedAt($paper->updated_at);
+        $response->setShortContent($paper->{PaperInterface::ATTR_SHORT_CONTENT});
+        $response->setImage($this->helperFunction->replaceImageUrl($paper->{PaperInterface::ATTR_IMAGE_PATH}));
+        $response->setContents($this->covertContentData($paper->getContents()));
+        $response->setSuggest($this->formatSug(Paper::all()->random(4)));
+        /**
+         * setInfo data
+         */
+        $info = new Info();
+        $info->setViewCount($paper->viewCount());
+        $info->setCommentCount($paper->commentCount());
+        $info->setLike($paper->paperLike());
+        $info->setHeart($paper->paperHeart());
+        $response->setInfo($info);
+
+        $response->setTags($this->convertTags($paper->getTags()));
+        $response->setUrl(
+            $this->helperFunction->replaceImageUrl(
+                route(
+                    'front_paper_detail',
+                    [
+                        'alias' => $paper->{PaperInterface::ATTR_URL_ALIAS},
+                        'paper_id' => $paper->id
+                    ]
+                )
+            )
+        );
+        $response->setActive($paper->{PaperInterface::ATTR_ACTIVE});
+        return $response;
+    }
+
+    protected function covertContentData($datas) {
+        if (empty($datas)) {
+            return null;
+        }
+
+        $convertSliderdata = function ($slider_datas) {
+            foreach ($slider_datas as &$value) {
+                $value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
+            }
+            return $slider_datas;
+        };
+
+        $return_data = [];
+        foreach ($datas as $value) {
+            $conten = new Conten();
+            $conten->setId($value->id);
+            $conten->setType($value->{PaperContentInterface::ATTR_TYPE});
+            $conten->setKey($value->{PaperContentInterface::ATTR_KEY});
+            $conten->setDependValue($value->{PaperContentInterface::ATTR_DEPEND_VALUE} ?: '');
+            $conten->setPaperId($value->{PaperContentInterface::ATTR_PAPER_ID});
+            switch ($value->{PaperContentInterface::ATTR_TYPE}) {
+                case 'image':
+                    $conten->setValue($this->helperFunction->replaceImageUrl($value->{PaperContentInterface::ATTR_VALUE} ?? ''));
+                    break;
+                case 'slider_data':
+                    $conten->setValue($convertSliderdata($value->{PaperContentInterface::ATTR_VALUE}, true));
+                    break;
+                default:
+                $conten->setValue($value->{PaperContentInterface::ATTR_VALUE});
+            }
+            $return_data[] = $conten;
+        }
+        return $return_data;
+    }
+
     /**
      * @param int $paper_id
      */
     public function getPaperDetail(int $paper_id)
     {
         // TODO: Implement getPaperDetail() method.
-        $covertContentData = function ($datas) {
-            if (empty($datas)) {
-                return null;
-            }
-            $convertSliderdata = function ($slider_datas) {
-                foreach ($slider_datas as &$value) {
-                    $value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
-                }
-                return $slider_datas;
-            };
 
-            $return_data = [];
-            for ($i = 0; $i < count($datas); $i++) {
-                switch ($datas[$i]['type']) {
-                    case 'image':
-                        $return_data[] = [
-                            ...$datas[$i],
-                            'value' => $this->helperFunction->replaceImageUrl($datas[$i]['value'] ?? '')
-                        ];
-                        break;
-                    case 'slider_data':
-                        $return_data[] = [
-                            ...$datas[$i],
-                            'value' => $convertSliderdata(json_decode($datas[$i]['value'], true))
-                        ];
-                        break;
-                    default:
-                        $return_data[] = $datas[$i];
-                        break;
-                }
-            }
-            return $return_data;
-        };
-
-        if (Cache::has("api_detail_$paper_id")) {
+        if (Cache::has("api_detail_$paper_id") && false) {
             $paper =  Cache::get("api_detail_$paper_id");
             event(new ViewCount($paper));
             return $paper;
@@ -316,18 +380,10 @@ class ExtensionController extends Controller implements ExtensionControllerInter
              * @var Paper $detail
              */
             $detail = $this->paper->find($paper_id);
-            $detail->contents = $covertContentData($detail->getContents()->toArray());
-            $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
-            $detail->info = $detail->paperInfo();
-            $detail->tags = $detail->getTags();
-            $detail->slider_images = array_map(function ($item) {
-                $item['value'] = $this->helperFunction->replaceImageUrl($item['value']);
-                return $item;
-            }, $detail->sliderImages()->toArray());
-            $detail->url = $this->helperFunction->replaceImageUrl(route('front_paper_detail', ['alias' => $detail->url_alias, 'paper_id' => $detail->id]));
-            Cache::put("api_detail_$detail->id", $detail);
+            $response = $this->convertPaperDetailApi($detail);
+            Cache::put("api_detail_$detail->id", $response);
             event(new ViewCount($detail));
-            return $detail;
+            return $response;
         }
     }
 
@@ -377,10 +433,29 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     function formatSug($data)
     {
-        return array_chunk(array_map(function ($item) {
-            $item['image_path'] = $this->helperFunction->replaceImageUrl($item['image_path']);
-            return $item;
-        }, $data), 2);
+        $paperItems = [];
+        foreach ($data as $item) {
+            $paperItem = new PaperItem();
+            $paperItem->setId($item->id);
+            $paperItem->setTitle($item->{PaperInterface::ATTR_TITLE});
+            $paperItem->setCreatedAt($item->created_at);
+            $paperItem->setUpdatedAt($item->updated_at);
+            $paperItem->setShortContent($item->{PaperInterface::ATTR_SHORT_CONTENT});
+            $paperItem->setImage($this->helperFunction->replaceImageUrl($item->{PaperInterface::ATTR_IMAGE_PATH}));
+            $paperItem->setUrl(
+                $this->helperFunction->replaceImageUrl(
+                    route(
+                        'front_paper_detail',
+                        [
+                            'alias' => $item->{PaperInterface::ATTR_URL_ALIAS},
+                            'paper_id' => $item->id
+                        ]
+                    )
+                )
+            );
+            $paperItems[] = $paperItem;
+        }
+        return $paperItems;
     }
 
     function download()
