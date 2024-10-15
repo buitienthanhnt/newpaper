@@ -4,7 +4,6 @@ namespace App\Api\Data\Paper;
 interface PaperDetailInterface extends PaperItemInterface{
     const CONTENTS = 'contents';
     const SUGGEST = 'suggest';
-    const INFO = 'info';
     const TAGS = 'tags';
 
 
@@ -29,17 +28,6 @@ interface PaperDetailInterface extends PaperItemInterface{
      * @return mixed
      */
     public function getSuggest();
-
-        /**
-     * @param \App\Api\Data\Paper\Info $info
-     * @return $this
-     */
-    public function setInfo($info);
-
-    /**
-     * @return \App\Api\Data\Paper\Info
-     */
-    public function getInfo();
 
     /**
      * @param \App\Api\Data\Paper\Tag[] $tags

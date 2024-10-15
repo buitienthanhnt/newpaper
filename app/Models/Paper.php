@@ -49,7 +49,8 @@ class Paper extends Model implements PaperInterface
      * lấy danh sách kết quả bảng trung gian.
      * @return Illuminate\Database\Eloquent\Collection
      */
-    function getPaperCategories() {
+    function getPaperCategories()
+    {
         return $this->toPaperCategory()->getResults();
     }
 
@@ -65,7 +66,8 @@ class Paper extends Model implements PaperInterface
      * lấy danh sách category của bài viết.
      * @return Illuminate\Database\Eloquent\Collection
      */
-    function getCategories() {
+    function getCategories()
+    {
         return Category::find($this->listIdCategories());
     }
 
@@ -77,7 +79,7 @@ class Paper extends Model implements PaperInterface
     public function getTags()
     {
         $tags = $this->hasMany(PageTag::class, PaperTagInterface::ATTR_ENTITY_ID)->getResults()
-                     ->where(PaperTagInterface::ATTR_TYPE, PaperTagInterface::TYPE_PAPER);
+            ->where(PaperTagInterface::ATTR_TYPE, PaperTagInterface::TYPE_PAPER);
         return $tags;
     }
 
@@ -85,7 +87,8 @@ class Paper extends Model implements PaperInterface
      * lấy tác giả của bài viết.
      * @return Writer
      */
-    public function getWriter() {
+    public function getWriter()
+    {
         return $this->belongsTo(Writer::class, PaperInterface::ATTR_WRITER)->getResults();
     }
 
@@ -110,8 +113,9 @@ class Paper extends Model implements PaperInterface
         return $this->content;
     }
 
-    function sliderImages() {
-        return $this->getContents()->filter(function($item){
+    function sliderImages()
+    {
+        return $this->getContents()->filter(function ($item) {
             return $item[PaperContentInterface::ATTR_TYPE] === PaperContentInterface::TYPE_TIMELINE;
         });
     }
@@ -237,5 +241,16 @@ class Paper extends Model implements PaperInterface
             'like' => $this->paperLike(),
             'heart' => $this->paperHeart(),
         ];
+    }
+
+    function getUrl(): string
+    {
+        return route(
+            'front_paper_detail',
+            [
+                'alias' => $this->{PaperInterface::ATTR_URL_ALIAS},
+                'paper_id' => $this->id
+            ]
+        );
     }
 }

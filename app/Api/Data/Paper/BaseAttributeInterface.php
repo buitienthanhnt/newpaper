@@ -2,7 +2,9 @@
 
 namespace App\Api\Data\Paper;
 
-interface BaseAttributeInterface
+use Illuminate\Contracts\Support\Arrayable;
+
+interface BaseAttributeInterface extends Arrayable
 {
     const ID = 'id';
     const CREATED_AT = 'createdAt';

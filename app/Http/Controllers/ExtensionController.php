@@ -7,7 +7,9 @@ use App\Api\Data\Paper\Info;
 use App\Api\Data\Paper\PaperDetail;
 use App\Api\Data\Paper\PaperItem;
 use App\Api\Data\Paper\Tag;
+use App\Api\Data\Response as ApiResponse;
 use App\Api\PaperApi;
+use App\Api\PaperRepository;
 use App\Api\WriterApi;
 use App\Events\ViewCount;
 use App\Helper\HelperFunction;
@@ -61,6 +63,9 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     protected $cartService;
 
+    protected $paperRepository;
+    protected $apiResponse;
+
     public function __construct(
         Request $request,
         Paper $paper,
@@ -75,6 +80,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         LikeMost $likeMost,
         Trending $trending,
         CartService $cartService,
+        PaperRepository $paperRepository,
+        ApiResponse $apiResponse
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -89,6 +96,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->likeMost = $likeMost;
         $this->trending = $trending;
         $this->cartService = $cartService;
+        $this->paperRepository = $paperRepository;
+        $this->apiResponse = $apiResponse;
     }
 
     public function homeInfo()
@@ -98,22 +107,9 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     public function listPapers()
     {
-        // not use ->makeHidden() with paginate
-        $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
-        if ($papers->count()) {
-            foreach ($papers as &$item) {
-                $item->image_path = $this->helperFunction->replaceImageUrl($item->image_path ?: '');
-                $item->short_conten = $this->cut_str($item->short_conten, 90, "...");
-                // $item["title"] = $this->cut_str($item["title"], 80, "../");
-                $item->info = [
-                    'view_count' => $item->viewCount(),
-                    'comment_count' => $item->commentCount(),
-                    'like' => $item->paperLike(),
-                    'heart' => $item->paperHeart(),
-                ];
-            }
-        }
-        return $papers;
+        $apiResponse = $this->apiResponse;
+        $apiResponse->setResponse($this->paperRepository->paperAll());
+        return $apiResponse;
     }
 
     public function getCategoryTree()
@@ -275,116 +271,14 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ], 200);
     }
 
-    function convertTags($tags) {
-        $values = [];
-        foreach ($tags as $tag) {
-            $_tag = new Tag();
-            $_tag->setId($tag->id);
-            $_tag->setEntityId($tag->{PaperTagInterface::ATTR_ENTITY_ID});
-            $_tag->setValue($tag->{PaperTagInterface::ATTR_VALUE});
-            $_tag->setType($tag->{PaperTagInterface::ATTR_TYPE});
-            $values[] = $_tag;
-        }
-        return $values;
-    }
-
-    /**
-     * @param Paper $paper
-     * @return PaperDetail
-     */
-    function convertPaperDetailApi($paper)
-    {
-        $response = new PaperDetail();
-        $response->setId($paper->id);
-        $response->setTitle($paper->{PaperInterface::ATTR_TITLE});
-        $response->setCreatedAt($paper->created_at);
-        $response->setUpdatedAt($paper->updated_at);
-        $response->setShortContent($paper->{PaperInterface::ATTR_SHORT_CONTENT});
-        $response->setImage($this->helperFunction->replaceImageUrl($paper->{PaperInterface::ATTR_IMAGE_PATH}));
-        $response->setContents($this->covertContentData($paper->getContents()));
-        $response->setSuggest($this->formatSug(Paper::all()->random(4)));
-        /**
-         * setInfo data
-         */
-        $info = new Info();
-        $info->setViewCount($paper->viewCount());
-        $info->setCommentCount($paper->commentCount());
-        $info->setLike($paper->paperLike());
-        $info->setHeart($paper->paperHeart());
-        $response->setInfo($info);
-
-        $response->setTags($this->convertTags($paper->getTags()));
-        $response->setUrl(
-            $this->helperFunction->replaceImageUrl(
-                route(
-                    'front_paper_detail',
-                    [
-                        'alias' => $paper->{PaperInterface::ATTR_URL_ALIAS},
-                        'paper_id' => $paper->id
-                    ]
-                )
-            )
-        );
-        $response->setActive($paper->{PaperInterface::ATTR_ACTIVE});
-        return $response;
-    }
-
-    protected function covertContentData($datas) {
-        if (empty($datas)) {
-            return null;
-        }
-
-        $convertSliderdata = function ($slider_datas) {
-            foreach ($slider_datas as &$value) {
-                $value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
-            }
-            return $slider_datas;
-        };
-
-        $return_data = [];
-        foreach ($datas as $value) {
-            $conten = new Conten();
-            $conten->setId($value->id);
-            $conten->setType($value->{PaperContentInterface::ATTR_TYPE});
-            $conten->setKey($value->{PaperContentInterface::ATTR_KEY});
-            $conten->setDependValue($value->{PaperContentInterface::ATTR_DEPEND_VALUE} ?: '');
-            $conten->setPaperId($value->{PaperContentInterface::ATTR_PAPER_ID});
-            switch ($value->{PaperContentInterface::ATTR_TYPE}) {
-                case 'image':
-                    $conten->setValue($this->helperFunction->replaceImageUrl($value->{PaperContentInterface::ATTR_VALUE} ?? ''));
-                    break;
-                case 'slider_data':
-                    $conten->setValue($convertSliderdata($value->{PaperContentInterface::ATTR_VALUE}, true));
-                    break;
-                default:
-                $conten->setValue($value->{PaperContentInterface::ATTR_VALUE});
-            }
-            $return_data[] = $conten;
-        }
-        return $return_data;
-    }
-
     /**
      * @param int $paper_id
      */
     public function getPaperDetail(int $paper_id)
     {
-        // TODO: Implement getPaperDetail() method.
-
-        if (Cache::has("api_detail_$paper_id") && false) {
-            $paper =  Cache::get("api_detail_$paper_id");
-            event(new ViewCount($paper));
-            return $paper;
-        } else {
-            /**
-             * @var Paper $detail
-             */
-            $detail = $this->paper->find($paper_id);
-            $response = $this->convertPaperDetailApi($detail);
-            Cache::put("api_detail_$detail->id", $response);
-            event(new ViewCount($detail));
-            return $response;
-        }
+        $apiResponse = $this->apiResponse;
+        $apiResponse->setResponse($this->paperRepository->getById($paper_id));
+        return $apiResponse;
     }
 
     /**
@@ -430,33 +324,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     }
 
     // ==============================================================
-
-    function formatSug($data)
-    {
-        $paperItems = [];
-        foreach ($data as $item) {
-            $paperItem = new PaperItem();
-            $paperItem->setId($item->id);
-            $paperItem->setTitle($item->{PaperInterface::ATTR_TITLE});
-            $paperItem->setCreatedAt($item->created_at);
-            $paperItem->setUpdatedAt($item->updated_at);
-            $paperItem->setShortContent($item->{PaperInterface::ATTR_SHORT_CONTENT});
-            $paperItem->setImage($this->helperFunction->replaceImageUrl($item->{PaperInterface::ATTR_IMAGE_PATH}));
-            $paperItem->setUrl(
-                $this->helperFunction->replaceImageUrl(
-                    route(
-                        'front_paper_detail',
-                        [
-                            'alias' => $item->{PaperInterface::ATTR_URL_ALIAS},
-                            'paper_id' => $item->id
-                        ]
-                    )
-                )
-            );
-            $paperItems[] = $paperItem;
-        }
-        return $paperItems;
-    }
 
     function download()
     {

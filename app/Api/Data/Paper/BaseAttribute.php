@@ -4,7 +4,7 @@ namespace App\Api\Data\Paper;
 use App\Api\Data\DataObject;
 use Illuminate\Contracts\Support\Arrayable;
 
-class BaseAttribute extends DataObject implements BaseAttributeInterface, Arrayable
+class BaseAttribute extends DataObject implements BaseAttributeInterface
 {
     function setCreatedAt(string $created_at)
     {

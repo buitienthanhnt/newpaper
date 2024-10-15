@@ -2,7 +2,9 @@
 
 namespace App\Api\Data\Paper;
 
-interface InfoInterface
+use Illuminate\Contracts\Support\Arrayable;
+
+interface InfoInterface extends Arrayable
 {
     const VIEW_COUNT = "viewCount";
     const COMMENT_COUNT = "commentCount";

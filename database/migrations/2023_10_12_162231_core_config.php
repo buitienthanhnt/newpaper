@@ -18,7 +18,7 @@ class CoreConfig extends Migration
             $table->string(\App\Constant\AttributeInterface::ATTR_NAME);
             $table->string(\App\Constant\AttributeInterface::ATTR_VALUE)->nullable();
             $table->text(\App\Constant\AttributeInterface::ATTR_DESCRIPTION)->nullable(true);
-            $table->text(\App\Constant\AttributeInterface::ATTR_TYPE)->default('text');
+            $table->text(\App\Constant\AttributeInterface::ATTR_TYPE);
         });
     }
 

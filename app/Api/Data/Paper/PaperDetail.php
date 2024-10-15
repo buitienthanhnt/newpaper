@@ -26,16 +26,6 @@ class PaperDetail extends PaperItem implements PaperDetailInterface
         return $this->getData(self::SUGGEST);
     }
 
-    function setInfo($info)
-    {
-        return $this->setData(self::INFO, $info);
-    }
-
-    function getInfo()
-    {
-        return $this->getData(self::INFO);
-    }
-
     function setTags($tags)
     {
         return $this->setData(self::TAGS, $tags);

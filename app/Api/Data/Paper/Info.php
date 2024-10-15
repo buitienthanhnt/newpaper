@@ -2,9 +2,8 @@
 namespace App\Api\Data\Paper;
 
 use App\Api\Data\DataObject;
-use Illuminate\Contracts\Support\Arrayable;
 
-class Info extends DataObject implements InfoInterface, Arrayable {
+class Info extends DataObject implements InfoInterface {
     function setViewCount(int $view_count)
     {
         return $this->setData(self::VIEW_COUNT, $view_count);

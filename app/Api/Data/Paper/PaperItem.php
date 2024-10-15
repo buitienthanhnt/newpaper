@@ -61,4 +61,14 @@ class PaperItem extends BaseAttribute implements PaperItemInterface
     {
         return $this->getData(self::WRITER);
     }
+
+    function setInfo($info)
+    {
+        return $this->setData(self::INFO, $info);
+    }
+
+    function getInfo()
+    {
+        return $this->getData(self::INFO);
+    }
 }

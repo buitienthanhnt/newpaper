@@ -8,6 +8,7 @@ interface PaperItemInterface extends BaseAttributeInterface{
     const IMAGE = 'image';
     const ACTIVE = 'active';
     const WRITER = 'writer';
+    const INFO = 'info';
     
      /**
      * @param string $title
@@ -74,4 +75,15 @@ interface PaperItemInterface extends BaseAttributeInterface{
      * @return mixed
      */
     public function getWriter();
+
+    /**
+     * @param \App\Api\Data\Paper\Info $info
+     * @return $this
+     */
+    public function setInfo($info);
+
+    /**
+     * @return \App\Api\Data\Paper\Info
+     */
+    public function getInfo();
 }
