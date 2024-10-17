@@ -211,11 +211,31 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         return $this->paperApi->getRelatedPaper($paper_id);
     }
 
+    /**
+     * @return ApiResponse
+     */
+    public function search()
+    {
+        return $this->apiResponse->setResponse($this->paperApi->searchAll());
+    }
+
+    /**
+     * @return ApiResponse
+     */
+    public function getWriterList()
+    {
+        return $this->apiResponse->setResponse($this->writerApi->listWriter());
+        // TODO: Implement getWriterList() method.
+    }
+
     // =============================================================================
 
     public function getCommentsOfPaper($paper_id)
     {
         $request = $this->request;
+        /**
+         * @var Paper $paper
+         */
         $paper = $this->paper->find($paper_id);
         if ($request->get('all')) {
             $comments = $paper->getCommentTree($request->get('parent_id', null), 0, 0);
@@ -227,11 +247,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             'data' => $comments,
             'errors' => null
         ];
-    }
-
-    public function search()
-    {
-        return $this->paperApi->searchAll();
     }
 
     public function getPaperMostView()

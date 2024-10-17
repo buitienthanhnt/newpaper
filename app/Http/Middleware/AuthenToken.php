@@ -18,8 +18,6 @@ class AuthenToken
     private $passUrl = [
         'api/getcategorytop',
         'api/paperMostView',
-        'api/share/mostPopulator',
-        'api/share/trending',
         'api/test/constEx',
         'api/test/submit'
     ];

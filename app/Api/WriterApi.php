@@ -34,9 +34,9 @@ final class WriterApi extends BaseApi
         $this->paperRepository = $paperRepository;
     }
 
-    function allWriter()
+    function listWriter()
     {
-       return $this->writerRepository->allWriter();
+       return $this->writerRepository->listWriter();
     }
 
     function getPapers($writer_id)

@@ -45,17 +45,20 @@ Route::get("getCategoryTop", $extensionController . ExtensionControllerInterface
 // https://localhost/laravel1/public/api/paperByCategory/2
 Route::get("paperByCategory/{category_id}", $extensionController . ExtensionControllerInterface::PAPER_BY_CATEGORY);
 
+// https://localhost/laravel1/public/api/writerList
+Route::get('writerList', $extensionController . ExtensionControllerInterface::WRITER_LIST);
+
 // https://localhost/laravel1/public/api/byWriter/1
 Route::get('byWriter/{id}', $extensionController . ExtensionControllerInterface::PAPER_BY_WRITER);
 
 // https://localhost/laravel1/public/api/getRelatedPaper/1
 Route::get("getRelatedPaper/{paper_id}", $extensionController . ExtensionControllerInterface::PAPER_RELATED);
 
-// https://localhost/laravel1/public/api/paperComments/1
-Route::get('paperComments/{paper_id}', $extensionController . ExtensionControllerInterface::PAPER_COMMENTS);
-
 // https://localhost/laravel1/public/api/search?query=demo
 Route::get('search', $extensionController . ExtensionControllerInterface::SEARCH);
+
+// https://localhost/laravel1/public/api/paperComments/1
+Route::get('paperComments/{paper_id}', $extensionController . ExtensionControllerInterface::PAPER_COMMENTS);
 
 // https://localhost/laravel1/public/api/paperMostView (dung cho web)
 Route::get('paperMostView', $extensionController . ExtensionControllerInterface::PAPER_MOST_VIEW)->name('api_paper_most_view');

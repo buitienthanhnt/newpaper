@@ -1,22 +1,30 @@
 <?php
 namespace App\Api;
 
+use App\Api\Data\Page\PageInfo;
 use App\Api\Data\Writer\WriterItem;
+use App\Api\Data\Writer\WriterList;
 use App\Helper\HelperFunction;
 use App\Models\Writer;
 use App\Models\WriterInterface;
 
 class WriterRepository{
     protected $writer;
+    protected $writerList;
+    protected $pageInfo;
 
     protected $helperFunction;
 
     function __construct(
         Writer $writer,
+        PageInfo $pageInfo,
+        WriterList $writerList,
         HelperFunction $helperFunction
     )
     {
         $this->writer = $writer;
+        $this->writerList = $writerList;
+        $this->pageInfo = $pageInfo;
         $this->helperFunction = $helperFunction;
     }
 
@@ -38,15 +46,39 @@ class WriterRepository{
     }
 
     /**
+     * @param $paginateDatas
+     * @return PageInfo
+     */
+    function convertPageInfo($paginateDatas){
+        $pageInfo = $this->pageInfo;
+        $pageInfo->setCurrentPage($paginateDatas->currentPage());
+        $pageInfo->setLastPage($paginateDatas->lastPage());
+        $pageInfo->setPageNumber($paginateDatas->perPage());
+        $pageInfo->setTotal($paginateDatas->total());
+        return $pageInfo;
+    }
+
+    /**
+     * @param $paginateDatas
+     * @return WriterList
+     */
+    function convertPaginate($paginateDatas){
+        $writerList = $this->writerList;
+        $items = [];
+        foreach ($paginateDatas as $paginateData) {
+            $items[] = $this->convertWriterItem($paginateData);
+        }
+        $writerList->setItems($items);
+        $writerList->setPageInfo($this->convertPageInfo($paginateDatas));
+        return $writerList;
+    }
+
+    /**
      * @return WriterItem[]
      */
-    function allWriter()
+    function listWriter()
     {
-        $allData = null;
-        foreach ($this->writer->all() as $writer) {
-            $allData[] = $this->convertWriterItem($writer);
-        }
-        return $allData;
+        return $this->convertPaginate($this->writer->all()->toQuery()->paginate(12));
     }
 
     /**

@@ -122,6 +122,9 @@ class ManagerController extends Controller implements ManagerControllerInterface
             $paper = Cache::remember($key, 15, fn () => $this->paper->find($paper_id));
         }
         event(new ViewCount($paper));
+        if (!$paper){
+            return redirect()->route('/');
+        }
         return view("frontend.templates.paper.paper_detail", ['paper' => $paper]);
     }
 

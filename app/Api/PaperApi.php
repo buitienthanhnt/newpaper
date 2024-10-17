@@ -167,15 +167,12 @@ class PaperApi extends BaseApi
     {
         $searchValues = [];
         $queryValue = strtolower($query);
-        $searchPaper = array_column(Paper::where(PaperInterface::ATTR_TITLE, 'LIKE', "%$queryValue%")
-            ->orWhere(PaperInterface::ATTR_SHORT_CONTENT, 'LIKE', "%$queryValue%")->get('id')->toArray(), 'id') ?: [];
+        $searchPaper = Paper::where(PaperInterface::ATTR_TITLE, 'LIKE', "%$queryValue%")
+            ->orWhere(PaperInterface::ATTR_SHORT_CONTENT, 'LIKE', "%$queryValue%")->pluck('id')->toArray() ?: [];
 
-        $searchTags = array_column(PaperTag::where(PaperTagInterface::ATTR_VALUE, 'LIKE', "%$queryValue%")->get('entity_id')->toArray(), 'entity_id') ?: [];
-        $allValue = array_unique(array_merge($searchPaper, $searchTags));
-        foreach (Paper::find($allValue) as $paper) {
-            $searchValues[] = $this->paperRepository->convertPaperItem($paper);
-        }
-        return $searchValues;
+        $searchTags = PaperTag::where(PaperTagInterface::ATTR_VALUE, 'LIKE', "%$queryValue%")->pluck(PaperTagInterface::ATTR_ENTITY_ID)->toArray() ?: [];
+        $papers = Paper::whereIn('id', array_unique(array_merge($searchPaper, $searchTags)))->paginate(12);
+        return  $this->paperRepository->convertPaperPaginate($papers);
     }
 
     /**

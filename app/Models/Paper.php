@@ -265,6 +265,9 @@ class Paper extends Model implements PaperInterface
         return $this->find($ids);
     }
 
+    /**
+     * @return mixed
+     */
     function getRelatedItems(){
         $paperIds = [];
         $categories = $this->getCategories();

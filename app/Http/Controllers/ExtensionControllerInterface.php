@@ -15,6 +15,7 @@ interface ExtensionControllerInterface{
     const PAPER_COMMENTS = 'getCommentsOfPaper';
     const SEARCH = 'search';
     const PAPER_BY_WRITER = 'getPaperByWriter';
+    const WRITER_LIST = 'getWriterList';
     const PAPER_MOST_VIEW = 'getPaperMostView';
     const LOGIN = 'login';
     const USER_INFO = 'getUserInfo';
@@ -56,6 +57,8 @@ interface ExtensionControllerInterface{
      * @param int $writer_id
      */
     public function getPaperByWriter(int $writer_id);
+
+    public function getWriterList();
 
     public function getPaperMostView();
 
