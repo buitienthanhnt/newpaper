@@ -4,7 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PageTag extends Model implements PaperTagInterface
+class PaperTag extends Model implements PaperTagInterface
 {
     use HasFactory;
     protected $table = self::TABLE_NAME;

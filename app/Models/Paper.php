@@ -78,7 +78,7 @@ class Paper extends Model implements PaperInterface
      */
     public function getTags()
     {
-        $tags = $this->hasMany(PageTag::class, PaperTagInterface::ATTR_ENTITY_ID)->getResults()
+        $tags = $this->hasMany(PaperTag::class, PaperTagInterface::ATTR_ENTITY_ID)->getResults()
             ->where(PaperTagInterface::ATTR_TYPE, PaperTagInterface::TYPE_PAPER);
         return $tags;
     }

@@ -14,6 +14,17 @@ class Writer extends Model implements WriterInterface
     protected $guarded = [];
 
     function getPapers(): HasMany {
-        return $this->hasMany(Paper::class, 'writer');
+        return $this->hasMany(Paper::class, PaperInterface::ATTR_WRITER);
+    }
+
+    /**
+     * @return mixed
+     */
+    function getPaperByWriter(){
+        return $this->getPapers()->getResults();
+    }
+
+    function getPaperWithPaginate(){
+        return $this->getPapers()->paginate(12);
     }
 }

@@ -9,7 +9,7 @@ use App\Models\CategoryInterface;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\ConfigCategory;
-use App\Models\PageTag;
+use App\Models\PaperTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use App\Helper\HelperFunction;
@@ -49,7 +49,7 @@ class ManagerController extends Controller implements ManagerControllerInterface
         Request $request,
         Paper $paper,
         \App\Models\Category $category,
-        PageTag $pageTag,
+        PaperTag $pageTag,
         HelperFunction $helperFunction,
         MostPopulator $mostPopulator,
         LikeMost $likeMost,

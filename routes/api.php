@@ -34,6 +34,8 @@ Route::get('homeInfo', $extensionController . ExtensionControllerInterface::HOME
 // https://localhost/laravel1/public/api/getPapers
 Route::get('getPapers', $extensionController . ExtensionControllerInterface::LIST_PAPERS);
 
+Route::get('categoryInfo/{category_id}', $extensionController.ExtensionControllerInterface::CATEGORY_INFO);
+
 // https://localhost/laravel1/public/api/getCategoryTree
 Route::get("getCategoryTree", $extensionController . ExtensionControllerInterface::CATEGORY_TREE);
 

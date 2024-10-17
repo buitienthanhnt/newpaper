@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\PaperCategory;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Category extends Model implements CategoryInterface
 {
@@ -28,18 +28,11 @@ class Category extends Model implements CategoryInterface
     }
 
     /**
-     * lấy danh sách kết quả bảng trung gian.
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function getPaperCategories() {
-        return $this->toPaperCategory()->getResults();
-    }
-
-    /**
      * lấy danh sách id của paper.
      * @return int[]
      */
-    public function listIdPapers() {
+    public function listIdPapers()
+    {
         return $this->getPaperCategories()->pluck(PaperInterface::PRIMARY_ALIAS)->toArray() ?: [];
     }
 
@@ -47,7 +40,8 @@ class Category extends Model implements CategoryInterface
      * lấy danh sách các bài viết của category này.
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function getPapers() {
+    public function getPapers()
+    {
         return Paper::find($this->listIdPapers());
     }
 
@@ -81,8 +75,8 @@ class Category extends Model implements CategoryInterface
 
     /**
      * @param Category $category
-     * @param string $begin
-     * @param int $selected
+     * @param string   $begin
+     * @param int      $selected
      * @return string
      */
     protected function category_tree($catergory, $begin = "", $selected = null)
@@ -119,8 +113,17 @@ class Category extends Model implements CategoryInterface
     }
 
     /**
+     * lấy danh sách kết quả bảng trung gian.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getPaperCategories()
+    {
+        return $this->toPaperCategory()->getResults();
+    }
+
+    /**
      * lấy danh sách bài viết có phân trang
-     * @param int $limit (số bài 1 trang)
+     * @param int   $limit    (số bài 1 trang)
      * @param int offset (trang hiện tại)
      * @param array $order_by (sắp xếp theo)
      */
@@ -129,11 +132,22 @@ class Category extends Model implements CategoryInterface
         $listPaperIds = $this->listIdPapers();
         $result = null;
         if ($order_by) {
-            $result =  Paper::whereIn("id", $listPaperIds)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
+            $result = Paper::whereIn("id", $listPaperIds)->offset($offset * $limit)->orderBy(...$order_by)->take($limit)->select($this->select_key);
         } else {
-            $result =  Paper::whereIn("id", $listPaperIds)->take($limit)->offset($offset * $limit)->select($this->select_key);
+            $result = Paper::whereIn("id", $listPaperIds)->take($limit)->offset($offset * $limit)->select($this->select_key);
         }
         return $result->get();
+    }
+
+    /**
+     * lấy danh sách paper của category này
+     * trả về 1 LengthAwarePaginator phân trang.
+     * @return LengthAwarePaginator
+     */
+    public function getPaperByCategory()
+    {
+        $listPaperIds = $this->listIdPapers();
+        return Paper::whereIn('id', $listPaperIds)->paginate(12);
     }
 
     /**
@@ -165,6 +179,7 @@ class Category extends Model implements CategoryInterface
         }
         return $currentCategory;
     }
+
     // ===================================================================
 
     public function setSelected($_selected = [])

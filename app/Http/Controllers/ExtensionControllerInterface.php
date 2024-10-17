@@ -7,6 +7,7 @@ interface ExtensionControllerInterface{
 
     const HOME_INFO = 'homeInfo';
     const LIST_PAPERS = 'listPapers';
+    const CATEGORY_INFO = 'getCategoryInfo';
     const CATEGORY_TREE = 'getCategoryTree';
     const CATEGORY_TOP = 'getCategoryTop';
     const PAPER_BY_CATEGORY = 'getPaperCategory';
@@ -27,6 +28,8 @@ interface ExtensionControllerInterface{
     public function homeInfo();
 
     public function listPapers();
+
+    public function getCategoryInfo(int $category_id);
 
     public function getCategoryTree();
 

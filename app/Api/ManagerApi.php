@@ -1,30 +1,32 @@
 <?php
 namespace App\Api;
 
+use App\Api\Data\Other\HomeInfo;
 use App\Helper\HelperFunction;
-use App\Models\Paper;
-use App\Models\PaperContent;
-use App\Models\PaperContentInterface;
-use App\Models\Writer;
-use Carbon\Carbon;
-use DateTime;
 
 class ManagerApi extends BaseApi
 {
 	protected $paperApi;
+	protected $writerRepository;
 
 	protected $helperFunction;
 
 	function __construct(
 		PaperApi $paperApi,
+		WriterRepository $writerRepository,
 		HelperFunction $helperFunction
 	)
 	{
 		$this->paperApi = $paperApi;
+		$this->writerRepository = $writerRepository;
 		$this->helperFunction = $helperFunction;
 	}
 
-	function homeInfo(): array
+    /**
+     * @return HomeInfo
+     * @throws \Exception
+     */
+	function homeInfo()
 	{
 		$timeLine = $this->paperApi->timeLine();
 		$hit = $this->paperApi->hit();
@@ -32,9 +34,8 @@ class ManagerApi extends BaseApi
 		$mostPopulator = $this->paperApi->mostPopulator();
 		$mostRecents = $this->paperApi->mostRecents();
 		$listImages = $this->paperApi->listImages();
-
 		$tags = $this->paperApi->tags();
-		$writers = Writer::all();
+		$writers =$this->writerRepository->allWriter();
 		$lineMap = [
 			"data" => [
 				"labels" => ["Jan", "Feb", "March", "April", "May", "June", 'nan'],
@@ -69,22 +70,18 @@ class ManagerApi extends BaseApi
 			"title" => "This snippet renders a Youtube video"
 		];
 
-		return [
-			'message' => 'get home info success',
-			'status' => true,
-			'code' => 200,
-			'hit' => $hit,
-			'forward' => $forward,
-			'mostPopulator' => $mostPopulator,
-			'mostRecents' => $mostRecents,
-			'listImages' => $listImages,
-			'timeLine' => $timeLine,
-			'search' => $tags,
-			'writers' => $writers,
-			'map' => $lineMap,
-			'video' => $video
-		];
+		$homeInfo = new HomeInfo();
+        $homeInfo->setHit($hit);
+		$homeInfo->setForward($forward);
+		$homeInfo->setListImages($listImages);
+		$homeInfo->setTimeLine($timeLine);
+		$homeInfo->setMostPopulator($mostPopulator);
+		$homeInfo->setMostRecents($mostRecents);
+		$homeInfo->setSearch($tags);
+		$homeInfo->setMap($lineMap);
+		$homeInfo->setVideo($video);
+		$homeInfo->setWriters($writers);
+		return  $homeInfo;
 	}
-}
 
-?>
+}

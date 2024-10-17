@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\CategoryApi;
 use App\Api\Data\Paper\Conten;
 use App\Api\Data\Paper\Info;
 use App\Api\Data\Paper\PaperDetail;
@@ -56,6 +57,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     protected $paperApi;
     protected $writerApi;
     protected $managerApi;
+    protected $categoryApi;
+
     protected $tokenManager;
     protected $helperFunction;
 
@@ -75,6 +78,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         RemoteSourceManager $remoteSourceManager,
         PaperApi $paperApi,
         WriterApi $writerApi,
+        CategoryApi $categoryApi,
         HelperFunction $helperFunction,
         User $user,
         TokenManager $tokenManager,
@@ -102,15 +106,22 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->paperRepository = $paperRepository;
         $this->apiResponse = $apiResponse;
         $this->managerApi = $managerApi;
-    }
-
-    public function homeInfo()
-    {
-        return $this->managerApi->homeInfo();
+        $this->categoryApi = $categoryApi;
     }
 
     /**
-     * 
+     * @return ApiResponse|m.\App\Api\Data\Response.setData
+     * @throws \Exception
+     */
+    public function homeInfo()
+    {
+        $apiResponse = $this->apiResponse;
+        $apiResponse->setMessage('newst home data api!');
+        return $apiResponse->setResponse($this->managerApi->homeInfo());
+    }
+
+    /**
+     * @return ApiResponse
      */
     public function listPapers()
     {
@@ -128,30 +139,12 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $apiResponse->setResponse($this->paperRepository->getById($paper_id));
         return $apiResponse;
     }
-    // =============================================================================
 
-    public function getCategoryTree()
-    {
-        $category_id = $this->request->get("category_id", 0);
-        if ($category_id) {
-            $category = $this->category->find($category_id);
-            $categories = $category->getCategoryTree();
-        } else {
-            $categories = $this->category->getCategoryTree(true);
-        }
-        return $categories;
-    }
-
-    public function getCategoryTop()
-    {
-        $top_category = ConfigCategory::where("path", "=", ConfigCategory::TOP_CATEGORY);
-        $values = Category::whereIn(CategoryInterface::ATTR_PRIMARY, explode("&", $top_category->first()->value))->get()->toArray();
-        foreach ($values as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
-        }
-        return $values;
-    }
-
+    /**
+     * lấy bài viết theo thể loại.
+     * @param int $category_id
+     * @return ApiResponse
+     */
     function getPaperCategory($category_id)
     {
         $request = $this->request;
@@ -159,28 +152,56 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $limit = $request->get("limit", 12);
         $key = "paper.category.$category_id.$page.$limit";
 
-        if (Cache::has($key)) { // nhanh hon ~50% voi du lieu nang.
-            return Cache::get($key);
+        $apiResponse = $this->apiResponse;
+        $responseData = null;
+        if (Cache::has($key) && false) { // nhanh hon ~50% voi du lieu nang.
+            $responseData = Cache::get($key);
         } else {
-            /**
-             * @var \App\Models\Category $category
-             */
-            $category = $this->category->find($category_id);
-            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->getPaperPaginate($limit, $page - 1, ['updated_at', 'desc'], ['conten']);
-            foreach ($papers as &$value) {
-                $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
-                $value->info = [
-                    'view_count' => $value->viewCount(),
-                    'comment_count' => $value->commentCount(),
-                    'like' => $value->paperLike(),
-                    'heart' => $value->paperHeart(),
-                ];
-            }
-            $papers = $papers->toArray();
-            Cache::put($key, $papers);
-            return $papers;
+           $responseData = $this->paperRepository->getPaperByCategory($category_id);
+            Cache::put($key, $responseData);
         }
+        return $apiResponse->setResponse($responseData);
     }
+
+    /**
+     * @param int $category_id
+     * @return ApiResponse|m.\App\Api\Data\Response.setData
+     */
+    function getCategoryInfo(int $category_id){
+        $apiResponse = $this->apiResponse;
+        return $apiResponse->setResponse($this->categoryApi->getCategoryById($category_id));
+    }
+
+    /**
+     * @return ApiResponse
+     */
+    public function getCategoryTree()
+    {
+        $apiResponse = $this->apiResponse;
+        $apiResponse->setResponse($this->categoryApi->getCategoryTree());
+        return $apiResponse;
+    }
+
+    /**
+     * @return ApiResponse
+     */
+    public function getCategoryTop()
+    {
+        $apiResponse = $this->apiResponse;
+        $apiResponse->setResponse($this->categoryApi->getCategoryTop());
+        return $apiResponse;
+    }
+
+    /**
+     * @param int $writer_id
+     * @return ApiResponse|m.\App\Api\Data\Response.setData
+     */
+    public function getPaperByWriter(int $writer_id)
+    {
+        $apiResponse = $this->apiResponse;
+        return $apiResponse->setResponse($this->writerApi->getPapers($writer_id));
+    }
+    // =============================================================================
 
     public function getRelatedPaper($paper_id)
     {
@@ -216,12 +237,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     public function search()
     {
         return $this->paperApi->searchAll();
-    }
-
-    public function getPaperByWriter(int $writer_id)
-    {
-        $papers = $this->writerApi->getPapers($writer_id);
-        return $papers;
     }
 
     public function getPaperMostView()

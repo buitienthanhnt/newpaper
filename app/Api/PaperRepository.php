@@ -10,15 +10,19 @@ use App\Api\Data\Paper\PaperItem;
 use App\Api\Data\Paper\PaperList;
 use App\Api\Data\Paper\Tag;
 use App\Helper\HelperFunction;
+use App\Models\Category;
 use App\Models\Paper;
 use App\Models\PaperContentInterface;
 use App\Models\PaperInterface;
+use App\Models\PaperTag;
 use App\Models\PaperTagInterface;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PaperRepository
 {
 	protected $paper;
+	protected $category;
 	protected $paperList;
 	protected $pageInfo;
 
@@ -26,16 +30,22 @@ class PaperRepository
 
 	function __construct(
 		Paper $paper,
+		Category $category,
 		PaperList $paperList,
 		PageInfo $pageInfo,
 		HelperFunction $helperFunction
 	) {
 		$this->paper = $paper;
+		$this->category = $category;
 		$this->paperList = $paperList;
 		$this->pageInfo = $pageInfo;
 		$this->helperFunction = $helperFunction;
 	}
 
+    /**
+     * @param PaperTag[] $tags
+     * @return array
+     */
 	function convertTags($tags)
 	{
 		$values = [];
@@ -50,6 +60,10 @@ class PaperRepository
 		return $values;
 	}
 
+    /**
+     * @param Paper[] $data
+     * @return PaperItem[]
+     */
 	function formatSug($data)
 	{
 		$paperItems = [];
@@ -149,6 +163,10 @@ class PaperRepository
 		return $response;
 	}
 
+    /**
+     * @param int $id
+     * @return PaperDetail
+     */
 	function getById(int $id): PaperDetail
 	{
 		$response = null;
@@ -165,6 +183,10 @@ class PaperRepository
 		return $response;
 	}
 
+    /**
+     * @param Paper $paper
+     * @return PaperItem
+     */
 	function convertPaperItem(Paper $paper): PaperItem
 	{
 		/**
@@ -182,25 +204,50 @@ class PaperRepository
 		return $paperItem;
 	}
 
-	/**
-	 * @return \App\Api\Data\Paper\PaperItem[]|null
-	 */
+	function convertPageInfo($paginateDatas){
+        $pageInfo = $this->pageInfo;
+        $pageInfo->setCurrentPage($paginateDatas->currentPage());
+        $pageInfo->setLastPage($paginateDatas->lastPage());
+        $pageInfo->setPageNumber($paginateDatas->perPage());
+        $pageInfo->setTotal($paginateDatas->total());
+        return $pageInfo;
+    }
+
+    /**
+     * @param LengthAwarePaginator $paginateDatas
+     * @return PaperList
+     */
+	function convertPaperPaginate($paginateDatas){
+        $listData = null;
+        foreach ($paginateDatas as $item) {
+            $listData[] = $this->convertPaperItem($item);
+        }
+        $paperList = $this->paperList;
+        $paperList->setItems($listData);
+        $paperList->setPageInfo($this->convertPageInfo($paginateDatas));
+        return $paperList;
+    }
+
+    /**
+     * @return PaperList
+     */
 	function paperAll()
 	{
 		$listData = null;
-		$paperList = $this->paperList;
 		$papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
-		foreach ($papers as $item) {
-			$listData[] = $this->convertPaperItem($item);
-		}
-		$pageInfo = $this->pageInfo;
-		$pageInfo->setCurrentPage($papers->currentPage());
-		$pageInfo->setLastPage($papers->lastPage());
-		$pageInfo->setPageNumber($papers->perPage());
-		$pageInfo->setTotal($papers->total());
-
-		$paperList->setItems($listData);
-		$paperList->setPageInfo($pageInfo);
-		return $paperList;
+		return $this->convertPaperPaginate($papers);
 	}
+
+    /**
+     * @param int $category_id
+     * @return PaperList
+     */
+    function getPaperByCategory(int $category_id){
+        /**
+         * @var Category $category
+         */
+        $category = $this->category->find($category_id);
+        $papers = $category->getPaperByCategory();
+        return $this->convertPaperPaginate($papers);
+    }
 }

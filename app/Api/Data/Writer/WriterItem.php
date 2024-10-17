@@ -65,7 +65,11 @@ class WriterItem extends Attribute implements WriterItemInterface
 		return $this->getData(self::ACTIVE);
 	}
 
-	function setRating(int $rating)
+    /**
+     * @param int|null $rating
+     * @return WriterItem|m.\App\Api\Data\Writer\WriterItem.setData
+     */
+	function setRating($rating)
 	{
 		return $this->setData(self::RATING, $rating);
 	}

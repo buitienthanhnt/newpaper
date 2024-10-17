@@ -42,7 +42,7 @@
                         <div class="col-xl-12 col-lg-12">
                             <div class="whats-news-single mb-20">
                                 <!-- single -->
-                                @foreach (\App\Models\PageTag::getPaperByTags($tag) as $paper)
+                                @foreach (\App\Models\PaperTag::getPaperByTags($tag) as $paper)
                                 <div class="row">
                                     <div class="whats-right-single mb-10">
                                         <div class="col-md-6">

@@ -18,9 +18,6 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Categories Table list</h4>
-                {{-- <p class="card-description">
-                    Add class <code>.table-hover</code>
-                </p> --}}
                 <div class="row float-right">
                     <div class="col-md-9">
                         <a class="btn btn-info" href={{ route('admin_create_category') }}>Create category</a>
@@ -68,7 +65,6 @@
                     <div class="col-md-12 mt-20 d-flex flex-row-reverse">
                         {{ $all_category->links() }}
                     </div>
-
                 </div>
 
             </div>
@@ -76,7 +72,7 @@
     </div>
 
     <script>
-        const syncCategory = "{{ route('firebase_category') }}";
+        const syncCategory = "{{ route('admin_firebase_upload_category_tree') }}";
         $(document).ready(function() {
             $('.syncCategoryFirebase').click(function(event) {
                 event.preventDefault(); // disable action submit of button
