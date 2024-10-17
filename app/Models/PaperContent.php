@@ -12,6 +12,10 @@ class PaperContent extends Model implements PaperContentInterface
     protected $guarded = [];
 
     function toPaper() : BelongsTo {
-        return $this->belongsTo(Paper::class, 'paper_id');
+        return $this->belongsTo(Paper::class, PaperInterface::PRIMARY_ALIAS);
+    }
+
+    function getPaper() {
+        return $this->toPaper()->getResults();
     }
 }

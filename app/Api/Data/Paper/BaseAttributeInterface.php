@@ -2,13 +2,11 @@
 
 namespace App\Api\Data\Paper;
 
-use Illuminate\Contracts\Support\Arrayable;
+use App\Api\Data\AttributeInterface;
 
-interface BaseAttributeInterface extends Arrayable
+interface BaseAttributeInterface extends AttributeInterface
 {
     const ID = 'id';
-    const CREATED_AT = 'createdAt';
-    const UPDATED_AT = 'updatedAt';
 
     /**
      * @param int $id
@@ -20,26 +18,4 @@ interface BaseAttributeInterface extends Arrayable
      * @return int
      */
     public function getId();
-
-    /**
-     * @param string $created_at
-     * @return $this
-     */
-    public function setCreatedAt(string $created_at);
-
-    /**
-     * @return string
-     */
-    public function getCreatedAt();
-
-    /**
-     * @param string $updated_at
-     * @return $this
-     */
-    public function setUpdatedAt(string $updated_at);
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAt();
 }

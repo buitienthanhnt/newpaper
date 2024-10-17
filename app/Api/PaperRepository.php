@@ -70,7 +70,8 @@ class PaperRepository
 		return $paperItems;
 	}
 
-	function convertSliderdata(string $sliderJsons) {
+	function convertSliderdata(string $sliderJsons)
+	{
 		$sliders = json_decode($sliderJsons, true);
 		foreach ($sliders as &$value) {
 			$value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
@@ -113,7 +114,8 @@ class PaperRepository
 	 * @param Paper $paper
 	 * @return \App\Api\Data\Paper\Info
 	 */
-	protected function convertInfo($paper){
+	protected function convertInfo($paper)
+	{
 		/**
 		 * setInfo data
 		 */
@@ -163,28 +165,34 @@ class PaperRepository
 		return $response;
 	}
 
+	function convertPaperItem(Paper $paper): PaperItem
+	{
+		/**
+		 * @var Paper $item
+		 */
+		$paperItem = new PaperItem();
+		$paperItem->setId($paper->id);
+		$paperItem->setUrl($paper->getUrl());
+		$paperItem->setActive(PaperInterface::ATTR_ACTIVE);
+		$paperItem->setCreatedAt($paper->created_at);
+		$paperItem->setImage($this->helperFunction->replaceImageUrl($paper->image_path ?: ''));
+		$paperItem->setShortContent($paper->{PaperInterface::ATTR_SHORT_CONTENT});
+		$paperItem->setTitle($paper->{PaperInterface::ATTR_TITLE});
+		$paperItem->setInfo($this->convertInfo($paper));
+		return $paperItem;
+	}
+
 	/**
 	 * @return \App\Api\Data\Paper\PaperItem[]|null
 	 */
-	function paperAll()  {
+	function paperAll()
+	{
 		$listData = null;
 		$paperList = $this->paperList;
 		$papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
-        foreach ($papers as $item) {
-			/**
-			 * @var Paper $item
-			 */
-			$paperItem = new PaperItem();
-			$paperItem->setId($item->id);
-			$paperItem->setUrl($item->getUrl());
-			$paperItem->setActive(PaperInterface::ATTR_ACTIVE);
-			$paperItem->setCreatedAt($item->created_at);
-			$paperItem->setImage($this->helperFunction->replaceImageUrl($item->image_path ?: ''));
-			$paperItem->setShortContent($item->{PaperInterface::ATTR_SHORT_CONTENT});
-			$paperItem->setTitle($item->{PaperInterface::ATTR_TITLE});
-			$paperItem->setInfo($this->convertInfo($item));
-			$listData[] = $paperItem;
-        }
+		foreach ($papers as $item) {
+			$listData[] = $this->convertPaperItem($item);
+		}
 		$pageInfo = $this->pageInfo;
 		$pageInfo->setCurrentPage($papers->currentPage());
 		$pageInfo->setLastPage($papers->lastPage());
@@ -193,6 +201,6 @@ class PaperRepository
 
 		$paperList->setItems($listData);
 		$paperList->setPageInfo($pageInfo);
-        return $paperList;
+		return $paperList;
 	}
 }

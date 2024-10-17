@@ -21,7 +21,7 @@ class CreateWritersTable extends Migration
             $table->string(WriterInterface::ATTR_PHONE)->nullable();
             $table->string(WriterInterface::ATTR_ADDRESS)->nullable();
             $table->string(WriterInterface::ATTR_GROUP)->nullable();
-            $table->string(WriterInterface::ATTR_IAMGE_PATH)->nullable();
+            $table->string(WriterInterface::ATTR_IMAGE_PATH)->nullable();
             $table->string(WriterInterface::ATTR_NAME_ALIAS)->unique(WriterInterface::ATTR_NAME_ALIAS)->nullable();
             $table->boolean(WriterInterface::ATTR_ACTIVE)->default(false);
             $table->string(WriterInterface::ATTR_RATING)->nullable();

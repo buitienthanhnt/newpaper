@@ -8,6 +8,7 @@ use App\Api\Data\Paper\PaperDetail;
 use App\Api\Data\Paper\PaperItem;
 use App\Api\Data\Paper\Tag;
 use App\Api\Data\Response as ApiResponse;
+use App\Api\ManagerApi;
 use App\Api\PaperApi;
 use App\Api\PaperRepository;
 use App\Api\WriterApi;
@@ -54,6 +55,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     protected $paperApi;
     protected $writerApi;
+    protected $managerApi;
     protected $tokenManager;
     protected $helperFunction;
 
@@ -81,7 +83,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         Trending $trending,
         CartService $cartService,
         PaperRepository $paperRepository,
-        ApiResponse $apiResponse
+        ApiResponse $apiResponse,
+        ManagerApi $managerApi
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -98,19 +101,34 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->cartService = $cartService;
         $this->paperRepository = $paperRepository;
         $this->apiResponse = $apiResponse;
+        $this->managerApi = $managerApi;
     }
 
     public function homeInfo()
     {
-        return $this->paperApi->homeInfo();
+        return $this->managerApi->homeInfo();
     }
 
+    /**
+     * 
+     */
     public function listPapers()
     {
         $apiResponse = $this->apiResponse;
         $apiResponse->setResponse($this->paperRepository->paperAll());
         return $apiResponse;
     }
+
+    /**
+     * @param int $paper_id
+     */
+    public function getPaperDetail(int $paper_id)
+    {
+        $apiResponse = $this->apiResponse;
+        $apiResponse->setResponse($this->paperRepository->getById($paper_id));
+        return $apiResponse;
+    }
+    // =============================================================================
 
     public function getCategoryTree()
     {
@@ -269,16 +287,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             'message' => null,
             'userData' => null
         ], 200);
-    }
-
-    /**
-     * @param int $paper_id
-     */
-    public function getPaperDetail(int $paper_id)
-    {
-        $apiResponse = $this->apiResponse;
-        $apiResponse->setResponse($this->paperRepository->getById($paper_id));
-        return $apiResponse;
     }
 
     /**

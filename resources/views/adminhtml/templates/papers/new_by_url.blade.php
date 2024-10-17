@@ -39,8 +39,9 @@
         <div>
             <div class="card-body">
                 <h4 class="card-title">add new source</h4>
-                <form class="form-sample" style="margin-top: 12px" method="GET" enctype="multipart/form-data"
+                <form class="form-sample" style="margin-top: 12px" method="POST" enctype="multipart/form-data"
                     action={{ route('admin_source_paper') }}>
+                    @csrf
                     @if (session('success'))
                         <?php alert()->success('server message', session('success')); ?>
                     @elseif (session('error'))

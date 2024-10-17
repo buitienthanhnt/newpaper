@@ -79,7 +79,7 @@ Route::group(["prefix" => "adminhtml"], function () {
 
         Route::get("newbyurl", $paperController.PaperControllerInterface::NEW_BY_URL)->name($admin . "_new_by_url");
 
-        Route::get("sourcePaper", $paperController.PaperControllerInterface::SOURCE_PAPER)->name($admin . "_source_paper");
+        Route::post("sourcePaper", $paperController.PaperControllerInterface::SOURCE_PAPER)->name($admin . "_source_paper");
     });
 
     Route::prefix(PermissionControllerInterface::PREFIX)->middleware($middlewareAdminPermission)->group(function () use ($admin) {

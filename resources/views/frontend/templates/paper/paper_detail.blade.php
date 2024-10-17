@@ -135,7 +135,7 @@
                                         @case('price')
                                         <div class="row">
                                             <div class="col-md-12 p-2">
-                                                <form action="{{ route('paper_addCart') }}" method="post">
+                                                <form action="{{ route('front_add_cart') }}" method="post">
                                                     @csrf
                                                     <div class="form-group container row">
                                                         <div class="form-group col-sm-10 row">

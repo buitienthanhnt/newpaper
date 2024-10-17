@@ -10,7 +10,7 @@ interface WriterInterface{
     const ATTR_PHONE = 'phone';
     const ATTR_ADDRESS = 'address';
     const ATTR_GROUP = 'group';
-    const ATTR_IAMGE_PATH = 'image_path';
+    const ATTR_IMAGE_PATH = 'image_path';
     const ATTR_NAME_ALIAS = 'name_alias';
     const ATTR_ACTIVE = 'active';
     const ATTR_RATING = 'rating';

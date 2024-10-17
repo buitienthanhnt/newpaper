@@ -2,9 +2,11 @@
 
 namespace App\Api;
 
+use App\Api\Data\Writer\WriterItem;
 use App\Helper\HelperFunction;
 use App\Models\ConfigCategory;
 use App\Models\Writer;
+use App\Models\WriterInterface;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
 use Thanhnt\Nan\Helper\LogTha;
@@ -28,13 +30,26 @@ final class WriterApi extends BaseApi
         parent::__construct($firebaseService, $logTha);
     }
 
+    function convertWriterItem($writer) : WriterItem {
+        $writerItem = new WriterItem();
+        $writerItem->setId($writer->id());
+        $writerItem->setName($writer->{WriterInterface::ATTR_NAME});
+        $writerItem->setEmail($writer->{WriterInterface::ATTR_EMAIL});
+        $writerItem->setPhone($writer->{WriterInterface::ATTR_PHONE});
+        $writerItem->setImagePath($this->helperFunction->replaceImageUrl($writer->{WriterInterface::ATTR_IMAGE_PATH} ?: ''));
+        $writerItem->setRating($writer->{WriterInterface::ATTR_RATING});
+        $writerItem->setActive($writer->{WriterInterface::ATTR_ACTIVE});
+        $writerItem->setDateOfBirth($writer->{WriterInterface::ATTR_DATE_OF_BIRTH});
+        return $writerItem;
+    }
+
     function allWriter()
     {
-        $writers = Writer::all();
-        foreach ($writers as &$value) {
-            $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
+        $allData = null;
+        foreach (Writer::all() as $writer) {
+            $allData = $this->convertWriterItem($writer);
         }
-        return $writers;
+        return $allData;
     }
 
     function getPapers($writer_id)

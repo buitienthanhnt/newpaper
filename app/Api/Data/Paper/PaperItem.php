@@ -22,7 +22,7 @@ class PaperItem extends BaseAttribute implements PaperItemInterface
         return $this->getData(self::URL);
     }
 
-    function setShortContent(string $short_content)
+    function setShortContent(string|null $short_content)
     {
         return $this->setData(self::SHORT_CONTENT, $short_content);
     }

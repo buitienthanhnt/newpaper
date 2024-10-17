@@ -1,31 +1,10 @@
 <?php
 namespace App\Api\Data\Paper;
 
-use App\Api\Data\DataObject;
-use Illuminate\Contracts\Support\Arrayable;
+use App\Api\Data\Attribute;
 
-class BaseAttribute extends DataObject implements BaseAttributeInterface
+class BaseAttribute extends Attribute implements BaseAttributeInterface
 {
-    function setCreatedAt(string $created_at)
-    {
-        return $this->setData(self::CREATED_AT, $created_at);
-    }
-
-    function getCreatedAt()
-    {
-        return $this->getData(self::CREATED_AT);
-    }
-
-    function setUpdatedAt(string $updated_at)
-    {
-        return $this->setData(self::UPDATED_AT, $updated_at);
-    }
-
-    function getUpdatedAt()
-    {
-        return $this->getData(self::UPDATED_AT);
-    }
-
     public function setId(int $id)
     {
         return $this->setData(self::ID, $id);

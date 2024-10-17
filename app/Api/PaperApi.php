@@ -9,10 +9,10 @@ use App\Models\Paper;
 use App\Models\ViewSource;
 use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use App\Models\PageTag;
 use App\Models\PaperContent;
-use App\Models\PaperTimeLine;
+use App\Models\PaperTagInterface;
+use App\Models\ViewSourceInterface;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,18 +29,22 @@ class PaperApi extends BaseApi
 	 */
 	protected $paperContent;
 
+	protected $paperRepository;
+
 	function __construct(
 		FirebaseService $firebaseService,
 		HelperFunction $helperFunction,
 		Request $request,
 		WriterApi $writerApi,
 		LogTha $logTha,
-		PaperContent $paperContent
+		PaperContent $paperContent,
+		PaperRepository $paperRepository
 	) {
 		$this->helperFunction = $helperFunction;
 		$this->request = $request;
 		$this->writerApi = $writerApi;
 		$this->paperContent = $paperContent;
+		$this->paperRepository = $paperRepository;
 		parent::__construct($firebaseService, $logTha);
 	}
 
@@ -371,7 +375,7 @@ class PaperApi extends BaseApi
 			$_paper = $paper->toArray();
 			unset($_paper['conten']);
 			$_paper['image_path'] = $image_path;
-			$writers = $paper->to_writer()->getResults()->toArray();
+			$writers = $paper->getWriter()->toArray();
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/writers/' . $writers['id'] . "/" . $_paper['id']);
 			$userRef->push($_paper);
 			$this->logTha->logFirebase('info', "added for paper to writer: " . $paper->id . " to realTime database writer firebase", [
@@ -511,65 +515,74 @@ class PaperApi extends BaseApi
 		}
 	}
 
+	// ===================================================================================
+
+	/**
+	 * lấy các bài viết nhiều lượt xem nhất.
+	 * dựa trên viewSource
+	 */
 	function mostPopulator()
 	{
-		$mostView = ViewSource::where('type', ViewSource::TYPE_PAPER)->orderBy('value', 'DESC')->limit(8)->get(['source_id'])->toArray();
-		$mostPapers = Paper::find(array_column($mostView, "source_id"))->makeHidden(['conten']);
-		foreach ($mostPapers as &$value) {
-			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
-			$value->info = $value->paperInfo();
+		$mostView = ViewSource::where(ViewSourceInterface::ATTR_TYPE, ViewSource::TYPE_PAPER)->orderBy(ViewSourceInterface::ATTR_VALUE, 'DESC')->limit(8)->pluck(ViewSourceInterface::ATTR_SOURCE_ID);
+		$mostPopulator = [];
+		foreach (Paper::find($mostView->toArray()) as $item) {
+			$mostPopulator[] = $this->paperRepository->convertPaperItem($item);
 		}
-		return $mostPapers;
+		return $mostPopulator;
 	}
 
+	/**
+	 * lấy 8 bài viết tạo mới nhất.
+	 */
 	function mostRecents()
 	{
-		$mostRecents = Paper::limit(8)->orderBy('created_at', 'DESC')->get()->makeHidden(['conten']);
-		foreach ($mostRecents as &$value) {
-			$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+		$mostRecentData = null;
+		$mostRecents = Paper::limit(8)->orderBy('created_at', 'DESC')->get();
+		foreach ($mostRecents as $item) {
+			$mostRecentData[] = $this->paperRepository->convertPaperItem($item);
 		}
-		return $mostRecents;
+		return $mostRecentData;
 	}
 
+	/**
+	 * lấy bài viết mới nhất.
+	 */
 	function hit()
 	{
-		$hit = Paper::all()->last()->makeHidden(['conten']);
-		$hit->image_path = $this->helperFunction->replaceImageUrl($hit['image_path']);
-		return $hit;
+		$hit = Paper::all()->last();
+		return $this->paperRepository->convertPaperItem($hit);
 	}
 
+	/**
+	 * lấy ngẫu nhiên 1 bài viết.
+	 */
 	function forward()
 	{
-		$forward = Paper::all()->random(1)->makeHidden(['conten'])->first();
-		$forward->image_path = $this->helperFunction->replaceImageUrl($forward['image_path']);
-		/**
-		 * get writer
-		 */
-		$writer = $forward->to_writer()->getResults();
-		if ($writer) {
-			$writer->image_path = $this->helperFunction->replaceImageUrl($writer->image_path ?: '');
-			/**
-			 * set writer for data
-			 */
-			$forward->writer = $writer;
-		}
-		return $forward;
+		$forward = Paper::all()->random(1)->first();
+		return $this->paperRepository->convertPaperItem($forward);
 	}
 
+	/**
+	 * lấy ngẫu nhiên 5 bài viết
+	 */
 	function listImages()
 	{
+		$listImagesData = null;
 		try {
-			$listImages = Paper::all()->random(5)->makeHidden(['conten']);
-			foreach ($listImages as &$value) {
-				$value->image_path = $this->helperFunction->replaceImageUrl($value['image_path']);
+			$listImages = Paper::all()->random(5);
+			foreach ($listImages as $item) {
+				$listImagesData[] = $this->paperRepository->convertPaperItem($item);
 			}
-			return $listImages;
+			return $listImagesData;
 		} catch (\Throwable $th) {
 			//throw $th;
 		}
 		return null;
 	}
 
+	/**
+	 * lấy bài viết kiểu timeline(sự kiện sắp diễn ra).
+	 */
 	function timeLine()
 	{
 		$dt = Carbon::now('Asia/Ho_Chi_Minh');
@@ -587,7 +600,7 @@ class PaperApi extends BaseApi
 			/**
 			 * @var PaperContent $time
 			 */
-			$paper = $time->toPaper()->getResults();
+			$paper = $time->getPaper();
 			$paper->image_path = $this->helperFunction->replaceImageUrl($paper->image_path);
 			$paper->time = date_format(new DateTime($time->value), "d-m-Y H:i");
 			$paper->description = $paper->title;
@@ -596,72 +609,17 @@ class PaperApi extends BaseApi
 		return $papers;
 	}
 
-	function homeInfo(): array
+	function tags(): array
 	{
-		$timeLine = $this->timeLine();
-		$hit = $this->hit();
-		$forward = $this->forward();
-		$mostPopulator = $this->mostPopulator();
-		$mostRecents = $this->mostRecents();
-		$listImages = $this->listImages();
-
-		$tags = $this->tags();
-		$writers = $this->writerApi->allWriter();
-		$lineMap = [
-			"data" => [
-				"labels" => ["Jan", "Feb", "March", "April", "May", "June", 'nan'],
-				"datasets" => [
-					[
-						"data" => [
-							random_int(1, 100),
-							random_int(1, 100),
-							random_int(1, 100),
-							random_int(1, 100),
-							random_int(1, 100),
-							random_int(1, 100),
-							random_int(1, 100)
-						]
-					]
-				]
-			],
-			"yAxisLabel" => "$",
-			"yAxisSuffix" => "đ",
-			"bezier" => true,
-			"yAxisInterval" => 1,
-			"chartConfig" => [
-				"backgroundColor" => "#e26a00",
-				"backgroundGradientFrom" => "#ff7cc0", // 82baff
-				"backgroundGradientTo" => "#82baff",   // ffa726
-				"decimalPlaces" => 1, // số chữ số sau dấu phẩy.
-			]
-		];
-		$video = [
-			"videoId" => "_l5V2aWyTfI",
-			"height" => 220,
-			"title" => "This snippet renders a Youtube video"
-		];
-
-		return [
-			'message' => 'get home info success',
-			'status' => true,
-			'code' => 200,
-			'hit' => $hit,
-			'forward' => $forward,
-			'mostPopulator' => $mostPopulator,
-			'mostRecents' => $mostRecents,
-			'listImages' => $listImages,
-			'timeLine' => $timeLine,
-			'search' => $tags,
-			'writers' => $writers,
-			'map' => $lineMap,
-			'video' => $video
-		];
+		$tags = PageTag::all()->unique(PaperTagInterface::ATTR_VALUE)->take(8)->pluck(PaperTagInterface::ATTR_VALUE)->toArray();
+		return $tags;
 	}
 
 	function upFirebaseHomeInfo(): bool
 	{
 		try {
-			$homeInfo = $this->homeInfo();
+			// $homeInfo = $this->homeInfo();
+			$homeInfo = null;
 			$userRef = $this->firebaseDatabase->getReference('/newpaper/info');
 			$snapshot = $userRef->getSnapshot();
 			/**
@@ -677,12 +635,6 @@ class PaperApi extends BaseApi
 			//throw $th;
 		}
 		return false;
-	}
-
-	function tags(): array
-	{
-		$tags = PageTag::select('value')->take(8)->get()->toArray();
-		return array_column($tags, 'value');
 	}
 
 	function searchAll()
