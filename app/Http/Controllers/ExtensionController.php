@@ -201,22 +201,17 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $apiResponse = $this->apiResponse;
         return $apiResponse->setResponse($this->writerApi->getPapers($writer_id));
     }
-    // =============================================================================
 
-    public function getRelatedPaper($paper_id)
+    /**
+     * @param int $paper_id
+     * @return ApiResponse
+     */
+    public function getRelatedPaper(int $paper_id)
     {
-        $papers = null;
-
-        try {
-            $papers = Paper::all()->random(5)->toArray();
-            foreach ($papers as &$value) {
-                $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
-            }
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-        return ['data' => $papers];
+        return $this->paperApi->getRelatedPaper($paper_id);
     }
+
+    // =============================================================================
 
     public function getCommentsOfPaper($paper_id)
     {

@@ -197,13 +197,6 @@ class ManagerController extends Controller implements ManagerControllerInterface
         }, $data), 2);
     }
 
-    function parseUrl(Request $request)
-    {
-        $url = $request->get('url', 'tuyen-viet-nam-dau-hong-kong-hlv-troussier-gay-bat-ngo');
-        $paper = Paper::where('url_alias', '=', $url)->first();
-        return $paper;
-    }
-
     // {{url}}/api/upFirebaseComments/122
     function upFirebaseComments($paper_id, Request $request)
     {

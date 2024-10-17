@@ -16,6 +16,8 @@ use App\Models\PaperContentInterface;
 use App\Models\PaperInterface;
 use App\Models\PaperTag;
 use App\Models\PaperTagInterface;
+use App\Models\ViewSource;
+use App\Models\ViewSourceInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -68,18 +70,7 @@ class PaperRepository
 	{
 		$paperItems = [];
 		foreach ($data as $item) {
-			/**
-			 * @var Paper $item
-			 */
-			$paperItem = new PaperItem();
-			$paperItem->setId($item->id);
-			$paperItem->setTitle($item->{PaperInterface::ATTR_TITLE});
-			$paperItem->setCreatedAt($item->created_at);
-			$paperItem->setUpdatedAt($item->updated_at);
-			$paperItem->setShortContent($item->{PaperInterface::ATTR_SHORT_CONTENT});
-			$paperItem->setImage($this->helperFunction->replaceImageUrl($item->{PaperInterface::ATTR_IMAGE_PATH}));
-			$paperItem->setUrl($item->getUrl());
-			$paperItems[] = $paperItem;
+			$paperItems[] = $this->convertPaperItem($item);
 		}
 		return $paperItems;
 	}
@@ -128,7 +119,7 @@ class PaperRepository
 	 * @param Paper $paper
 	 * @return \App\Api\Data\Paper\Info
 	 */
-	protected function convertInfo($paper)
+	protected function convertPaperInfo($paper)
 	{
 		/**
 		 * setInfo data
@@ -159,7 +150,7 @@ class PaperRepository
 		$response->setContents($this->covertContentData($paper->getContents()));
 		$response->setSuggest($this->formatSug(Paper::all()->random(4)));
 		$response->setTags($this->convertTags($paper->getTags()));
-		$response->setInfo($this->convertInfo($paper));
+		$response->setInfo($this->convertPaperInfo($paper));
 		return $response;
 	}
 
@@ -200,7 +191,7 @@ class PaperRepository
 		$paperItem->setImage($this->helperFunction->replaceImageUrl($paper->image_path ?: ''));
 		$paperItem->setShortContent($paper->{PaperInterface::ATTR_SHORT_CONTENT});
 		$paperItem->setTitle($paper->{PaperInterface::ATTR_TITLE});
-		$paperItem->setInfo($this->convertInfo($paper));
+		$paperItem->setInfo($this->convertPaperInfo($paper));
 		return $paperItem;
 	}
 
@@ -249,5 +240,14 @@ class PaperRepository
         $category = $this->category->find($category_id);
         $papers = $category->getPaperByCategory();
         return $this->convertPaperPaginate($papers);
+    }
+
+    function mostPaperViews(){
+        $mostView = ViewSource::where(ViewSourceInterface::ATTR_TYPE, ViewSource::TYPE_PAPER)
+            ->orderBy(ViewSourceInterface::ATTR_VALUE, 'desc')
+            ->limit(8)
+            ->pluck(ViewSourceInterface::ATTR_SOURCE_ID)
+            ->toArray();
+        return Paper::find($mostView);
     }
 }

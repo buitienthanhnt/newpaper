@@ -243,6 +243,9 @@ class Paper extends Model implements PaperInterface
         ];
     }
 
+    /**
+     * @return string
+     */
     function getUrl(): string
     {
         return route(
@@ -252,5 +255,22 @@ class Paper extends Model implements PaperInterface
                 'paper_id' => $this->id
             ]
         );
+    }
+
+    /**
+     * @param array $ids
+     * @return mixed
+     */
+    function getPaperByIds(array $ids = []){
+        return $this->find($ids);
+    }
+
+    function getRelatedItems(){
+        $paperIds = [];
+        $categories = $this->getCategories();
+        foreach ($categories as $category) {
+            $paperIds = array_merge($category->listIdPapers(), $paperIds);
+        }
+        return $this->getPaperByIds(array_unique($paperIds));
     }
 }

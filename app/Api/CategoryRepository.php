@@ -33,7 +33,7 @@ class CategoryRepository{
         $_category->setType($category->{CategoryInterface::ATTR_TYPE});
         $_category->setImagePath($this->helperFunction->replaceImageUrl($category->{CategoryInterface::ATTR_IMAGE_PATH} ?: ''));
         $_category->setParentId($category->{CategoryInterface::ATTR_PARENT_ID});
-        $_category->setUrl(route('front_category', ['category' => $category->{CategoryInterface::ATTR_URL_ALIAS}]));
+        $_category->setUrl($category->getUrl());
         if ($with_children){
             $_category->setChildrents($this->convertCategoryChildrent($category->getChildrent(), $with_children));
         }

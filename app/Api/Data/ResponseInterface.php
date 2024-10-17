@@ -18,7 +18,7 @@ interface ResponseInterface {
 	function getMessage();
 
 	/**
-	 * @param Arrayable $data
+	 * @param mixed $data
 	 * @return $this
 	 */
 	function setResponse($data);

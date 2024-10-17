@@ -180,6 +180,14 @@ class Category extends Model implements CategoryInterface
         return $currentCategory;
     }
 
+    /**
+     * @return string
+     */
+    function getUrl(): string
+    {
+        return route('front_category', ['category' => $this->{CategoryInterface::ATTR_URL_ALIAS}]);
+    }
+
     // ===================================================================
 
     public function setSelected($_selected = [])
