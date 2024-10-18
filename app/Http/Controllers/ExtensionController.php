@@ -13,6 +13,7 @@ use App\Api\Data\Response as ApiResponse;
 use App\Api\ManagerApi;
 use App\Api\PaperApi;
 use App\Api\PaperRepository;
+use App\Api\UserApi;
 use App\Api\WriterApi;
 use App\Events\ViewCount;
 use App\Helper\HelperFunction;
@@ -60,6 +61,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     protected $managerApi;
     protected $categoryApi;
     protected $commentApi;
+    protected $userApi;
 
     protected $tokenManager;
     protected $helperFunction;
@@ -91,15 +93,13 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         PaperRepository $paperRepository,
         ApiResponse $apiResponse,
         ManagerApi $managerApi,
-        CommentApi $commentApi
+        CommentApi $commentApi,
+        UserApi $userApi
     ) {
         $this->request = $request;
         $this->paper = $paper;
         $this->category = $category;
         $this->remoteSourceManager = $remoteSourceManager;
-        $this->paperApi = $paperApi; // new for api
-        $this->writerApi = $writerApi;
-        $this->commentApi = $commentApi;
         $this->helperFunction = $helperFunction;
         $this->user = $user;
         $this->tokenManager = $tokenManager;
@@ -111,6 +111,10 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->apiResponse = $apiResponse;
         $this->managerApi = $managerApi;
         $this->categoryApi = $categoryApi;
+        $this->userApi = $userApi;
+        $this->paperApi = $paperApi; // new for api
+        $this->writerApi = $writerApi;
+        $this->commentApi = $commentApi;
     }
 
     /**
@@ -161,7 +165,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         if (Cache::has($key) && false) { // nhanh hon ~50% voi du lieu nang.
             $responseData = Cache::get($key);
         } else {
-           $responseData = $this->paperRepository->getPaperByCategory($category_id);
+            $responseData = $this->paperRepository->getPaperByCategory($category_id);
             Cache::put($key, $responseData);
         }
         return $apiResponse->setResponse($responseData);
@@ -171,7 +175,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
      * @param int $category_id
      * @return ApiResponse|m.\App\Api\Data\Response.setData
      */
-    function getCategoryInfo(int $category_id){
+    function getCategoryInfo(int $category_id)
+    {
         $apiResponse = $this->apiResponse;
         return $apiResponse->setResponse($this->categoryApi->getCategoryById($category_id));
     }
@@ -232,20 +237,31 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         // TODO: Implement getWriterList() method.
     }
 
-    // =============================================================================
-
     public function getCommentsOfPaper($paper_id)
     {
         $apiResponse = $this->apiResponse->setResponse($this->commentApi->getCommentOfPaper($paper_id));
         return $apiResponse;
     }
 
-    function getCommentChildrent(int $comment_id) {
+    function getCommentChildrent(int $comment_id)
+    {
         $apiResponse = $this->apiResponse->setResponse($this->commentApi->getCommentChildrent($comment_id));
         $response = response()->make();
         $response->setContent($apiResponse)->setStatusCode(201);
         return $response;
     }
+
+    public function getUserInfo()
+    {
+        return $this->userApi->getUserInfo();
+    }
+
+    function login()
+    {
+       return $this->userApi->logIn();
+    }
+
+    // =============================================================================
 
     public function getPaperMostView()
     {
@@ -256,60 +272,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             $value->image_path = $value->getImagePath();
         }
         return $papers;
-    }
-
-    function login()
-    {
-        $request = $this->request;
-        $email = $request->get('email');
-        $password = $request->get('password');
-        if (!($email && $password)) {
-            return response([
-                "message" => "invalid email or password"
-            ], 400);
-        }
-        if (Auth::check()) {
-            return response([
-                "message" => "người dùng đã đăng nhập, không thể thực hiện thêm!"
-            ], 403);
-        }
-
-        if (Auth::attempt([
-            'email' => $email,
-            "password" => $password
-        ])) {
-            $user = $this->user->where("email", $email)->first();
-            Auth::login($user);
-            $userData = $user->toArray();
-            $userData["sid"] = Session::getId();
-
-            $token = $this->tokenManager->getToken($userData);
-            $refreshToken = $this->tokenManager->getRefreshToken($userData);
-            return response([
-                "message" => "login success!!!",
-                "userData" => $user,
-                "token" => $token,
-                "refresh_token" => $refreshToken
-            ], 200);
-        }
-        return response([
-            'message' => "login fail, error email or password",
-        ], 400);
-    }
-
-    public function getUserInfo()
-    {
-        $tokenData = (array) $this->tokenManager->getTokenData()['iss'];
-        if (isset($tokenData['id']) && $userId = $tokenData['id']) {
-            return response([
-                'message' => null,
-                'userData' => Auth::user()
-            ], 200);
-        }
-        return response([
-            'message' => null,
-            'userData' => null
-        ], 200);
     }
 
     /**
