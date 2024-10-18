@@ -2,8 +2,8 @@
 @inject('DomHtml', 'App\Helper\HelperFunction')
 
 @section('metas')
-    <meta name="title" content="{{$paper->title}}">
-    <meta property="og:image" content="{{ $paper->image_path }}"/>
+    <meta name="title" content="{{ $paper->title }}">
+    <meta property="og:image" content="{{ $paper->image_path }}" />
     <meta name="twitter:image" content="{{ $paper->image_path }}">
     <meta name="image" content="{{ $paper->image_path }}">
     <meta property="og:image:height" content="600">
@@ -18,7 +18,9 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-@section('page_title')detail page @endsection
+@section('page_title')
+    detail page
+@endsection
 
 @section('css_after')
     <link rel="stylesheet" href={{ asset('assets/frontend/css/paper/detail.css') }}>
@@ -82,97 +84,95 @@
                                 @foreach ($paper->getContents() as $item)
                                     @switch($item->type)
                                         @case('conten')
-                                        {!! $item->value !!}
+                                            {!! $item->value !!}
                                         @break;
                                         @case('slider_data')
-                                        @if ($sliderImages = json_decode($item->value, true))
-                                            <div class="bd-example">
-                                                <div id="carouselExampleCaptions" class="carousel slide"
-                                                     data-ride="carousel">
-                                                    <ol class="carousel-indicators">
-                                                        @for ($i = 0; $i < count($sliderImages); $i++)
-                                                            <li data-target="#carouselExampleCaptions"
-                                                                data-slide-to="{{ $i }}"
-                                                                class="{{ $i === 0 ? 'active' : ' ' }}"></li>
-                                                        @endfor
-                                                    </ol>
+                                            @if ($sliderImages = json_decode($item->value, true))
+                                                <div class="bd-example">
+                                                    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                                                        <ol class="carousel-indicators">
+                                                            @for ($i = 0; $i < count($sliderImages); $i++)
+                                                                <li data-target="#carouselExampleCaptions"
+                                                                    data-slide-to="{{ $i }}"
+                                                                    class="{{ $i === 0 ? 'active' : ' ' }}"></li>
+                                                            @endfor
+                                                        </ol>
 
-                                                    <div class="carousel-inner">
-                                                        @php
-                                                            $j = 0;
-                                                        @endphp
-                                                        @foreach ($sliderImages as $i)
-                                                            <div class="carousel-item {{ $j === 0 ? 'active' : ' ' }}">
-                                                                <img src="{{ $i['image_path'] }}"
-                                                                     style="width: 100%; max-height: 480px;" alt="">
-                                                                <div class="carousel-caption d-none d-md-block">
-                                                                    <h5>{{ $i['title'] }}</h5>
-                                                                    <p>{{ $i['label'] }}</p>
-                                                                </div>
-                                                            </div>
+                                                        <div class="carousel-inner">
                                                             @php
-                                                                $j += 1;
+                                                                $j = 0;
                                                             @endphp
-                                                        @endforeach
+                                                            @foreach ($sliderImages as $i)
+                                                                <div class="carousel-item {{ $j === 0 ? 'active' : ' ' }}">
+                                                                    <img src="{{ $i['image_path'] }}"
+                                                                        style="width: 100%; max-height: 480px;" alt="">
+                                                                    <div class="carousel-caption d-none d-md-block">
+                                                                        <h5>{{ $i['title'] }}</h5>
+                                                                        <p>{{ $i['label'] }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                @php
+                                                                    $j += 1;
+                                                                @endphp
+                                                            @endforeach
 
+                                                        </div>
+                                                        <a class="carousel-control-prev" href="#carouselExampleCaptions"
+                                                            role="button" data-slide="prev">
+                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                            <span class="sr-only">Previous</span>
+                                                        </a>
+                                                        <a class="carousel-control-next" href="#carouselExampleCaptions"
+                                                            role="button" data-slide="next">
+                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                            <span class="sr-only">Next</span>
+                                                        </a>
                                                     </div>
-                                                    <a class="carousel-control-prev" href="#carouselExampleCaptions"
-                                                       role="button" data-slide="prev">
-                                                        <span class="carousel-control-prev-icon"
-                                                              aria-hidden="true"></span>
-                                                        <span class="sr-only">Previous</span>
-                                                    </a>
-                                                    <a class="carousel-control-next" href="#carouselExampleCaptions"
-                                                       role="button" data-slide="next">
-                                                        <span class="carousel-control-next-icon"
-                                                              aria-hidden="true"></span>
-                                                        <span class="sr-only">Next</span>
-                                                    </a>
                                                 </div>
-                                            </div>
-                                        @endif
+                                            @endif
                                         @break;
                                         @case('price')
-                                        <div class="row">
-                                            <div class="col-md-12 p-2">
-                                                <form action="{{ route('front_add_cart') }}" method="post">
-                                                    @csrf
-                                                    <div class="form-group container row">
-                                                        <div class="form-group col-sm-10 row">
-                                                            <label class="col-form-label" for="qty">Giá:
-                                                                {{ $item->value }}
-                                                                vnđ</label>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" name="qty" class="form-control"
-                                                                       id="qty" min="1" value="1">
-                                                                <input type="hidden" name="id"
-                                                                       value="{{ $paper->id }}">
+                                            <div class="row">
+                                                <div class="col-md-12 p-2">
+                                                    <form action="{{ route('front_add_cart') }}" method="post">
+                                                        @csrf
+                                                        <div class="form-group container row">
+                                                            <div class="form-group col-sm-10 row">
+                                                                <label class="col-form-label" for="qty">Giá:
+                                                                    {{ $item->value }}
+                                                                    vnđ</label>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" name="qty" class="form-control"
+                                                                        id="qty" min="1" value="1">
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $paper->id }}">
+                                                                </div>
                                                             </div>
+                                                            <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu
+                                                                giỏ
+                                                                hàng
+                                                            </button>
                                                         </div>
-                                                        <button type="submit" class="btn btn-primary btn-sm mb-2">Lưu
-                                                            giỏ
-                                                            hàng
-                                                        </button>
-                                                    </div>
-                                                </form>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
                                         @break;
                                         @case('image')
-                                        <div class="col-md-12 p-2">
-                                            <img src="{{ $item->value }}" style="width: 100%; max-height: 480px;"
-                                                 alt="">
-                                            <div>
+                                            <div class="col-md-12 p-2">
+                                                <img src="{{ $item->value }}" style="width: 100%; max-height: 480px;"
+                                                    alt="">
+                                                <div>
 
-                                            </div>
-                                            @isset($item->depend_value)
-                                                <div class="justify-content-center align-items-center d-flex mt-2">
-                                                    <span class="text-success"
-                                                          style="font-size: 12px; text-decoration: underline">{{ $item->depend_value }}</span>
                                                 </div>
-                                            @endisset
-                                        </div>
+                                                @isset($item->depend_value)
+                                                    <div class="justify-content-center align-items-center d-flex mt-2">
+                                                        <span class="text-success"
+                                                            style="font-size: 12px; text-decoration: underline">{{ $item->depend_value }}</span>
+                                                    </div>
+                                                @endisset
+                                            </div>
                                         @break
+
                                         @default
                                     @endswitch
                                 @endforeach
@@ -217,6 +217,62 @@
 
 @section('js_after')
     <script>
+        function BuildUrl() {
+		var self = this;
+
+		self.getUrl = function (path = '', params = null) {
+			const queryString = new URLSearchParams(params).toString();
+			return baseUrl+ '/' + path + '?' + queryString;
+		}
+
+		self.getApiUrl = function(path = '', params = null){
+			return this.getUrl('api' + '/' + path, params);
+		}
+
+		self.token = flashToken;
+        return self;
+
+	}
+
+        function sendReply(data) {
+            var buildUrl = BuildUrl();
+            var element = $(data);
+            let comment_id = element.attr("data-comment-id");
+            let reply_conten = $("#reply-comment-" + comment_id).val();
+            let reply_name = $("#reply-name-" + comment_id).val();
+            let reply_email = $("#reply-email-" + comment_id).val();
+
+            $.ajax({
+                url: buildUrl.getUrl('paper/commentReply' + "/" + comment_id),
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    _token: buildUrl.token,
+                    paper_value: paper_value,
+                    conten: reply_conten,
+                    name: reply_name,
+                    email: reply_email
+                }),
+                success: function(result) {
+                    console.log("success");
+                    if (result) {
+                        var _data = JSON.parse(result);
+                        if (_data.code == 200) {
+                            element.parent().parent().children().first().addClass("alert-success").text(
+                                "success!").show();
+                        } else {
+                            element.parent().parent().children().first().addClass("alert-warning").text(
+                                "error!").show();
+                        }
+                    }
+                }.bind(this),
+                error: function(e) {
+                    element.parent().parent().children().first().addClass("alert-warning").text("error!")
+                .show();
+                }
+            })
+        }
+
         setInterval(() => {
             var success_message = $("#success-message");
             if (success_message.length) {

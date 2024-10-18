@@ -186,9 +186,12 @@ class PaperApi extends BaseApi
          */
         $paper = $this->paper->find($paper_id);
         $data = [];
-        foreach ($paper->getRelatedItems()->random(5) as $item) {
-            $data[] = $this->paperRepository->convertPaperItem($item);
+        if ($list_related = $paper->getRelatedItems()) {
+            foreach ($list_related->random($list_related->count() >= 5 ? 5 : $list_related->count()) as $item) {
+                $data[] = $this->paperRepository->convertPaperItem($item);
+            }
         }
+    
         return $this->apiResponse->setResponse($data);
     }
 }

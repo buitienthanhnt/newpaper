@@ -101,10 +101,10 @@ class PaperRepository
 			$conten->setDependValue($value->{PaperContentInterface::ATTR_DEPEND_VALUE} ?: '');
 			$conten->setPaperId($value->{PaperContentInterface::ATTR_PAPER_ID});
 			switch ($value->{PaperContentInterface::ATTR_TYPE}) {
-				case 'image':
+				case PaperContentInterface::TYPE_IMAGE:
 					$conten->setValue($this->helperFunction->replaceImageUrl($value->{PaperContentInterface::ATTR_VALUE} ?? ''));
 					break;
-				case 'slider_data':
+				case PaperContentInterface::TYPE_SLIDER:
 					$conten->setValue($this->convertSliderdata($value->{PaperContentInterface::ATTR_VALUE}));
 					break;
 				default:

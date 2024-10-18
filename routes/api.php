@@ -60,6 +60,9 @@ Route::get('search', $extensionController . ExtensionControllerInterface::SEARCH
 // https://localhost/laravel1/public/api/paperComments/1
 Route::get('paperComments/{paper_id}', $extensionController . ExtensionControllerInterface::PAPER_COMMENTS);
 
+// https://localhost/laravel1/public/api/commentChildrent/1
+Route::get('commentChildrent/{comment_id}', $extensionController . ExtensionControllerInterface::PAPER_COMMENT_CHILDRENT);
+
 // https://localhost/laravel1/public/api/paperMostView (dung cho web)
 Route::get('paperMostView', $extensionController . ExtensionControllerInterface::PAPER_MOST_VIEW)->name('api_paper_most_view');
 

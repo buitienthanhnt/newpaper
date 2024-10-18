@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Api\CategoryApi;
+use App\Api\CommentApi;
 use App\Api\Data\Paper\Conten;
 use App\Api\Data\Paper\Info;
 use App\Api\Data\Paper\PaperDetail;
@@ -58,6 +59,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     protected $writerApi;
     protected $managerApi;
     protected $categoryApi;
+    protected $commentApi;
 
     protected $tokenManager;
     protected $helperFunction;
@@ -88,7 +90,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         CartService $cartService,
         PaperRepository $paperRepository,
         ApiResponse $apiResponse,
-        ManagerApi $managerApi
+        ManagerApi $managerApi,
+        CommentApi $commentApi
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -96,6 +99,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->remoteSourceManager = $remoteSourceManager;
         $this->paperApi = $paperApi; // new for api
         $this->writerApi = $writerApi;
+        $this->commentApi = $commentApi;
         $this->helperFunction = $helperFunction;
         $this->user = $user;
         $this->tokenManager = $tokenManager;
@@ -232,21 +236,15 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     public function getCommentsOfPaper($paper_id)
     {
-        $request = $this->request;
-        /**
-         * @var Paper $paper
-         */
-        $paper = $this->paper->find($paper_id);
-        if ($request->get('all')) {
-            $comments = $paper->getCommentTree($request->get('parent_id', null), 0, 0);
-        } else {
-            $comments = $paper->getCommentTree($request->get('parent_id', null), $request->get('p', 0), $request->get('limit', 4));
-        }
-        return [
-            'success' => true,
-            'data' => $comments,
-            'errors' => null
-        ];
+        $apiResponse = $this->apiResponse->setResponse($this->commentApi->getCommentOfPaper($paper_id));
+        return $apiResponse;
+    }
+
+    function getCommentChildrent(int $comment_id) {
+        $apiResponse = $this->apiResponse->setResponse($this->commentApi->getCommentChildrent($comment_id));
+        $response = response()->make();
+        $response->setContent($apiResponse)->setStatusCode(201);
+        return $response;
     }
 
     public function getPaperMostView()

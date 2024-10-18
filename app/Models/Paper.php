@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Api\BaseApi;
 use App\Helper\ImageUpload;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -120,6 +121,10 @@ class Paper extends Model implements PaperInterface
         });
     }
 
+    function linkComment() {
+        return $this->hasMany(Comment::class, PaperInterface::PRIMARY_ALIAS)->where(CommentInterface::ATTR_PARENT_ID, null);
+    }
+
     /**
      * lấy comment con theo paper_id và comment cha.
      * @return Illuminate\Database\Eloquent\Collection
@@ -130,6 +135,13 @@ class Paper extends Model implements PaperInterface
             return $this->hasMany(Comment::class, PaperInterface::PRIMARY_ALIAS)->where(CommentInterface::ATTR_PARENT_ID, $parentId)->getResults();
         }
         return $this->hasMany(Comment::class, PaperInterface::PRIMARY_ALIAS)->where(CommentInterface::ATTR_PARENT_ID, $parentId)->limit($limit)->offSet($page * $limit)->getResults();
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    function getCommentPaginate() {
+     return $this->linkComment()->paginate(12);   
     }
 
     /**

@@ -13,6 +13,7 @@ interface ExtensionControllerInterface{
     const PAPER_BY_CATEGORY = 'getPaperCategory';
     const PAPER_RELATED = 'getRelatedPaper';
     const PAPER_COMMENTS = 'getCommentsOfPaper';
+    const PAPER_COMMENT_CHILDRENT = 'getCommentChildrent';
     const SEARCH = 'search';
     const PAPER_BY_WRITER = 'getPaperByWriter';
     const WRITER_LIST = 'getWriterList';
@@ -50,6 +51,8 @@ interface ExtensionControllerInterface{
      * @param int $paper_id
      */
     public function getCommentsOfPaper(int $paper_id);
+
+    public function getCommentChildrent(int $comment_id);
 
     public function search();
 
