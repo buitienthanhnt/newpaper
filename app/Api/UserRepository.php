@@ -26,16 +26,16 @@ class UserRepository{
 
     function convertUserInfo(User $user) : UserInfo {
         $userInfo = $this->userInfo;
-        $userInfo->setName($user->name());
-        $userInfo->setEmail($user->email());
+        $userInfo->setName($user->name);
+        $userInfo->setEmail($user->email);
         $user->setCreatedAt($user->created_at);
         return $userInfo;
     }
 
     function convertUserAuth(User $user) {
         $userAuth = $this->userAuth;
-        $userAuth->setName($user->name());
-        $userAuth->setEmail($user->email());
+        $userAuth->setName($user->name);
+        $userAuth->setEmail($user->email);
         $userAuth->setCreatedAt($user->created_at);
         $userAuth->setToken($this->tokenManager->getToken($user->toArray()));
         $userAuth->setRefreshToken($this->tokenManager->getRefreshToken($user->toArray()));

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\ImageUpload;
 use App\Models\Writer;
+use App\Models\WriterInterface;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -117,21 +118,20 @@ class WriterController extends Controller implements WriterControllerInterface
             if ($writer) {
                 if ($file = $request->__get("image_post")) {
                     $image_upload_path = $this->uploadImage($file, "public/images/writer", "images/resize/writer");
-                    if ($image_upload_path) {
+                    if ($image_upload_path && $writer->image_path) {
                         $this->delete_file($writer->image_path); // xoa file cu de thay bang file moi.
                     }
                 }
                 try {
                     $writer->fill([
-                        "name" => $request->__get("name"),
-                        "email" => $request->__get("email"),
-                        "phone" => $request->__get("phone"),
-                        "address" => $request->__get("address"),
-                        "image_path" => $image_upload_path["file_path"] ? url($image_upload_path["file_path"]) : null,
-                        "name_alias" => $request->__get("alias"),
-                        "active" => $request->__get("active") ?? true,
-                        "date_of_birth" => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
-                        "good" => $request->__get("good") ?: null
+                        WriterInterface::ATTR_NAME => $request->__get("name"),
+                        WriterInterface::ATTR_EMAIL => $request->__get("email"),
+                        WriterInterface::ATTR_PHONE => $request->__get("phone"),
+                        WriterInterface::ATTR_ADDRESS => $request->__get("address"),
+                        WriterInterface::ATTR_IMAGE_PATH => $image_upload_path["file_path"] ? url($image_upload_path["file_path"]) : null,
+                        WriterInterface::ATTR_NAME_ALIAS => $request->__get("alias"),
+                        WriterInterface::ATTR_ACTIVE => $request->__get("active") ?? true,
+                        WriterInterface::ATTR_DATE_OF_BIRTH => Carbon::createFromFormat('Y-m-d', $request->__get("date_of_birth")), // date('Y-m-d H:i:s', strtotime($request->__get("date_of_birth")))
                     ]);
                     $result = $writer->save();
                     if ($result) {

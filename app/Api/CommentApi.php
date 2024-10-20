@@ -3,19 +3,27 @@ namespace App\Api;
 
 use App\Models\Comment;
 use App\Models\Paper;
+use Illuminate\Http\Request;
 
 class CommentApi{
     protected $comment;
 
     protected $commentRepository;
+    protected $responseApi;
+
+    protected $request;
 
     function __construct(
         Comment $comment,
-        CommentRepository $commentRepository
+        CommentRepository $commentRepository,
+        ResponseApi $responseApi,
+        Request $request
     )
     {
         $this->comment = $comment;
         $this->commentRepository = $commentRepository;
+        $this->responseApi = $responseApi;
+        $this->request = $request;
     }
 
     function getCommentOfPaper($paper_id) {
@@ -37,5 +45,9 @@ class CommentApi{
         }
         $childrent = $comment->getChildrentPaginate();
         return $this->commentRepository->convertPaperPaginate($childrent);
+    }
+
+    function addComment(){
+
     }
 }

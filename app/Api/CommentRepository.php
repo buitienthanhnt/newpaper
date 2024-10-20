@@ -11,10 +11,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class CommentRepository{
-    
+
     function __construct()
     {
-        
+
     }
 
     /**
@@ -27,6 +27,7 @@ class CommentRepository{
         $commentItem->setContent($comment->{CommentInterface::ATTR_CONTENT});
         $commentItem->setEmail($comment->{CommentInterface::ATTR_EMAIL});
         $commentItem->setChildrentCount($comment->getChildrentCount());
+        $commentItem->setPaperId($comment->{CommentInterface::ATTR_PAPER_ID});
         return $commentItem;
     }
 

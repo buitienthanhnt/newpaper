@@ -9,6 +9,7 @@ use App\Models\Writer;
 use App\Models\WriterInterface;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Thanhnt\Nan\Helper\LogTha;
 
 final class WriterApi extends BaseApi
@@ -36,7 +37,13 @@ final class WriterApi extends BaseApi
 
     function listWriter()
     {
-       return $this->writerRepository->listWriter();
+        $writer_cache_key = 'writer-list.'.$this->request->get('page', 1);
+        if (Cache::has($writer_cache_key)){
+            return  Cache::get($writer_cache_key);
+        }
+       $writerList = $this->writerRepository->listWriter();
+       Cache::put($writer_cache_key, $writerList);
+       return  $writerList;
     }
 
     function getPapers($writer_id)
@@ -47,5 +54,9 @@ final class WriterApi extends BaseApi
         $writer = $this->writer->find($writer_id);
         $papers = $writer->getPaperWithPaginate();
         return $this->paperRepository->convertPaperPaginate($papers);
+    }
+
+    function addPaperComment(int $paper_id){
+
     }
 }

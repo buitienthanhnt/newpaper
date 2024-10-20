@@ -16,8 +16,8 @@ interface ViewSourceInterface
     const TYPE_CATEGORY = "category";
 
     const PARAM_TYPE = 'type';
-    const PARAM_ACTION = 'action';
 
+    const PARAM_ACTION = 'action';
     const ACTION_VAL_ADD = 'add';
     const ACTION_VAL_SUB = 'sub';
 }

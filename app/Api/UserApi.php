@@ -1,6 +1,7 @@
 <?php
 namespace App\Api;
 
+use App\Api\Data\Response;
 use App\Api\Data\User\UserInfo;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,14 +15,18 @@ class UserApi
     protected $user;
     protected $userRepository;
 
+    protected $response;
+
     function __construct(
         Request $request,
         User $user,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        Response $response
     )
     {
         $this->request = $request;
         $this->user = $user;
+        $this->response = $response;
         $this->userRepository = $userRepository;
     }
 
@@ -32,14 +37,16 @@ class UserApi
              * @var UserInfo $userInfo
              */
             $userInfo = $this->userRepository->convertUserInfo($user);
+            return  $this->response->setResponse($userInfo);
             return response($userInfo, 200);
         }
         return response([
-            'message' => 'you are not logined, please login to continue process.' 
+            'message' => 'you are not logined, please login to continue process.'
         ], 402);
     }
 
     function logIn() {
+
         $request = $this->request;
         $email = $request->get('email');
         $password = $request->get('password');
@@ -63,7 +70,7 @@ class UserApi
             $userData = $user->toArray();
             $userData["sid"] = Session::getId();
 
-            return $this->userRepository->convertUserAuth($user);
+            return $this->response->setResponse($this->userRepository->convertUserAuth($user));
         }
         return response([
             'message' => "login fail, error email or password",

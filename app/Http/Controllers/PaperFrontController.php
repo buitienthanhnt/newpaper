@@ -36,11 +36,11 @@ class PaperFrontController extends Controller implements PaperFrontControllerInt
         $paperSource = ViewSource::where(ViewSource::ATTR_TYPE, ViewSource::TYPE_PAPER)->where(ViewSource::ATTR_SOURCE_ID, $paper_id)->first();
         if (empty($paperSource)) {
             ViewSource::firstOrCreate([
-                ViewSource::ATTR_TYPE => ViewSource::TYPE_PAPER,
+                ViewSource::ATTR_TYPE => ViewSource::TYPE_PAPER, // type= paper|category(category chua ho tro.)
                 ViewSource::ATTR_SOURCE_ID => $paper_id,
                 ViewSource::ATTR_VALUE => 1,
                 ViewSource::ATTR_HEART => $params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_HEART ? 1 : 0,
-                ViewSource::ATTR_LIKE => $params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_LIKE ? 1 : 0
+                ViewSource::ATTR_LIKE => $params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_HEART ? 1 : 0
             ]);
         } else {
             if ($params[ViewSource::PARAM_TYPE] === ViewSource::ATTR_LIKE) {

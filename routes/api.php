@@ -4,7 +4,10 @@ use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\ExtensionControllerInterface;
 use App\Http\Controllers\PaperFrontControllerInterface;
 use App\Http\Controllers\NotificationControllerInterface;
-use Berkayk\OneSignal\OneSignalFacade; // https://github.com/berkayk/laravel-onesignal
+use App\Http\Controllers\Api\CommentApiControllerInterface;
+use Berkayk\OneSignal\OneSignalFacade;
+
+// https://github.com/berkayk/laravel-onesignal
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,7 +37,7 @@ Route::get('homeInfo', $extensionController . ExtensionControllerInterface::HOME
 // https://localhost/laravel1/public/api/getPapers
 Route::get('getPapers', $extensionController . ExtensionControllerInterface::LIST_PAPERS);
 
-Route::get('categoryInfo/{category_id}', $extensionController.ExtensionControllerInterface::CATEGORY_INFO);
+Route::get('categoryInfo/{category_id}', $extensionController . ExtensionControllerInterface::CATEGORY_INFO);
 
 // https://localhost/laravel1/public/api/getCategoryTree
 Route::get("getCategoryTree", $extensionController . ExtensionControllerInterface::CATEGORY_TREE);
@@ -80,6 +83,7 @@ Route::post('login', $extensionController . ExtensionControllerInterface::LOGIN)
 Route::get('userInfo', $extensionController . ExtensionControllerInterface::USER_INFO);
 
 Route::prefix('paper')->group(function () use ($extensionController, $paperFrontController) {
+    $commentControllerApi = CommentApiControllerInterface::CONTROLLER_NAME . '@';
 
     // curl  -X POST \
     //   'https://localhost/laravel1/public/api/paperAddComment/1' \
@@ -91,7 +95,7 @@ Route::prefix('paper')->group(function () use ($extensionController, $paperFront
     //   "subject": "demo add comment api",
     //   "message": "noi dung"
     // }'
-    Route::post("addComment/{paper_id}", $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_ADD_COMMENT);
+    Route::post("addComment/{paper_id}", $commentControllerApi . CommentApiControllerInterface::PAPER_ADD_COMMENT);
 
     // curl  -X POST \
     //   'https://localhost/laravel1/public/api/likePaper/1' \
@@ -102,6 +106,10 @@ Route::prefix('paper')->group(function () use ($extensionController, $paperFront
     //   "type": "like",
     //   "action": "add"
     // }'
+
+    // commentReply
+    Route::post("replyComment/{comment_id}", $commentControllerApi . CommentApiControllerInterface::PAPER_REPLY_COMMENT);
+
     Route::post("likePaper/{paper_id}", $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_ADD_LIKE);
 
     Route::get("detail/{paper_id}", $extensionController . ExtensionControllerInterface::PAPER_DETAIL);
