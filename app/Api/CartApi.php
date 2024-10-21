@@ -1,6 +1,7 @@
 <?php
 namespace App\Api;
 
+use App\Api\Data\Cart\CartItem;
 use App\Api\Data\ConvertCart;
 use App\Models\Order;
 use App\Models\OrderAddress;
@@ -35,7 +36,7 @@ class CartApi{
         $this->session_begin();
     }
 
-    function addCart($value_id, int $qty)
+    function addCart($paper, int $qty)
     {
         $current_cart = $this->getCart();
         if (!$current_cart) {
@@ -44,19 +45,18 @@ class CartApi{
         /**
          * @var Paper $paperObj
          */
-        $cartItem = $this->convertCart->convertCartItem(Paper::find($value_id), $qty);
+        $cartItem = $this->convertCart->convertCartItem($paper, $qty);
         $currentCartItems = $current_cart->getItems() ?: [];
 
         try {
-            // $currentCartItems->push($cartItem)
-            $_existItem = array_filter($currentCartItems, function ($item) use ($value_id) {
-                return $value_id == $item->getValueId();
+            $_existItem = array_filter($currentCartItems, function ($item) use ($paper) {
+                return $paper->id == $item->getValueId();
             });
             if (!$_existItem) {
                 $currentCartItems[] = $cartItem;
             }else {
                 foreach ($currentCartItems as &$value) {
-                    if ($value_id === $value->getValueId()) {
+                    if ($paper->id === $value->getValueId()) {
                         $value->setQty($value->getQty() + $qty);
                     }
                 }
@@ -66,9 +66,18 @@ class CartApi{
             $this->saveCart($newCart);
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 500);
-            Session::forget(self::KEY);
-            Session::save();
         }
+        return $this->getCart();
+    }
+
+    function removeItem($item_id){
+        $cartData = $this->getCart();
+        $cart_items = $cartData->getItems();
+        $new_items = array_filter($cart_items, function (CartItem $item)use($item_id){
+            return $item->getValueId() != $item_id;
+        });
+        $cartData->setItems(array_values($new_items));
+        $this->saveCart($this->convertCart->convertCartData($cartData));
         return $this->getCart();
     }
 

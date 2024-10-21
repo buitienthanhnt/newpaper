@@ -7,10 +7,13 @@ interface CartApiControllerInterface{
     const ADD_TO_CART = 'addToCart';
     const GET_CART = 'getCart';
     const CLEAR_CART = 'clearCart';
+    const REMOVE_CART_ITEM = 'removeItem';
 
     function addToCart();
 
     function getCart();
 
     function clearCart();
+
+    function removeItem(int $item_id);
 }
