@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Exception;
 
+use Exception;
 use Illuminate\Support\MessageBag;
 
 class FormValidationException extends \Exception

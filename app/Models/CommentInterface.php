@@ -12,4 +12,8 @@ interface CommentInterface{
     const ATTR_LIKE = 'like';
     const ATTR_PARENT_ID = 'parent_id';
     const ATTR_PAPER_ID = PaperInterface::PRIMARY_ALIAS;
+
+    const PARAM_ACTION = 'action';
+    const ACTION_LIKE = 'like';
+    const ACTION_DISLIKE = 'dislike';
 }

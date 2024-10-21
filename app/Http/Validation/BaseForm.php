@@ -11,12 +11,8 @@ abstract class BaseForm
      */
     protected $validation;
 
-    private $validator;
 
-    public function __construct(Validator $validator)
-    {
-        $this->validator = $validator;
-    }
+    public function __construct(){}
 
     /**
      * @param array $formData

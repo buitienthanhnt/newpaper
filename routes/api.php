@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\CartApiControllerInterface;
 use App\Http\Controllers\ExtensionController;
 use App\Http\Controllers\ExtensionControllerInterface;
 use App\Http\Controllers\PaperFrontControllerInterface;
 use App\Http\Controllers\NotificationControllerInterface;
 use App\Http\Controllers\Api\CommentApiControllerInterface;
+use App\Http\Controllers\Api\PaperApiControllerInterface;
 use Berkayk\OneSignal\OneSignalFacade;
 
 // https://github.com/berkayk/laravel-onesignal
@@ -84,6 +86,8 @@ Route::get('userInfo', $extensionController . ExtensionControllerInterface::USER
 
 Route::prefix('paper')->group(function () use ($extensionController, $paperFrontController) {
     $commentControllerApi = CommentApiControllerInterface::CONTROLLER_NAME . '@';
+    $paperApiController = PaperApiControllerInterface::CONTROLLER_NAME.'@';
+    $cartApiController = CartApiControllerInterface::CONTROLLER_NAME.'@';
 
     // curl  -X POST \
     //   'https://localhost/laravel1/public/api/paperAddComment/1' \
@@ -110,13 +114,13 @@ Route::prefix('paper')->group(function () use ($extensionController, $paperFront
     // commentReply
     Route::post("replyComment/{comment_id}", $commentControllerApi . CommentApiControllerInterface::PAPER_REPLY_COMMENT);
 
-    Route::post("likePaper/{paper_id}", $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_ADD_LIKE);
+    Route::post("likePaper/{paper_id}", $paperApiController . PaperApiControllerInterface::API_PAPER_ADD_LIKE);
 
     Route::get("detail/{paper_id}", $extensionController . ExtensionControllerInterface::PAPER_DETAIL);
 
-    Route::post("likeComment/{comment_id?}", $paperFrontController . PaperFrontControllerInterface::FRONT_COMMENT_LIKE);
+    Route::post("likeComment/{comment_id?}",  $commentControllerApi . CommentApiControllerInterface::API_COMMENT_LIKE);
 
-    Route::post("addCart", $extensionController . ExtensionControllerInterface::ADD_TO_CART);
+    Route::post("addCart", $cartApiController . CartApiControllerInterface::ADD_TO_CART);
 
     Route::get("cart", $extensionController . ExtensionControllerInterface::GET_CART);
 
