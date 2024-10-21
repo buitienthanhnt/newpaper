@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderAddress;
 use App\Models\OrderItem;
 use App\Models\Paper;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -43,17 +44,28 @@ class CartApi{
         /**
          * @var Paper $paperObj
          */
-        $paperObj = Paper::find($value_id);
-        $cartItem = $this->convertCart->convertCartItem($paperObj, $qty);
+        $cartItem = $this->convertCart->convertCartItem(Paper::find($value_id), $qty);
         $currentCartItems = $current_cart->getItems() ?: [];
 
         try {
             // $currentCartItems->push($cartItem)
-            $currentCartItems[] = $cartItem;
+            $_existItem = array_filter($currentCartItems, function ($item) use ($value_id) {
+                return $value_id == $item->getValueId();
+            });
+            if (!$_existItem) {
+                $currentCartItems[] = $cartItem;
+            }else {
+                foreach ($currentCartItems as &$value) {
+                    if ($value_id === $value->getValueId()) {
+                        $value->setQty($value->getQty() + $qty);
+                    }
+                }
+            }
             $current_cart->setItems($currentCartItems);
             $newCart = $this->convertCart->convertCartData($current_cart);
             $this->saveCart($newCart);
         } catch (\Throwable $th) {
+            throw new Exception($th->getMessage(), 500);
             Session::forget(self::KEY);
             Session::save();
         }
@@ -66,13 +78,13 @@ class CartApi{
     function getCart()
     {
         $paper_cart = Session::get(self::KEY) ?: null;
-        return $paper_cart;
+        return $this->convertCart->convertCartData($paper_cart);
     }
 
     function submitOrder()
     {
         $cart = $this->getCart();
-        if (count($cart)) {
+        if (count($cart->getItems())) {
             $ship_store = $this->request->get('ship_store');
             if (!$ship_store) {
                 $ship_hc = $this->request->get("ship_hc");

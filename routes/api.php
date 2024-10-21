@@ -122,9 +122,9 @@ Route::prefix('paper')->group(function () use ($extensionController, $paperFront
 
     Route::post("addCart", $cartApiController . CartApiControllerInterface::ADD_TO_CART);
 
-    Route::get("cart", $extensionController . ExtensionControllerInterface::GET_CART);
+    Route::get("cart", $cartApiController . CartApiControllerInterface::GET_CART);
 
-    Route::delete("clearCart", $extensionController . ExtensionControllerInterface::CLEAR_CART);
+    Route::delete("clearCart", $cartApiController . CartApiControllerInterface::CLEAR_CART);
 
     Route::delete('removeItem/{item_id}', $extensionController . ExtensionControllerInterface::REMOVE_CART_ITEM);
 });

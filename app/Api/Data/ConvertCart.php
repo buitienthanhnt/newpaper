@@ -30,6 +30,14 @@ class ConvertCart
         return $cartItem;
     }
 
+    function cartTotals(CartData $cartData)  {
+        $value = 0;
+        foreach ($cartData->getItems() as $item) {
+            $value+=$item->getValuePrice()*$item->getQty();
+        }
+        return $value;
+    }
+
     /**
      * @param CartData|null $cartData
      * @return CartData
@@ -39,7 +47,7 @@ class ConvertCart
         if ($_cartData) {
             $cartItems = $_cartData->getItems();
             $cartData->setItems($cartItems);
-            $cartData->setTotals(1);
+            $cartData->setTotals($this->cartTotals($_cartData));
             $cartData->setCount(count($cartItems));
         }
         return $cartData;

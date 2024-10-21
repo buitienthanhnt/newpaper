@@ -17,7 +17,7 @@ class CartItem extends Attribute implements CartItemInterface
 
     function setValueId(int $id)
     {
-        return $this->setData(self::VALUE_ALIAS, $id);
+        return $this->setData(self::VALUE_ID, $id);
     }
 
     function getValueId()
@@ -27,7 +27,7 @@ class CartItem extends Attribute implements CartItemInterface
 
     function setValueTitle(string $title)
     {
-        return $this->setData(self::VALUE_TITLE);
+        return $this->setData(self::VALUE_TITLE, $title);
     }
 
     function getValueTitle()

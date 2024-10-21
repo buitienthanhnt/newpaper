@@ -34,5 +34,13 @@ class CartApiController extends BaseController implements CartApiControllerInter
         return $this->responseApi->setResponse($this->response->setResponse($cartData));
     }
 
+    function getCart() {
+        $cartData = $this->cartApi->getCart();
+        return $this->responseApi->setResponse($this->response->setResponse($cartData));
+    }
 
+    function clearCart(){
+        $this->cartApi->clearCart();
+        return $this->responseApi->setResponse($this->response->setMessage('cart cleared!'));
+    }
 }
