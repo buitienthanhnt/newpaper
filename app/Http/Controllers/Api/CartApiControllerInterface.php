@@ -8,6 +8,7 @@ interface CartApiControllerInterface{
     const GET_CART = 'getCart';
     const CLEAR_CART = 'clearCart';
     const REMOVE_CART_ITEM = 'removeItem';
+    const SUBMIT_ORDER = 'submitOrder';
 
     function addToCart();
 
@@ -16,4 +17,6 @@ interface CartApiControllerInterface{
     function clearCart();
 
     function removeItem(int $item_id);
+
+    function submitOrder();
 }

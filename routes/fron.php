@@ -28,6 +28,8 @@ Route::get("likeHtml",  $managerController . ManagerControllerInterface::MOST_LI
 // https://localhost/laravel1/public/api/share/trending
 Route::get('trendingHtml',  $managerController . ManagerControllerInterface::MOST_TRENDING_HTML)->name("front_trending_html");
 
+Route::get('redirect', $managerController. ManagerControllerInterface::REDIRECT)->name('front_redirect');
+
 Route::prefix(UserControllerInterface::PREFIX)->group(function () {
     $userController = UserControllerInterface::CONTROLLER_NAME . '@';
 

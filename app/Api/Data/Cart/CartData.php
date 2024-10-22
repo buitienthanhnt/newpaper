@@ -34,4 +34,14 @@ class CartData extends Attribute implements CartDataInterface
     {
         return $this->getData(self::COUNT);
     }
+
+    function setCheckoutUrl(string $checkout_url)
+    {
+        return $this->setData(self::CHECKOUT_URL, $checkout_url);
+    }
+
+    function getCheckoutUrl()
+    {
+        return $this->getData(self::CHECKOUT_URL);
+    }
 }

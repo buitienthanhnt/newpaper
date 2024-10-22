@@ -1,6 +1,7 @@
 <?php
 namespace App\ViewBlock;
 
+use App\Api\CartApi;
 use App\Services\CartService;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\View;
@@ -8,19 +9,19 @@ use Illuminate\Support\Facades\View;
 class TopBar implements Htmlable
 {
     protected $template = 'frontend.templates.page_header';
-    protected $cartService;
+    protected $cartApi;
 
     function __construct(
-        CartService $cartService
+        CartApi $cartApi
     )
     {
-        $this->cartService = $cartService;
+        $this->cartApi = $cartApi;
     }
 
     function toHtml()
     {
-        $cart = $this->cartService->getCart();
-        $top_menu_view = View::make($this->template)->with('cart_count', count($cart))->render();
+        $cart = $this->cartApi->getCart();
+        $top_menu_view = View::make($this->template)->with('cart_count', $cart->getCount())->render();
         return $top_menu_view;
     }
 }

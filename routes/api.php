@@ -127,6 +127,8 @@ Route::prefix('paper')->group(function () use ($extensionController, $paperFront
     Route::delete("clearCart", $cartApiController . CartApiControllerInterface::CLEAR_CART);
 
     Route::delete('removeItem/{item_id}', $cartApiController . CartApiControllerInterface::REMOVE_CART_ITEM);
+
+    Route::post('submitOrder', $cartApiController. CartApiControllerInterface::SUBMIT_ORDER);
 });
 
 Route::prefix(NotificationControllerInterface::PREFIX)->group(function () use ($notificationController) {

@@ -190,6 +190,30 @@ class ManagerController extends Controller implements ManagerControllerInterface
         ];
     }
 
+    function redirect(){
+        if (!$redirect_url = $this->request->get('url')) {
+            return redirect()->route("/")->with("error", "your redirect url not found");
+        }
+        $token = $this->request->get('token');
+        $tokenData = (array) $this->tokenManager->getTokenData($token);
+        if (empty($tokenData)) {
+            return redirect()->route("/")->with("error", "your redirect error expire");
+        }
+        $tokenData = (array) $tokenData['iss'];
+        if (isset($tokenData['id'])) {
+            Auth::setUser($this->user->find($tokenData['id']) ?? null);
+        }
+
+        if (isset($tokenData['sid'])) {
+            if (!Session::isStarted()) {
+                Session::start();
+            }
+            Session::setId($tokenData['sid']);
+            Session::start();
+        }
+        return redirect($redirect_url);
+    }
+
     // =====================================================================
 
     function formatSug($data)
@@ -201,33 +225,33 @@ class ManagerController extends Controller implements ManagerControllerInterface
     }
 
     // {{url}}/api/upFirebaseComments/122
-    function upFirebaseComments($paper_id, Request $request)
-    {
-        $paper = $this->paper->find($paper_id);
-        $this->paperApi->upFirebaseComments($paper);
-        return [
-            'success' => true,
-            'errors' => null
-        ];
-    }
+    // function upFirebaseComments($paper_id, Request $request)
+    // {
+    //     $paper = $this->paper->find($paper_id);
+    //     $this->paperApi->upFirebaseComments($paper);
+    //     return [
+    //         'success' => true,
+    //         'errors' => null
+    //     ];
+    // }
 
     // pullFirebaseComment
-    function pullFirebaseComment()
-    {
-        $this->paperApi->pullFirebaseComment();
-    }
+    // function pullFirebaseComment()
+    // {
+    //     $this->paperApi->pullFirebaseComment();
+    // }
 
-    // {{url}}/api/pullFirebasePaperLike
-    function pullFirebasePaperLike()
-    {
-        $this->paperApi->pullFirebasePaperLike();
-    }
+    // // {{url}}/api/pullFirebasePaperLike
+    // function pullFirebasePaperLike()
+    // {
+    //     $this->paperApi->pullFirebasePaperLike();
+    // }
 
-    // {{url}}/api/pullFirebaseComLike
-    function pullFirebaseComLike()
-    {
-        $this->paperApi->pullFirebaseComLike();
-    }
+    // // {{url}}/api/pullFirebaseComLike
+    // function pullFirebaseComLike()
+    // {
+    //     $this->paperApi->pullFirebaseComLike();
+    // }
 
     function getToken(Request $request): \Illuminate\Http\Response
     {

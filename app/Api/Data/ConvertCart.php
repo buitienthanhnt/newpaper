@@ -5,14 +5,17 @@ use App\Api\Data\Cart\CartData;
 use App\Api\Data\Cart\CartItem;
 use App\Models\Paper;
 use App\Models\PaperInterface;
+use Thanhnt\Nan\Helper\TokenManager;
 
 class ConvertCart
 {
-    function __construct(
+    protected $tokenManager;
 
+    function __construct(
+        TokenManager $tokenManager
     )
     {
-        
+        $this->tokenManager = $tokenManager;
     }
 
     /**
@@ -49,6 +52,10 @@ class ConvertCart
             $cartData->setItems($cartItems);
             $cartData->setTotals($this->cartTotals($_cartData));
             $cartData->setCount(count($cartItems));
+            $cartData->setCheckoutUrl(route('front_redirect', [
+                'token' => $this->tokenManager->getTokenAuthor(),
+                'url' => route('front_checkout')
+            ]));
         }
         return $cartData;
     }

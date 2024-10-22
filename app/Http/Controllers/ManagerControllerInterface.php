@@ -13,6 +13,7 @@ interface ManagerControllerInterface{
     const MOST_POPULATOR_HTML = 'mostPopulator';
     const MOST_LIKE_HTML = 'likeMost';
     const MOST_TRENDING_HTML = 'trendingHtml';
+    const REDIRECT = 'redirect';
 
     public function homePage();
 
@@ -44,4 +45,6 @@ interface ManagerControllerInterface{
     public function likeMost();
 
     public function trendingHtml();
+
+    public function redirect();
 }

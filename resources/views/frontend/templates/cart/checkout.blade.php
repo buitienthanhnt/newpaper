@@ -32,9 +32,9 @@
                 </div>
             @endif
 
-            @if (count($cart))
+            @if (!empty($cart) && count($cart->getItems()))
                 <div class="col-md-6">
-                    <form method="POST" enctype="multipart/form-data" action="{{ route('paper_checkoutPro') }}">
+                    <form method="POST" enctype="multipart/form-data" action="{{ route('front_checkout_post') }}">
                         @csrf
                         <div class="form-group">
                             <label for="name_order">Người mua:</label>
@@ -68,7 +68,7 @@
                                     <div class="card card-body">
                                         Quý khách chuyển tiền qua stk: 1017748102 <br />
                                         Số tiền:
-                                        {{ number_format(array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))) }}<br />
+                                        {{ $cart->getTotals() }}<br />
                                         Nội dung: AB12345 <br />
                                         <image src="{{asset('assets/pub_image/btt_vcb_qr.jpg')}}"></image>
                                     </div>
@@ -94,7 +94,7 @@
                             <div class="form-check">
                                 <input class="form-check-input addressCheck" type="checkbox" name="ship_hc">
                                 <label class="form-check-label">
-                                    Giao giờ hành chính:
+                                    Trường hợp giao giờ hành chính:
                                 </label>
                                 <div class="form-address" style="display: none">
                                     <input type="address1" class="form-control" name="address_hc"
@@ -105,7 +105,7 @@
                             <div class="form-check">
                                 <input class="form-check-input addressCheck" type="checkbox" name="ship_nhc">
                                 <label class="form-check-label">
-                                    Giao ngoài giờ hành chính:
+                                    Trường hợp giao ngoài giờ hành chính:
                                 </label>
                                 <div class="form-address" style="display: none">
                                     <input type="text" class="form-control" name="address_nhc"
@@ -146,7 +146,7 @@
                                 <tr>
                                     <td>tổng tiền</td>
                                     <td>
-                                        {{ number_format(array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))) }}
+                                        {{ $cart->getTotals() }}
                                         vnđ
                                     </td>
                                     <td></td>

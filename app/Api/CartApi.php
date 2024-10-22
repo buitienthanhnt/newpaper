@@ -1,17 +1,24 @@
 <?php
+
 namespace App\Api;
 
+use App\Api\Data\Cart\CartData;
 use App\Api\Data\Cart\CartItem;
 use App\Api\Data\ConvertCart;
+use App\Http\Exception\InputErrorException;
 use App\Models\Order;
 use App\Models\OrderAddress;
+use App\Models\OrderAddressInterface;
+use App\Models\OrderInterface;
 use App\Models\OrderItem;
+use App\Models\OrderItemInterface;
 use App\Models\Paper;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
-class CartApi{
+class CartApi
+{
     const KEY = 'cart_session';
 
     protected $request;
@@ -54,7 +61,7 @@ class CartApi{
             });
             if (!$_existItem) {
                 $currentCartItems[] = $cartItem;
-            }else {
+            } else {
                 foreach ($currentCartItems as &$value) {
                     if ($paper->id === $value->getValueId()) {
                         $value->setQty($value->getQty() + $qty);
@@ -70,10 +77,11 @@ class CartApi{
         return $this->getCart();
     }
 
-    function removeItem($item_id){
+    function removeItem($item_id)
+    {
         $cartData = $this->getCart();
         $cart_items = $cartData->getItems();
-        $new_items = array_filter($cart_items, function (CartItem $item)use($item_id){
+        $new_items = array_filter($cart_items, function (CartItem $item) use ($item_id) {
             return $item->getValueId() != $item_id;
         });
         $cartData->setItems(array_values($new_items));
@@ -82,7 +90,7 @@ class CartApi{
     }
 
     /**
-     *
+     * @return CartData
      */
     function getCart()
     {
@@ -93,78 +101,65 @@ class CartApi{
     function submitOrder()
     {
         $cart = $this->getCart();
-        if (count($cart->getItems())) {
-            $ship_store = $this->request->get('ship_store');
-            if (!$ship_store) {
-                $ship_hc = $this->request->get("ship_hc");
-                $ship_nhc = $this->request->get("ship_nhc");
-                if (!$ship_hc && !$ship_nhc) {
-                    return [
-                        "status" => false,
-                        "message" => 'shipping type not define',
-                        "order_id" => null
-                    ];
-                }
-                $address_hc = $this->request->get("address_hc");
-                $address_nhc = $this->request->get("address_nhc");
-                if (!$address_hc && !$address_nhc) {
-                    return [
-                        "status" => false,
-                        "message" => 'shipping address not define',
-                        "order_id" => null
-                    ];
-                }
+        $ship_store = $this->request->get(OrderAddressInterface::ATTR_SHIP_STORE);
+        if (!$ship_store) {
+            $ship_hc = $this->request->get(OrderAddressInterface::ATTR_SHIP_HC);
+            $ship_nhc = $this->request->get(OrderAddressInterface::ATTR_SHIP_NHC);
+            if (!$ship_hc && !$ship_nhc) {
+                throw new InputErrorException("shipping type not define", 400);
             }
-            try {
-                $this->order->fill([
-                    'status' => "waiting",
-                    "email" => $this->request->get('email'),
-                    "name" => $this->request->get("name"),
-                    "phone" => $this->request->get("phone"),
-                    "thanh_toan" => $this->request->get("thanhtoan"),
-                    "omx" => $this->request->get("omx", '0000000'),
-                    "total" => array_sum(array_map(fn($i) => $i['price'] * $i['qty'], $cart))
-                ])->save();
-                if ($order_id = $this->order->id) {
-                    // save order address
-                    $this->orderAddress->fill([
-                        "order_id" => $order_id,
-                        "ship_hc" => boolval($this->request->get("ship_hc")),
-                        "address_hc" => $this->request->get("address_hc"),
-                        "ship_nhc" => boolval($this->request->get("ship_nhc")),
-                        "address_nhc" => $this->request->get("address_nhc"),
-                        "ship_store" => boolval($this->request->get("ship_store"))
-                    ])->save();
-
-                    // save for order items
-                    foreach ($cart as $item) {
-                        $order_item = [
-                            "paper_id" => $item['id'],
-                            "title" => $item['title'],
-                            "qty" => $item["qty"],
-                            "order_id" => $order_id,
-                            "price" => $item['price'],
-                            "url" => $item['url_alias'],
-                            "image_path" => $item['image_path']
-                        ];
-                        $this->orderItem->create($order_item);
-                    }
-                }
-                $this->clearCart();
-                return [
-                    "status" => true,
-                    "message" => 'created new order',
-                    "order_id" => $order_id
-                ];
-            } catch (\Exception $exception) {
-                dd($exception);
+            $address_hc = $this->request->get(OrderAddressInterface::ATTR_ADDRESS_HC);
+            $address_nhc = $this->request->get(OrderAddressInterface::ATTR_ADDRESS_NHC);
+            if (!$address_hc && !$address_nhc) {
+                throw new InputErrorException("shipping address not define", 400);
             }
         }
-        return [
-            "status" => false,
-            "message" => 'order can not register, please try again!',
-            "order_id" => null
-        ];
+        try {
+            $this->order->fill([
+                OrderInterface::ATTR_STATUS => OrderInterface::STATUS_PENDING,
+                OrderInterface::ATTR_EMAIL => $this->request->get(OrderInterface::ATTR_EMAIL),
+                OrderInterface::ATTR_NAME => $this->request->get(OrderInterface::ATTR_NAME),
+                OrderInterface::ATTR_PHONE => $this->request->get(OrderInterface::ATTR_PHONE),
+                OrderInterface::ATTR_THANH_TOAN => $this->request->get(OrderInterface::ATTR_THANH_TOAN),
+                OrderInterface::ATTR_OMX => $this->request->get(OrderInterface::ATTR_OMX, '0000000'),
+                OrderInterface::ATTR_TOTAL => $cart->getTotals()
+            ])->save();
+            if ($order_id = $this->order->id) {
+                // save order address
+                $this->orderAddress->fill([
+                    OrderAddressInterface::ATTR_JOIN_ID => $order_id,
+                    OrderAddressInterface::ATTR_SHIP_HC => boolval($this->request->get(OrderAddressInterface::ATTR_SHIP_HC)),
+                    OrderAddressInterface::ATTR_ADDRESS_HC => $this->request->get(OrderAddressInterface::ATTR_ADDRESS_HC),
+                    OrderAddressInterface::ATTR_SHIP_NHC => boolval($this->request->get(OrderAddressInterface::ATTR_SHIP_NHC)),
+                    OrderAddressInterface::ATTR_ADDRESS_NHC => $this->request->get(OrderAddressInterface::ATTR_ADDRESS_NHC),
+                    OrderAddressInterface::ATTR_SHIP_STORE => boolval($this->request->get(OrderAddressInterface::ATTR_SHIP_STORE))
+                ])->save();
+                // save for order items
+                foreach ($cart->getItems() as $item) {
+                    /**
+                     * @var CartItem $item
+                     */
+                    $order_item = [
+                        OrderItemInterface::ATTR_PAPER_ID => $item->getValueId(),
+                        OrderItemInterface::ATTR_TITLE => $item->getValueTitle(),
+                        OrderItemInterface::ATTR_QTY => $item->getQty(),
+                        OrderItemInterface::ATTR_ORDER_ID => $order_id,
+                        OrderItemInterface::ATTR_PRICE => $item->getValuePrice(),
+                        OrderItemInterface::ATTR_URL => $item->getValueAlias(),
+                        OrderItemInterface::ATTR_IMAGE_PATH => $item->getValueImagePath()
+                    ];
+                    $this->orderItem->create($order_item);
+                }
+            }
+            $this->clearCart();
+            return [
+                "status" => true,
+                "message" => 'created new order',
+                "order_id" => $order_id
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
     }
 
     function xoaItem($id)

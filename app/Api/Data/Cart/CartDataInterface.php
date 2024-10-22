@@ -7,6 +7,7 @@ interface CartDataInterface extends AttributeInterface{
     const ITEMS = 'items';
     const TOTALS = 'totals';
     const COUNT = 'count';
+    const CHECKOUT_URL = 'checkoutUrl';
 
     function setItems($items);
 
@@ -22,4 +23,15 @@ interface CartDataInterface extends AttributeInterface{
      * @return int
      */
     function getCount();
+
+    /**
+     * @param string $checkout_url
+     * @return $this
+     */
+    function setCheckoutUrl(string $checkout_url);
+
+    /**
+     * @return string
+     */
+    function getCheckoutUrl();
 }

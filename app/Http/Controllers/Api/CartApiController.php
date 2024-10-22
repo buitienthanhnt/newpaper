@@ -7,6 +7,7 @@ use App\Api\Data\Cart\CartItem;
 use App\Api\Data\Response;
 use App\Api\ResponseApi;
 use App\Http\Controllers\BaseController;
+use App\Models\Order;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use Exception;
@@ -73,5 +74,21 @@ class CartApiController extends BaseController implements CartApiControllerInter
         }
         return $this->responseApi->setResponse($this->response->setResponse($this->cartApi->removeItem($item_id))->setMessage("removed item: '".current($checkItem)->getValueTitle()."'!"));
         // TODO: Implement removeItem() method.
+    }
+
+    public function submitOrder() {
+        $cartData = $this->cartApi->getCart();
+        if (count($cartData->getItems())) {
+            return $this->responseApi->setResponse($this->response->setMessage("your cart none items"))->setStatusCode(400);
+        }
+        try {
+            $orderData = $this->cartApi->submitOrder();
+            if ($order_id = $orderData['order_id']) {
+                $order = Order::find($order_id);
+                return $this->responseApi->setResponse($this->response->setResponse($order));
+            }
+        } catch (\Throwable $th) {
+            return $this->responseApi->setResponse($this->response->setMessage($th->getMessage()))->setStatusCode(500); 
+        }
     }
 }
