@@ -160,4 +160,14 @@ class CommentApiController extends Controller implements CommentApiControllerInt
         }
         return $this->responseApi->setResponse($this->response->setMessage($action == CommentInterface::ACTION_LIKE ? 'đã thích!!' : 'bỏ thích')->setResponse(['count' => $comment->{CommentInterface::ATTR_LIKE}]));
     }
+
+    public function getCommentsOfPaper($paper_id)
+    {
+        return $this->responseApi->setResponse($this->commentApi->getCommentOfPaper($paper_id));
+    }
+
+    function getCommentChildrent(int $comment_id)
+    {
+        return $this->responseApi->setResponse($this->commentApi->getCommentChildrent($comment_id));
+    }
 }

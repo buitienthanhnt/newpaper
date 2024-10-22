@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Api\Data\Response;
+use App\Api\PaperApi;
+use App\Api\PaperRepository;
 use App\Api\ResponseApi;
 use App\Http\Controllers\Controller;
 use App\Http\Exception\FormValidationException;
@@ -13,6 +16,9 @@ class PaperApiController extends Controller implements PaperApiControllerInterfa
 {
     protected $request;
 
+    protected $paperRepository;
+    protected $paperApi;
+
     protected $response;
     protected $responseApi;
 
@@ -22,16 +28,20 @@ class PaperApiController extends Controller implements PaperApiControllerInterfa
         Request $request,
         Response $response,
         ResponseApi $responseApi,
+        PaperRepository $paperRepository,
+        PaperApi $paperApi,
         PaperLikeForm $paperLikeForm
-    )
-    {
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->responseApi = $responseApi;
+        $this->paperRepository = $paperRepository;
+        $this->paperApi = $paperApi;
         $this->paperLikeForm = $paperLikeForm;
     }
 
-    function addPaperLike(int $paper_id) {
+    function addPaperLike(int $paper_id)
+    {
         $params = $this->request->toArray();
         try {
             $this->paperLikeForm->validate($params);
@@ -52,12 +62,41 @@ class PaperApiController extends Controller implements PaperApiControllerInterfa
                 }
                 $paperSource->save();
             }
-        }catch(FormValidationException $e){
+        } catch (FormValidationException $e) {
             return $this->responseApi->setStatusCode(400)->setResponse($this->response->setMessage($e->getFullMessage()));
-        }
-         catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return $this->responseApi->setStatusCode($th->getCode())->setResponse($this->response->setMessage($th->getMessage()));
         }
         return $this->responseApi->setResponse($this->response->setMessage('đã thích!!'));
     }
+
+    /**
+     * @param int $paper_id
+     */
+    public function getPaperDetail(int $paper_id)
+    {
+        $responseApi = $this->responseApi;
+        $responseApi->setResponse($this->paperRepository->getById($paper_id));
+        return $responseApi;
+    }
+    
+    /**
+     * @return ResponseApi
+     */
+    public function listPapers()
+    {
+        $responseApi = $this->responseApi;
+        $responseApi->setResponse($this->paperRepository->paperAll());
+        return $responseApi;
+    }
+
+    /**
+     * @param int $paper_id
+     * @return ApiResponse
+     */
+    public function getRelatedPaper(int $paper_id)
+    {
+        return $this->paperApi->getRelatedPaper($paper_id);
+    }
+
 }

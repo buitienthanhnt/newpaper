@@ -13,6 +13,7 @@ use App\Api\Data\Response as ApiResponse;
 use App\Api\ManagerApi;
 use App\Api\PaperApi;
 use App\Api\PaperRepository;
+use App\Api\ResponseApi;
 use App\Api\UserApi;
 use App\Api\WriterApi;
 use App\Events\ViewCount;
@@ -74,6 +75,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
 
     protected $paperRepository;
     protected $apiResponse;
+    protected $responseApi;
 
     public function __construct(
         Request $request,
@@ -94,7 +96,8 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         ApiResponse $apiResponse,
         ManagerApi $managerApi,
         CommentApi $commentApi,
-        UserApi $userApi
+        UserApi $userApi,
+        ResponseApi $responseApi
     ) {
         $this->request = $request;
         $this->paper = $paper;
@@ -115,6 +118,7 @@ class ExtensionController extends Controller implements ExtensionControllerInter
         $this->paperApi = $paperApi; // new for api
         $this->writerApi = $writerApi;
         $this->commentApi = $commentApi;
+        $this->responseApi = $responseApi;
     }
 
     /**
@@ -124,100 +128,12 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     public function homeInfo()
     {
         $apiResponse = $this->apiResponse;
-        $apiResponse->setMessage('newst home data api!');
-        return $apiResponse->setResponse($this->managerApi->homeInfo());
-    }
-
-    /**
-     * @return ApiResponse
-     */
-    public function listPapers()
-    {
-        $apiResponse = $this->apiResponse;
-        $apiResponse->setResponse($this->paperRepository->paperAll());
-        return $apiResponse;
-    }
-
-    /**
-     * @param int $paper_id
-     */
-    public function getPaperDetail(int $paper_id)
-    {
-        $apiResponse = $this->apiResponse;
-        $apiResponse->setResponse($this->paperRepository->getById($paper_id));
-        return $apiResponse;
-    }
-
-    /**
-     * lấy bài viết theo thể loại.
-     * @param int $category_id
-     * @return ApiResponse
-     */
-    function getPaperCategory($category_id)
-    {
-        $request = $this->request;
-        $page = $request->get("page", 1);
-        $limit = $request->get("limit", 12);
-        $key = "paper.category.$category_id.$page.$limit";
-
-        $apiResponse = $this->apiResponse;
-        $responseData = null;
-        if (Cache::has($key) && false) { // nhanh hon ~50% voi du lieu nang.
-            $responseData = Cache::get($key);
-        } else {
-            $responseData = $this->paperRepository->getPaperByCategory($category_id);
-            Cache::put($key, $responseData);
+        try {
+            $apiResponse->setMessage('newst home data api!');
+            return $this->responseApi->setResponse($apiResponse->setResponse($this->managerApi->homeInfo()));
+        } catch (\Throwable $th) {
+            return $this->responseApi->setResponse($apiResponse->setMessage($th->getMessage()))->setStatusCode(500);
         }
-        return $apiResponse->setResponse($responseData);
-    }
-
-    /**
-     * @param int $category_id
-     * @return ApiResponse|m.\App\Api\Data\Response.setData
-     */
-    function getCategoryInfo(int $category_id)
-    {
-        $apiResponse = $this->apiResponse;
-        return $apiResponse->setResponse($this->categoryApi->getCategoryById($category_id));
-    }
-
-    /**
-     * @return ApiResponse
-     */
-    public function getCategoryTree()
-    {
-        $apiResponse = $this->apiResponse;
-        $apiResponse->setResponse($this->categoryApi->getCategoryTree());
-        return $apiResponse;
-    }
-
-    /**
-     * @return ApiResponse
-     */
-    public function getCategoryTop()
-    {
-        $apiResponse = $this->apiResponse;
-        $apiResponse->setResponse($this->categoryApi->getCategoryTop());
-        return $apiResponse;
-    }
-
-    /**
-     * @param int $writer_id
-     * @return ApiResponse|m.\App\Api\Data\Response.setData
-     */
-    public function getPaperByWriter(int $writer_id)
-    {
-        $apiResponse = $this->apiResponse;
-        return $apiResponse->setResponse($this->writerApi->getPapers($writer_id));
-    }
-
-    /**
-     * @param int $paper_id
-     * @return ApiResponse
-     */
-    public function getRelatedPaper(int $paper_id)
-    {
-        return $this->paperApi->getRelatedPaper($paper_id);
     }
 
     /**
@@ -226,29 +142,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
     public function search()
     {
         return $this->apiResponse->setResponse($this->paperApi->searchAll());
-    }
-
-    /**
-     * @return ApiResponse
-     */
-    public function getWriterList()
-    {
-        return $this->apiResponse->setResponse($this->writerApi->listWriter());
-        // TODO: Implement getWriterList() method.
-    }
-
-    public function getCommentsOfPaper($paper_id)
-    {
-        $apiResponse = $this->apiResponse->setResponse($this->commentApi->getCommentOfPaper($paper_id));
-        return $apiResponse;
-    }
-
-    function getCommentChildrent(int $comment_id)
-    {
-        $apiResponse = $this->apiResponse->setResponse($this->commentApi->getCommentChildrent($comment_id));
-        $response = response()->make();
-        $response->setContent($apiResponse)->setStatusCode(201);
-        return $response;
     }
 
     public function getUserInfo()
@@ -272,42 +165,6 @@ class ExtensionController extends Controller implements ExtensionControllerInter
             $value->image_path = $value->getImagePath();
         }
         return $papers;
-    }
-
-    /**
-     * thêm 1 item vào cart
-     */
-    function addToCart()
-    {
-        $cartData = $this->cartService->addCart($this->request->get('id'));
-        return $cartData;
-    }
-
-    /**
-     * lấy cart data
-     */
-    function getCart()
-    {
-        return $this->cartService->getCart();
-    }
-
-    /**
-     * xóa hết item trong cart
-     */
-    function clearCart()
-    {
-        $this->cartService->clearCart();
-        return $this->getCart();
-    }
-
-    /**
-     * xóa 1 item trong cart.
-     * @param int $item_id
-     */
-    function removeCartItem($item_id)
-    {
-        $this->cartService->xoaItem($item_id);
-        return $this->cartService->getCart();
     }
 
     static function getConstants()
