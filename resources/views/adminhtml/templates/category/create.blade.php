@@ -19,7 +19,7 @@
                     @endif
                 </h4>
                 <form class="form-sample" method="POST" enctype="multipart/form-data"
-                    action={{ route('category_admin_insert', ['type' => request()->get('type')]) }}>
+                    action={{ route('admin_insert_category', ['type' => request()->get('type')]) }}>
                     @csrf
                     @if (session('success'))
                         <div class="alert alert-success" id="category_insert_success" role="alert">
@@ -110,7 +110,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="offset-md-10 col-md-2">
+                        <div class="offset-md-8 col-md-4">
                             <button type="submit" class="btn btn-info">
                                 Save
                                 @if (request()->get('type'))

@@ -85,14 +85,14 @@
                                            target="_blank"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="tel:{{ $DomHtml->getConfig('contact_phone') }}"><i
                                                 class="fa fa-phone"></i></a></li>
-                                    <li><a href="{{ route('paper_cart') }}"><i
+                                    <li><a href="{{ route('front_view_cart') }}"><i
                                                 class="fa fa-shopping-cart text-black"></i> {{$cart_count ?: ''}}</a>
                                     </li>
                                     @if (Auth::check())
-                                        <li><a href="{{ route('user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
+                                        <li><a href="{{ route('front_user_logout') }}"><i class="fa fa-sign-out-alt"></i></a>
                                         </li>
                                     @else
-                                        <li><a href="{{ route('user_login') }}"><i class="fa fa-user"></i></a></li>
+                                        <li><a href="{{ route('front_login_page') }}"><i class="fa fa-user"></i></a></li>
                                     @endif
 
                                 </ul>

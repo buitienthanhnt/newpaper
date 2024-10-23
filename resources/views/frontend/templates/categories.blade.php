@@ -5,42 +5,16 @@
     {{ $category->name }}
 @endsection
 
-{{-- col-lg-8 --}}
-@section('trending_left')
-    @render(App\ViewBlock\TrendingLeft::class)
-@endsection
-{{-- col-lg-8 --}}
-
-{{-- col-lg-4 --}}
-@section('trending_right')
-    @render(App\ViewBlock\TrendingRight::class)
-@endsection
-{{-- col-lg-4 --}}
-
-{{-- col-lg-9 --}}
 @section('weekly2_conten')
-    <div id="most-populator">
-        {{-- @render(\App\ViewBlock\MostPopulator::class) --}}
-    </div>
+    {!! view('frontend.templates.homePage.mostPopulator') !!}
 @endsection
-{{-- col-lg-9 --}}
 
-{{-- =====================weekly3_news=============================== --}}
-{{-- col-lg-12 --}}
 @section('weekly3_conten')
-    <div id="likeMost">
-        {{-- @render(App\ViewBlock\LikeMost::class) --}}
-    </div>
+    {!! view('frontend.templates.homePage.mostLike') !!}
 @endsection
-{{-- col-lg-12 --}}
-{{-- =====================weekly3_news=============================== --}}
 
-{{-- ========================new_post============================ --}}
-
-{{-- col-lg-8 left --}}
 @section('new_post_left')
     <div class="whats-news-wrapper">
-
         <!-- Heading & Nav Button -->
         <div class="row justify-content-between align-items-end mb-15">
             <div class="col-md-12">
@@ -48,10 +22,8 @@
                     <h3>{{ $category->name }}</h3>
                 </div>
             </div>
-
         </div>
         <!-- Heading & Nav Button -->
-
         <!-- Tab content -->
         <div class="row">
             <div class="col-12">
@@ -68,9 +40,13 @@
                                                 style="max-height: 210px; object-fit: cover" alt="">
                                         </div>
                                         <div class="whates-caption">
-                                            <h4><a class="text-info"
-                                                    href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
-                                            </h4>
+                                            <a class="text-info"
+                                                href="{{ route('front_paper_detail', ['alias' => $paper_first->url_alias, 'paper_id' => $paper_first->id]) }}">
+                                                <h4
+                                                    style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                                    {{ $paper_first->title }}
+                                                </h4>
+                                            </a>
                                             <h6>{{ $paper_first->short_conten }}</h6>
                                             {!! view('frontend.templates.elements.dateTime', ['paper' => $paper_first])->render() !!}
                                         </div>
@@ -93,11 +69,15 @@
                                                 <div class="col-md-6 whats-right-cap" style="padding-left: 15px">
                                                     <h4>
                                                         <a
-                                                            href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
-                                                            <h4 class="text-info">{{ $paper->title }}</h4>
+                                                            href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'paper_id' => $paper->id]) }}">
+                                                            <h4 class="text-info"
+                                                                style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
+                                                                {{ $paper->title }}</h4>
                                                         </a>
                                                     </h4>
-                                                    <h6>{{ $paper->short_conten }}</h6>
+                                                    <h6
+                                                        style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;">
+                                                        {{ $paper->short_conten }}</h6>
                                                     <span class="colorb" style="color: #ff2143">
                                                         {{ $paper->writerName() }}
                                                     </span>
@@ -121,7 +101,6 @@
                                 Load more
                             </button>
                         </center>
-
                     </div>
                 </div>
                 <!-- End Nav Card -->
@@ -138,9 +117,7 @@
             height={{ $DomHtml->getConfig('home_image_height', 111) }} />
     </div>
 @endsection
-{{-- col-lg-8 --}}
 
-{{-- col-lg-4 right --}}
 @section('flow_socail')
     {!! view('frontend.templates.share.social')->render() !!}
 @endsection
@@ -148,12 +125,8 @@
 @section('most_recent')
     @render(App\ViewBlock\MostRecent::class)
 @endsection
-{{-- col-lg-4 --}}
-
-{{-- =====================new_post=============================== --}}
 
 {{-- =====================banner_last=============================== --}}
-{{-- row --}}
 @section('banner_last_conten')
     <div class="col-lg-10 col-md-10">
         <div class="banner-one">
@@ -163,18 +136,11 @@
         </div>
     </div>
 @endsection
-{{-- row --}}
 {{-- =====================banner_last=============================== --}}
 
-
 @section('js_after')
-    <script>
-        var token = "{{ csrf_token() }}";
-        var url = "{{ route('load_more') }}";
-        var mostPopulatorUrl = "{{ route('mostPopulator') }}";
-        var likeMost = "{{ route('likeMost') }}";
-
-
+    <script type="text/javascript">
+        var url = "{{ route('front_load_more') }}";
         var type = "{{ $category->url_alias }}"
 
         function load_more() {
@@ -191,7 +157,6 @@
                         if (result.data) {
                             let data = result.data;
                             let conten = $("#whats-right-single");
-                            // conten.after(data);
                             conten.append(data);
                             button.html('Load more').attr('disabled', false).attr("data-page", Number(button
                                 .attr("data-page")) + 1);
@@ -207,119 +172,5 @@
                 });
             }
         }
-
-        $(document).ready(function() {
-            $.ajax({
-                url: mostPopulatorUrl,
-                type: "GET",
-                success: function(result) {
-                    if (result.dataHtml) {
-                        let mostPopur = $("#most-populator")
-                        mostPopur.append(result.dataHtml);
-                        $('.weekly2-news-active').slick({
-                            dots: false,
-                            infinite: true,
-                            speed: 500,
-                            arrows: true,
-                            autoplay: true,
-                            loop: true,
-                            slidesToShow: 3,
-                            prevArrow: '<button type="button" class="slick-prev"><i class="ti-angle-left"></i></button>',
-                            nextArrow: '<button type="button" class="slick-next"><i class="ti-angle-right"></i></button>',
-                            slidesToScroll: 1,
-                            responsive: [{
-                                    breakpoint: 1200,
-                                    settings: {
-                                        slidesToShow: 2,
-                                        slidesToScroll: 1,
-                                        infinite: true,
-                                        dots: false,
-                                    }
-                                },
-                                {
-                                    breakpoint: 992,
-                                    settings: {
-                                        slidesToShow: 2,
-                                        slidesToScroll: 1
-                                    }
-                                },
-                                {
-                                    breakpoint: 700,
-                                    settings: {
-                                        arrows: false,
-                                        slidesToShow: 1,
-                                        slidesToScroll: 1
-                                    }
-                                },
-                                {
-                                    breakpoint: 480,
-                                    settings: {
-                                        arrows: false,
-                                        slidesToShow: 1,
-                                        slidesToScroll: 1
-                                    }
-                                }
-                            ]
-                        });
-                    }
-                }
-            })
-
-            $.ajax({
-                url: likeMost,
-                type: "GET",
-                success: function(result) {
-                    if (result.dataHtml) {
-                        let likeMost = $("#likeMost")
-                        likeMost.append(result.dataHtml);
-                        $('.weekly3-news-active').slick({
-                            dots: true,
-                            infinite: true,
-                            speed: 500,
-                            arrows: false,
-                            autoplay: true,
-                            loop: true,
-                            slidesToShow: 4,
-                            prevArrow: '<button type="button" class="slick-prev"><i class="ti-angle-left"></i></button>',
-                            nextArrow: '<button type="button" class="slick-next"><i class="ti-angle-right"></i></button>',
-                            slidesToScroll: 1,
-                            responsive: [{
-                                    breakpoint: 1200,
-                                    settings: {
-                                        slidesToShow: 2,
-                                        slidesToScroll: 1,
-                                        infinite: true,
-                                        dots: true,
-                                    }
-                                },
-                                {
-                                    breakpoint: 992,
-                                    settings: {
-                                        slidesToShow: 2,
-                                        slidesToScroll: 1
-                                    }
-                                },
-                                {
-                                    breakpoint: 700,
-                                    settings: {
-                                        arrows: false,
-                                        slidesToShow: 1,
-                                        slidesToScroll: 1
-                                    }
-                                },
-                                {
-                                    breakpoint: 480,
-                                    settings: {
-                                        arrows: false,
-                                        slidesToShow: 1,
-                                        slidesToScroll: 1
-                                    }
-                                }
-                            ]
-                        });
-                    }
-                }
-            })
-        })
     </script>
 @endsection

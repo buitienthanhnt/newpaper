@@ -36,16 +36,16 @@
     </style>
 
     <div class="col-md-12">
-        <a href="{{ route('admin_permission_list') }}" class="btn btn-info">list permission</a>
+        <a href="{{ route('admin_list_permission') }}" class="btn btn-info">list permission</a>
     </div>
 
     <div class="col-md-6">
-        <form action="{{ route('admin_permission_insert') }}" method="post">
+        <form action="{{ route('admin_insert_permission') }}" method="post">
             @csrf
-            @if ($message = session('success'))
-                <?php alert()->success('server message', $message); ?>
-            @elseif ($error = session('error'))
-                <?php alert()->warning('server mesage', $error); ?>
+            @if (session('success'))
+                <?php alert()->success('server message', session('success')); ?>
+            @elseif (session('error'))
+                <?php alert()->warning('server mesage', session('error')); ?>
             @endif
 
             <div class="form-group">

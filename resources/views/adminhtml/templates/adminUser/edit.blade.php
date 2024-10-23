@@ -39,13 +39,13 @@
                 <h4>edit admin user</h4>
             </center>
 
-            @if ($message = session('success'))
-                <?php alert()->success('server message', $message); ?>
-            @elseif ($error = session('error'))
-                <?php alert()->warning('server mesage', $error); ?>
+            @if (session('success'))
+                <?php alert()->success('server message', session('success')); ?>
+            @elseif (session('error'))
+                <?php alert()->warning('server mesage', session('error')); ?>
             @endif
 
-            <form action="{{ route('admin_user_update', ['user_id' => $user->id]) }}" method="post">
+            <form action="{{ route('admin_update_user', ['user_id' => $user->id]) }}" method="post">
                 @csrf
                 <div class="row">
                     <div class="col-md-8">

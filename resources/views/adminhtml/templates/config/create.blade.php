@@ -27,10 +27,10 @@
 @section('body_main_conten')
     <div class="container">
         <div>
-            <a href="{{ route('admin_config_list') }}" class="btn btn-info"> list config</a>
+            <a href="{{ route('admin_list_config') }}" class="btn btn-info"> list config</a>
         </div>
         <div class="col-md-6">
-            <form action="{{ route('admin_config_insert') }}" method="post">
+            <form action="{{ route('admin_insert_config') }}" method="post">
                 @csrf
                 <div class="form-group">
                     <label for="name">name</label>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\PaperInterface;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class postPaper
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->get("page_title")) {
+        if (!$request->get(PaperInterface::ATTR_TITLE)) {
             return redirect()->back()->with("error", "page title is require!");
         }
         return $next($request);

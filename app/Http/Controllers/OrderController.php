@@ -6,9 +6,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class OrderController extends Controller
+class OrderController extends Controller implements OrderControllerInterface
 {
-    //
     /**
      * @var Order $order
      */
@@ -21,12 +20,16 @@ class OrderController extends Controller
         $this->order = $order;
     }
 
-    function lists() : View {
+    function listOrder() : View {
         $orders = $this->order->paginate(8);
         return view("adminhtml.templates.orders.list", ["orders" => $orders]);
     }
 
-    function info($order_id) : View {
+    /**
+     * @param int $order_id
+     * @return View
+     */
+    function detailOrder(int $order_id) {
         /**
          * @var Order $order
          */

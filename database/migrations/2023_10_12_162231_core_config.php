@@ -13,15 +13,12 @@ class CoreConfig extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('core_config', function (Blueprint $table) {
+        Schema::create(\App\Helper\Nan::coreConfigTable(), function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("value")->nullable();
-            $table->text("description")->nullable(true);
-            $table->text("type")->default('text');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string(\App\Constant\AttributeInterface::ATTR_NAME);
+            $table->string(\App\Constant\AttributeInterface::ATTR_VALUE)->nullable();
+            $table->text(\App\Constant\AttributeInterface::ATTR_DESCRIPTION)->nullable(true);
+            $table->text(\App\Constant\AttributeInterface::ATTR_TYPE);
         });
     }
 
@@ -33,6 +30,6 @@ class CoreConfig extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('core_config');
+        Schema::dropIfExists(\App\Helper\Nan::coreConfigTable());
     }
 }

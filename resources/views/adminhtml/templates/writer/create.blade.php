@@ -9,15 +9,16 @@
 @endsection
 
 @section('body_main_conten')
-    @if($message = session('success'))
-        <?php alert()->success('server message', $message);?>
-    @elseif ($error = session("error"))
-        <?php alert()->error('server mesage',$error);?>
+    @if(session('success'))
+        <?php alert()->success('server message',session('success'));?>
+    @elseif (session("error"))
+        <?php alert()->error('server mesage', session("error"));?>
     @endif
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <form action="{{ route('admin_writer_insert') }}" method="post" enctype="multipart/form-data" >
+                <form action="{{ route('admin_insert_writer') }}" method="post" enctype="multipart/form-data" >
                     @csrf
                     <div class="row">
                         <div class="col-md-6">

@@ -15,10 +15,6 @@
 
 {{-- ========base============ --}}
 
-@section('page_title')
-    home page
-@endsection
-
 @section('morning_post')
     @include('frontend/layouts/paperComponent/morning_post')
 @endsection

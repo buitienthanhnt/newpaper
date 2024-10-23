@@ -26,9 +26,9 @@
 
 @section('body_main_conten')
     <div class="container">
-        <a href="{{ route('admin_config_create') }}" class="btn btn-info">create new config</a>
+        <a href="{{ route('admin_create_config') }}" class="btn btn-info">create new config</a>
         <div class="col-md-10">
-            <form action="{{ route('admin_config_update') }}" method="post">
+            <form action="{{ route('admin_update_config') }}" method="post">
                 @csrf
                 @if ($allOfCoreConfig)
                     @foreach ($allOfCoreConfig as $item)
@@ -57,7 +57,7 @@
     </div>
     <script>
         $(document).ready(function() {
-            var url = "{{ route('admin_config_delete') }}";
+            var url = "{{ route('admin_delete_config') }}";
             var token = "{{ csrf_token() }}";
 
             $('.edit-action').click(function(e) {

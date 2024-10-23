@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PaperContentInterface;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,13 +14,13 @@ class CreatePaperContentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('paper_contents', function (Blueprint $table) {
+        Schema::create(PaperContentInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->string('key');
-            $table->string('depend_value')->nullable();
-            $table->longText('value')->nullable();
-            $table->integer('paper_id');
+            $table->string(PaperContentInterface::ATTR_TYPE);
+            $table->string(PaperContentInterface::ATTR_KEY);
+            $table->longText(PaperContentInterface::ATTR_VALUE)->nullable();
+            $table->string(PaperContentInterface::ATTR_DEPEND_VALUE)->nullable();
+            $table->integer(PaperContentInterface::ATTR_PAPER_ID);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +33,6 @@ class CreatePaperContentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('paper_contents');
+        Schema::dropIfExists(PaperContentInterface::TABLE_NAME);
     }
 }

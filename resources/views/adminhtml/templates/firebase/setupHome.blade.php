@@ -37,7 +37,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             let _token = "{{ csrf_token() }}";
-            let uploadUrl = "{{ route('admin_firebase_upDefaultHome') }}";
+            let uploadUrl = "{{ route('admin_firebase_upload_home_info') }}";
 
             $('#uploadHomeFedault').on('click', function() {
                 Swal.fire({

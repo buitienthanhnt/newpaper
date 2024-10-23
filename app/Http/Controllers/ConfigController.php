@@ -8,22 +8,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\LogTha;
 
-class ConfigController extends Controller
+class ConfigController extends Controller implements ConfigControllerInterface
 {
     use Nan;
 
     protected $helperFunction;
     protected $logTha;
+    protected $request;
 
     function __construct(
         HelperFunction $helperFunction,
-        LogTha $logTha
-    ) {
+        LogTha $logTha,
+        Request $request
+    )
+    {
         $this->helperFunction = $helperFunction;
         $this->logTha = $logTha;
+        $this->request = $request;
     }
 
-    function list()
+    function listConfig()
     {
         $allOfCoreConfig = null;
         try {
@@ -37,13 +41,18 @@ class ConfigController extends Controller
         return view("adminhtml.templates.config.list", compact("allOfCoreConfig"));
     }
 
-    function create()
+    function createConfig()
     {
         return view("adminhtml.templates.config.create");
     }
 
-    function insert(Request $request)
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    function insertConfig()
     {
+        $request = $this->request;
         extract($this->helperFunction->saveConfig($request->get("name"), $request->get("value")));
         if ($status) {
             $this->logTha->logEvent('info', "added config: ", [
@@ -54,8 +63,9 @@ class ConfigController extends Controller
         return redirect()->back()->with("success", "saved config value!");
     }
 
-    function update(Request $request)
+    function updateConfig()
     {
+        $request = $this->request;
         $params = $request->all();
         unset($params['_token']);
         try {
@@ -75,11 +85,18 @@ class ConfigController extends Controller
         }
     }
 
-    function delete(Request $request)
+    function deleteConfig()
     {
+        $request = $this->request;
         $config_id = $request->get('config_id');
         try {
             extract($this->helperFunction->deleteConfig($config_id));
+            if (!$configValue) {
+                return response(json_encode([
+                    "code" => "401",
+                    "value" => "deleted: success!"
+                ]), 401);
+            }
             $this->logTha->logEvent('warning', "deleted config with : {key} & {value}", [
                 'key' => $configValue->name,
                 'value' => $configValue->value

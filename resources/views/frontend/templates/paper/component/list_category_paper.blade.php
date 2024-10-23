@@ -8,7 +8,7 @@
                 </div>
                 <div class="col-md-6 whats-right-cap">
                     <h4>
-                        <a href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
+                        <a href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'paper_id' => $paper->id]) }}">
                             <h4 class="text-info">
                                 {{ $paper->title }}
                             </h4>

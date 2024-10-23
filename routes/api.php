@@ -1,10 +1,19 @@
 <?php
 
-use Berkayk\OneSignal\OneSignalFacade; // https://github.com/berkayk/laravel-onesignal
+use App\Http\Controllers\Api\CartApiControllerInterface;
+use App\Http\Controllers\Api\CategoryApiControllerInterface;
+use App\Http\Controllers\ExtensionController;
+use App\Http\Controllers\ExtensionControllerInterface;
+use App\Http\Controllers\PaperFrontControllerInterface;
+use App\Http\Controllers\NotificationControllerInterface;
+use App\Http\Controllers\Api\CommentApiControllerInterface;
+use App\Http\Controllers\Api\PaperApiControllerInterface;
+use App\Http\Controllers\Api\WriterApiControllerInterface;
+use Berkayk\OneSignal\OneSignalFacade;
+
+// https://github.com/berkayk/laravel-onesignal
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,49 +31,131 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('info', "ManagerController@info")->name('info');
+$extensionController = ExtensionControllerInterface::CONTROLLER_NAME . '@';
+$paperFrontController = PaperFrontControllerInterface::CONTROLLER_NAME . '@';
+$notificationController = NotificationControllerInterface::CONTROLLER_NAME . '@';
+$commentControllerApi = CommentApiControllerInterface::CONTROLLER_NAME . '@';
+$paperApiController = PaperApiControllerInterface::CONTROLLER_NAME . '@';
+$cartApiController = CartApiControllerInterface::CONTROLLER_NAME . '@';
+$categoryApiController = CategoryApiControllerInterface::CONTROLLER_NAME . '@';
+$writerApiController = WriterApiControllerInterface::CONTROLLER_NAME . '@';
 
-Route::get('getpapers', 'ManagerController@apiSourcePapers');
+// https://localhost/laravel1/public/api/homeInfo
+Route::get('homeInfo', $extensionController . ExtensionControllerInterface::HOME_INFO);
 
-Route::get("getcategorytop", "ManagerController@getCategoryTop");
+// https://localhost/laravel1/public/api/search?query=demo
+Route::get('search', $extensionController . ExtensionControllerInterface::SEARCH);
 
-Route::get("papercategory/{category_id}", "ManagerController@getPaperCategory");
+// https://localhost/laravel1/public/api/paperMostView (dung cho web)
+Route::get('paperMostView', $extensionController . ExtensionControllerInterface::PAPER_MOST_VIEW)->name('api_paper_most_view');
 
-Route::get("getRelatedPaper", "ManagerController@getRelatedPaper");
+// curl  -X POST \
+//   'https://localhost/laravel1/public/api/login' \
+//   --header 'Accept: */*' \
+//   --header 'Content-Type: application/json' \
+//   --data-raw '{
+//   "email": "a12@gmail.com",
+//   "password": "admin123"
+// }'
+Route::post('login', $extensionController . ExtensionControllerInterface::LOGIN);
 
-Route::get("getcategorytree", "ManagerController@getCategoryTree");
+// https://localhost/laravel1/public/api/userInfo
+Route::get('userInfo', $extensionController . ExtensionControllerInterface::USER_INFO);
 
-Route::get("parseUrl", 'ManagerController@parseUrl');
+// https://localhost/laravel1/public/api/getPapers
+Route::get('getPapers', $paperApiController . PaperApiControllerInterface::LIST_PAPERS);
 
-Route::get('paperComment/{paper_id}', "ManagerController@getPaperComment")->name('getPaperComment');
+// https://localhost/laravel1/public/api/getRelatedPaper/1
+Route::get("getRelatedPaper/{paper_id}", $paperApiController . PaperApiControllerInterface::PAPER_RELATED);
 
-Route::post("paperAddComment/{paper_id}", "PaperController@addComment")->name("api_paper_add_comment");
+Route::get('categoryInfo/{category_id}', $categoryApiController . CategoryApiControllerInterface::CATEGORY_INFO);
 
-Route::post("addLike/{paper_id}", "PaperController@addLike")->name("api_addLike");
+// https://localhost/laravel1/public/api/getCategoryTree
+Route::get("getCategoryTree", $categoryApiController . CategoryApiControllerInterface::CATEGORY_TREE);
 
-Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments")->name('upFirebaseComments');
+// https://localhost/laravel1/public/api/getCategoryTop
+Route::get("getCategoryTop", $categoryApiController . CategoryApiControllerInterface::CATEGORY_TOP);
 
-Route::prefix('notification')->group(function () {
-    Route::post("addFcm", "NotificationController@registerFcm")->name('api_addFcm');
+// https://localhost/laravel1/public/api/paperByCategory/2
+Route::get("paperByCategory/{category_id}", $categoryApiController . CategoryApiControllerInterface::PAPER_BY_CATEGORY);
 
-    Route::get('push', "NotificationController@push_notification")->name("api_notification_push");
+// https://localhost/laravel1/public/api/paperComments/1
+Route::get('paperComments/{paper_id}', $commentControllerApi . CommentApiControllerInterface::PAPER_COMMENTS);
+
+// https://localhost/laravel1/public/api/commentChildrent/1
+Route::get('commentChildrent/{comment_id}', $commentControllerApi . CommentApiControllerInterface::PAPER_COMMENT_CHILDRENT);
+
+// https://localhost/laravel1/public/api/writerList
+Route::get('writerList', $writerApiController . WriterApiControllerInterface::WRITER_LIST);
+
+// https://localhost/laravel1/public/api/byWriter/1
+Route::get('byWriter/{id}', $writerApiController . WriterApiControllerInterface::PAPER_BY_WRITER);
+
+Route::prefix('paper')->group(function () use ($commentControllerApi, $paperApiController, $cartApiController) {
+
+    // curl  -X POST \
+    //   'https://localhost/laravel1/public/api/paperAddComment/1' \
+    //   --header 'Accept: */*' \
+    //   --header 'Content-Type: application/json' \
+    //   --data-raw '{
+    //   "email": "a1@gmail.com",
+    //   "name": "a12",
+    //   "subject": "demo add comment api",
+    //   "message": "noi dung"
+    // }'
+    Route::post("addComment/{paper_id}", $commentControllerApi . CommentApiControllerInterface::PAPER_ADD_COMMENT);
+
+    // curl  -X POST \
+    //   'https://localhost/laravel1/public/api/likePaper/1' \
+    //   --header 'Accept: */*' \
+    //   --header 'Content-Type: application/json' \
+    //   --data-raw '{
+    //   "name": "a12",
+    //   "type": "like",
+    //   "action": "add"
+    // }'
+
+    // commentReply
+    Route::post("replyComment/{comment_id}", $commentControllerApi . CommentApiControllerInterface::PAPER_REPLY_COMMENT);
+
+    Route::post("likeComment/{comment_id?}",  $commentControllerApi . CommentApiControllerInterface::API_COMMENT_LIKE);
+
+    Route::post("likePaper/{paper_id}", $paperApiController . PaperApiControllerInterface::API_PAPER_ADD_LIKE);
+
+    Route::get("detail/{paper_id}", $paperApiController . PaperApiControllerInterface::PAPER_DETAIL);
+
+    Route::post("addCart", $cartApiController . CartApiControllerInterface::ADD_TO_CART);
+
+    Route::get("cart", $cartApiController . CartApiControllerInterface::GET_CART);
+
+    Route::delete("clearCart", $cartApiController . CartApiControllerInterface::CLEAR_CART);
+
+    Route::delete('removeItem/{item_id}', $cartApiController . CartApiControllerInterface::REMOVE_CART_ITEM);
+
+    Route::post('submitOrder', $cartApiController . CartApiControllerInterface::SUBMIT_ORDER);
 });
 
-Route::get('mostviewdetail/{page?}', "ManagerController@mostviewdetail")->name("mostviewdetail");
+Route::prefix(NotificationControllerInterface::PREFIX)->group(function () use ($notificationController) {
+    Route::post("addFcm", $notificationController . NotificationControllerInterface::REGISTER_FCM);
 
-Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile")->name('uploadImageFromMobile');
-
-Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment")->name('pullFirebaseComment');
-
-Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike")->name('pullFirebasePaperLike');
-
-Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike")->name('pullFirebaseComLike');
-
-Route::get('search', "ManagerController@searchApi")->name('api_search');
-
-Route::get('byWriter/{id}', "ManagerController@byWriter")->name('api_search_byWriter');
+    Route::get('pushMessage', $notificationController . NotificationControllerInterface::PUSH_NOTIFICATION);
+});
 
 Route::prefix('test')->group(function () {
+
+    Route::get('constEx', function () {
+        dd(ExtensionController::getConstants());
+    });
+
+    Route::post('mobile/upimage', "ExtensionController@uploadImageFromMobile");
+
+    Route::get('upFirebaseComments/{paper_id}', "ManagerController@upFirebaseComments");
+
+    Route::get('pullFirebaseComment', "ManagerController@pullFirebaseComment");
+
+    Route::get('pullFirebasePaperLike', "ManagerController@pullFirebasePaperLike");
+
+    Route::get('pullFirebaseComLike', "ManagerController@pullFirebaseComLike");
 
     Route::get('onesign', function () {
         OneSignalFacade::sendNotificationToAll( // đã chạy: https://github.com/berkayk/laravel-onesignal
@@ -74,34 +165,5 @@ Route::prefix('test')->group(function () {
         return 123;
     });
 });
-
-Route::prefix('share')->group(function () {
-    Route::get("mostPopulator", "ManagerController@mostPopulator")->name('mostPopulator');
-
-    Route::get("likeMost", "ManagerController@likeMost")->name('likeMost');
-
-    Route::get('trending', "ManagerController@trending")->name("trending");
-});
-
-Route::prefix('paper')->group(function () {
-
-    Route::get("detail/{paper_id}", "ManagerController@getPaperDetail")->name('api_paperDetail');
-
-    Route::post("like/{comment_id?}", "PaperController@like")->name("api_paper_like");
-
-    Route::get("firebase/{paper_id?}", "ManagerController@firebasePaperDetail")->name("api_paper_detail_firebase");
-
-    Route::post("addCart", "PaperController@addCartApi")->name("api_paper_add_cart");
-
-    Route::get("cart", "PaperController@getCartApi")->name("api_get_cart");
-
-    Route::delete("clearCart", "PaperController@clearCartApi")->name("api_clear_cart");
-
-    Route::delete('removeItem/{id}', "PaperController@removeItemApi")->name("api_remove_item");
-});
-
-Route::post('login', "ManagerController@loginApi")->name('api_login');
-
-Route::get('userInfo', "ManagerController@getUserInfo")->name('api_user_info');
 
 // https://viblo.asia/p/huong-dan-trien-khai-desgin-patterns-trong-laravel-Qpmle79rKrd

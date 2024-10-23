@@ -15,7 +15,7 @@ final class AdminGlobalVar implements Htmlable
         // từ đó các vị trí khác nhau đều truy cập được các biến này
         $vars = [
             'filemanager_url_base' => url("adminhtml/file/manager"),
-            'filemanager_url' => url("adminhtml/file/manager") . "?editor=tinymce5"
+            'filemanager_url_mce' => url("adminhtml/file/manager") . "?editor=tinymce5"
         ];
         return view($this->template, ['vars' => $vars])->render();
     }

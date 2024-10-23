@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
-class AdminController extends Controller
+class AdminController extends Controller implements AdminControllerInterface
 {
     //
     protected $adminUser;
@@ -19,6 +19,18 @@ class AdminController extends Controller
         $this->adminUser = $adminUser;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function home()
+    {
+        return view("adminhtml/templates/home");
+    }
+
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function adminLogin()
     {
         if ($this->get_user_admin()) {
@@ -27,6 +39,10 @@ class AdminController extends Controller
         return view("adminhtml/templates/adminUser/adminLogin");
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function loginPost(Request $request)
     {
         if ($this->get_user_admin()) {
@@ -37,28 +53,32 @@ class AdminController extends Controller
             if ($adminUser) {
                 if (Hash::check($request->get("admin_password"), $adminUser->password)) {
                     $this->admin_login($adminUser);
-                }else {
+                } else {
                     dd("auth found");
                 }
                 return redirect()->route("admin")->with("success", "login success. Hello $adminUser->name");
             }
-        }else {
+        } else {
             return redirect()->back()->with("error", "can not login. Please check again user name and passsword.");
         }
         return redirect()->back()->with("error", "can not login. Please check again user name and passsword.");
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout()
     {
         if ($this->adminUser->check_login()) {
             $this->adminUser->admin_logout();
             return redirect()->route("admin_login")->with("success", "logout! see you again.");
-        }else{
+        } else {
             return redirect()->route("admin")->with("error", "can not logout, please login first!!");
         }
     }
 
-    protected function admin_login($adminUser){
+    protected function admin_login($adminUser)
+    {
         if (!Session::isStarted()) {
             Session::start();
         }
@@ -66,16 +86,12 @@ class AdminController extends Controller
         Session::save();
     }
 
-    protected function get_user_admin() {
+    protected function get_user_admin()
+    {
         if (!Session::isStarted()) {
             Session::start();
         }
         return Session::get("admin_user", null);
-    }
-
-    public function home()
-    {
-        return view("adminhtml/templates/home");
     }
 
     public function default()

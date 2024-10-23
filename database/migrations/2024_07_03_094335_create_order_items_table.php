@@ -13,15 +13,15 @@ class CreateOrderItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::create(\App\Models\OrderItemInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->integer('paper_id');
-            $table->string('title')->nullable();
-            $table->string('price');
-            $table->integer('qty');
-            $table->string('url')->nullable();
-            $table->string('image_path')->nullable();
+            $table->integer(\App\Models\OrderItemInterface::ATTR_ORDER_ID);
+            $table->integer(\App\Models\OrderItemInterface::ATTR_PAPER_ID);
+            $table->string(\App\Models\OrderItemInterface::ATTR_TITLE)->nullable();
+            $table->string(\App\Models\OrderItemInterface::ATTR_PRICE);
+            $table->integer(\App\Models\OrderItemInterface::ATTR_QTY);
+            $table->string(\App\Models\OrderItemInterface::ATTR_URL)->nullable();
+            $table->string(\App\Models\OrderItemInterface::ATTR_IMAGE_PATH)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ class CreateOrderItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_items');
+        Schema::dropIfExists(\App\Models\OrderItemInterface::TABLE_NAME);
     }
 }

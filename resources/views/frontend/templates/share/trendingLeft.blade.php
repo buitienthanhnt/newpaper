@@ -4,15 +4,15 @@
 			<div class="single-slider">
 				<div class="trending-top mb-30">
 					<div class="trend-top-img">
-						<img style="max-height: 465px; object-fit: cover" src="{{ $tren->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
+						<img style="max-height: 465px; object-fit: cover;" src="{{ $tren->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
 						<div class="trend-top-cap">
-							@if ($first_category = $tren->to_category()->first())
+							@if ($first_category = $tren->getPaperCategories()->first())
 								<a href="">
 									<span class="bgr" data-animation="fadeInUp" data-delay=".2s"
 										data-duration="1000ms">{{ $first_category->for_category()->first()->name }}</span>
 								</a>
 							@endif
-							<h2><a href="{{ route('front_page_detail', ['page' => $tren->id, 'alias' => $tren->url_alias]) }}"
+							<h2><a href="{{ route('front_paper_detail', ['paper_id' => $tren->id, 'alias' => $tren->url_alias]) }}"
 									data-animation="fadeInUp" data-delay=".4s"
 									data-duration="1000ms">{{ $tren->title }}</a>
 							</h2>

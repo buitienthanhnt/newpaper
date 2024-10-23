@@ -47,17 +47,19 @@
 @endsection
 
 @section('body_main_conten')
+@inject('category', 'App\Models\Category')
+@inject('writer', 'App\Models\Writer')
     <div class="col-12 grid-margin">
         <h5 class="card-title">Design paper</h5>
-        <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_paper_save') }}>
+        <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_save_paper') }}>
             @csrf
             {!! view('elements.message.index')->render() !!}
-
+            <input type="hidden" name="source_request" value="{{ $value['source_request'] ?? null }}">
             <div class="row">
                 <div class="col-md-6">
                     {!! view('elements.formFields.textField', [
                         'label' => 'Title',
-                        'name' => 'page_title',
+                        'name' => App\Models\PaperInterface::ATTR_TITLE,
                         'require' => true,
                         'value' => $value['title'] ?? null,
                     ])->render() !!}
@@ -65,15 +67,15 @@
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-md-4">
-                            {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => 'active', 'checked' => true])->render() !!}
+                            {!! view('elements.formFields.checkBox', ['label' => 'Active', 'name' => App\Models\PaperInterface::ATTR_ACTIVE, 'checked' => true])->render() !!}
                         </div>
                         <div class="col-md-4">
-                            {!! view('elements.formFields.checkBox', ['label' => 'Show', 'name' => 'show', 'checked' => true])->render() !!}
+                            {!! view('elements.formFields.checkBox', ['label' => 'Show', 'name' => App\Models\PaperInterface::ATTR_SHOW, 'checked' => true])->render() !!}
                         </div>
                         <div class="col-md-4">
                             {!! view('elements.formFields.checkBox', [
                                 'label' => 'Auto hide',
-                                'name' => 'auto_hide',
+                                'name' => App\Models\PaperInterface::ATTR_AUTO_HIDE,
                                 'checked' => true,
                             ])->render() !!}
                         </div>
@@ -85,7 +87,7 @@
                 <div class="col-md-6">
                     {!! view('elements.formFields.textField', [
                     'label' => 'Url alias',
-                    'name' => 'alias',
+                    'name' =>  App\Models\PaperInterface::ATTR_URL_ALIAS,
                     'value' => $value['url_alias'] ?? '',
                 ])->render() !!}
                 </div>
@@ -94,8 +96,8 @@
                         {!! view('elements.formFields.select2Fields', [
                             'label' => 'Select category',
                             'id' => 'category_option',
-                            'name' => 'category_option',
-                            'options' => $category_option,
+                            'name' => App\Models\PaperInterface::EX_ATTR_CATEGORY,
+                            'options' => $category->category_tree_option(),
                             'place_holder' => 'Select an option',
                             'token_separators' => [',', ' '],
                             'multiple' => true,
@@ -108,7 +110,7 @@
                 <div class="col-md-6">
                     {!! view('elements.formFields.textArea', [
                         'label' => 'Short conten',
-                        'name' => 'short_conten',
+                        'name' => App\Models\PaperInterface::ATTR_SHORT_CONTENT,
                         'value' => $value['short_conten'] ?? null,
                     ])->render() !!}
                 </div>
@@ -117,7 +119,7 @@
                      'label' => 'Thumbnail image',
                      'id' => 'lfm_1',
                      'input_id' => 'input_id_1',
-                     'name' => 'image_path',
+                     'name' => App\Models\PaperInterface::ATTR_IMAGE_PATH,
                      'preview_id' => 'preview_id_1',
                  ])->render() !!}
                 </div>
@@ -131,7 +133,7 @@
                         {!! view('adminhtml.templates.papers.contenElement.conten', ['conten' => $value['conten'] ?? null])->render() !!}
 
                         {!! view('adminhtml.templates.papers.contenElement.timeline', [
-                            'time_line_option' => $time_line_option,
+                            'time_line_option' => \App\Models\Category::timelineOptionHtml(),
                         ])->render() !!}
 
                         {!! view('adminhtml.templates.papers.contenElement.price')->render() !!}
@@ -150,7 +152,7 @@
                     {!! view('elements.formFields.select2Fields', [
                         'id' => 'paper_tag',
                         'label' => 'Tag for links',
-                        'name' => 'paper_tag',
+                        'name' => App\Models\PaperInterface::EX_ATTR_TAGS,
                         'place_holder' => 'liên kết',
                         'token_separators' => [','],
                         'multiple' => true,
@@ -160,8 +162,8 @@
                     {!! view('elements.formFields.select2Fields', [
                         'label' => 'Writer',
                         'id' => 'paper_writer',
-                        'name' => 'writer',
-                        'options' => $writers,
+                        'name' => App\Models\PaperInterface::ATTR_WRITER,
+                        'options' => $writer->all(),
                         'token_separators' => [''],
                         'multiple' => false,
                         'require' => true,
@@ -246,11 +248,9 @@
                                     .clientHeight || document
                                     .getElementsByTagName('body')[0].clientHeight;
 
-                                let type = 'image' === meta.filetype ? 'Images' : 'Files',
-                                    url = '{!! $filemanager_url !!}';
-
+                                let type = 'image' === meta.filetype ? 'Images' : 'Files';
                                 tinymce.activeEditor.windowManager.openUrl({
-                                    url: url,
+                                    url: filemanager_url_base,
                                     title: 'Filemanager',
                                     width: x * 0.8,
                                     height: y * 0.8,

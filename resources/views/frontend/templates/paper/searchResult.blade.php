@@ -33,7 +33,7 @@
                         <div class="card" style="">
                             <div class="card-body">
                                 <a class="card-title"
-                                    href="{{ route('front_page_detail', ['alias' => $item->url_alias, 'page' => $item->id]) }}">{{ $item->title }}</a>
+                                    href="{{ route('front_paper_detail', ['alias' => $item->url_alias, 'paper_id' => $item->id]) }}">{{ $item->title }}</a>
                                 <p class="card-text">{{ $item->short_conten }}</p>
                                 {{-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
                             </div>

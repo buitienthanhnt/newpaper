@@ -8,13 +8,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class PermissionRules extends Model
+class PermissionRules extends Model implements PermissionRulesInterface
 {
     use HasFactory;
     use Nan;
+
+    protected $table = self::TABLE_NAME;
     protected $guarded = [];
 
-    function insert_permission_rules($permission_id, $rule_ids) {
+    function insert_permission_rules($permission_id, $rule_ids)
+    {
         if ($rule_ids && $permission_id) {
             DB::beginTransaction();
             try {

@@ -6,16 +6,22 @@ use App\Models\Paper;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Thanhnt\Nan\Helper\DomHtml;
+use App\Constant\AttributeInterface;
+use Illuminate\Support\Facades\Cache;
 
 class HelperFunction
 {
     use DomHtml;
     use Nan;
 
+    /**
+     * @param string $name
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     */
     public function getConfigData(string $name)
     {
         try {
-            $value = DB::table($this->coreConfigTable())->where('name', $name)->first();
+            $value = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, $name)->first();
             return $value;
         } catch (\Throwable $th) {
             //throw $th;
@@ -23,10 +29,20 @@ class HelperFunction
         return null;
     }
 
+    /**
+     * @param string $name
+     * @param null   $default
+     * @return mixed|null
+     */
     public function getConfig(string $name, $default = null)
     {
         try {
-            $value = $this->getConfigData($name)->value;
+            $config_cache = 'config_value_' . $name;
+            if (Cache::has($config_cache)) {
+                return Cache::get($config_cache);
+            }
+            $value = $this->getConfigData($name)->{AttributeInterface::ATTR_VALUE};
+            Cache::put($config_cache, $value);
             return $value;
         } catch (\Throwable $th) {
             //throw $th;
@@ -34,12 +50,19 @@ class HelperFunction
         return $default;
     }
 
-    // save core config value.
+    /**
+     * @param string      $name
+     * @param string      $value
+     * @param string      $type
+     * @param string|null $description
+     * @return array
+     * @throws Exception
+     */
     public function saveConfig(string $name, string $value, string $type = "text", string $description = null): array
     {
         DB::beginTransaction();
         try {
-            $saveStatus = DB::table($this->coreConfigTable())->updateOrInsert(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
+            $saveStatus = DB::table($this->coreConfigTable())->updateOrInsert([AttributeInterface::ATTR_NAME => $name, AttributeInterface::ATTR_VALUE => $value, AttributeInterface::ATTR_DESCRIPTION => $description, AttributeInterface::ATTR_TYPE => $type]);
             if ($saveStatus) {
                 $configValue = $this->getConfigData($name);
             } else {
@@ -54,21 +77,32 @@ class HelperFunction
         return ["status" => false, "value" => null];
     }
 
+    /**
+     * @param string      $name
+     * @param string      $value
+     * @param string      $type
+     * @param string|null $description
+     * @return array
+     * @throws Exception
+     */
     function updateConfig(string $name, string $value, string $type = "text", string $description = null)
     {
-
         DB::beginTransaction();
         try {
-            $insert_value = DB::table($this->coreConfigTable())->where('name', $name)->limit(1)->update(["name" => $name, "value" => $value, "description" => $description, "type" => $type]);
+            $insert_value = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, $name)->limit(1)->update([AttributeInterface::ATTR_NAME => $name, AttributeInterface::ATTR_VALUE => $value, AttributeInterface::ATTR_DESCRIPTION => $description, AttributeInterface::ATTR_TYPE => $type]);
             DB::commit();
             return ["status" => true, "value" => $insert_value];
         } catch (Exception $e) {
             DB::rollBack();
+            return ["status" => false, "value" => null];
             throw new Exception($e->getMessage());
         }
-        return ["status" => false, "value" => null];
     }
 
+    /**
+     * @param int $config_id
+     * @return array
+     */
     function deleteConfig(int $config_id)
     {
         DB::beginTransaction();
@@ -84,7 +118,7 @@ class HelperFunction
             //throw $th;
             DB::rollBack();
         }
-        return false;
+        return ['status' => false, 'configValue' => null];
     }
 
     // repalce image url for app by use ip address.
@@ -107,16 +141,16 @@ class HelperFunction
                     return $target_domain_val . 'public/storage' . $ex_image_path[1];
                 }
             }
-            $domain = DB::table($this->coreConfigTable())->where("name", "=", "domain")->select()->first()->value;
-            $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->select()->first()->value;
-            $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->select()->first()->value;
+            $domain = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "domain")->select()->first()->value;
+            $main = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "main")->select()->first()->value;
+            $ip = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "ip")->select()->first()->value;
         } catch (\Throwable $th) {
             //throw $th;
             return $imageUrl;
         }
         // support for windown platform
         try {
-            $is_windown = (bool) DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->select()->first()->value;
+            $is_windown = (bool)DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "is_windown")->select()->first()->value;
         } catch (\Throwable $th) {
         }
         $img = $is_windown ? str_replace($domain, $ip, $imageUrl) : str_replace($domain, $ip . "/" . $main . "/public", $imageUrl);
@@ -128,16 +162,16 @@ class HelperFunction
     {
         try {
             DB::beginTransaction();
-            $default_image = DB::table($this->coreConfigTable())->where("name", "=", "default_image")->first('value')->value;
-            if ($default_image){
+            $default_image = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "default_image")->first('value')->value;
+            if ($default_image) {
                 return $default_image;
             }
-            $is_windown = DB::table($this->coreConfigTable())->where("name", "=", "is_windown")->first('value')->value;
-            if (!$is_windown){
+            $is_windown = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "is_windown")->first('value')->value;
+            if (!$is_windown) {
                 return public_path('assets/pub_image/defaul.PNG');
             }
-            $main = DB::table($this->coreConfigTable())->where("name", "=", "main")->first('value')->value;
-            $ip = DB::table($this->coreConfigTable())->where("name", "=", "ip")->first('value')->value;
+            $main = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "main")->first('value')->value;
+            $ip = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "ip")->first('value')->value;
         } catch (\Throwable $th) {
             return "";
         }
@@ -170,7 +204,7 @@ class HelperFunction
             CURLOPT_POST => 1,
             CURLOPT_SSL_VERIFYPEER => false, //Bỏ kiểm SSL
             CURLOPT_POSTFIELDS => http_build_query(array(
-                'registration_ids' => array_map(fn ($notification) => $notification->fcmToken, $notification_fcm),
+                'registration_ids' => array_map(fn($notification) => $notification->fcmToken, $notification_fcm),
                 'notification' => [
                     "title" => $paper->title,
                     "body" => $paper->short_conten,
@@ -193,7 +227,12 @@ class HelperFunction
         return $resp;
     }
 
-    // post request with json params in body
+    /**
+     * post request with json params in body
+     * @param array $notification_fcm
+     * @param Paper $paper
+     * @return bool
+     */
     public function push_notification_json(array $notification_fcm = [], Paper $paper): bool
     {
         if (!$notification_fcm || !$paper) {
@@ -201,7 +240,7 @@ class HelperFunction
         }
         $authorization = ""; //$authHeaders = [];
         try {
-            $authorization = DB::table($this->coreConfigTable())->where("name", "=", "Authorization")->select()->first()->value;
+            $authorization = DB::table($this->coreConfigTable())->where(AttributeInterface::ATTR_NAME, "=", "Authorization")->select()->first()->value;
         } catch (\Throwable $th) {
             return false;
             $th("not has authorization");
@@ -210,7 +249,7 @@ class HelperFunction
         // $authHeaders[] = 'Content-Type: application/x-www-form-urlencoded';
         // $authHeaders[] = 'Authorization: ' . $authorization;
         $data = array(
-            'registration_ids' => array_map(fn ($notification) => $notification["fcmToken"], $notification_fcm),
+            'registration_ids' => array_map(fn($notification) => $notification["fcmToken"], $notification_fcm),
             'notification' => [
                 "title" => $paper->title,
                 "body" => $paper->short_conten,
@@ -249,7 +288,9 @@ class HelperFunction
         return $result;
     }
 
-    // get request curl data
+    /**
+     *
+     */
     public function curl_get()
     {
         $curl = curl_init();

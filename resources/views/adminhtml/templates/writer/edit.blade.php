@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <form action="{{ route('admin_writer_update', ['writer_id' => $writer->id]) }}" method="post" enctype="multipart/form-data" >
+                <form action="{{ route('admin_update_writer', ['writer_id' => $writer->id]) }}" method="post" enctype="multipart/form-data" >
                     @csrf
                     <div class="row">
                         <div class="col-md-6">

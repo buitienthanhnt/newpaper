@@ -13,14 +13,14 @@ class CreateOrderAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_addresses', function (Blueprint $table) {
+        Schema::create(\App\Models\OrderAddressInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->boolean('ship_hc')->nullable();
-            $table->string('address_hc')->nullable();
-            $table->boolean('ship_nhc')->nullable();
-            $table->string('address_nhc')->nullable();
-            $table->boolean('ship_store')->nullable();
+            $table->integer(\App\Models\OrderAddressInterface::ATTR_JOIN_ID);
+            $table->boolean(\App\Models\OrderAddressInterface::ATTR_SHIP_HC)->nullable();
+            $table->string(\App\Models\OrderAddressInterface::ATTR_ADDRESS_HC)->nullable();
+            $table->boolean(\App\Models\OrderAddressInterface::ATTR_SHIP_NHC)->nullable();
+            $table->string(\App\Models\OrderAddressInterface::ATTR_ADDRESS_NHC)->nullable();
+            $table->boolean(\App\Models\OrderAddressInterface::ATTR_SHIP_STORE)->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateOrderAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_addresses');
+        Schema::dropIfExists(\App\Models\OrderAddressInterface::TABLE_NAME);
     }
 }

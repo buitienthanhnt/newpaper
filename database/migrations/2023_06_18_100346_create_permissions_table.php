@@ -13,10 +13,11 @@ class CreatePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('permissions', function (Blueprint $table) {
+        Schema::create(\App\Models\PermissionInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->text("label");
-            // $table->boolean("active")->default(true);
+            $table->text(\App\Models\PermissionInterface::ATTR_LABEL);
+            $table->string(\App\Models\PermissionInterface::ATTR_KEY)->unique()->default(Str::random(5));
+            $table->boolean(\App\Models\PermissionInterface::ATTR_ACTIVE)->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +30,6 @@ class CreatePermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permissions');
+        Schema::dropIfExists(\App\Models\PermissionInterface::TABLE_NAME);
     }
 }

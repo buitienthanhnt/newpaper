@@ -8,8 +8,9 @@ use App\Models\PermissionRules;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 
-class PermissionController extends Controller
+class PermissionController extends Controller implements PermissionControllerInterface
 {
+    protected $request;
     protected $router;
     protected $rule;
     protected $permission;
@@ -19,22 +20,51 @@ class PermissionController extends Controller
         Router $router,
         Rule $rule,
         Permission $permission,
-        PermissionRules $permissionRules
+        PermissionRules $permissionRules,
+        Request $request
     )
     {
         $this->router = $router;
         $this->rule = $rule;
         $this->permission = $permission;
         $this->permissionRules = $permissionRules;
+        $this->request = $request;
     }
 
-    function create()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    function listPermission()
     {
-        $rules = $this->rule->rule_tree_array();
-        $ul_rules = $this->rule->root_rules_html();
+        $permission = $this->permission->paginate(8);
+        return view("adminhtml/templates/permission/list", ["permissions" => $permission]);
+    }
+
+    function createPermission()
+    {
         $prefixGroup = $this->allRules();
-        return view("adminhtml/templates/permission/create", ["rules" => json_encode($prefixGroup), "ul_rules" => $ul_rules]);
+        return view("adminhtml/templates/permission/create", ["rules" => json_encode($prefixGroup)]);
         // return view("adminhtml/templates/permission/create", ["rules" => json_encode(["Name" => "all", "Number" => 0, "Children" => $rules]), "ul_rules" => $ul_rules]);
+    }
+
+    function insertPermission()
+    {
+        $request = $this->request;
+        $params = $request->toArray();
+        $rules = array_filter($params, function ($value, $key) {
+            if ($value == "on") {
+                return true;
+            }
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $rules = $this->filterRules(array_map(fn($value): String => str_replace("checkbox-", "", $value), array_keys($rules)));
+        $new_permission = new Permission(["label" => $params["label"]]);
+        $value = $new_permission->save();
+        if ($value) {
+            $this->permissionRules->insert_permission_rules($new_permission->id, $rules);
+            return redirect()->back()->with("success", "add new permission!!");
+        }
+        return redirect()->back()->with("error", "cant insert permission");
     }
 
     function allRules() : array {
@@ -49,7 +79,7 @@ class PermissionController extends Controller
             } catch (\Throwable $th) {
                 //throw $th;
             }
-            
+
         })->filter();
         return $this->actionByController($actions->toArray());
     }
@@ -83,12 +113,6 @@ class PermissionController extends Controller
         return [];
     }
 
-    function list()
-    {
-        $permission = $this->permission->paginate(8);
-        return view("adminhtml/templates/permission/list", ["permissions" => $permission]);
-    }
-
     function filterRules($rules): array{
         if (in_array("rootAdmin", $rules)) {
             return ["rootAdmin"];
@@ -96,34 +120,24 @@ class PermissionController extends Controller
         return $rules;
     }
 
-    function insert(Request $request)
-    {
-        $params = $request->toArray();
-        $rules = array_filter($params, function ($value, $key) {
-            if ($value == "on") {
-                return true;
-            }
-        }, ARRAY_FILTER_USE_BOTH);
-
-        $rules = $this->filterRules(array_map(fn($value): String => str_replace("checkbox-", "", $value), array_keys($rules)));
-        $new_permission = new Permission(["label" => $params["label"]]);
-        $value = $new_permission->save();
-        if ($value) {
-            $check_insert_rules = $this->permissionRules->insert_permission_rules($new_permission->id, $rules);
-            return redirect()->back()->with("success", "add new permission!!");
-        }
-        return redirect()->back()->with("error", "cant insert permission");
-    }
-
-    function edit() {
+    /**
+     * @param int $permission_id
+     * @return mixed|void
+     */
+    function editPermission(int $permission_id) {
         return;
     }
 
-    function update() {
+    /**
+     * @param int $permission_id
+     * @return mixed|void
+     */
+    function updatePermission(int $permission_id) {
         return;
     }
 
-    function delete(Request $request) {
+    function deletePermission() {
+        $request = $this->request;
         $permission_id = $request->get("permission_id");
         if ($permission_id) {
             try {
@@ -148,13 +162,20 @@ class PermissionController extends Controller
     }
 
     /**
-     * @/return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * @param int $permission_id
+     * @return \Illuminate\Contracts\View\View|null
      */
-    function detail($permission_id): ?\Illuminate\Contracts\View\View{
+    function detailPermission($permission_id): ?\Illuminate\Contracts\View\View{
         $permission = Permission::find($permission_id);
         $prefixGroup = $this->allRules();
         $permissionRules = $permission->allRules();
-        return view("adminhtml.templates.permission.detail", ["permission" => $permission, "rules" => json_encode($prefixGroup), "rules_selected" => json_encode($permissionRules)]);
+        return view("adminhtml.templates.permission.detail",
+            [
+                "permission" => $permission,
+                "rules" => json_encode($prefixGroup),
+                "rules_selected" => json_encode($permissionRules)
+            ]
+        );
     }
 
 }

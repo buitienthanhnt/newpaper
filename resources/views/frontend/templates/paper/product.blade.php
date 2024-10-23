@@ -69,7 +69,7 @@
                                         </div>
                                         <div class="whates-caption">
                                             <h4><a class="text-info"
-                                                    href="{{ route('front_page_detail', ['alias' => $paper_first->url_alias, 'page' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
+                                                    href="{{ route('front_paper_detail', ['alias' => $paper_first->url_alias, 'paper_id' => $paper_first->id]) }}">{{ $paper_first->title }}</a>
                                             </h4>
                                             <h6>{{ $paper_first->short_conten }}</h6>
                                             {!! view('frontend.templates.elements.dateTime', ['paper' => $paper_first])->render() !!}
@@ -93,7 +93,7 @@
                                                 <div class="col-md-6 whats-right-cap" style="padding-left: 15px">
                                                     <h4>
                                                         <a
-                                                            href="{{ route('front_page_detail', ['alias' => $paper->url_alias, 'page' => $paper->id]) }}">
+                                                            href="{{ route('front_paper_detail', ['alias' => $paper->url_alias, 'paper_id' => $paper->id]) }}">
                                                             <h4 class="text-info">{{ $paper->title }}</h4>
                                                         </a>
                                                     </h4>
@@ -170,9 +170,9 @@
 @section('js_after')
     <script>
         var token = "{{ csrf_token() }}";
-        var url = "{{ route('more_type', ['type' => $type]) }}";
-        var mostPopulatorUrl = "{{ route('mostPopulator') }}";
-        var likeMost = "{{ route('likeMost') }}";
+        var url = "{{ route('front_paper_by_type', ['type' => $type]) }}";
+        var mostPopulatorUrl = "{{ route('front_most_populator_html') }}";
+        var likeMost = "{{ route('front_most_like_html') }}";
 
         function load_more() {
             var button = $("#load_more");

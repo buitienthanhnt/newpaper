@@ -45,7 +45,7 @@
 
             <div class="card-body">
                 <h4 class="card-title">choose setup categories:</h4>
-                <form class="form-sample" method="POST" action={{ route('category_setup_save') }}>
+                <form class="form-sample" method="POST" action={{ route('admin_setup_save_category') }}>
                     @csrf
 
                     @if (session('success'))
@@ -114,7 +114,7 @@
             $(this).trigger("change");
         });
 
-        const syncUrl = "{{ route('admin_upCategoryTop') }}";
+        const syncUrl = "{{ route('admin_firebase_upload_category_top') }}";
         $(document).ready(function() {
             $('.syncFirebase').click(function(event) {
                 event.preventDefault(); // disable action submit of button

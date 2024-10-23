@@ -27,42 +27,33 @@ trait Nan
         return public_path($path);
     }
 
-    public function pageCategoryTable()
+    public static function paperCategoryTable()
     {
-        return "page_category";
+        return "paper_category";
     }
 
-    public function pageTagTable()
+    public function paperTagTable()
     {
-        return "page_tag";
+        return "paper_tag";
     }
+
     public function pagePriceTable()
     {
         return "price";
     }
-
-    // public function permissionRulesTable()
-    // {
-    //     return "rule_permissions";
-    // }
 
     public function permissionRulesTable()
     {
         return "permission_rules";
     }
 
-    public function userPermissionTable(): string
+    public static function userPermissionTable(): string
     {
         return "admin_user_permissions";
     }
 
-    function coreConfigTable(): string
+    public static function coreConfigTable(): string
     {
         return "core_config";
-    }
-
-    function viewSourceTable(): string
-    {
-        return 'view_sources';
     }
 }

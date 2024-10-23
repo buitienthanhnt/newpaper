@@ -13,15 +13,15 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create(\App\Models\OrderInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string('status');
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('total');
-            $table->string('thanh_toan')->default('offline');
-            $table->string('omx')->nullable();
+            $table->string(\App\Models\OrderInterface::ATTR_STATUS)->default(\App\Models\OrderInterface::STATUS_PENDING);
+            $table->string(\App\Models\OrderInterface::ATTR_NAME);
+            $table->string(\App\Models\OrderInterface::ATTR_EMAIL);
+            $table->string(\App\Models\OrderInterface::ATTR_PHONE);
+            $table->string(\App\Models\OrderInterface::ATTR_TOTAL);
+            $table->string(\App\Models\OrderInterface::ATTR_THANH_TOAN)->default('offline');
+            $table->string(\App\Models\OrderInterface::ATTR_OMX)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists(\App\Models\OrderInterface::TABLE_NAME);
     }
 }

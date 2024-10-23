@@ -10,7 +10,8 @@ class LikeMost implements Htmlable
 	protected $template = "frontend.templates.share.likeMost";
 	function toHtml(): string
 	{
-		$likeMost = Paper::all()->random(8);
+		$papers = Paper::all();
+		$likeMost = $papers->random($papers->count() >= 6 ? 6 : $papers->count());
 		return view($this->template, ['weekly3_contens' => $likeMost])->render();
 	}
 }

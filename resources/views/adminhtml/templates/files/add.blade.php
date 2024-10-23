@@ -17,7 +17,7 @@
         <div class="">
             <div class="card-body">
                 <h4 class="card-title">add new file to source</h4>
-                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_file_save') }}>
+                <form class="form-sample" method="POST" enctype="multipart/form-data" action={{ route('admin_save_file') }}>
                     @csrf
                     @if (session('success'))
                         <div class="alert alert-success" id="save_image_success" role="alert">

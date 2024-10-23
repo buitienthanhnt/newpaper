@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class CategoryController extends Controller
+class CategoryController extends Controller implements CategoryControllerInterface
 {
     protected $request;
     protected $category;
@@ -28,6 +28,9 @@ class CategoryController extends Controller
         $this->session = $session;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function listCategory()
     {
         $all_category = $this->category::paginate(8); // php artisan vendor:publish --tag=laravel-pagination
@@ -36,11 +39,6 @@ class CategoryController extends Controller
 
     public function createCategory()
     {
-        // $parent_category = '<option value="0">Root category</option>';
-        // $list_catergory = $this->category->all()->where("parent_id", "=", 0);
-        // if ($list_catergory->count()) {
-        //     $parent_category.= $this->category_tree($list_catergory);
-        // }
         if ($this->session->exists("success")) {
             Alert::info($this->session->get("success"), 'Message')->autoClose(2000);
         } elseif ($this->session->exists("error")) {
@@ -49,39 +47,6 @@ class CategoryController extends Controller
 
         $parent_category = $this->category_tree_option();
         return view("adminhtml/templates/category/create", ["parent_category" => $parent_category]);
-    }
-
-    protected function category_tree_option($category = null)
-    {
-        $parent_category = '<option value="0">Root category</option>';
-        $list_catergory = $this->category->all()->where("parent_id", "=", 0);
-        if ($list_catergory->count()) {
-            if ($category) {
-                $parent_category .= $this->category_tree($list_catergory, "", $category->parent_id);
-            } else {
-                $parent_category .= $this->category_tree($list_catergory);
-            }
-        }
-        return $parent_category;
-    }
-
-    protected function category_tree($catergory, $begin = "", $selected = null)
-    {
-        $html = "";
-        foreach ($catergory as $cate) {
-            $html .= '<option value="' . $cate->id . '" ' . ($selected === $cate->id ? "selected" : "") . '>' . $begin . $cate->name . '</option>';
-            if ($list_catergory = $this->category->all()->where("parent_id", "=", $cate->id)) {
-                if ($list_catergory->count()) {
-                    $_be = $begin;
-                    $begin .= "___";
-                    $html .= $this->category_tree($list_catergory, $begin, $selected);
-                    $begin = $_be;
-                } else {
-                    continue;
-                }
-            }
-        }
-        return $html;
     }
 
     public function insertCategory()
@@ -102,51 +67,116 @@ class CategoryController extends Controller
         }
     }
 
+    /**
+     * @param int $category_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
     public function editCategory($category_id)
     {
-        $category = $this->category::find($category_id);
-        $parent_category = $this->category_tree_option($category);
+        $selected_category = $this->category::find($category_id);
+        $category_tree_option = $this->category_tree_option($selected_category);
 
-        return view("adminhtml/templates/category/edit", compact("category", "parent_category"));
+        return view("adminhtml/templates/category/edit", ["category" => $selected_category, "category_tree_option" => $category_tree_option]);
     }
 
+    /**
+     * @param int $category_id
+     * @return \Illuminate\Http\RedirectResponse|mixed
+     */
     public function updateCategory($category_id)
     {
         $category = $this->category::find($category_id);
         $request_params = $this->request->toArray();
         $category->fill($request_params);
         $category->save();
-        // return redirect(route("category_admin_list"));
         return redirect()->back()->with("success", "updated success!");
+        // chuyển hướng qua trang danh sách category.
+        // return redirect(route("category_admin_list"));
     }
 
+    /**
+     * hàm này trả về chuỗi các <option> của category cho trường <select> trong <form>.
+     * @param Category $selected_category
+     * @return string
+     */
+    protected function category_tree_option($selected_category = null)
+    {
+        $list_of_category = '<option value="0">Root category</option>';
+        $list_catergory = $this->category->all()->where("parent_id", "=", 0);
+        if ($list_catergory->count()) {
+            if ($selected_category) {
+                $list_of_category .= $this->category_tree($list_catergory, "", $selected_category->parent_id);
+            } else {
+                $list_of_category .= $this->category_tree($list_catergory);
+            }
+        }
+        return $list_of_category;
+    }
+
+    /**
+     * @param        $catergory
+     * @param string $begin
+     * @param Category|null   $selected
+     * @return string
+     */
+    protected function category_tree($catergory, $begin = "", $selected = null)
+    {
+        $html = "";
+        foreach ($catergory as $cate) {
+            $html .= '<option value="' . $cate->id . '" ' . ($selected === $cate->id ? "selected" : "") . '>' . $begin . $cate->name . '</option>';
+            if ($list_catergory = $this->category->all()->where("parent_id", "=", $cate->id)) {
+                if ($list_catergory->count()) {
+                    $_be = $begin;
+                    $begin .= "___";
+                    $html .= $this->category_tree($list_catergory, $begin, $selected);
+                    $begin = $_be;
+                } else {
+                    continue;
+                }
+            }
+        }
+        return $html;
+    }
+
+    /**
+     * @param int $category_id
+     * @return \Illuminate\Http\RedirectResponse|mixed
+     */
     public function deleteCategory($category_id)
     {
         $category = $this->category::find($category_id);
         if ($category) {
             $category->delete();
-            return back();
         }
+        return back();
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function setupCategory()
     {
-        $parent_category = $this->category_tree_option();
+        $category_tree_option = $this->category_tree_option();
         $list_current = [];
         $current_setup = ConfigCategory::where("path", ConfigCategory::TOP_CATEGORY);
-        $all_category = Category::all();
         if ($current_setup->count()) {
             $list_current = explode("&", $current_setup->first()->value);
         }
+        $all_category = Category::all();
         $setup_type = [ConfigCategory::TOP_CATEGORY, ConfigCategory::CENTER_CATEGORY];
         return view("adminhtml/templates/category/setup",
             [
-                "parent_category" => $parent_category,
+                "parent_category" => $category_tree_option,
                 "all_category" => $all_category,
                 "list_current" => $list_current,
-                "setup_type" => $setup_type]);
+                "setup_type" => $setup_type
+            ]
+        );
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function setupSave()
     {
         $params = $this->request->toArray();

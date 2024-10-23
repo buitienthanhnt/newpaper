@@ -13,13 +13,13 @@
 @endsection
 
 @section('body_main_conten')
-    @if ($message = session('success'))
-        <?php alert()->success('server message', $message); ?>
+    @if (session('success'))
+        <?php alert()->success('server message', session('success')); ?>
     @endif
 
     <div class="container">
         <div class="row">
-            <a href="{{ route('admin_file_add') }}">
+            <a href="{{ route('admin_add_file') }}">
                 <button class="btn btn-info">add new file</button>
             </a>
 
@@ -74,7 +74,7 @@
             var file_path = $(this).attr("data-path");
             var resize_path = $(this).attr("data-resize");
             var _id = $(this).attr("data-id");
-            var url = "{{ route('admin_file_delete') }}";
+            var url = "{{ route('admin_delete_file') }}";
 
             event.preventDefault();
             Swal.fire({
@@ -101,7 +101,7 @@
                             if (result) {
                                 var data = JSON.parse(result);
                                 if (data.code == 200) {
-                                
+
                                     Swal.fire({
                                         position: 'center',
                                         type: 'success',

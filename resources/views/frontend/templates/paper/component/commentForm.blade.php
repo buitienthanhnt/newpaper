@@ -1,7 +1,7 @@
 <div class="panel">
     <div class="panel-body">
         <div class="alert hide response-message" id="response-message" role="alert"></div>
-        <form class="form-contact contact_form mb-80" action="{{ route('paper_add_comment', ['paper_id' => $paper->id]) }}"
+        <form class="form-contact contact_form mb-80" action="{{ route('front_paper_add_comment', ['paper_id' => $paper->id]) }}"
             method="post" id="contactForm">
             @csrf
             <div class="row">

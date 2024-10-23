@@ -1,16 +1,96 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ManagerControllerInterface;
+use App\Http\Controllers\UserControllerInterface;
+use App\Http\Controllers\PaperFrontControllerInterface;
 
-Route::get("/", "ManagerController@homePage")->name("/");
+$managerController = ManagerControllerInterface::CONTROLLER_NAME . '@';
 
-Route::get("basepage", function () {
-    return view("frontend/templates/elements/dragula");
+Route::get("/", $managerController . ManagerControllerInterface::HOME_PAGE)->name("/");
+
+Route::get("/{category}.htm", $managerController . ManagerControllerInterface::FORNT_CATEFORY_VIEW)->name("front_category");
+
+Route::get("{alias?}_{paper_id}.html", $managerController . ManagerControllerInterface::FRONT_PAPER_DETAIL)->name("front_paper_detail");
+
+Route::get("tags/{value}", $managerController . ManagerControllerInterface::FRONT_TAG_VIEW)->name("front_tag_view");
+
+Route::get("search", $managerController . ManagerControllerInterface::FRONT_SEARCH)->name("front_search_all");
+
+Route::get("loadMore", $managerController . ManagerControllerInterface::LOAD_MORE)->name("front_load_more");
+
+// https://localhost/laravel1/public/api/share/mostPopulator
+Route::get("populatorHtml",  $managerController . ManagerControllerInterface::MOST_POPULATOR_HTML)->name('front_most_populator_html');
+
+// https://localhost/laravel1/public/api/share/likeMost
+Route::get("likeHtml",  $managerController . ManagerControllerInterface::MOST_LIKE_HTML)->name('front_most_like_html');
+
+// https://localhost/laravel1/public/api/share/trending
+Route::get('trendingHtml',  $managerController . ManagerControllerInterface::MOST_TRENDING_HTML)->name("front_trending_html");
+
+Route::get('redirect', $managerController. ManagerControllerInterface::REDIRECT)->name('front_redirect');
+
+Route::prefix(UserControllerInterface::PREFIX)->group(function () {
+    $userController = UserControllerInterface::CONTROLLER_NAME . '@';
+
+    Route::get("register", $userController . UserControllerInterface::FRONT_REGISTER_ACCOUNT)->name("front_register_account");
+
+    Route::post('registerPost', $userController . UserControllerInterface::FRONT_ADD_ACCOUNT)->name("front_add_account");
+
+    Route::get('login', $userController . UserControllerInterface::FRONT_LOGIN_PAGE)->name("front_login_page");
+
+    Route::post("loginPost", $userController . UserControllerInterface::FRONT_LOGIN_POST)->name("front_login_post");
+
+    Route::get('detail', $userController . UserControllerInterface::FRONT_USER_DETAIL)->name("front_user_detail");
+
+    Route::get('logout', $userController . UserControllerInterface::FRONT_USER_LOGOUT)->name("front_user_logout");
+
+    //    Route::get('edit/{id}', "UserController@loginPage")->name("user_edit");
+
+    //    Route::put('update/{id}', "UserController@loginPage")->name("user_update");
 });
 
-Route::get("dra", function () {
-    return view("frontend/templates/elements/dra2");
+Route::prefix(PaperFrontControllerInterface::PREFIX)->group(function () {
+    $paperFrontController = PaperFrontControllerInterface::CONTROLLER_NAME . '@';
+
+    Route::post("addLike/{paper_id}", $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_ADD_LIKE)->name("front_paper_add_like");
+
+    Route::get('commentContent/{paper_id}/{p}', $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_COMMENTS)->name('front_paper_comment');
+
+    Route::post("comment/{paper_id}", $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_ADD_COMMENT)->name("front_paper_add_comment");
+
+    Route::post('commentReply/{comment_id?}', $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_REPLY_COMMENT)->name("front_paper_reply_comment");
+
+    Route::post("commentLike/{comment_id?}", $paperFrontController . PaperFrontControllerInterface::FRONT_COMMENT_LIKE)->name("front_comment_like");
+
+    Route::post("addCart", $paperFrontController . PaperFrontControllerInterface::FRONT_ADD_CART)->name('front_add_cart');
+
+    Route::get("cart", $paperFrontController . PaperFrontControllerInterface::FRONT_VIEW_CART)->name('front_view_cart');
+
+    Route::any("deleteItem/{item_id}", $paperFrontController . PaperFrontControllerInterface::FRONT_DELETE_CART_ITEM)->name('front_delete_cart_item');
+
+    Route::any("clearCart", $paperFrontController . PaperFrontControllerInterface::FRONT_CLEAR_CART)->name('front_clear_cart');
+
+    Route::get('checkout', $paperFrontController . PaperFrontControllerInterface::FRONT_CHECKOUT)->name("front_checkout");
+
+    Route::Post('checkoutPost', $paperFrontController . PaperFrontControllerInterface::FRONT_CHECKOUT_POST)->name("front_checkout_post");
+
+    Route::get('byType/{type}', $paperFrontController . PaperFrontControllerInterface::FRONT_PAPER_BY_TYPE)->name("front_paper_by_type");
+
+    Route::get('morePaperByType/{type}', $paperFrontController . PaperFrontControllerInterface::FRONT_MORE_PAPER_BY_TYPE)->name("front_more_paper_by_type");
 });
+
+Route::prefix('test')->group(function (): void {
+    Route::get("obser", "ExtensionController@obser");
+});
+
+Route::get("download/file", "ExtensionController@download")->name('download');
+
+Route::get("sendmail", "ExtensionController@sendMail");
+
+Route::get('verifyPassword', "UserController@verifyPassword");
+
+Route::get('upLoadImage', "UserController@upLoadImage");
 
 Route::get("playSound", function () {
     $sound = <<<SOUND
@@ -30,76 +110,3 @@ Route::get("playSound", function () {
     SOUND;
     return ($sound);
 });
-
-Route::get("download/file", "ExtensionController@download")->name('download');
-
-Route::prefix("user")->group(function () {
-
-    Route::get("create", "UserController@createAccount")->name("account_create");
-
-    Route::post('add', "UserController@accountAdd")->name("account_add");
-
-    Route::get('login', "UserController@loginPage")->name("user_login");
-
-    Route::get('detail', "UserController@detail")->name("user_detail");
-
-    Route::get('edit/{id}', "UserController@loginPage")->name("user_edit");
-
-    Route::put('update/{id}', "UserController@loginPage")->name("user_update");
-
-    Route::post("loginPost", "UserController@login")->name("login_post");
-
-    Route::get('logout', "UserController@logout")->name("user_logout");
-});
-
-Route::get("/{category}.htm", "ManagerController@categoryView")->name("front_category");
-
-Route::get("{alias?}_{page}.html", "ManagerController@pageDetail")->name("front_page_detail");
-
-Route::get("tags/{value}", "ManagerController@tagView")->name("front_tag_view");
-
-Route::get("load_more", "ManagerController@load_more")->name("load_more");
-
-Route::get("search", "ManagerController@search")->name("search_all");
-
-Route::prefix('paper')->group(function () {
-    Route::get('commentContent/{paper_id}/{p}', 'PaperController@getCommentContent')->name('paper_comment_content');
-
-    Route::post("comment/{paper_id}", "PaperController@addComment")->name("paper_add_comment");
-
-    Route::post('commentReply/{comment_id?}', "PaperController@replyComment")->name("paper_reply_comment");
-
-    Route::post("like/{comment_id?}", "PaperController@like")->name("paper_like");
-
-    Route::post("addLike/{paper_id}", "PaperController@addLike")->name("paper_addLike");
-
-    Route::post("addCart", "PaperController@addCart")->name('paper_addCart');
-
-    Route::get("cart", "PaperController@cart")->name('paper_cart');
-
-    Route::any("clearCart", "PaperController@clearCart")->name('paper_clearCart');
-
-    Route::get('checkout', "PaperController@checkout")->name("paper_checkout");
-
-    Route::Post('checkoutPro', "PaperController@checkoutPro")->name("paper_checkoutPro");
-
-    Route::any("xoaItem/{id}", "PaperController@xoaItem")->name('paper_xoaItem');
-
-    Route::get('byType/{type}', "PaperController@byType")->name("paper_byType");
-
-    Route::get('more_type/{type}', "PaperController@moreByType")->name("more_type");
-});
-
-Route::prefix('test')->group(function (): void {
-    Route::get("obser", "ExtensionController@obser");
-});
-
-Route::get("sendmail", "ExtensionController@sendMail");
-
-
-Route::get('verifyPassword', "UserController@verifyPassword");
-
-Route::get('upLoadImage', "UserController@upLoadImage");
-
-// upload categoryTree to firebase
-Route::get('asyncCategory', "FirebaseController@asyncCategory")->name('firebase_category');

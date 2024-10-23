@@ -13,12 +13,12 @@ class CreateRemoteSourceHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('remote_source_histories', function (Blueprint $table) {
+        Schema::create(\App\Models\RemoteSourceHistoryInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->text("url_value");
-            $table->integer("type")->nullable();
-            $table->integer("paper_id")->nullable();
-            $table->boolean("active");
+            $table->text(\App\Models\RemoteSourceHistoryInterface::ATTR_URL_VALUE);
+            $table->string(\App\Models\RemoteSourceHistoryInterface::ATTR_TYPE)->nullable();
+            $table->integer(\App\Models\RemoteSourceHistoryInterface::ATTR_PAPER_ID)->nullable();
+            $table->boolean(\App\Models\RemoteSourceHistoryInterface::ATTR_ACTIVE)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ class CreateRemoteSourceHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('remote_source_histories');
+        Schema::dropIfExists(\App\Models\RemoteSourceHistoryInterface::TABLE_NAME);
     }
 }

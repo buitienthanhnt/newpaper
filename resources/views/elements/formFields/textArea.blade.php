@@ -6,7 +6,6 @@
                   @isset($require)
                   @if ($require) required @endif
             @endisset
-        >@isset($value){{ $value }}@endisset
-        </textarea>
+        >@isset($value){{ $value }}@endisset</textarea>
     </div>
 </div>

@@ -13,11 +13,13 @@ class CreateViewSourcesTable extends Migration
      */
     public function up()
     {
-        Schema::create('view_sources', function (Blueprint $table) {
+        Schema::create(\App\Models\ViewSourceInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string('type')->nullable();
-            $table->integer('value')->nullable();
-            $table->integer('source_id');
+            $table->string(\App\Models\ViewSourceInterface::ATTR_TYPE)->nullable();
+            $table->integer(\App\Models\ViewSourceInterface::ATTR_SOURCE_ID);
+            $table->integer(\App\Models\ViewSourceInterface::ATTR_VALUE)->nullable();
+            $table->integer(\App\Models\ViewSourceInterface::ATTR_LIKE)->default(0);
+            $table->integer(\App\Models\ViewSourceInterface::ATTR_HEART)->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +32,6 @@ class CreateViewSourcesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('view_sources');
+        Schema::dropIfExists(\App\Models\ViewSourceInterface::TABLE_NAME);
     }
 }

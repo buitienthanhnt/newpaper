@@ -7,21 +7,30 @@ use App\Models\Notification;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 
-class NotificationController extends Controller
+class NotificationController extends Controller implements NotificationControllerInterface
 {
+    protected $request;
+
     protected $notification;
     protected $helperFunction;
 
-    function __construct(Notification $notification, HelperFunction $helperFunction)
+    function __construct(
+        Request $request,
+        Notification $notification,
+        HelperFunction $helperFunction
+    )
     {
+        $this->request = $request;
         $this->notification = $notification;
         $this->helperFunction = $helperFunction;
     }
 
-    //
-    public function registerFcm(Request $request) {
+    /**
+     * @return array|false|resource|string|null
+     */
+    public function registerFcm() {
         $notification = $this->notification;
-        $params_content = json_decode($request->getContent(), true);
+        $params_content = json_decode($this->request->getContent(), true);
         if ($params_content) {
             $check_notification = $notification->where("deviceId", "=", $params_content['deviceId'])->first();
             if ($check_notification) {
@@ -50,10 +59,10 @@ class NotificationController extends Controller
             }
         }
 
-        return($request->getContent());
+        return($this->request->getContent());
     }
 
-    function push_notification() {
+    function pushNotification() {
         $paper = Paper::all()->last();
         $all_fcm = $this->notification->where("active", true)->get()->toArray();
         $this->helperFunction->push_notification_json($all_fcm, $paper);

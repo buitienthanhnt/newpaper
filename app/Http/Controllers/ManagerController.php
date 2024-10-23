@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Api\PaperApi;
 use App\Api\WriterApi;
 use App\Events\ViewCount;
+use App\Models\CategoryInterface;
 use Thanhnt\Nan\Helper\DomHtml;
 use App\Models\Category;
 use App\Models\ConfigCategory;
-use App\Models\PageTag;
+use App\Models\PaperTag;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use App\Helper\HelperFunction;
+use App\Models\PaperInterface;
 use App\Models\User;
 use App\ViewBlock\LikeMost;
 use App\ViewBlock\MostPopulator;
@@ -22,7 +24,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Thanhnt\Nan\Helper\TokenManager;
 
-class ManagerController extends Controller
+class ManagerController extends Controller implements ManagerControllerInterface
 {
     use DomHtml;
 
@@ -47,7 +49,7 @@ class ManagerController extends Controller
         Request $request,
         Paper $paper,
         \App\Models\Category $category,
-        PageTag $pageTag,
+        PaperTag $pageTag,
         HelperFunction $helperFunction,
         MostPopulator $mostPopulator,
         LikeMost $likeMost,
@@ -73,27 +75,12 @@ class ManagerController extends Controller
         $this->auth = $auth;
     }
 
-    function info()
-    {
-        return $this->paperApi->homeInfo();
-    }
-
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function homePage()
     {
-        $list_center = [];
         $video_contens = null;
-        $center_category = ConfigCategory::where("path", "center_category")->firstOr(function () {
-            return null;
-        });
-
-        if ($center_category) {
-            $list_center = Category::find(explode("&", $center_category->value));
-            $list_papers = [];
-            foreach ($list_center as $center) {
-                $page_category = $center->to_page_category()->getResults()->toArray();
-                $list_papers = array_unique([...array_column($page_category, "page_id"), ...$list_papers]);
-            }
-        }
         // $video_contens = $this->paper->orderBy("updated_at", "DESC")->take(3)->get();
         // $video_contens = [
         //     ['url' => "https://www.youtube.com/embed/lhYztX6cdg8", "title" => "demo 1"],
@@ -103,75 +90,73 @@ class ManagerController extends Controller
         //     ['url' => "https://www.youtube.com/embed/sKdpqk7o5ac", "title" => "demo 5"],
         //     ['url' => "https://www.youtube.com/embed/lovblkkDVDU", "title" => "demo 6"],
         // ];
-        return view("frontend/templates/homeconten", compact("list_center", "video_contens"));
+        return view("frontend/templates/homeContent", compact("video_contens"));
     }
 
-    function search(Request $request)
+    /**
+     * @param string $category_alias
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function categoryView($category_alias)
+    {
+        /**
+         * @var Category $category
+         */
+        $category = Category::where(CategoryInterface::ATTR_URL_ALIAS, $category_alias)->get()->first();
+        $papers = $category->getPaperPaginate(4, 0, $order_by = ["updated_at", "DESC"]);
+        event(new ViewCount($category));
+        return view("frontend/templates/categories", compact("category", "papers"));
+    }
+
+    /**
+     * @param string $alias
+     * @param int $paper_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function paperDetail($alias, $paper_id)
+    {
+        $key = 'paper_detail' . $paper_id;
+        if (Cache::has($key)){
+            $paper = Cache::get($key);
+        }else{
+            $paper = Cache::remember($key, 15, fn () => $this->paper->find($paper_id));
+        }
+        event(new ViewCount($paper));
+        if (!$paper){
+            return redirect()->route('/');
+        }
+        return view("frontend.templates.paper.paper_detail", ['paper' => $paper]);
+    }
+
+    /**
+     * @param string $tag
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function tagView($tag)
+    {
+        return view("frontend/templates/tags", ["tag" => $tag]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    function search()
     {
         $papers = $this->paperApi->searchAll();
         return view('frontend.templates.paper.searchResult', compact('papers'));
     }
 
-    function searchApi()
-    {
-        return $this->paperApi->searchAll();
-    }
-
-    function byWriter($id)
-    {
-        // return response([
-        //     'message' => "can't not get paper data by writer"
-        // ], 501);
-
-        $writerApi = $this->writerApi->getPapers($id);
-        return $writerApi;
-    }
-
-    public function pageDetail($alias, $page_id)
-    {
-        $key = 'paper_detail' . $page_id;
-        $paper = Cache::remember($key, 15, fn () => $this->paper->find($page_id));
-
-        $category = Cache::remember('category.alias.like', 15, function () {
-            return Category::all()->random(1)->first();
-            // return Category::where("url_alias", "like", "today")->get()->first();
-        });
-
-        $list_center = Cache::remember('listCenter.alias.like', 15, fn () => Category::where("url_alias", "like", 2)->take(4)->get());
-        $papers = Cache::remember('papers_detail' . $page_id, 15, fn () => $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]));
-        $top_paper = $papers->take(2);
-        $papers = $papers->diff($top_paper);
-        event(new ViewCount($paper));
-        return view("frontend.templates.paper.paper_detail", compact("paper", "list_center", "top_paper", "papers"));
-    }
-
-    public function categoryView($category_id)
-    {
-        $category = Category::where("url_alias", "like", $category_id)->get()->first();
-        $papers = $category->get_papers(4, 0, $order_by = ["updated_at", "DESC"]);
-        event(new ViewCount($category));
-        return view("frontend/templates/categories", compact("category", "papers"));
-    }
-
-    public function tagView($value)
-    {
-        $papers = null;
-        $paper_ids = $this->pageTag->to_paper($value);
-        if ($paper_ids) {
-            $papers = $this->paper::whereIn("id", $paper_ids)->get();
-        }
-        $trending_left = $papers->first();
-        return view("frontend/templates/tags", ["tag" => $value, "papers" => $papers, "trending_left" => [$trending_left]]);
-    }
-
-    public function load_more()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function loadMore()
     {
         $request = $this->request;
         $type = $request->get("type");
         $page = $request->get("page");
         if ($type) {
             $category = $this->category->where("url_alias", "like", $type)->first();
-            $papers = $category->get_papers(4, $page);
+            $papers = $category->getPaperPaginate(4, $page);
         }
         $data = view("frontend/templates/paper/component/list_category_paper", ['papers' => $papers])->render();
 
@@ -181,27 +166,55 @@ class ManagerController extends Controller
         ]));
     }
 
-    function apiSourcePapers(Request $request)
-    {
-        // not use ->makeHidden() with paginate
-        $papers = $this->paper->orderBy('updated_at', 'desc')->paginate(12);
-        if ($papers->count()) {
-            foreach ($papers as &$item) {
-                $item->image_path = $this->helperFunction->replaceImageUrl($item->image_path ?: '');
-                $item->short_conten = $this->cut_str($item->short_conten, 90, "...");
-                // $item["title"] = $this->cut_str($item["title"], 80, "../");
-                unset($item['conten']);
-                $item->info = [
-                    'view_count' => $item->viewCount(),
-                    'comment_count' => $item->commentCount(),
-                    'like' => $item->paperLike(),
-                    'heart' => $item->paperHeart(),
-                ];
-            }
+    public function mostPopulator() {
+        $mostPopulatorHtml = $this->mostPopulator->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $mostPopulatorHtml
+        ];
+    }
+
+    public function likeMost(){
+        $likeMostHtml = $this->likeMost->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $likeMostHtml
+        ];
+    }
+
+    public function trendingHtml(){
+        $trendingHtml = $this->trending->toHtml();
+        return [
+            'code' => 200,
+            'dataHtml' => $trendingHtml
+        ];
+    }
+
+    function redirect(){
+        if (!$redirect_url = $this->request->get('url')) {
+            return redirect()->route("/")->with("error", "your redirect url not found");
+        }
+        $token = $this->request->get('token');
+        $tokenData = (array) $this->tokenManager->getTokenData($token);
+        if (empty($tokenData)) {
+            return redirect()->route("/")->with("error", "your redirect error expire");
+        }
+        $tokenData = (array) $tokenData['iss'];
+        if (isset($tokenData['id'])) {
+            Auth::setUser($this->user->find($tokenData['id']) ?? null);
         }
 
-        return $papers;
+        if (isset($tokenData['sid'])) {
+            if (!Session::isStarted()) {
+                Session::start();
+            }
+            Session::setId($tokenData['sid']);
+            Session::start();
+        }
+        return redirect($redirect_url);
     }
+
+    // =====================================================================
 
     function formatSug($data)
     {
@@ -211,213 +224,34 @@ class ManagerController extends Controller
         }, $data), 2);
     }
 
-    public function getPaperDetail($paper_id)
-    {
-        $covertContentData = function($datas){
-            if (empty($datas)) {
-                return null;
-            }
-            $convertSliderdata = function($slider_datas){
-                foreach ($slider_datas as &$value) {
-                    $value['value'] = $this->helperFunction->replaceImageUrl($value['image_path']);
-                }
-                return $slider_datas;
-            };
-
-            $return_data = [];
-            for ($i=0; $i < count($datas); $i++) {
-                switch ($datas[$i]['type']) {
-                    case 'image':
-                        $return_data[] = [
-                            ...$datas[$i],
-                            'value' => $this->helperFunction->replaceImageUrl($datas[$i]['value'] ?? '')
-                        ];
-                        break;
-                    case 'slider_data':
-                        $return_data[] = [
-                            ...$datas[$i],
-                            'value' => $convertSliderdata(json_decode($datas[$i]['value'], true))
-                        ];
-                        break;
-                    default:
-                        $return_data[] = $datas[$i];
-                        break;
-                }
-            }
-            return $return_data;
-        };
-
-        if (Cache::has("api_detail_$paper_id")) {
-            $paper =  Cache::get("api_detail_$paper_id");
-            event(new ViewCount($paper));
-            return $paper;
-        } else {
-            /**
-             * @var Paper $detail
-             */
-            $detail = $this->paper->find($paper_id);
-            $detail->contents = $covertContentData($detail->to_contents()->toArray());
-            $detail->suggest = $this->formatSug(Paper::all()->random(4)->makeHidden('conten')->toArray());
-            $detail->info = $detail->paperInfo();
-            $detail->tags = $detail->to_tag()->getResults();
-            $detail->slider_images = array_map(function ($item) {
-                $item->value = $this->helperFunction->replaceImageUrl($item->value);
-                return $item;
-            }, $detail->sliderImages()->toArray());
-            $detail->url = $this->helperFunction->replaceImageUrl(route('front_page_detail', ['alias' => $detail->url_alias, 'page' => $detail->id]));
-            Cache::put("api_detail_$detail->id", $detail);
-            event(new ViewCount($detail));
-            return $detail;
-        }
-    }
-
-    public function getCategoryTop()
-    {
-        $top_category = ConfigCategory::where("path", "=", ConfigCategory::TOP_CATEGORY);
-        $values = Category::whereIn("id", explode("&", $top_category->first()->value))->get()->toArray();
-        foreach ($values as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
-        }
-        return $values;
-    }
-
-    public function getPaperCategory($category_id, Request $request)
-    {
-        $page = $request->get("page", 1);
-        $limit = $request->get("limit", 12);
-        $key = "paper.category.$category_id.$page.$limit";
-
-        if (Cache::has($key)) { // nhanh hon ~50% voi du lieu nang.
-            return Cache::get($key);
-        } else {
-            /**
-             * @var \App\Models\Category $category
-             */
-            $category = $this->category->find($category_id);
-            $papers = $category->setSelectKey(["id", "title", "short_conten", "image_path"])->get_papers($limit, $page - 1, ['updated_at', 'desc'], ['conten']);
-            foreach ($papers as &$value) {
-                $value->image_path = $this->helperFunction->replaceImageUrl($value->image_path ?: '');
-                $value->info = [
-                    'view_count' => $value->viewCount(),
-                    'comment_count' => $value->commentCount(),
-                    'like' => $value->paperLike(),
-                    'heart' => $value->paperHeart(),
-                ];
-            }
-            $papers = $papers->toArray();
-            Cache::put($key, $papers);
-            return $papers;
-        }
-    }
-
-    function getRelatedPaper()
-    {
-        $papers = Paper::all()->random(5)->toArray();
-        foreach ($papers as &$value) {
-            $value["image_path"] = $this->helperFunction->replaceImageUrl($value["image_path"] ?: '');
-        }
-        return ['data' => $papers];
-    }
-
-    function getCategoryTree(Request $request)
-    {
-        $category_id = $request->get("category_id", 0);
-        if ($category_id) {
-            $category = $this->category->find($category_id);
-            $categories = $category->getCategoryTree();
-        } else {
-            $categories = $this->category->getCategoryTree(true);
-        }
-        return $categories;
-    }
-
-    function parseUrl(Request $request)
-    {
-        $url = $request->get('url', 'tuyen-viet-nam-dau-hong-kong-hlv-troussier-gay-bat-ngo');
-        $paper = Paper::where('url_alias', '=', $url)->first();
-        return $paper;
-    }
-
-    function getPaperComment($paper_id, Request $request)
-    {
-        $paper = $this->paper->find($paper_id);
-        if ($request->get('all')) {
-            $comments = $paper->getCommentTree($request->get('parent_id', null), 0, 0);
-        } else {
-            $comments = $paper->getCommentTree($request->get('parent_id', null), $request->get('p', 0), $request->get('limit', 4));
-        }
-        return [
-            'success' => true,
-            'data' => $comments,
-            'errors' => null
-        ];
-    }
-
     // {{url}}/api/upFirebaseComments/122
-    function upFirebaseComments($paper_id, Request $request)
-    {
-        $paper = $this->paper->find($paper_id);
-        $this->paperApi->upFirebaseComments($paper);
-        return [
-            'success' => true,
-            'errors' => null
-        ];
-    }
-
-    function mostviewdetail(Request $request)
-    {
-        $papers = Paper::take($request->get('size', 15))->orderBy("updated_at", "ASC")->get(['id', 'title', 'image_path', 'updated_at', 'url_alias']);
-        foreach ($papers as &$value) {
-            $value->url = route('front_page_detail', ['alias' => $value->url_alias, 'page' => $value->id]);
-            $value->image_path = $value->getImagePath();
-        }
-        return $papers;
-    }
-
-    function mostPopulator()
-    {
-        $mostPopulatorHtml = $this->mostPopulator->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $mostPopulatorHtml
-        ];
-    }
-
-    function likeMost()
-    {
-        $likeMostHtml = $this->likeMost->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $likeMostHtml
-        ];
-    }
-
-    function trending()
-    {
-        $trendingHtml = $this->trending->toHtml();
-        return [
-            'code' => 200,
-            'dataHtml' => $trendingHtml
-        ];
-    }
+    // function upFirebaseComments($paper_id, Request $request)
+    // {
+    //     $paper = $this->paper->find($paper_id);
+    //     $this->paperApi->upFirebaseComments($paper);
+    //     return [
+    //         'success' => true,
+    //         'errors' => null
+    //     ];
+    // }
 
     // pullFirebaseComment
-    function pullFirebaseComment()
-    {
-        $this->paperApi->pullFirebaseComment();
-    }
+    // function pullFirebaseComment()
+    // {
+    //     $this->paperApi->pullFirebaseComment();
+    // }
 
-    // {{url}}/api/pullFirebasePaperLike
-    function pullFirebasePaperLike()
-    {
-        $this->paperApi->pullFirebasePaperLike();
-    }
+    // // {{url}}/api/pullFirebasePaperLike
+    // function pullFirebasePaperLike()
+    // {
+    //     $this->paperApi->pullFirebasePaperLike();
+    // }
 
-    // {{url}}/api/pullFirebaseComLike
-    function pullFirebaseComLike()
-    {
-        $this->paperApi->pullFirebaseComLike();
-    }
+    // // {{url}}/api/pullFirebaseComLike
+    // function pullFirebaseComLike()
+    // {
+    //     $this->paperApi->pullFirebaseComLike();
+    // }
 
     function getToken(Request $request): \Illuminate\Http\Response
     {
@@ -485,58 +319,4 @@ class ManagerController extends Controller
         ], 401);
     }
 
-    function loginApi(Request $request): Response
-    {
-        $email = $request->get('email');
-        $password = $request->get('password');
-        if (!($email && $password)) {
-            return response([
-                "message" => "invalid email or password"
-            ], 400);
-        }
-        if (Auth::check()) {
-            return response([
-                "message" => "người dùng đã đăng nhập, không thể thực hiện thêm!"
-            ], 403);
-        }
-
-        if (Auth::attempt([
-            'email' => $email,
-            "password" => $password
-        ])) {
-            $user = $this->user->where("email", $email)->first();
-            Auth::login($user);
-            $userData = $user->toArray();
-            $userData["sid"] = Session::getId();
-
-            $token = $this->tokenManager->getToken($userData);
-            $refreshToken = $this->tokenManager->getRefreshToken($userData);
-            return response([
-                "message" => "login success!!!",
-                "userData" => $user,
-                "token" => $token,
-                "refresh_token" => $refreshToken
-            ], 200);
-        }
-        return response([
-            'message' => "login fail, error email or password",
-        ], 400);
-    }
-
-    function getUserInfo(): Response
-    {
-        $token = $this->tokenManager->getToken();
-        $tokenData = (array) $this->tokenManager->getTokenData()['iss'];
-        $sid = $tokenData['sid'];
-        if (isset($tokenData['id']) && $userId = $tokenData['id']) {
-            return response([
-                'message' => null,
-                'userData' => Auth::user()
-            ], 200);
-        }
-        return response([
-            'message' => null,
-            'userData' => null
-        ], 200);
-    }
 }

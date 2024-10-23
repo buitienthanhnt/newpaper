@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Api\PaperApi;
+use App\Api\PaperFirebaseApi;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -36,30 +37,30 @@ class UpPaperFireBase implements ShouldQueue
      *
      * @return void
      */
-    public function handle(PaperApi $paperApi, LogTha $logTha)
+    public function handle(PaperFirebaseApi $paperFirebaseApi, LogTha $logTha)
     {
-        $_paper = $paperApi->getDetail($this->paper_id);
+        $_paper = $paperFirebaseApi->getDetail($this->paper_id);
         $logTha->logFirebase('info', '<================ ' . $_paper->id . ' ================>');
         /**
          * add paper to firebase category.
          */
-        $paperApi->addPapersCategory($_paper, $this->firebaseImage);
+        $paperFirebaseApi->addPapersCategory($_paper, $this->firebaseImage);
         /**
          * up comment of paper to firebase.
          */
-        $paperApi->upFirebaseComments($_paper);
+        $paperFirebaseApi->upFirebaseComments($_paper);
         /**
          * up paper info to firebase storage(like, heart, viewcount, comment).
          */
-        $paperApi->upPaperInfo($_paper);
+        $paperFirebaseApi->upPaperInfo($_paper);
         /**
          * up paper content to firestorage firebase.
          */
-        $paperApi->upContentFireStore($_paper);
+        $paperFirebaseApi->upContentFireStore($_paper);
         /**
          * up paper to writer in realtime database firebase
          */
-        $paperApi->upPaperWriter($_paper, $this->firebaseImage);
+        $paperFirebaseApi->upPaperWriter($_paper, $this->firebaseImage);
         $logTha->logFirebase('info', '<================ ' . $_paper->id . ' ================>');
     }
 }

@@ -15,9 +15,8 @@ use Illuminate\Support\Str;
 use Kreait\Firebase\Exception\Auth\EmailExists as FirebaseEmailExists;
 use Google\Cloud\Storage\Connection\Rest;
 
-class UserController extends BaseController
+class UserController extends BaseController implements UserControllerInterface
 {
-    //
     protected $request;
     protected $user;
 
@@ -31,26 +30,23 @@ class UserController extends BaseController
         parent::__construct($firebaseService);
     }
 
-    public function loginPage()
-    {
-        if (Auth::check()) {
-            return redirect(route("/"));
-        } else {
-            return view("frontend/templates/login");
-        }
-    }
-
-    public function createAccount()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function registerAccount()
     {
         return view("frontend/templates/new_account");
     }
 
-    public function accountAdd()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function addAccount()
     {
         if ($this->request->get("user_email") && $this->request->get("password") && $this->request->get("user_name")) {
             $verify_email = $this->user->where("email", "=", $this->request->get("user_email"))->get();
             if ($verify_email->count()) {
-                return redirect()->back(302, "the email exist");
+                return redirect()->back(405, "the email exist!");
             } else {
                 $user = $this->user;
                 $user->email = $this->request->get("user_email");
@@ -60,10 +56,25 @@ class UserController extends BaseController
                 return redirect("/");
             }
         }
-        // return "accountAdd";
+        return redirect()->back(405, "the request params fail!");
     }
 
-    public function login()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function loginPage()
+    {
+        if (Auth::check()) {
+            return redirect(route("/"));
+        } else {
+            return view("frontend/templates/login");
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loginPost()
     {
         $email = $this->request->get("email");
         $password = $this->request->get("password");
@@ -80,17 +91,23 @@ class UserController extends BaseController
         return redirect()->back();
     }
 
-    public function detail()
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function userDetail()
     {
         if (Auth::check()) {
             $user = Auth::user();
             dd($user);
             return view("frontend/templates/userDetail");
         } else {
-            return redirect(route("user_login"));
+            return redirect(route("front_login_page"));
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function logout()
     {
         if (Auth::check()) {
@@ -101,6 +118,8 @@ class UserController extends BaseController
         Cache::forget('top_menu_view');
         return redirect()->back(302);
     }
+
+//    ==================================================================================================
 
     public function authenticate(Request $request)
     {
@@ -118,26 +137,6 @@ class UserController extends BaseController
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
-    }
-
-    function addFireBaseData(Request $request)
-    {
-        /**
-         * khong lay field conten
-         */
-        $paper = Paper::find($request->get('paper_id', 1))->makeHidden(['conten'])->toArray();
-        if ($paper) {
-            try {
-                $userRef = $this->database->getReference('/newpaper/papers');
-                $userRef->push($paper);
-            } catch (Exception $exception) {
-                Log::error($exception->getMessage());
-            }
-            $snapshot = $userRef->getSnapshot();
-            dd($snapshot->getValue());
-        } else {
-            dd('not has data!');
-        }
     }
 
     /**

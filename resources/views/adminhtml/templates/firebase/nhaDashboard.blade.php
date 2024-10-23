@@ -27,7 +27,7 @@
 @section('body_main_conten')
     <div class="row">
         <div class="colo-md-2">
-            <a href="{{ route('admin_firebase_setupHome') }}" class="btn btn-info" style="align-self: flex-start">setup home info</a>
+            <a href="{{ route('admin_firebase_setup_home_info') }}" class="btn btn-info" style="align-self: flex-start">setup home info</a>
         </div>
     </div>
     <table class="table table-striped table-inverse table-responsive">
@@ -57,7 +57,7 @@
                                 data-id="{{ $key }}">del in firebase</button>
 
                             <a style="min-width: 110px" type="button"
-                                href="{{ route('admin_paper_edit', ['paper_id' => $item['id']]) }}"
+                                href="{{ route('admin_edit_paper', ['paper_id' => $item['id']]) }}"
                                 class="btn btn-warning fa-pull-right">view</a>
                         </td>
                     </tr>
@@ -78,7 +78,7 @@
                                 firebase</button>
 
                             <a type="button" style="min-width: 110px"
-                                href="{{ route('admin_paper_edit', ['paper_id' => $paper->id]) }}"
+                                href="{{ route('admin_edit_paper', ['paper_id' => $paper->id]) }}"
                                 class="btn btn-warning fa-pull-right">view</a>
                         </td>
                     </tr>
@@ -103,7 +103,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             let _token = "{{ csrf_token() }}";
-            let addUrl = "{{ route('admin_firebase_addPaper') }}";
+            let addUrl = "{{ route('admin_firebase_upload_paper') }}";
 
             $('.firebase_action').on('click', function() {
                 if ($(this).hasClass('up_firebase')) {
@@ -169,7 +169,7 @@
                     }
                 } else if ($(this).hasClass('delete_firebase')) {
                     let sourceId = $(this).attr('data-id');
-                    let deleteUrl = "{{ route('admin_firebase_deletePaper') }}";
+                    let deleteUrl = "{{ route('admin_firebase_delete_paper') }}";
                     if (sourceId) {
                         Swal.fire({
                             title: 'Please Wait !',

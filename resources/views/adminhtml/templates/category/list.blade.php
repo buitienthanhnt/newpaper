@@ -18,13 +18,10 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Categories Table list</h4>
-                {{-- <p class="card-description">
-                    Add class <code>.table-hover</code>
-                </p> --}}
                 <div class="row float-right">
                     <div class="col-md-9">
-                        <a class="btn btn-info" href={{ route('category_admin_create') }}>Create category</a>
-                        <a class="btn btn-info" href={{ route('category_admin_create', ['type' => 'time_line']) }}>Create Timeline</a>
+                        <a class="btn btn-info" href={{ route('admin_create_category') }}>Create category</a>
+                        <a class="btn btn-info" href={{ route('admin_create_category', ['type' => 'time_line']) }}>Create Timeline</a>
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-warning syncCategoryFirebase">Upload category firebase</button>
@@ -53,9 +50,9 @@
                                     <td>{{ $category->parent_id }}</td>
                                     <td>{{ $category->url_alias }}</td>
                                     <td>
-                                        <a href={{ route('category_admin_edit', ['category_id' => $category->id]) }}><button
+                                        <a href={{ route('admin_edit_category', ['category_id' => $category->id]) }}><button
                                                 class="btn btn-info btn-sm">edit</button></a>
-                                        <a href={{ route('category_admin_delete', ['category_id' => $category->id]) }}
+                                        <a href={{ route('admin_delete_category', ['category_id' => $category->id]) }}
                                             data-method="delete"><button class="btn btn-info btn-danger">delete</button></a>
                                     </td>
                                     {{-- <td class="text-danger"> 28.76% <i class="ti-arrow-down"></i></td> --}}
@@ -68,7 +65,6 @@
                     <div class="col-md-12 mt-20 d-flex flex-row-reverse">
                         {{ $all_category->links() }}
                     </div>
-
                 </div>
 
             </div>
@@ -76,7 +72,7 @@
     </div>
 
     <script>
-        const syncCategory = "{{ route('firebase_category') }}";
+        const syncCategory = "{{ route('admin_firebase_upload_category_tree') }}";
         $(document).ready(function() {
             $('.syncCategoryFirebase').click(function(event) {
                 event.preventDefault(); // disable action submit of button

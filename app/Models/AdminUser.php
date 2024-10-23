@@ -11,14 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-// use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Collection;
 
-class AdminUser extends Model
+class AdminUser extends Model implements AdminUserInterface
 {
     use HasFactory;
     use SoftDeletes;
     use Nan;
+
     protected $guarded = [];
     protected $request;
 
@@ -49,13 +48,11 @@ class AdminUser extends Model
 
     public function get_admin_user(): mixed
     {
-        // $this->session_begin();
         return Session::get("admin_user", null);
     }
 
     public function check_login(): bool
     {
-        // $this->session_begin();
         return Session::has("admin_user");
     }
 
@@ -85,19 +82,27 @@ class AdminUser extends Model
         return false;
     }
 
-    public function savePermissions($user, $permissions)
+    /**
+     * @param AdminUser $admin_user
+     * @param integer[] $permissions
+     * @return bool
+     * @throws Exception
+     */
+    public function savePermissions($admin_user, $permissions)
     {
-        if ($user && $permissions) {
-            $userPermission = $user->hasMany(AdminUserPermission::class, "user_id");
-            $userPermission = $userPermission->getResults();
+        if ($admin_user && $permissions) {
+            $userPermission = $admin_user->hasMany(AdminUserPermission::class, AdminUserInterface::PRIMARY_ALIAS)->getResults();
             /**
              * delete old permission
              */
-            collect($userPermission)->map(fn ($item) => $item->delete());
+            collect($userPermission)->map(fn($item) => $item->delete());
             DB::beginTransaction();
             try {
                 foreach ($permissions as $permission) {
-                    DB::table($this->userPermissionTable())->updateOrInsert(["permission_id" => $permission, "user_id" => $user->id]);
+                    DB::table($this->userPermissionTable())->updateOrInsert([
+                        AdminUserInterface::PRIMARY_ALIAS => $admin_user->id,
+                        PermissionInterface::PRIMARY_ALIAS => $permission
+                    ]);
                 }
                 DB::commit();
                 return true;
@@ -113,7 +118,7 @@ class AdminUser extends Model
      */
     function getPermissionsIds()
     {
-        $permissions = $this->hasMany(AdminUserPermission::class, "user_id");
+        $permissions = $this->hasMany(AdminUserPermission::class, AdminUser::PRIMARY_ALIAS);
         $permissionValues = array_column($permissions->getResults()->toArray(), "permission_id");
         return $permissionValues;
     }
@@ -121,14 +126,14 @@ class AdminUser extends Model
     function getPermissionRules()
     {
         $rules = [];
-        $userPermissions =  array_column($this->hasMany(AdminUserPermission::class, "user_id")->getResults()->toArray(), 'permission_id');
+        $userPermissions = array_column($this->hasMany(AdminUserPermission::class, AdminUserInterface::PRIMARY_ALIAS)->getResults()->toArray(), 'permission_id');
         $permission = Permission::where('label', '=', 'root')->first()->id ?? null;
         if (in_array($permission, $userPermissions)) {
             return ['rootAdmin'];
         } else {
-            $userPermissions =  collect($this->hasMany(AdminUserPermission::class, "user_id")->getResults());
+            $userPermissions = collect($this->hasMany(AdminUserPermission::class, AdminUser::PRIMARY_ALIAS)->getResults());
             foreach ($userPermissions->all() as $userPermission) {
-                $data_rules = $userPermission->hasMany(PermissionRules::class, "permission_id", "permission_id")->getResults()->map(fn ($item) => $item->rule_value)->all();
+                $data_rules = $userPermission->hasMany(PermissionRules::class, "permission_id", "permission_id")->getResults()->map(fn($item) => $item->rule_value)->all();
                 $rules = [...$rules, ...$data_rules];
             }
         }
