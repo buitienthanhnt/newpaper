@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Frontend\ManagerControllerInterface;
+use App\Http\Controllers\Frontend\PaperFrontControllerInterface;
+use App\Http\Controllers\Frontend\UserControllerInterface;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ManagerControllerInterface;
-use App\Http\Controllers\UserControllerInterface;
-use App\Http\Controllers\PaperFrontControllerInterface;
 
 $managerController = ManagerControllerInterface::CONTROLLER_NAME . '@';
 

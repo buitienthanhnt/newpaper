@@ -6,13 +6,13 @@ use App\Api\CartApi;
 use App\Api\Data\Cart\CartItem;
 use App\Api\Data\Response;
 use App\Api\ResponseApi;
-use App\Http\Controllers\BaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use Exception;
 
-class CartApiController extends BaseController implements CartApiControllerInterface
+class CartApiController extends Controller implements CartApiControllerInterface
 {
     protected $request;
     protected $cartApi;
@@ -88,7 +88,7 @@ class CartApiController extends BaseController implements CartApiControllerInter
                 return $this->responseApi->setResponse($this->response->setResponse($order));
             }
         } catch (\Throwable $th) {
-            return $this->responseApi->setResponse($this->response->setMessage($th->getMessage()))->setStatusCode(500); 
+            return $this->responseApi->setResponse($this->response->setMessage($th->getMessage()))->setStatusCode(500);
         }
     }
 }

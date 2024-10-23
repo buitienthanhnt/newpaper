@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminControllerInterface;
-use App\Http\Controllers\WriterControllerInterface;
-use App\Http\Controllers\CategoryControllerInterface;
-use App\Http\Controllers\PaperControllerInterface;
-use App\Http\Controllers\PermissionControllerInterface;
-use App\Http\Controllers\AdminUserControllerInterface;
-use App\Http\Controllers\ConfigControllerInterface;
-use App\Http\Controllers\OrderControllerInterface;
-use App\Http\Controllers\ImageControllerInterface;
-use App\Http\Controllers\FirebaseControllerInterface;
+use App\Http\Controllers\Admin\AdminControllerInterface;
+use App\Http\Controllers\Admin\AdminUserControllerInterface;
+use App\Http\Controllers\Admin\CategoryControllerInterface;
+use App\Http\Controllers\Admin\ConfigControllerInterface;
+use App\Http\Controllers\Admin\FirebaseControllerInterface;
+use App\Http\Controllers\Admin\ImageControllerInterface;
+use App\Http\Controllers\Admin\OrderControllerInterface;
+use App\Http\Controllers\Admin\PaperControllerInterface;
+use App\Http\Controllers\Admin\PermissionControllerInterface;
+use App\Http\Controllers\Admin\WriterControllerInterface;
 
 Route::group(["prefix" => "adminhtml"], function () {
     $admin = AdminControllerInterface::ADMIN;

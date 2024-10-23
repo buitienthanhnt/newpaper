@@ -5,11 +5,11 @@ use App\Api\CategoryApi;
 use App\Api\Data\Response;
 use App\Api\PaperRepository;
 use App\Api\ResponseApi;
-use App\Http\Controllers\BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class CategoryApiController extends BaseController implements CategoryApiControllerInterface
+class CategoryApiController extends Controller implements CategoryApiControllerInterface
 {
 
     protected $request;

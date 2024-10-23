@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\Api\CartApiControllerInterface;
 use App\Http\Controllers\Api\CategoryApiControllerInterface;
-use App\Http\Controllers\ExtensionController;
-use App\Http\Controllers\ExtensionControllerInterface;
-use App\Http\Controllers\PaperFrontControllerInterface;
-use App\Http\Controllers\NotificationControllerInterface;
 use App\Http\Controllers\Api\CommentApiControllerInterface;
+use App\Http\Controllers\Api\NotificationControllerInterface;
 use App\Http\Controllers\Api\PaperApiControllerInterface;
 use App\Http\Controllers\Api\WriterApiControllerInterface;
+use App\Http\Controllers\Frontend\ExtensionController;
+use App\Http\Controllers\Frontend\ExtensionControllerInterface;
+use App\Http\Controllers\Frontend\PaperFrontControllerInterface;
 use Berkayk\OneSignal\OneSignalFacade;
 
 // https://github.com/berkayk/laravel-onesignal
