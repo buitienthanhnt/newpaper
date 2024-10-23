@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Api\Data\Response;
 use App\Api\ResponseApi;
 use App\Api\WriterApi;
-use App\Http\Controllers\BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class WriterApiController extends BaseController implements WriterApiControllerInterface
+class WriterApiController extends Controller implements WriterApiControllerInterface
 {
 
     protected $request;
