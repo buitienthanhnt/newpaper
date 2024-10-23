@@ -95,6 +95,10 @@
 
 # X-debug fix error not Step Debugger============================================================
 
+
+# ubuntu cấp quyền user cho database: 'laravel2' và user: 'mysql':
+#   GRANT ALL PRIVILEGES ON laravel2.* TO mysql@localhost WITH GRANT OPTION;
+
 <!-- You just have to do these changes in php.ini file.
 For Xdebug v3.x.x : (Note that port number in this version has changed to 9003).
 

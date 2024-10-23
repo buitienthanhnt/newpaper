@@ -33,7 +33,7 @@ final class CategoryApi extends BaseApi
     function getCategoryById(int $category_id){
         $category_cache = 'category.info.'.$category_id;
         if (Cache::has($category_cache) && false){
-            return  Cache::get($category_cache);
+            return Cache::get($category_cache);
         }else{
             $value = $this->categoryRepository->getById($category_id);
             Cache::put($category_cache, $value);
@@ -63,44 +63,44 @@ final class CategoryApi extends BaseApi
 
     function categoryTopForFirebase()
     {
-        $topCategories = $this->Topcategories();
-        foreach ($topCategories as &$category) {
-            if (empty($category['image_path'])) {
-                continue;
-            }
-            $category["image_path"] = $this->upLoadImageFirebase($category['image_path']);
-        }
-        return $topCategories;
+    //     $topCategories = $this->Topcategories();
+    //     foreach ($topCategories as &$category) {
+    //         if (empty($category['image_path'])) {
+    //             continue;
+    //         }
+    //         $category["image_path"] = $this->upLoadImageFirebase($category['image_path']);
+    //     }
+    //     return $topCategories;
     }
 
     function addCategoryTopFirebase()
     {
-        try {
-            $userRef = $this->firebaseDatabase->getReference('/newpaper/categoryTop');
-            if ($userRef->getSnapshot()->getValue()) {
-                $userRef->remove();
-            }
-            $userRef->push($this->categoryTopForFirebase() ?: null);
-            $snapshot = $userRef->getSnapshot();
-            return [
-                'status' => true,
-                'value' => $snapshot->getValue()
-            ];
-        } catch (\Throwable $th) {
-            return [
-                'status' => false,
-                'value' => null
-            ];
-        }
+    //     try {
+    //         $userRef = $this->firebaseDatabase->getReference('/newpaper/categoryTop');
+    //         if ($userRef->getSnapshot()->getValue()) {
+    //             $userRef->remove();
+    //         }
+    //         $userRef->push($this->categoryTopForFirebase() ?: null);
+    //         $snapshot = $userRef->getSnapshot();
+    //         return [
+    //             'status' => true,
+    //             'value' => $snapshot->getValue()
+    //         ];
+    //     } catch (\Throwable $th) {
+    //         return [
+    //             'status' => false,
+    //             'value' => null
+    //         ];
+    //     }
     }
 
     function asyncCategory(): void
     {
-        $categoryTree = $this->category->getCategoryTree();
-        $userRef = $this->firebaseDatabase->getReference('/newpaper/category');
-        if ($userRef->getSnapshot()->getValue()) {
-            $userRef->remove();
-        }
-        $userRef->push($categoryTree ?: null);
+    //     $categoryTree = $this->category->getCategoryTree();
+    //     $userRef = $this->firebaseDatabase->getReference('/newpaper/category');
+    //     if ($userRef->getSnapshot()->getValue()) {
+    //         $userRef->remove();
+    //     }
+    //     $userRef->push($categoryTree ?: null);
     }
 }

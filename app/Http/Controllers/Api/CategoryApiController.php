@@ -40,7 +40,7 @@ class CategoryApiController extends BaseController implements CategoryApiControl
     function getCategoryInfo(int $category_id)
     {
         $responseApi = $this->responseApi;
-        return $responseApi->setResponse($this->categoryApi->getCategoryById($category_id));
+        return $responseApi->setResponse($this->response->setResponse($this->categoryApi->getCategoryById($category_id)));
     }
 
     /**
@@ -49,7 +49,7 @@ class CategoryApiController extends BaseController implements CategoryApiControl
     public function getCategoryTree()
     {
         $responseApi = $this->responseApi;
-        $responseApi->setResponse($this->categoryApi->getCategoryTree());
+        $responseApi->setResponse($this->response->setResponse($this->categoryApi->getCategoryTree()));
         return $responseApi;
     }
 
@@ -59,7 +59,7 @@ class CategoryApiController extends BaseController implements CategoryApiControl
     public function getCategoryTop()
     {
         $responseApi = $this->responseApi;
-        $responseApi->setResponse($this->categoryApi->getCategoryTop());
+        $responseApi->setResponse($this->response->setResponse($this->categoryApi->getCategoryTop()));
         return $responseApi;
     }
 
@@ -83,6 +83,6 @@ class CategoryApiController extends BaseController implements CategoryApiControl
             $responseData = $this->paperRepository->getPaperByCategory($category_id);
             Cache::put($key, $responseData);
         }
-        return $responseApi->setResponse($responseData);
+        return $responseApi->setResponse($this->response->setResponse($responseData));
     }
 }

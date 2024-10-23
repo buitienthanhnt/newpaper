@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 interface CategoryApiControllerInterface{
-    const CONTROLLER_NAME = 'App\CategoryApiController';
+    const CONTROLLER_NAME = 'Api\CategoryApiController';
 
     const CATEGORY_INFO = 'getCategoryInfo';
     const CATEGORY_TREE = 'getCategoryTree';
