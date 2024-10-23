@@ -250,7 +250,7 @@
 
                                 let type = 'image' === meta.filetype ? 'Images' : 'Files';
                                 tinymce.activeEditor.windowManager.openUrl({
-                                    url: filemanager_url_base,
+                                    url: filemanager_url_mce,
                                     title: 'Filemanager',
                                     width: x * 0.8,
                                     height: y * 0.8,
