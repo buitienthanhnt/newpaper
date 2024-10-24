@@ -119,7 +119,7 @@
 @endsection
 
 @section('flow_socail')
-    {!! view('frontend.templates.share.social')->render() !!}
+    @render(App\ViewBlock\Frontend\Social::class)
 @endsection
 
 @section('most_recent')

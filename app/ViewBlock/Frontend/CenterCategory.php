@@ -1,5 +1,6 @@
 <?php
-namespace App\ViewBlock;
+
+namespace App\ViewBlock\Frontend;
 
 use App\Models\Category;
 use App\Models\ConfigCategory;
@@ -9,14 +10,14 @@ use Illuminate\Support\Facades\View;
 
 class CenterCategory implements Htmlable
 {
-    protected $template = 'frontend.templates.share.centerCategory';
+    protected $template = 'frontend.templates.pageBlock.centerCategory';
 
     function toHtml()
     {
         $centerCategory = [];
-        if (Cache::has('center_category')){
+        if (Cache::has('center_category')) {
             $centerCategory = Cache::get('center_category');
-        }else{
+        } else {
             $center_category = ConfigCategory::where("path", ConfigCategory::CENTER_CATEGORY)->firstOr(function () {
                 return null;
             });
@@ -29,7 +30,7 @@ class CenterCategory implements Htmlable
         return $center_menu_view;
     }
 
-    function setTemplate(string $template): TopCategory
+    function setTemplate(string $template)
     {
         $this->template = $template;
         return $this;

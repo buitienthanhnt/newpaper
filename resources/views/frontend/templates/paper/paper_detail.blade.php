@@ -198,7 +198,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    {!! view('frontend.templates.share.social')->render() !!}
+                    @render(App\ViewBlock\Frontend\Social::class)
                     {{-- most of view --}}
                     {!! view('frontend.templates.paper.component.mostViewDetail')->render() !!}
                 </div>

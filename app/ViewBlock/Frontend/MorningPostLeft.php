@@ -1,13 +1,13 @@
 <?php
 
-namespace App\ViewBlock;
+namespace App\ViewBlock\Frontend;
 
 use App\Models\Paper;
 use Illuminate\Contracts\Support\Htmlable;
 
-class TrendingLeft implements Htmlable
+class MorningPostLeft implements Htmlable
 {
-	protected $template = "frontend.templates.share.trendingLeft";
+	protected $template = "frontend.templates.pageBlock.morningPostLeft";
 	function toHtml(): string
 	{
 		$trendingLeft = Paper::take(3)->orderBy('created_at', "DESC")->get();

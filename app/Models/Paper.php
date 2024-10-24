@@ -288,4 +288,9 @@ class Paper extends Model implements PaperInterface
         }
         return $this->getPaperByIds(array_unique($paperIds));
     }
+
+    function getUpdatedAt() : string {
+        return date('M d, Y', strtotime($this->updated_at));
+        return '';
+    }
 }

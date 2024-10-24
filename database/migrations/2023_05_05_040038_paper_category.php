@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Models\PaperCategoryInterface;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,7 @@ class PaperCategory extends Migration
      */
     public function up()
     {
-        Schema::create(\App\Helper\Nan::paperCategoryTable(), function (Blueprint $table) {
+        Schema::create(PaperCategoryInterface::TABLE_NAME, function (Blueprint $table) {
             $table->id();
             $table->integer(\App\Models\PaperInterface::PRIMARY_ALIAS);
             $table->integer(\App\Models\CategoryInterface::PRIMARY_ALIAS);
@@ -29,6 +30,6 @@ class PaperCategory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(\App\Helper\Nan::paperCategoryTable());
+        Schema::dropIfExists(PaperCategoryInterface::TABLE_NAME);
     }
 }
