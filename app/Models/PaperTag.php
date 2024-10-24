@@ -25,4 +25,8 @@ class PaperTag extends Model implements PaperTagInterface
     public static function getPaperByTags(string $tag){
         return Paper::find(self::getPaperIds($tag));
     }
+
+    public function getUrl(): string{
+        return route('front_tag_view', ['value' => $this->{self::ATTR_VALUE}]);
+    }
 }

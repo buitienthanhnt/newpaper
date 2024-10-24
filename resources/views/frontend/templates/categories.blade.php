@@ -123,7 +123,7 @@
 @endsection
 
 @section('most_recent')
-    @render(App\ViewBlock\MostRecent::class)
+    @render(App\ViewBlock\Frontend\MostRecent::class)
 @endsection
 
 {{-- =====================banner_last=============================== --}}

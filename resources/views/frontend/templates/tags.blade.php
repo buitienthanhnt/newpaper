@@ -6,11 +6,11 @@
 @endsection
 
 @section('trending_left')
-    @render(App\ViewBlock\TrendingLeft::class)
+    @render(App\ViewBlock\Frontend\MorningPostLeft::class)
 @endsection
 
 @section('trending_right')
-    @render(App\ViewBlock\TrendingRight::class)
+    @render(App\ViewBlock\Frontend\MorningPostRight::class)
 @endsection
 
 {{-- ========================new_post============================ --}}

@@ -1,4 +1,3 @@
-@inject('DomHtml', 'App\Helper\HelperFunction')
 <div class="whats-news-wrapper">
     <!-- Heading & Nav Button -->
     <div class="row justify-content-between align-items-end mb-15">
@@ -9,7 +8,6 @@
         </div>
         <div class="col-xl-8 col-md-9">
             <div class="properties__button">
-                <!--Nav Button  -->
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         @if ($list_center)
@@ -25,16 +23,12 @@
                         @endif
                     </div>
                 </nav>
-                <!--End Nav Button  -->
             </div>
         </div>
     </div>
-    <!-- Heading & Nav Button -->
-
     <!-- Tab content -->
     <div class="row">
         <div class="col-12">
-            <!-- Nav Card -->
             <div class="tab-content" id="nav-tabContent">
                 @if ($list_center)
                     <?php $center_one = 0; ?>
@@ -44,7 +38,6 @@
                             aria-labelledby="{{ 'nav-' . $center_conten->id . '-tab' }}">
                             <div class="row">
                                 @if ($papers = $center_conten->getPaperPaginate())
-                                    <!-- Left Details Caption -->
                                     @if ($paper_first = $papers->first())
                                         <div class="col-xl-6">
                                             <div class="whats-news-single mb-40">
@@ -52,25 +45,18 @@
                                                     <img src="{{ $paper_first->getImagePath() }}" alt="">
                                                 </div>
                                                 <div class="whates-caption">
-                                                    <a
-                                                        href="{{ route('front_paper_detail', ['paper_id' => $paper_first->id, 'alias' => $paper_first->url_alias]) }}">
-                                                        <h4
-                                                            style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;">
-                                                            {{ $paper_first->title }}
-                                                        </h4>
+                                                    <a href="{{ $paper_first->getUrl() }}">
+                                                        <h4 class="text-2lines">{{ $paper_first->title }}</h4>
                                                     </a>
                                                     <span>by
                                                         {{ $paper_first->writerName() }}
                                                         -
                                                         {{ date('M d, Y', strtotime($paper_first->updated_at)) }}
                                                         <a href="#" class="text text-info" style="float: right;">
-                                                            <i class="fa fa-eye"></i>
-                                                            {{ $paper_first->viewCount() }}
+                                                            <i class="fa fa-eye"></i>{{ $paper_first->viewCount() }}
                                                         </a>
                                                     </span>
-                                                    <p
-                                                        style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;">
-                                                        {{ $paper_first->short_conten }}</p>
+                                                    <p class="text-3lines">{{ $paper_first->short_conten }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -78,7 +64,6 @@
                                     <!-- Right single caption -->
                                     <div class="col-xl-6 col-lg-12">
                                         <div class="row">
-                                            <!-- single -->
                                             @if ($papers->first() && ($papers = $papers->diff([$papers->first()])))
                                                 @foreach ($papers as $paper)
                                                     <div class="col-xl-12 col-lg-6 col-md-6 col-sm-10">
@@ -89,11 +74,8 @@
                                                             </div>
                                                             <div class="whats-right-cap">
                                                                 <a title="{{ $paper->short_conten }}"
-                                                                    href="{{ route('front_paper_detail', ['paper_id' => $paper->id, 'alias' => $paper->url_alias]) }}">
-                                                                    <h4
-                                                                        style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;">
-                                                                        {{ $paper->short_conten }}
-                                                                    </h4>
+                                                                   href="{{ $paper->getUrl() }}">
+                                                                    <h4 class="text-3lines">{{ $paper->short_conten }}</h4>
                                                                 </a>
                                                                 <p>
                                                                     {{ date('M d, Y', strtotime($paper->updated_at)) }}
@@ -103,8 +85,7 @@
                                                                         {{ $paper->viewCount() }}
                                                                     </a>
                                                                 </p>
-                                                                <span class="colorb mb-10">{{ $paper->writerName() }}
-                                                                </span>
+                                                                <span class="colorb mb-10">{{ $paper->writerName() }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -113,15 +94,12 @@
                                         </div>
                                     </div>
                                 @endif
-
                             </div>
                         </div>
                         <?php $center_one += 1; ?>
                     @endforeach
                 @endif
             </div>
-            <!-- End Nav Card -->
         </div>
     </div>
-    <!-- Tab content -->
 </div>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,5 +25,10 @@ class Writer extends Model implements WriterInterface
 
     function getPaperWithPaginate(){
         return $this->getPapers()->paginate(12);
+    }
+
+    public static function getUrl()
+    {
+        return route('');
     }
 }

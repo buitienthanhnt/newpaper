@@ -1,5 +1,4 @@
 <?php
-
 namespace App\ViewBlock\Frontend;
 
 use App\Models\Category;

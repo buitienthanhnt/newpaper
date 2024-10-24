@@ -4,8 +4,7 @@
         <ul>
             @foreach ($paper->getTags() as $tag)
                 <li>
-                    <a href="{{ route('front_tag_view', ['value' => $tag->value]) }}"
-                        class="btn btn-info">{{ $tag->value }}</a>
+                    <a class="btn btn-info px-3 py-3" href="{{ $tag->getUrl() }}">{{ $tag->value }}</a>
                 </li>
             @endforeach
         </ul>

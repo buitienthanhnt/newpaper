@@ -1,4 +1,3 @@
-@inject('routerHelper', 'App\Helper\RouterHelper')
 <div class="slider-active">
     @if ($trending_left)
         @foreach ($trending_left as $tren)
@@ -8,13 +7,13 @@
                         <img style="max-height: 465px; object-fit: cover;"
                             src="{{ $tren->getImagePath() ?: asset('assets/pub_image/defaul.PNG') }}" alt="">
                         <div class="trend-top-cap">
-                            @if ($first_category = $tren->getPaperCategories()->first())
-                                <a href="">
+                            @if ($first_category = $tren->getPaperCategories()->first()?->toCategory()->first())
+                                <a href="{{$first_category->getUrl()}}">
                                     <span class="bgr" data-animation="fadeInUp" data-delay=".2s"
-                                        data-duration="1000ms">{{ $first_category->toCategory()->first()->{\App\Models\CategoryInterface::ATTR_NAME} }}</span>
+                                        data-duration="1000ms">{{ $first_category->{\App\Models\CategoryInterface::ATTR_NAME} }}</span>
                                 </a>
                             @endif
-                            <h2><a href="{{ $routerHelper->paperDetailUrl($tren) }}" data-animation="fadeInUp"
+                            <h2><a href="{{ $tren->getUrl() }}" data-animation="fadeInUp"
                                     data-delay=".4s"
                                     data-duration="1000ms">{{ $tren->{\App\Models\PaperInterface::ATTR_TITLE} }}</a>
                             </h2>

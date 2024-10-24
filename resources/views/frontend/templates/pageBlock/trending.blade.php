@@ -1,4 +1,3 @@
-@inject('routerHelper', 'App\Helper\RouterHelper')
 <div class="recent-articles">
     <div class="container">
         <div class="recent-wrapper">
@@ -14,15 +13,15 @@
                                     <img src="{{ $trending->getImagePath() }}" style="max-height: 240px" alt="">
                                 </div>
                                 <div class="what-cap">
-                                    <a href="{{ $routerHelper->paperDetailUrl($trending) }}">
+                                    <a href="{{ $trending->getUrl() }}">
                                         <h4 class="text-2lines">
                                             {{ $trending->{\App\Models\PaperInterface::ATTR_TITLE} }}
                                         </h4>
                                     </a>
                                     <P>{{ date('M d, Y', strtotime($trending->updated_at)) }}</P>
-                                    <a class="popup-video btn-icon"
-                                        href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><span
-                                            class="flaticon-play-button"></span></a>
+                                    <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU">
+                                        <span class="flaticon-play-button"></span>
+                                    </a>
                                 </div>
                             </div>
                         @endforeach

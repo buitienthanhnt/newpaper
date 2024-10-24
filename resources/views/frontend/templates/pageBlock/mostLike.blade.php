@@ -1,4 +1,3 @@
-@inject('routerHelper', 'App\Helper\RouterHelper')
 <div class="weekly3-news-area">
     <div class="container">
         <div class="weekly3-wrapper">
@@ -19,7 +18,7 @@
                                             </div>
                                             <div class="weekly3-caption">
                                                 <a
-                                                    href="{{ $routerHelper->paperDetailUrl($like) }}">
+                                                    href="{{ $like->getUrl() }}">
                                                     <h4 class="text-2lines">
                                                         {{ $like->{\App\Models\PaperInterface::ATTR_TITLE} }}
                                                     </h4>

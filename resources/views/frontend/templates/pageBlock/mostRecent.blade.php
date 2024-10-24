@@ -1,4 +1,3 @@
-@inject('routerHelper', 'App\Helper\RouterHelper')
 <div class="most-recent-area">
     <div class="small-tittle mb-20">
         <h4>{{ $title }}</h4>
@@ -8,12 +7,17 @@
             <div class="most-recent-img" style="max-height: 400px; object-fit: cover">
                 <img src="{{ $first_recent->getImagePath() }}" alt="">
                 <div class="most-recent-cap">
-                    <span
-                        class="bgbeg">{{ $first_recent->getPaperCategories()->first()->toCategory()->first()->{\App\Models\CategoryInterface::ATTR_NAME} }}</span>
-                    <h4><a href="{{ $routerHelper->paperDetailUrl($first_recent) }}">{{ $first_recent->{App\Models\PaperInterface::ATTR_TITLE} }}
+                    @if($recenCategory = $first_recent->getPaperCategories()->first()->toCategory()->first())
+                        <a href="{{$recenCategory->getUrl()}}">
+                            <span class="bgbeg">
+                                {{ $recenCategory->{\App\Models\CategoryInterface::ATTR_NAME} }}
+                            </span>
+                        </a>
+                    @endif
+                    <h4>
+                        <a href="{{ $first_recent->getUrl() }}">{{ $first_recent->{App\Models\PaperInterface::ATTR_TITLE} }}</a>
                     </h4>
-                    <p>{{ $first_recent->writerName() }}
-                        | {{ $first_recent->getUpdatedAt() }}</p>
+                    <p>{{ $first_recent->writerName() }} | {{ $first_recent->getUpdatedAt() }}</p>
                 </div>
             </div>
         </div>
@@ -24,11 +28,12 @@
                         <img src="{{ $af_recent->getImagePath() }}" style="width: 85px; height: 79px;" alt="">
                     </div>
                     <div class="most-recent-capt">
-                        <h4><a
-                                href="{{ $routerHelper->paperDetailUrl($af_recent) }}">{{ $af_recent->{App\Models\PaperInterface::ATTR_TITLE} }}</a>
+                        <h4>
+                            <a href="{{ $af_recent->getUrl() }}">
+                                {{ $af_recent->{App\Models\PaperInterface::ATTR_TITLE} }}
+                            </a>
                         </h4>
-                        <p>{{ $af_recent->writerName() }}
-                            | {{ $af_recent->getUpdatedAt() }}</p>
+                        <p>{{ $af_recent->writerName() }} | {{ $af_recent->getUpdatedAt() }}</p>
                     </div>
                 </div>
             @endforeach

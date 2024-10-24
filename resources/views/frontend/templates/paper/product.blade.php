@@ -7,13 +7,13 @@
 
 {{-- col-lg-8 --}}
 @section('trending_left')
-    @render(App\ViewBlock\TrendingLeft::class)
+    @render(App\ViewBlock\Frontend\MorningPostLeft::class)
 @endsection
 {{-- col-lg-8 --}}
 
 {{-- col-lg-4 --}}
 @section('trending_right')
-    @render(App\ViewBlock\TrendingRight::class)
+    @render(App\ViewBlock\Frontend\MorningPostRight::class)
 @endsection
 {{-- col-lg-4 --}}
 
@@ -144,7 +144,7 @@
 @endsection
 
 @section('most_recent')
-    @render(App\ViewBlock\MostRecent::class)
+    @render(App\ViewBlock\Frontend\MostRecent::class)
 @endsection
 {{-- col-lg-4 --}}
 
