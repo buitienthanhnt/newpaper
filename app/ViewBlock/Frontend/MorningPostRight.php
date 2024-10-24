@@ -1,13 +1,13 @@
 <?php
 
-namespace App\ViewBlock;
+namespace App\ViewBlock\Frontend;
 
 use App\Models\Paper;
 use Illuminate\Contracts\Support\Htmlable;
 
-class TrendingRight implements Htmlable
+class MorningPostRight implements Htmlable
 {
-	protected $template = "frontend.templates.share.trendingRight";
+	protected $template = "frontend.templates.pageBlock.morningPostRight";
 
 	function toHtml()
 	{

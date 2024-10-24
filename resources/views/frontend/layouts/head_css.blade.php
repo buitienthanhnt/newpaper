@@ -14,9 +14,15 @@
  <link rel="stylesheet" href={{ asset('assets/frontend/css/style.css') }}>
  <style>
  </style>
- @isset ($custom_css)
+ @isset($custom_css)
      <style>
-        {{ $custom_css }}
+         {{ $custom_css }} .text-2lines {
+             overflow: hidden;
+             display: -webkit-box;
+             -webkit-line-clamp: 2;
+             line-clamp: 2;
+             -webkit-box-orient: vertical;
+         }
      </style>
  @endisset
  @yield('css_after')

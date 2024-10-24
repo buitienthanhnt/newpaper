@@ -1,3 +1,4 @@
+@inject('routerHelper', 'App\Helper\RouterHelper')
 @foreach ($trending_right as $tren_r)
     <div class="col-lg-12 col-md-6 col-sm-6">
         <div class="trending-top mb-30">
@@ -7,14 +8,14 @@
                 <div class="trend-top-cap trend-top-cap2">
                     <span
                         class="bgg">{{ $tren_r->getPaperCategories()->first()
-                            ? $tren_r->getPaperCategories()->first()->for_category()->first()->name
+                            ? $tren_r->getPaperCategories()->first()->toCategory()->first()->{\App\Models\CategoryInterface::ATTR_NAME}
                             : '' }}
                     </span>
                     <div style="background-color: #cccccc; opacity: 0.6; border-radius: 5px 0px 0px 5px; padding-left: 4px">
-                        <a style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;"
-                            href="{{ route('front_paper_detail', ['paper_id' => $tren_r->id, 'alias' => $tren_r->url_alias]) }}">
+                        <a class="text-2lines"
+                            href="{{ $routerHelper->paperDetailUrl($tren_r) }}">
                             <h3>
-                                {{ $tren_r->title }}
+                                {{ $tren_r->{\App\Models\PaperInterface::ATTR_TITLE} }}
                             </h3>
                         </a>
                         <p style="margin-bottom: 0px; color: blueviolet">by {{ $tren_r->writerName() }}

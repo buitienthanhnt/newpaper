@@ -1,48 +1,20 @@
 @extends('frontend.layouts.home_default')
 @inject('DomHtml', 'App\Helper\HelperFunction')
 
-{!! view('elements.message.index')->render() !!}
+@render(App\ViewBlock\Frontend\Message::class)
 
-@section('new_post_left')
-    @render(App\ViewBlock\CenterCategory::class)
-@endsection
-
-@section('new_post_banner')
-    <div class="banner-one mt-20 mb-30">
-        <img src={{ $DomHtml->getConfig('post_banner_image') ?: asset('assets/frontend/img/gallery/body_card1.png') }}
-            width={{ $DomHtml->getConfig('home_image_width', 750) }}
-            height={{ $DomHtml->getConfig('home_image_height', 111) }} />
-    </div>
-@endsection
-
-@section('flow_socail')
-    {!! view('frontend.templates.share.social')->render() !!}
-@endsection
-
-@section('most_recent')
-    @render(App\ViewBlock\MostRecent::class)
-@endsection
-{{-- =====================new_post=============================== --}}
-
-{{-- =====================weekly2_banner=============================== --}}
 @section('weekly2_news')
     {!! view('frontend.templates.homePage.mostPopulator') !!}
 @endsection
-{{-- =====================weekly2_banner=============================== --}}
 
-{{-- =====================articles=============================== --}}
 @section('articles')
     {!! view('frontend.templates.homePage.mostTrending') !!}
 @endsection
-{{-- =====================articles=============================== --}}
 
-{{-- =====================weekly3_news=============================== --}}
 @section('weekly3_news')
     {!! view('frontend.templates.homePage.mostLike') !!}
 @endsection
-{{-- =====================weekly3_news=============================== --}}
 
-{{-- =====================video_area=============================== --}}
 @if ($video_contens)
     @section('video_area_conten')
         <div class="youtube-area video-padding d-none d-sm-block">
@@ -89,9 +61,7 @@
         </div>
     @endsection
 @endif
-{{-- =====================video_area=============================== --}}
 
-{{-- =====================banner_last=============================== --}}
 @section('banner_last_conten')
     <div class="col-lg-10 col-md-10">
         <div class="banner-one">
@@ -101,4 +71,3 @@
         </div>
     </div>
 @endsection
-{{-- =====================banner_last=============================== --}}

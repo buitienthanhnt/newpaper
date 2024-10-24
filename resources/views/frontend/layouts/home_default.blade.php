@@ -1,5 +1,7 @@
 @extends('frontend.layouts.pagestruct')
 
+@section('page_title') Trang chủ @endsection
+
 @section('page_top_head')
     @include('frontend.templates.page_top_head')
 @endsection
@@ -13,10 +15,8 @@
     @include('frontend.templates.page_footer')
 @endsection
 
-@section('page_title') Trang chủ @endsection
-
 @section('morning_post')
-    @include('frontend/layouts/paperComponent/morning_post')
+    @render(App\ViewBlock\Frontend\MorningPost::class)
 @endsection
 
 @section('new_post')

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\ViewBlock;
 
 use App\Models\Paper;

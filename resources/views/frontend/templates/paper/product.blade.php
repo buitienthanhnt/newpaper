@@ -28,9 +28,7 @@
 {{-- =====================weekly3_news=============================== --}}
 {{-- col-lg-12 --}}
 @section('weekly3_conten')
-    <div id="likeMost">
-        {{-- @render(App\ViewBlock\LikeMost::class) --}}
-    </div>
+    <div id="likeMost"></div>
 @endsection
 {{-- col-lg-12 --}}
 {{-- =====================weekly3_news=============================== --}}
@@ -142,7 +140,7 @@
 
 {{-- col-lg-4 right --}}
 @section('flow_socail')
-    {!! view('frontend.templates.share.social')->render() !!}
+    @render(App\ViewBlock\Frontend\Social::class)
 @endsection
 
 @section('most_recent')
